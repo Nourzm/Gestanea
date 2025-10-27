@@ -92,41 +92,41 @@ Fonts, icons, images. Update `pubspec.yaml` to include assets.
 
 ```
 pregnancy_baby_app/
-├── pubspec.yaml
-├── README.md
-├── CONTRIBUTING.md
-├── analysis_options.yaml
-├── l10n.yaml
-├── .gitignore
+├── pubspec.yaml                    # Dependencies
+├── README.md                       # This file
+├── CONTRIBUTING.md                 # Git workflow & guidelines
+├── analysis_options.yaml           # Dart linter rules
+├── l10n.yaml                       # Localization config
+├── .gitignore                      # Git ignore rules
 │
 ├── lib/
-│ ├── main.dart
-│ ├── app.dart
-│ ├── routes.dart
+│ ├── main.dart                     # App entry point
+│ ├── app.dart                      # MaterialApp config
+│ ├── routes.dart                   # Named routes
 │ │
-│ ├── core/
+│ ├── core/                         # Shared utilities
 │ │ ├── constants/
 │ │ │ ├── app_colors.dart
 │ │ │ ├── app_text_styles.dart
 │ │ │ └── app_routes.dart
 │ │ ├── theme/
 │ │ │ └── app_theme.dart
-│ │ ├── widgets/
+│ │ ├── widgets/                   # Reusable UI components
 │ │ │ ├── custom_button.dart
 │ │ │ ├── custom_text_field.dart
 │ │ │ └── app_dialog.dart
-│ │ ├── providers/
+│ │ ├── providers/                 # Cross-feature providers
 │ │ │ ├── user_mode_provider.dart
 │ │ │ ├── current_user_provider.dart
 │ │ │ └── locale_provider.dart
-│ │ ├── services/
+│ │ ├── services/                  # Global services
 │ │ │ ├── database/
 │ │ │ │ └── database_service.dart
 │ │ │ ├── api_service.dart
 │ │ │ ├── notification_service.dart
 │ │ │ ├── local_storage_service.dart
 │ │ │ └── auth_service.dart
-│ │ ├── utils/
+│ │ ├── utils/                     # Helper functions
 │ │ │ ├── date_utils.dart
 │ │ │ ├── validators.dart
 │ │ │ ├── formatters.dart
@@ -134,8 +134,8 @@ pregnancy_baby_app/
 │ │ └── exceptions/
 │ │ └── app_exceptions.dart
 │ │
-│ ├── features/
-│ │ ├── auth/
+│ ├── features/                    # 12 Independent Features
+│ │ ├── auth/                      # Login, signup
 │ │ │ ├── data/
 │ │ │ │ ├── datasources/
 │ │ │ │ └── models/
@@ -148,78 +148,36 @@ pregnancy_baby_app/
 │ │ │ ├── widgets/
 │ │ │ └── providers/
 │ │ │
-│ │ ├── onboarding/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── dashboard/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── pregnancy/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── baby/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── health_log/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── health_analysis/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── plan/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── education/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── doctors/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ ├── marketplace/
-│ │ │ ├── data/
-│ │ │ ├── domain/
-│ │ │ └── presentation/
-│ │ │
-│ │ └── profile/
-│ │ ├── data/
-│ │ ├── domain/
-│ │ └── presentation/
+│ │ ├── onboarding/                # Mode selection, forms
+│ │ ├── dashboard/                 # Home screen
+│ │ ├── pregnancy/                 # Pregnancy tracking
+│ │ ├── baby/                      # Baby profile & tracking
+│ │ ├── health_log/                # Vitals, symptoms, mood
+│ │ ├── health_analysis/           # Risk detection, OCR
+│ │ ├── plan/                      # Calendar, appointments
+│ │ ├── education/                 # Articles, videos, tips
+│ │ ├── doctors/                   # Find doctors, book
+│ │ ├── marketplace/               # Products, cart
+│ │ └── profile/                   # Settings, history
+│ │ (Each feature has data/domain/presentation structure)
 │ │
-│ └── l10n/
-│ ├── app_en.arb
-│ ├── app_fr.arb
-│ ├── app_ar.arb
-│ └── app_localizations.dart
+│ └── l10n/                        # Localization files
+│ ├── app_en.arb                  # English
+│ ├── app_fr.arb                  # French
+│ ├── app_ar.arb                  # Arabic
+│ └── app_localizations.dart      # Generated file
 │
 ├── assets/
 │ ├── images/
 │ ├── fonts/
 │ └── lottie/
 │
-├── test/
+├── test/                          # Tests
 │ ├── unit/
 │ ├── widget/
 │ └── integration/
 │
-└── docs/
+└── docs/                          # Documentation
 ```
 
 ---
