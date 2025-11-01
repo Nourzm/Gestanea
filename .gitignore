@@ -71,3 +71,21 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+
+# Flutter generated files
+**/GeneratedPluginRegistrant.swift
+**/generated_plugin_registrant.cc
+**/generated_plugin_registrant.h
+**/generated_plugins.cmake
+linux/flutter/generated_plugin*
+macos/Flutter/GeneratedPluginRegistrant.swift
+windows/flutter/generated_plugin*
+
+# Flutter/Dart build files
+**/Flutter-Debug.xcconfig
+**/Flutter-Release.xcconfig
+linux/flutter/CMakeLists.txt
+windows/flutter/CMakeLists.txt
+
+.flutter-plugins-dependencies
