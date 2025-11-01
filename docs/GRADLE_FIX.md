@@ -23,7 +23,9 @@ Script compilation error:
 
 ## Root Cause
 
-The `incremental` property is a Kotlin compilation option that **must** be placed within the `kotlinOptions` block. Placing it anywhere else (such as in `defaultConfig` or at the top level) will cause an "Unresolved reference" error.
+The `incremental` property is **not a valid property** in the Android Gradle DSL (for `kotlinOptions`, `defaultConfig`, or any other block). This error occurs when someone mistakenly tries to add `incremental = false` to the build.gradle.kts file.
+
+**Important:** The `incremental` property should not be used in Flutter Android Gradle configuration files. Incremental compilation is handled automatically by the Kotlin Gradle plugin.
 
 ## Solution
 
@@ -42,32 +44,36 @@ android {
 
 ### Correct ✅
 
-If you need to set the `incremental` property, it should be in the `kotlinOptions` block:
+**Do NOT add the `incremental` property anywhere in your Flutter Android Gradle configuration.** The error occurs because `incremental` is not a valid property for `android` DSL blocks.
+
+The `incremental` property is a Kotlin compiler task option, not a property that should be set in `kotlinOptions`, `defaultConfig`, or any other Android Gradle DSL block. Flutter and modern Kotlin Gradle plugins handle incremental compilation automatically.
+
+Your `android/app/build.gradle.kts` should look like this (without any `incremental` property):
 
 ```kotlin
 android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
-        // This is the correct place for incremental if needed
-        // However, it's usually not necessary to set this explicitly
+        // Do NOT add incremental here - it's not a valid kotlinOptions property
     }
 
     defaultConfig {
         applicationId = "com.example.first"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
+        // Do NOT add incremental here either
     }
 }
 ```
 
 ### Note on `incremental` Property
 
-In most Flutter projects, you **do not need** to set the `incremental` property explicitly. The current configuration in `android/app/build.gradle.kts` is correct and follows Flutter best practices:
+**In Flutter projects, you should NEVER manually set the `incremental` property.** Incremental compilation is handled automatically by the Kotlin Gradle plugin. The current configuration in `android/app/build.gradle.kts` is correct and follows Flutter best practices:
 
 ```kotlin
 kotlinOptions {
     jvmTarget = JavaVersion.VERSION_11.toString()
-    // No need to set incremental - default is fine
+    // Incremental compilation is handled automatically - DO NOT add it here
 }
 ```
 
@@ -85,10 +91,11 @@ The repository's Gradle configuration is already correct and does not have this 
 
 To prevent this issue:
 
-1. **Never add `incremental` outside of `kotlinOptions` block**
-2. Only modify `kotlinOptions` if you have a specific reason
-3. Follow the existing structure in the build files
-4. Test builds after making any Gradle changes
+1. **NEVER add the `incremental` property to build.gradle.kts files** - it's not a valid Android Gradle DSL property
+2. Let the Kotlin Gradle plugin handle incremental compilation automatically
+3. Only modify `kotlinOptions` for valid properties like `jvmTarget`
+4. Follow the existing structure in the build files
+5. Test builds after making any Gradle changes
 
 ## References
 
@@ -107,12 +114,13 @@ echo "=== Validating Gradle Configuration Files ==="
 echo ""
 
 # Check for misplaced 'incremental' property
-echo "1. Checking for misplaced 'incremental' property..."
+echo "1. Checking for 'incremental' property (should NOT exist)..."
 if grep -q "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts 2>/dev/null; then
-    echo "   ⚠️  WARNING: Found 'incremental' property - verify it's in kotlinOptions block"
+    echo "   ❌ ERROR: Found 'incremental' property - this should NOT be in your Gradle files!"
+    echo "   The 'incremental' property is not valid in Android Gradle DSL."
     grep -n "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts
 else
-    echo "   ✅ No misplaced 'incremental' property found"
+    echo "   ✅ No 'incremental' property found (correct)"
 fi
 echo ""
 
