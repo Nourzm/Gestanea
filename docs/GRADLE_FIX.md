@@ -115,10 +115,11 @@ echo ""
 
 # Check for misplaced 'incremental' property
 echo "1. Checking for 'incremental' property (should NOT exist)..."
-if grep -q "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts 2>/dev/null; then
+# Check in app-level and project-level build files
+if grep -q "incremental" android/app/build.gradle.kts android/build.gradle.kts 2>/dev/null; then
     echo "   ❌ ERROR: Found 'incremental' property - this should NOT be in your Gradle files!"
     echo "   The 'incremental' property is not valid in Android Gradle DSL."
-    grep -n "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts
+    grep -n "incremental" android/app/build.gradle.kts android/build.gradle.kts 2>/dev/null
 else
     echo "   ✅ No 'incremental' property found (correct)"
 fi
@@ -126,7 +127,7 @@ echo ""
 
 # Check kotlinOptions structure
 echo "2. Checking kotlinOptions block structure..."
-if grep -A2 "kotlinOptions" android/app/build.gradle.kts | grep -q "jvmTarget"; then
+if [ -f android/app/build.gradle.kts ] && grep -A2 "kotlinOptions" android/app/build.gradle.kts 2>/dev/null | grep -q "jvmTarget"; then
     echo "   ✅ kotlinOptions block is properly configured"
 else
     echo "   ⚠️  WARNING: kotlinOptions may not be properly configured"
@@ -135,27 +136,28 @@ echo ""
 
 # Check defaultConfig structure
 echo "3. Checking defaultConfig block..."
-if grep -A10 "defaultConfig" android/app/build.gradle.kts | grep -qE "(applicationId|minSdk|targetSdk)"; then
+if [ -f android/app/build.gradle.kts ] && grep -A10 "defaultConfig" android/app/build.gradle.kts 2>/dev/null | grep -qE "(applicationId|minSdk|targetSdk)"; then
     echo "   ✅ defaultConfig block contains expected properties"
 else
     echo "   ⚠️  WARNING: defaultConfig may be missing standard properties"
 fi
 echo ""
 
-# Check for required plugins
-echo "4. Checking required plugins..."
-if grep -q 'id("com.android.application")' android/app/build.gradle.kts && \
-   grep -q 'id("kotlin-android")' android/app/build.gradle.kts && \
-   grep -q 'id("dev.flutter.flutter-gradle-plugin")' android/app/build.gradle.kts; then
-    echo "   ✅ All required plugins are present"
+# Check for required plugins in app-level build.gradle.kts
+echo "4. Checking required plugins in app-level build file..."
+if [ -f android/app/build.gradle.kts ] && \
+   grep -q 'id("com.android.application")' android/app/build.gradle.kts 2>/dev/null && \
+   grep -q 'id("kotlin-android")' android/app/build.gradle.kts 2>/dev/null && \
+   grep -q 'id("dev.flutter.flutter-gradle-plugin")' android/app/build.gradle.kts 2>/dev/null; then
+    echo "   ✅ All required app-level plugins are present"
 else
-    echo "   ⚠️  WARNING: Some required plugins may be missing"
+    echo "   ⚠️  WARNING: Some required plugins may be missing from app/build.gradle.kts"
 fi
 echo ""
 
 # Check Gradle version
 echo "5. Checking Gradle version..."
-if grep -q "gradle-8" android/gradle/wrapper/gradle-wrapper.properties; then
+if [ -f android/gradle/wrapper/gradle-wrapper.properties ] && grep -q "gradle-8" android/gradle/wrapper/gradle-wrapper.properties 2>/dev/null; then
     echo "   ✅ Using Gradle 8.x (compatible with latest Flutter)"
 else
     echo "   ⚠️  WARNING: Gradle version may need updating"
