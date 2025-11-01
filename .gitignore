@@ -1,4 +1,4 @@
-notepad analysis_options.yaml# Miscellaneous
+# Miscellaneous
 *.class
 *.log
 *.pyc
@@ -37,6 +37,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android local properties (contains SDK path)
+android/local.properties
 
 # Generated code
 lib/generated/
