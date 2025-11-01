@@ -43,8 +43,8 @@ class AppTheme {
       iconTheme: const IconThemeData(color: AppColors.white),
     ),
 
-    // Card
-    cardTheme: CardTheme(
+    // Card - FIXED: Changed CardTheme to CardThemeData
+    cardTheme: CardThemeData(
       color: AppColors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -144,8 +144,8 @@ class AppTheme {
       space: 1,
     ),
 
-    // Dialog
-    dialogTheme: DialogTheme(
+    // Dialog - FIXED: Changed DialogTheme to DialogThemeData
+    dialogTheme: DialogThemeData(
       backgroundColor: AppColors.white,
       elevation: 8,
       shape: RoundedRectangleBorder(

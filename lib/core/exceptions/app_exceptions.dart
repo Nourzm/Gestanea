@@ -101,41 +101,41 @@ class ApiException extends AppException {
   }
 }
 
-/// Database related exceptions
-class DatabaseException extends AppException {
-  DatabaseException(super.message, {super.code, super.details});
+/// FIXED: Renamed from DatabaseException to AppDatabaseException to avoid conflict with sqflite's DatabaseException
+class AppDatabaseException extends AppException {
+  AppDatabaseException(super.message, {super.code, super.details});
 
-  factory DatabaseException.notFound(String entity) {
-    return DatabaseException(
+  factory AppDatabaseException.notFound(String entity) {
+    return AppDatabaseException(
       '$entity not found in database.',
       code: 'NOT_FOUND',
     );
   }
 
-  factory DatabaseException.insertFailed(String entity) {
-    return DatabaseException(
+  factory AppDatabaseException.insertFailed(String entity) {
+    return AppDatabaseException(
       'Failed to insert $entity.',
       code: 'INSERT_FAILED',
     );
   }
 
-  factory DatabaseException.updateFailed(String entity) {
-    return DatabaseException(
+  factory AppDatabaseException.updateFailed(String entity) {
+    return AppDatabaseException(
       'Failed to update $entity.',
       code: 'UPDATE_FAILED',
     );
   }
 
-  factory DatabaseException.deleteFailed(String entity) {
-    return DatabaseException(
+  factory AppDatabaseException.deleteFailed(String entity) {
+    return AppDatabaseException(
       'Failed to delete $entity.',
       code: 'DELETE_FAILED',
     );
   }
 
-  factory DatabaseException.queryFailed() {
-    return DatabaseException(
-      'Database query failed.',
+  factory AppDatabaseException.queryFailed([String? additionalInfo]) {
+    return AppDatabaseException(
+      additionalInfo ?? 'Database query failed.',
       code: 'QUERY_FAILED',
     );
   }

@@ -1,268 +1,259 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:pregnancy_baby_app/core/constants/app_strings.dart';
-import 'package:pregnancy_baby_app/core/exceptions/app_exceptions.dart';
+import 'package:flutter/material.dart';
+import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
+import 'package:pregnancy_baby_app/core/constants/app_text_styles.dart';
 
-class NotificationService {
-  static final NotificationService instance = NotificationService._internal();
-  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+class AppTheme {
+  // Private constructor to prevent instantiation
+  AppTheme._();
 
-  NotificationService._internal();
+  // Light theme
+  static ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
+    fontFamily: AppTextStyles.fontFamily,
+    brightness: Brightness.light,
+    
+    // Color scheme
+    colorScheme: ColorScheme.light(
+      primary: AppColors.main600,
+      primaryContainer: AppColors.main300,
+      secondary: AppColors.pink500,
+      secondaryContainer: AppColors.pink200,
+      tertiary: AppColors.blue500,
+      tertiaryContainer: AppColors.blue200,
+      surface: AppColors.white,
+      surfaceContainerHighest: AppColors.bg_1,
+      error: Colors.red,
+      onPrimary: AppColors.white,
+      onSecondary: AppColors.white,
+      onSurface: AppColors.textPrimary,
+      onError: AppColors.white,
+      outline: AppColors.purpleGrey,
+    ),
 
-  factory NotificationService() => instance;
+    // Scaffold
+    scaffoldBackgroundColor: AppColors.background,
 
-  /// Initialize notification service
-  Future<void> init() async {
-    try {
-      // Android initialization settings
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    // AppBar
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.main600,
+      foregroundColor: AppColors.white,
+      elevation: 0,
+      centerTitle: true,
+      titleTextStyle: AppTextStyles.headline2.copyWith(color: AppColors.white),
+      iconTheme: const IconThemeData(color: AppColors.white),
+    ),
 
-      // iOS initialization settings
-      const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+    // Card - FIXED: Changed CardTheme to CardThemeData
+    cardTheme: CardThemeData(
+      color: AppColors.white,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    ),
 
-      // Combined initialization settings
-      const initSettings = InitializationSettings(
-        android: androidSettings,
-        iOS: iosSettings,
-      );
+    // Input decoration
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: AppColors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.purpleGrey),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.purpleGrey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.main600, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+      ),
+      labelStyle: AppTextStyles.unfocusedLabel,
+      floatingLabelStyle: AppTextStyles.focusedLabel,
+      hintStyle: AppTextStyles.body1.copyWith(color: AppColors.textSecondary.withOpacity(0.6)),
+      errorStyle: const TextStyle(fontSize: 12),
+    ),
 
-      await _notifications.initialize(
-        initSettings,
-        onDidReceiveNotificationResponse: _onNotificationTapped,
-      );
+    // Elevated button
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.main600,
+        foregroundColor: AppColors.white,
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        textStyle: AppTextStyles.buttonText,
+      ),
+    ),
 
-      // Request permissions for iOS
-      await _requestPermissions();
+    // Text button
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.main600,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        textStyle: AppTextStyles.buttonTextSmall,
+      ),
+    ),
 
-      // Create notification channel for Android
-      await _createNotificationChannel();
-    } catch (e) {
-      throw AppException('Failed to initialize notifications: $e');
-    }
-  }
+    // Outlined button
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.main600,
+        side: const BorderSide(color: AppColors.main600, width: 1.5),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        textStyle: AppTextStyles.buttonText,
+      ),
+    ),
 
-  /// Request notification permissions (iOS)
-  Future<bool> _requestPermissions() async {
-    final result = await _notifications
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-    return result ?? false;
-  }
+    // Icon button
+    iconButtonTheme: IconButtonThemeData(
+      style: IconButton.styleFrom(
+        foregroundColor: AppColors.main600,
+      ),
+    ),
 
-  /// Create notification channel (Android)
-  Future<void> _createNotificationChannel() async {
-    const channel = AndroidNotificationChannel(
-      AppStrings.notificationChannelId,
-      AppStrings.notificationChannelName,
-      description: AppStrings.notificationChannelDescription,
-      importance: Importance.high,
-      playSound: true,
-      enableVibration: true,
-    );
+    // Floating action button
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: AppColors.main600,
+      foregroundColor: AppColors.white,
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
 
-    await _notifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-  }
+    // Divider
+    dividerTheme: const DividerThemeData(
+      color: AppColors.purpleGrey,
+      thickness: 1,
+      space: 1,
+    ),
 
-  /// Handle notification tap
-  void _onNotificationTapped(NotificationResponse response) {
-    // Handle notification tap
-    // You can navigate to specific screens based on payload
-    final payload = response.payload;
-    if (payload != null) {
-      // Handle payload
-      print('Notification tapped with payload: $payload');
-    }
-  }
+    // Dialog - FIXED: Changed DialogTheme to DialogThemeData
+    dialogTheme: DialogThemeData(
+      backgroundColor: AppColors.white,
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      titleTextStyle: AppTextStyles.headline2,
+      contentTextStyle: AppTextStyles.body1,
+    ),
 
-  /// Show instant notification
-  Future<void> showNotification({
-    required int id,
-    required String title,
-    required String body,
-    String? payload,
-  }) async {
-    try {
-      const androidDetails = AndroidNotificationDetails(
-        AppStrings.notificationChannelId,
-        AppStrings.notificationChannelName,
-        channelDescription: AppStrings.notificationChannelDescription,
-        importance: Importance.high,
-        priority: Priority.high,
-        showWhen: true,
-      );
+    // Bottom navigation bar
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: AppColors.white,
+      selectedItemColor: AppColors.main600,
+      unselectedItemColor: AppColors.textSecondary,
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+    ),
 
-      const iosDetails = DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      );
+    // Text theme
+    textTheme: AppTextStyles.textTheme,
 
-      const notificationDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      );
+    // Icon theme
+    iconTheme: const IconThemeData(
+      color: AppColors.main600,
+      size: 24,
+    ),
 
-      await _notifications.show(
-        id,
-        title,
-        body,
-        notificationDetails,
-        payload: payload,
-      );
-    } catch (e) {
-      throw AppException('Failed to show notification: $e');
-    }
-  }
+    // Checkbox theme
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.main600;
+        }
+        return AppColors.purpleGrey;
+      }),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+    ),
 
-  /// Schedule notification
-  Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required DateTime scheduledDate,
-    String? payload,
-  }) async {
-    try {
-      const androidDetails = AndroidNotificationDetails(
-        AppStrings.notificationChannelId,
-        AppStrings.notificationChannelName,
-        channelDescription: AppStrings.notificationChannelDescription,
-        importance: Importance.high,
-        priority: Priority.high,
-      );
+    // Radio theme
+    radioTheme: RadioThemeData(
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.main600;
+        }
+        return AppColors.purpleGrey;
+      }),
+    ),
 
-      const iosDetails = DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      );
+    // Switch theme
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.main600;
+        }
+        return AppColors.purpleGrey;
+      }),
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.main300;
+        }
+        return AppColors.purpleGrey.withOpacity(0.3);
+      }),
+    ),
 
-      const notificationDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      );
+    // Slider theme
+    sliderTheme: SliderThemeData(
+      activeTrackColor: AppColors.main600,
+      inactiveTrackColor: AppColors.main300,
+      thumbColor: AppColors.main600,
+      overlayColor: AppColors.main600.withOpacity(0.2),
+    ),
 
-      await _notifications.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(scheduledDate, tz.local),
-        notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        payload: payload,
-      );
-    } catch (e) {
-      throw AppException('Failed to schedule notification: $e');
-    }
-  }
+    // Progress indicator
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.main600,
+      linearTrackColor: AppColors.main300,
+      circularTrackColor: AppColors.main300,
+    ),
 
-  /// Schedule daily notification at specific time
-  Future<void> scheduleDailyNotification({
-    required int id,
-    required String title,
-    required String body,
-    required int hour,
-    required int minute,
-    String? payload,
-  }) async {
-    try {
-      final now = tz.TZDateTime.now(tz.local);
-      var scheduledDate = tz.TZDateTime(
-        tz.local,
-        now.year,
-        now.month,
-        now.day,
-        hour,
-        minute,
-      );
+    // Snackbar
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: AppColors.main700,
+      contentTextStyle: AppTextStyles.bodyWhite,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
 
-      // If the scheduled time is in the past, schedule for tomorrow
-      if (scheduledDate.isBefore(now)) {
-        scheduledDate = scheduledDate.add(const Duration(days: 1));
-      }
+    // Chip theme
+    chipTheme: ChipThemeData(
+      backgroundColor: AppColors.main300,
+      selectedColor: AppColors.main600,
+      labelStyle: AppTextStyles.smallLabel,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+  );
 
-      const androidDetails = AndroidNotificationDetails(
-        AppStrings.notificationChannelId,
-        AppStrings.notificationChannelName,
-        channelDescription: AppStrings.notificationChannelDescription,
-        importance: Importance.high,
-        priority: Priority.high,
-      );
-
-      const iosDetails = DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      );
-
-      const notificationDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      );
-
-      await _notifications.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-        payload: payload,
-      );
-    } catch (e) {
-      throw AppException('Failed to schedule daily notification: $e');
-    }
-  }
-
-  /// Cancel notification
-  Future<void> cancelNotification(int id) async {
-    try {
-      await _notifications.cancel(id);
-    } catch (e) {
-      throw AppException('Failed to cancel notification: $e');
-    }
-  }
-
-  /// Cancel all notifications
-  Future<void> cancelAllNotifications() async {
-    try {
-      await _notifications.cancelAll();
-    } catch (e) {
-      throw AppException('Failed to cancel all notifications: $e');
-    }
-  }
-
-  /// Get pending notifications
-  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
-    try {
-      return await _notifications.pendingNotificationRequests();
-    } catch (e) {
-      throw AppException('Failed to get pending notifications: $e');
-    }
-  }
-
-  /// Get active notifications
-  Future<List<ActiveNotification>> getActiveNotifications() async {
-    try {
-      final result = await _notifications
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-          ?.getActiveNotifications();
-      return result ?? [];
-    } catch (e) {
-      throw AppException('Failed to get active notifications: $e');
-    }
-  }
+  // Dark theme (optional - can be implemented later)
+  static ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
+    fontFamily: AppTextStyles.fontFamily,
+    brightness: Brightness.dark,
+    // You can customize dark theme later
+  );
 }

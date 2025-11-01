@@ -29,7 +29,7 @@ class DatabaseService {
         onUpgrade: _onUpgrade,
       );
     } catch (e) {
-      throw DatabaseException('Failed to initialize database: $e');
+      throw AppDatabaseException('Failed to initialize database: $e');
     }
   }
 
@@ -108,7 +108,7 @@ class DatabaseService {
       final db = await database;
       return await db.insert(table, data);
     } catch (e) {
-      throw DatabaseException.insertFailed(table);
+      throw AppDatabaseException.insertFailed(table);
     }
   }
 
@@ -132,7 +132,7 @@ class DatabaseService {
         offset: offset,
       );
     } catch (e) {
-      throw DatabaseException.queryFailed();
+      throw AppDatabaseException.queryFailed();
     }
   }
 
@@ -148,7 +148,7 @@ class DatabaseService {
       );
       return results.isNotEmpty ? results.first : null;
     } catch (e) {
-      throw DatabaseException.queryFailed();
+      throw AppDatabaseException.queryFailed();
     }
   }
 
@@ -168,7 +168,7 @@ class DatabaseService {
         whereArgs: whereArgs,
       );
     } catch (e) {
-      throw DatabaseException.updateFailed(table);
+      throw AppDatabaseException.updateFailed(table);
     }
   }
 
@@ -186,7 +186,7 @@ class DatabaseService {
         whereArgs: whereArgs,
       );
     } catch (e) {
-      throw DatabaseException.deleteFailed(table);
+      throw AppDatabaseException.deleteFailed(table);
     }
   }
 
@@ -205,7 +205,7 @@ class DatabaseService {
       final db = await database;
       return await db.rawQuery(sql, arguments);
     } catch (e) {
-      throw DatabaseException.queryFailed();
+      throw AppDatabaseException.queryFailed();
     }
   }
 
@@ -213,9 +213,10 @@ class DatabaseService {
   Future<int> rawExecute(String sql, [List<dynamic>? arguments]) async {
     try {
       final db = await database;
-      return await db.rawInsert(sql, arguments);
+      await db.execute(sql, arguments);
+      return 1;
     } catch (e) {
-      throw DatabaseException('Raw execute failed: $e');
+      throw AppDatabaseException('Raw execute failed: $e');
     }
   }
 
@@ -225,7 +226,7 @@ class DatabaseService {
       final db = await database;
       await db.delete(table);
     } catch (e) {
-      throw DatabaseException('Failed to clear table $table: $e');
+      throw AppDatabaseException('Failed to clear table $table: $e');
     }
   }
 
@@ -244,7 +245,7 @@ class DatabaseService {
       await databaseFactory.deleteDatabase(path);
       _database = null;
     } catch (e) {
-      throw DatabaseException('Failed to delete database: $e');
+      throw AppDatabaseException('Failed to delete database: $e');
     }
   }
 }

@@ -13,11 +13,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Enable core library desugaring for flutter_local_notifications
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
+    jvmTarget = JavaVersion.VERSION_11.toString()
+    incremental = false
+}
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -41,4 +44,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // FIXED: Updated desugar_jdk_libs to 2.1.4 (was 2.0.4)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
