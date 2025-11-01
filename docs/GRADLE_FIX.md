@@ -94,3 +94,67 @@ To prevent this issue:
 
 - [Kotlin Gradle Plugin Documentation](https://kotlinlang.org/docs/gradle.html)
 - [Flutter Android Build Configuration](https://flutter.dev/docs/deployment/android)
+
+## Validation Script
+
+You can validate your Gradle configuration with this script:
+
+```bash
+#!/bin/bash
+# Save as validate_gradle.sh and run: bash validate_gradle.sh
+
+echo "=== Validating Gradle Configuration Files ==="
+echo ""
+
+# Check for misplaced 'incremental' property
+echo "1. Checking for misplaced 'incremental' property..."
+if grep -q "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts 2>/dev/null; then
+    echo "   ⚠️  WARNING: Found 'incremental' property - verify it's in kotlinOptions block"
+    grep -n "incremental" android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts
+else
+    echo "   ✅ No misplaced 'incremental' property found"
+fi
+echo ""
+
+# Check kotlinOptions structure
+echo "2. Checking kotlinOptions block structure..."
+if grep -A2 "kotlinOptions" android/app/build.gradle.kts | grep -q "jvmTarget"; then
+    echo "   ✅ kotlinOptions block is properly configured"
+else
+    echo "   ⚠️  WARNING: kotlinOptions may not be properly configured"
+fi
+echo ""
+
+# Check defaultConfig structure
+echo "3. Checking defaultConfig block..."
+if grep -A10 "defaultConfig" android/app/build.gradle.kts | grep -qE "(applicationId|minSdk|targetSdk)"; then
+    echo "   ✅ defaultConfig block contains expected properties"
+else
+    echo "   ⚠️  WARNING: defaultConfig may be missing standard properties"
+fi
+echo ""
+
+# Check for required plugins
+echo "4. Checking required plugins..."
+if grep -q 'id("com.android.application")' android/app/build.gradle.kts && \
+   grep -q 'id("kotlin-android")' android/app/build.gradle.kts && \
+   grep -q 'id("dev.flutter.flutter-gradle-plugin")' android/app/build.gradle.kts; then
+    echo "   ✅ All required plugins are present"
+else
+    echo "   ⚠️  WARNING: Some required plugins may be missing"
+fi
+echo ""
+
+# Check Gradle version
+echo "5. Checking Gradle version..."
+if grep -q "gradle-8" android/gradle/wrapper/gradle-wrapper.properties; then
+    echo "   ✅ Using Gradle 8.x (compatible with latest Flutter)"
+else
+    echo "   ⚠️  WARNING: Gradle version may need updating"
+fi
+echo ""
+
+echo "=== Validation Complete ==="
+```
+
+Run this script from the project root to validate your Gradle configuration.
