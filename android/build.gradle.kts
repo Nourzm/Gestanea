@@ -5,16 +5,10 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory =
-    rootProject.layout.buildDirectory
-        .dir("../../build")
-        .get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// FIXED: Removed custom build directory configuration to avoid path conflicts
+// This was causing: "this and base files have different roots" error
+// The default build directory structure will be used instead
 
-subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
 subprojects {
     project.evaluationDependsOn(":app")
 }

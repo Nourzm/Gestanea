@@ -43,8 +43,8 @@ dependencies:
   image_picker: ^1.0.0
 
   # Notifications
-  flutter_local_notifications: ^15.1.0
-  timezone: ^0.9.0
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -68,18 +68,16 @@ flutter:
     - assets/images/onboarding2.png
     - assets/images/onboarding3.png
     - assets/images/fetus-inside-heart-shape-womb.png
-  #   - assets/images/splash/
-  #   - assets/images/illustrations/
-  #   - assets/images/icons/
-  #   - assets/lottie/
 
-  # fonts:
-  #   - family: Poppins
-  #     fonts:
-  #       - asset: assets/fonts/Poppins/Poppins-Regular.ttf
-  #       - asset: assets/fonts/Poppins/Poppins-Bold.ttf
-  #         weight: 700
-  #       - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
-  #         weight: 600
-  #       - asset: assets/fonts/Poppins/Poppins-Light.ttf
-  #         weight: 300
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+        - asset: assets/fonts/Lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lato/Lato-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Lato/Lato-Italic.ttf
+          style: italic
