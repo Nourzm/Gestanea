@@ -120,8 +120,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
   Widget _buildComingSoon(String tabName) {
     return Center(
       child: Text(
-        '
-$tabName - Coming Soon',
+        '$tabName - Coming Soon',
         style: TextStyle(
           fontSize: 18,
           color: Colors.grey[600],
