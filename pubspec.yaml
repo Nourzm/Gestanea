@@ -30,3 +30,14 @@ flutter:
     - assets/images/onboarding3.png
     - assets/images/fetus-inside-heart-shape-womb.png
   generate: true
+fonts:
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
+        - asset: fonts/Lato-Bold.ttf
+          weight: 700
+        - asset: fonts/Lato-Italic.ttf
+          style: italic
+        - asset: fonts/Lato-BoldItalic.ttf
+          weight: 700
+          style: italic

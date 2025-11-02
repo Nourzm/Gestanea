@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       
       theme: ThemeData(
+        fontFamily: 'Lato',
         primarySwatch: Colors.purple,
         useMaterial3: true,
       ),
