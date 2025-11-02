@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class HealthTabBar extends StatelessWidget {
   final List<Map<String, dynamic>> tabs;

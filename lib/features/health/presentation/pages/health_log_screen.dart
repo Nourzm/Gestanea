@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:Gestanea/core/constants/app_colors.dart';
-import 'package:Gestanea/features/health/presentation/widgets/health_tab_bar.dart';
-import 'package:Gestanea/features/health/presentation/widgets/vitals_tab_content.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/health/presentation/widgets/health_tab_bar.dart';
+import 'package:gestanea/features/health/presentation/widgets/vitals_tab_content.dart';
 
 class HealthLogScreen extends StatefulWidget {
   const HealthLogScreen({super.key});

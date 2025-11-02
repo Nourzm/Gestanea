@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class MotivationalCard extends StatelessWidget {
   const MotivationalCard({super.key});

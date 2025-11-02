@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:Gestanea/core/constants/app_colors.dart';
-import 'package:Gestanea/features/health/presentation/widgets/health_metric_card.dart';
-import 'package:Gestanea/features/health/presentation/widgets/bmi_card.dart';
-import 'package:Gestanea/features/health/presentation/widgets/weight_progress_chart.dart';
-import 'package:Gestanea/features/health/presentation/widgets/motivational_card.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/health/presentation/widgets/health_metric_card.dart';
+import 'package:gestanea/features/health/presentation/widgets/bmi_card.dart';
+import 'package:gestanea/features/health/presentation/widgets/weight_progress_chart.dart';
+import 'package:gestanea/features/health/presentation/widgets/motivational_card.dart';
 
 class VitalsTabContent extends StatelessWidget {
   const VitalsTabContent({super.key});

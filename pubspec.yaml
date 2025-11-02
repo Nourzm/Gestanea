@@ -1,4 +1,4 @@
-name: Gestanea
+name: gestanea
 description: A comprehensive pregnancy and baby care mobile app.
 publish_to: none
 version: 0.1.0
@@ -20,7 +20,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
@@ -31,9 +30,3 @@ flutter:
     - assets/images/onboarding3.png
     - assets/images/fetus-inside-heart-shape-womb.png
   generate: true
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/fetus-inside-heart-shape-womb.png"
-  adaptive_icon_background: "#B39DDB"
-  adaptive_icon_foreground: "assets/images/fetus-inside-heart-shape-womb.png"

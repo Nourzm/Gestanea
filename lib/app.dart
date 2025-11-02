@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:Gestanea/core/constants/app_routes.dart';
-import 'package:Gestanea/l10n/app_localizations.dart';
-import 'package:Gestanea/routes.dart';
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/routes.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

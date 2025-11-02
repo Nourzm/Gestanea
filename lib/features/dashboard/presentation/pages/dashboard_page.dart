@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:Gestanea/features/dashboard/presentation/pages/home_screen.dart';
-import 'package:Gestanea/features/health/presentation/pages/health_log_screen.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
+import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
