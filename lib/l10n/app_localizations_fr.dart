@@ -95,6 +95,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get upgradeNow => 'Mettre à niveau maintenant';
+
+  @override
   String get healthLog => 'Journal de Santé';
 
   @override

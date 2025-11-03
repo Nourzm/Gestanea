@@ -95,6 +95,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get upgradeNow => 'قم بالترقية الآن';
+
+  @override
   String get healthLog => 'سجل الصحة';
 
   @override

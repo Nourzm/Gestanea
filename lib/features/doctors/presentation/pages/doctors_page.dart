@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
-import 'package:pregnancy_baby_app/features/doctors/presentation/widgets/header.dart';
-import 'package:pregnancy_baby_app/features/doctors/presentation/widgets/search_field.dart';
-import 'package:pregnancy_baby_app/features/doctors/presentation/widgets/filter_bar.dart';
-import 'package:pregnancy_baby_app/features/doctors/presentation/widgets/doctor_card.dart';
-import 'package:pregnancy_baby_app/features/doctors/data/models/doctors_model.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/doctors/presentation/widgets/header.dart';
+import 'package:gestanea/features/doctors/presentation/widgets/search_field.dart';
+import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
+import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
+import 'package:gestanea/features/doctors/data/models/doctors_model.dart';
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({Key? key}) : super(key: key);

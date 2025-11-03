@@ -68,7 +68,7 @@
   "upgradeNow": "Upgrade Now",
   "@upgradeNow": {
     "description": "Upgrade button text"
-  }
+  },
 
   "healthLog": "Health Log",
   "trackYourWellness": "Track your wellness",
