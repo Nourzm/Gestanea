@@ -29,6 +29,46 @@
       "days": {"type": "int"}
     }
   },
+  "market": "Market",
+  "@market": {
+    "description": "Market page title"
+  },
+  "maternityWear": "Maternity Wear",
+  "@maternityWear": {
+    "description": "Maternity wear category"
+  },
+  "painRelief": "Pain Relief",
+  "@painRelief": {
+    "description": "Pain relief category"
+  },
+  "skinCare": "Skin Care",
+  "@skinCare": {
+    "description": "Skin care category"
+  },
+  "pregnancyPillow": "Pregnancy Pillow",
+  "@pregnancyPillow": {
+    "description": "Pregnancy pillow product"
+  },
+  "backSupportBelt": "Back Support Belt",
+  "@backSupportBelt": {
+    "description": "Back support belt product"
+  },
+  "searchHint": "Find what you need...",
+  "@searchHint": {
+    "description": "Search bar hint text"
+  },
+  "dontMissOut": "Don't miss out!",
+  "@dontMissOut": {
+    "description": "Promotional banner title"
+  },
+  "discountUpTo": "Discount up to 50%",
+  "@discountUpTo": {
+    "description": "Promotional discount text"
+  },
+  "upgradeNow": "Upgrade Now",
+  "@upgradeNow": {
+    "description": "Upgrade button text"
+  },
 
   "healthLog": "Health Log",
   "trackYourWellness": "Track your wellness",

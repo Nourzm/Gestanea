@@ -67,6 +67,36 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get market => 'Marché';
+
+  @override
+  String get maternityWear => 'Vêtements de Maternité';
+
+  @override
+  String get painRelief => 'Soulagement de la Douleur';
+
+  @override
+  String get skinCare => 'Soins de la Peau';
+
+  @override
+  String get pregnancyPillow => 'Oreiller de Grossesse';
+
+  @override
+  String get backSupportBelt => 'Ceinture de Soutien Dorsal';
+
+  @override
+  String get searchHint => 'Trouvez ce dont vous avez besoin...';
+
+  @override
+  String get dontMissOut => 'Ne manquez pas!';
+
+  @override
+  String get discountUpTo => 'Réduction jusqu\'à 50%';
+
+  @override
+  String get upgradeNow => 'Mettre à niveau maintenant';
+
+  @override
   String get healthLog => 'Journal de Santé';
 
   @override

@@ -208,6 +208,66 @@ abstract class AppLocalizations {
   /// **'{days} days left'**
   String daysLeft(int days);
 
+  /// Market page title
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get market;
+
+  /// Maternity wear category
+  ///
+  /// In en, this message translates to:
+  /// **'Maternity Wear'**
+  String get maternityWear;
+
+  /// Pain relief category
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Relief'**
+  String get painRelief;
+
+  /// Skin care category
+  ///
+  /// In en, this message translates to:
+  /// **'Skin Care'**
+  String get skinCare;
+
+  /// Pregnancy pillow product
+  ///
+  /// In en, this message translates to:
+  /// **'Pregnancy Pillow'**
+  String get pregnancyPillow;
+
+  /// Back support belt product
+  ///
+  /// In en, this message translates to:
+  /// **'Back Support Belt'**
+  String get backSupportBelt;
+
+  /// Search bar hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Find what you need...'**
+  String get searchHint;
+
+  /// Promotional banner title
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t miss out!'**
+  String get dontMissOut;
+
+  /// Promotional discount text
+  ///
+  /// In en, this message translates to:
+  /// **'Discount up to 50%'**
+  String get discountUpTo;
+
+  /// Upgrade button text
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade Now'**
+  String get upgradeNow;
+
   /// No description provided for @healthLog.
   ///
   /// In en, this message translates to:

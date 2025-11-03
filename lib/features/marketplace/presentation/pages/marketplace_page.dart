@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/header.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/category_sidebar.dart';
@@ -16,7 +17,10 @@ class Market extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: AppColors.bg_1),
+      // Add localization delegates and supported locales
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+
       home: const MarketplacePage(),
     );
   }
@@ -32,60 +36,71 @@ class MarketplacePage extends StatefulWidget {
 class _MarketplacePageState extends State<MarketplacePage> {
   final TextEditingController _searchController = TextEditingController();
 
-  // Sample data
-  final List<CategoryModel> _categories = [
-    CategoryModel(
-      label: 'Maternity\nWear',
-      imageAsset: 'assets/images/Maternity_wear.webp',
-    ),
-    CategoryModel(label: 'Pain Relief', imageAsset: 'assets/images/pain.webp'),
-    CategoryModel(
-      label: 'Skin Care',
-      imageAsset: 'assets/images/skin_care.webp',
-    ),
-  ];
+  // Move data initialization to methods that use context for localization
+  List<CategoryModel> _getCategories(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      CategoryModel(
+        label: l10n.maternityWear,
+        imageAsset: 'assets/images/Maternity_wear.webp',
+      ),
+      CategoryModel(
+        label: l10n.painRelief,
+        imageAsset: 'assets/images/pain.webp',
+      ),
+      CategoryModel(
+        label: l10n.skinCare,
+        imageAsset: 'assets/images/skin_care.webp',
+      ),
+    ];
+  }
 
-  final List<ProductModel> _products = [
-    ProductModel(
-      imageAsset: 'assets/images/product.png',
-      title: 'Pregnancy Pillow',
-      price: 22.40,
-
-      discountBgColor: AppColors.main500,
-    ),
-    ProductModel(
-      imageAsset: 'assets/images/Back_pain_belt.webp',
-      title: 'Back Support Belt',
-      price: 22.40,
-      oldPrice: 32.00,
-      discount: '30%',
-      discountBgColor: AppColors.main500,
-    ),
-    ProductModel(
-      imageAsset: 'assets/images/Back_pain_belt.webp',
-      title: 'Back Support Belt',
-      price: 22.40,
-      oldPrice: 32.00,
-      discount: '30%',
-      discountBgColor: AppColors.main500,
-    ),
-  ];
+  List<ProductModel> _getProducts(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      ProductModel(
+        imageAsset: 'assets/images/product.png',
+        title: l10n.pregnancyPillow,
+        price: 22.40,
+        discountBgColor: AppColors.main500,
+      ),
+      ProductModel(
+        imageAsset: 'assets/images/Back_pain_belt.webp',
+        title: l10n.backSupportBelt,
+        price: 22.40,
+        oldPrice: 32.00,
+        discount: '30%',
+        discountBgColor: AppColors.main500,
+      ),
+      ProductModel(
+        imageAsset: 'assets/images/Back_pain_belt.webp',
+        title: l10n.backSupportBelt,
+        price: 22.40,
+        oldPrice: 32.00,
+        discount: '30%',
+        discountBgColor: AppColors.main500,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
         child: Column(
           children: [
             // Header
-            MarketplaceHeader(title: 'Market'),
+            MarketplaceHeader(title: l10n.market),
 
             // Search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: MarketplaceSearchBar(
                 controller: _searchController,
+                hintText: l10n.searchHint,
                 onSearchTapped: () {
                   // Handle search tap
                 },
@@ -94,7 +109,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
             const SizedBox(height: 20),
 
-            // Promotional Banner - Inline
+            // Promotional Banner
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -127,7 +142,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                       left: 21,
                       top: 17,
                       child: Text(
-                        'Don\'t Miss out',
+                        l10n.dontMissOut,
                         style: AppTextStyles.headline2.copyWith(
                           color: AppColors.white,
                           fontSize: 22,
@@ -140,7 +155,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                       left: 21,
                       top: 52,
                       child: Text(
-                        'Discount up to 50%',
+                        l10n.discountUpTo,
                         style: AppTextStyles.body1.copyWith(
                           color: AppColors.white.withValues(alpha: 0.70),
                           fontFamily: 'Lato',
@@ -210,7 +225,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                           ),
                           child: Center(
                             child: Text(
-                              'Upgrade now',
+                              l10n.upgradeNow,
                               style: AppTextStyles.smallLabel.copyWith(
                                 color: const Color(0xFFFF6FAC),
                                 fontFamily: 'Inter',
@@ -233,10 +248,10 @@ class _MarketplacePageState extends State<MarketplacePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category sidebar
-                  CategorySidebar(categories: _categories),
-                  // Product grid
-                  Expanded(child: ProductGrid(products: _products)),
+                  // Category sidebar - use localized categories
+                  CategorySidebar(categories: _getCategories(context)),
+                  // Product grid - use localized products
+                  Expanded(child: ProductGrid(products: _getProducts(context))),
                 ],
               ),
             ),

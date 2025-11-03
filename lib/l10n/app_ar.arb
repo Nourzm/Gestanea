@@ -1,5 +1,4 @@
 {
-  "@@locale": "ar",
   "appTitle": "رعاية الحمل والطفل",
   "welcome": "أهلا وسهلا",
   "login": "دخول",
@@ -17,6 +16,17 @@
   "pregnant": "حامل",
   "postpartum": "ما بعد الولادة",
   "week": "الأسبوع {week}",
+  "daysLeft": "{days} أيام متبقية",
+  "market": "السوق",
+  "maternityWear": "ملابس الأمومة",
+  "painRelief": "تخفيف الألم",
+  "skinCare": "العناية بالبشرة",
+  "pregnancyPillow": "وسادة الحمل",
+  "backSupportBelt": "حزام دعم الظهر",
+  "searchHint": "ابحث عما تحتاجه...",
+  "dontMissOut": "لا تفوت الفرصة!",
+  "discountUpTo": "خصم يصل إلى 50٪",
+  "upgradeNow": "قم بالترقية الآن",
   "@week": {
     "description": "رقم الأسبوع",
     "placeholders": {
