@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 
 class BMICard extends StatelessWidget {
-  const BMICard({super.key});
+  const BMICard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.main500, AppColors.main600],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        gradient: const LinearGradient(
+          colors: [Color(0xFF9D6DB8), Color(0xFFB388CC)],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Pre-pregnancy BMI',
             style: TextStyle(
+              color: Colors.white,
               fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             '22.5 (Normal)',
             style: TextStyle(
+              color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppColors.white,
             ),
           ),
           const SizedBox(height: 16),
@@ -44,39 +41,39 @@ class BMICard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Target Range',
+                    'Current Gain: -dkg',
                     style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
                       fontSize: 12,
-                      color: AppColors.white.withOpacity(0.9),
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
+                    'Target Range',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Text(
                     '11.5 - 16 kg',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.white,
                     ),
                   ),
                 ],
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     'Expected: 5.5 kg',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 12,
-                      color: AppColors.white.withOpacity(0.9),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Current Gain: -dkg',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.white.withOpacity(0.9),
                     ),
                   ),
                 ],
