@@ -1,10 +1,12 @@
-
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:flutter/material.dart';
 import 'pregnancy_dashboard_page.dart';
 import 'postpartum_dashboard_page.dart';
 import '../../../pregnancy/presentation/pages/week_tracker_page.dart';
-import 'postpartum_track_page.dart'; 
+import 'postpartum_track_page.dart';
+import '../../../health/presentation/pages/health_log_screen.dart'; // ✅ Add this
+import '../../../marketplace/presentation/pages/marketplace_page.dart'; // ✅ Add this
+
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -14,22 +16,22 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _currentIndex = 0;
-  bool isPregnant = true; // TODO: Get from provider/state management
- String babyGender = 'girl'; // TODO: Get from provider/state management
+  bool isPregnant = true;
+  String babyGender = 'girl';
 
   @override
   Widget build(BuildContext context) {
     final pages = [
-    isPregnant
-        ? const PregnancyDashboardPage()
-        : PostpartumDashboardPage(babyGender: babyGender),
-    isPregnant
-        ? const WeekTrackerPage()
-        :  PostpartumTrackPage(babyGender: babyGender), // 👈 show postpartum-specific track page
-    _buildPlaceholderPage('Health', Icons.favorite),
-    _buildPlaceholderPage('Plan', Icons.calendar_today),
-    _buildPlaceholderPage('Market', Icons.shopping_bag),
-  ];
+      isPregnant
+          ? const PregnancyDashboardPage()
+          : PostpartumDashboardPage(babyGender: babyGender),
+      isPregnant
+          ? const WeekTrackerPage()
+          : PostpartumTrackPage(babyGender: babyGender),
+      const HealthLogPage(), // ✅ Replace placeholder with actual Health page
+      _buildPlaceholderPage('Plan', Icons.calendar_today),
+      const MarketplacePage(), // ✅ Replace placeholder with actual Market page
+    ];
 
     return Scaffold(
       body: IndexedStack(
@@ -94,7 +96,6 @@ class _DashboardPageState extends State<DashboardPage> {
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () {
-                // TODO: Navigate to settings and handle mode change
                 _showModeDialog();
               },
               backgroundColor: const Color(0xFF9B7FDB),
@@ -174,4 +175,3 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 }
-
