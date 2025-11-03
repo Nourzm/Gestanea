@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
-import 'package:pregnancy_baby_app/core/constants/app_routes.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_routes.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -43,7 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.splashGradient),
+        decoration: const BoxDecoration(
+          gradient: AppColors.splashGradient,
+          // image: DecorationImage(
+          //   image:
+          //       AssetImage("assets/images/onboarding.png"),
+          //   fit: BoxFit.cover,
+          // ),
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class AppTextStyles {
   static const TextStyle sidebarItem = TextStyle(
@@ -12,7 +12,7 @@ class AppTextStyles {
     bodyMedium: const TextStyle(fontSize: 14),
     titleLarge: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
   );
-  
+
   static const TextStyle headline1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
@@ -53,9 +53,7 @@ class AppTextStyles {
     color: AppColors.textSecondary,
   );
 
-  static const TextStyle title = TextStyle(
-    fontWeight: FontWeight.w500,
-  );
+  static const TextStyle title = TextStyle(fontWeight: FontWeight.w500);
 
   static const TextStyle focused_label = TextStyle(
     fontWeight: FontWeight.w600,

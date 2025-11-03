@@ -1,85 +1,35 @@
-name: pregnancy_baby_app
+name: gestanea
 description: A comprehensive pregnancy and baby care mobile app.
 publish_to: none
-
-version: 1.0.0+1
+version: 0.1.0
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.9.2
 
 dependencies:
+  animated_notch_bottom_bar: ^1.0.3
   flutter:
     sdk: flutter
-
-  # State Management
-  riverpod: ^2.4.0
-  flutter_riverpod: ^2.4.0
-  riverpod_annotation: ^2.3.0
-
-  # Localization
+    # Localization
   flutter_localizations:
     sdk: flutter
+  flutter_svg: ^2.2.1
   intl: ^0.20.2
 
-  # Local Storage
-  sqflite: ^2.3.0
-  path_provider: ^2.1.0
   shared_preferences: ^2.5.3
-
-  # API & Networking
-  dio: ^5.3.0
-
-  # UI/UX
-  google_fonts: ^6.1.0
-  lottie: ^2.4.0
-  table_calendar: ^3.0.0
-  fl_chart: ^0.64.0
-
-  # Utilities
-  uuid: ^4.0.0
-
-  # Device Features
-  geolocator: ^9.0.0
-  image_picker: ^1.0.0
-
-  # Notifications
-  flutter_local_notifications: ^15.1.0
-  timezone: ^0.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # Code Generation
-  build_runner: ^2.4.0
-  riverpod_generator: ^2.3.0
-
-  # Testing
-  mocktail: ^1.0.0
-  flutter_lints: ^6.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
   generate: true
-
   assets:
     - assets/images/
+    - assets/icons/
     - assets/images/onboarding1.png
     - assets/images/onboarding2.png
     - assets/images/onboarding3.png
     - assets/images/fetus-inside-heart-shape-womb.png
-  #   - assets/images/splash/
-  #   - assets/images/illustrations/
-  #   - assets/images/icons/
-  #   - assets/lottie/
-
-  # fonts:
-  #   - family: Poppins
-  #     fonts:
-  #       - asset: assets/fonts/Poppins/Poppins-Regular.ttf
-  #       - asset: assets/fonts/Poppins/Poppins-Bold.ttf
-  #         weight: 700
-  #       - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
-  #         weight: 600
-  #       - asset: assets/fonts/Poppins/Poppins-Light.ttf
-  #         weight: 300

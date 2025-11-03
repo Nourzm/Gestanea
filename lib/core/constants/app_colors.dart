@@ -11,6 +11,7 @@ class AppColors {
   static const Color background = Color(0xFFF9E3FF);
   static const Color bg_1 = Color(0xFFFDF5FF);
   static const Color lightPurple = Color(0xFFB599CE);
+  static const Color homeCards = Color(0xFFFBECFF);
 
   //neutral
   static const Color purpleGrey = Color(0xFFD7D0DD);

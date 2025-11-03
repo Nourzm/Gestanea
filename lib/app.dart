@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:pregnancy_baby_app/core/constants/app_routes.dart';
-import 'package:pregnancy_baby_app/l10n/app_localizations.dart';
-import 'package:pregnancy_baby_app/routes.dart';
+import 'package:gestanea/features/auth/presentation/pages/auth_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/splash_screen.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/routes.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -12,8 +13,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
- // default language
-  Locale _locale = const Locale('en'); 
+  // default language
+  Locale _locale = const Locale('en');
+  int selectedIndex = 2;
 
   void setLocale(Locale locale) {
     setState(() {
@@ -26,11 +28,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Pregnancy & Baby Care',
       debugShowCheckedModeBanner: false,
-      
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        useMaterial3: true,
-      ),
+
+      theme: ThemeData(primarySwatch: Colors.purple, useMaterial3: true),
 
       // app language
       locale: _locale,
@@ -52,8 +51,9 @@ class _MyAppState extends State<MyApp> {
       },
 
       //routing
-      initialRoute: AppRoutes.splash,
+      // initialRoute: AppRoutes.splash,
       routes: appRoutes,
+      home: SplashScreen(),
     );
   }
 }

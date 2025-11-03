@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
-import 'package:pregnancy_baby_app/core/constants/app_routes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/core/widgets/custom_button.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -20,55 +21,60 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'subtitle': 'Your Journey',
       'description':
           'Monitor your pregnancy week by week with personalized tips and insights',
-      'image': 'assets/images/onboarding1.png'
+      'image': 'assets/images/Heart.png',
     },
     {
       'title': 'Baby Grouth',
       'subtitle': 'Monitor',
       'description': 'Follow your baby\'s ......',
-      'image': 'assets/images/onboarding2.png'
+      'image': 'assets/images/onboarding2.png',
     },
     {
       'title': 'Never Miss a',
       'subtitle': 'Moment',
       'description':
           'Set reminders for appointments, vaccines, and important checkups',
-      'image': 'assets/images/onboarding3.png'
+      'image': 'assets/images/onboarding3.png',
     },
     {
       'title': 'Mom & Baby',
       'subtitle': 'Marketplace',
       'description': '...............',
-      'image': 'assets/images/onboarding3.png'
+      'image': 'assets/images/onboarding4.png',
     },
   ];
 
   // ignore: unused_element
   Future<void> _completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboardingCompleted', true);
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-    }
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.setBool('onboardingCompleted', true);
+    // if (mounted) {
+    Navigator.pushReplacementNamed(context, AppRoutes.auth);
+    // }
   }
 
   Widget _buildPage(Map<String, String> data) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(data['image']!, height: 300),
+        Image.asset(data['image']!, height: 150),
         const SizedBox(height: 30),
         Text(
           data['title']!,
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.white),
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: AppColors.white,
+          ),
           textAlign: TextAlign.center,
         ),
         Text(
           data['subtitle']!,
           style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: AppColors.main600),
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: AppColors.main600,
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 15),
@@ -98,81 +104,64 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.center,
             ),
           ),
-          PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) => setState(() => _currentPage = index),
-            itemCount: onboardingData.length,
-            itemBuilder: (context, index) => _buildPage(onboardingData[index]),
-          ),
-
-          // Dots indicator
-          Positioned(
-            bottom: 150,
-            child: Row(
-              children: List.generate(
-                onboardingData.length,
-                (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  width: _currentPage == index ? 60 : 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: _currentPage == index
-                        ? AppColors.main600
-                        : AppColors.purpleGrey,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) =>
+                      setState(() => _currentPage = index),
+                  itemCount: onboardingData.length,
+                  itemBuilder: (context, index) =>
+                      _buildPage(onboardingData[index]),
                 ),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        onboardingData.length,
+                        (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: _currentPage == index ? 60 : 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? AppColors.main600
+                                : AppColors.purpleGrey,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    // Button
+                    _currentPage == onboardingData.length - 1
+                        ? AppButton(
+                            onPressed: _completeOnboarding,
+                            text: 'Get Started',
+                          )
+                        : AppButton(
+                            onPressed: () {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            text: 'Next',
+                            suffixIcon: "assets/icons/next-arrow.svg",
+                          ),
+                  ],
+                ),
+              ),
+            ],
           ),
-
-          // Button
-          Positioned(
-              left: 16,
-              right: 16,
-              bottom: 40,
-              child: _currentPage == onboardingData.length - 1
-                  ? ElevatedButton(
-                      onPressed: _completeOnboarding,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.main600,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: const Text('Get Started',
-                          style: TextStyle(fontSize: 18, color: AppColors.white)),
-                    )
-                  : SizedBox(
-                      width: double.infinity,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: AppColors.main600,
-                          foregroundColor: AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20),
-                        ),
-                        onPressed: () {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        child: const Text(
-                          'Next',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    )),
         ],
       ),
     );

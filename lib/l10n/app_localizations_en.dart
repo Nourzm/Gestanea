@@ -15,16 +15,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Welcome';
 
   @override
+  String get welcome_back => 'Welcome Back!';
+
+  @override
+  String get or => '— OR —';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get auth => 'Your trusted companion for every stage of motherhood';
+
+  @override
+  String get auth2 =>
+      'Let Gestanéa guide you through pregnancy, baby care, and beyond.';
+
+  @override
   String get login => 'Login';
+
+  @override
+  String get forgot => 'Forgot Password?';
+
+  @override
+  String get notRegistered => 'Not registered yet?';
+
+  @override
+  String get createAccount => 'Create an Account';
 
   @override
   String get signup => 'Sign Up';
 
   @override
+  String get your_name => 'Your Name';
+
+  @override
   String get email => 'Email';
 
   @override
+  String get enter_email => 'Enter your email';
+
+  @override
+  String get enter_name => 'Enter your Name';
+
+  @override
   String get password => 'Password';
+
+  @override
+  String get rememberMe => 'Remember me';
 
   @override
   String get logout => 'Logout';

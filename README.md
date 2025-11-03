@@ -55,11 +55,13 @@ Each feature follows the same internal pattern: `data/`, `domain/`, `presentatio
 **Example: `features/pregnancy/`**
 
 - `data/`
+
   - `datasources/` → local or remote data access
   - `models/` → DTOs for the feature
   - `pregnancy_repository_impl.dart` → concrete repo implementation
 
 - `domain/`
+
   - `entities/` → pure Dart models (e.g., `Pregnancy`, `Week`)
   - `repositories/` → abstract repository interfaces
   - `usecases/` → single-responsibility classes (e.g., `CalculatePregnancyWeekUseCase`)
@@ -91,7 +93,7 @@ Fonts, icons, images. Update `pubspec.yaml` to include assets.
 ## 📂 Complete Folder Tree
 
 ```
-pregnancy_baby_app/
+gestanea/
 ├── pubspec.yaml                    # Dependencies
 ├── README.md                       # This file
 ├── CONTRIBUTING.md                 # Git workflow & guidelines
@@ -187,10 +189,12 @@ pregnancy_baby_app/
 ### Three Layers
 
 1. **Presentation Layer** (`features/*/presentation/`)
+
    - UI, pages, widgets, Riverpod providers
    - Only displays data and captures user input
 
 2. **Domain Layer** (`features/*/domain/`)
+
    - Business logic, entities, repository interfaces, usecases
    - No Flutter or database knowledge
 
@@ -231,6 +235,7 @@ docs/...          # Documentation (e.g., docs/update-readme)
 ### Workflow Steps
 
 1. **Create feature branch:**
+
    ```bash
    git checkout develop
    git pull origin develop
@@ -238,17 +243,20 @@ docs/...          # Documentation (e.g., docs/update-readme)
    ```
 
 2. **Make changes and commit:**
+
    ```bash
    git add .
    git commit -m "[FEATURE] Add pregnancy week calculator"
    ```
 
 3. **Push to GitHub:**
+
    ```bash
    git push origin feature/your-feature-name
    ```
 
 4. **Create Pull Request:**
+
    - Go to GitHub → Pull Requests → New PR
    - Set base to `develop`, compare to your feature branch
    - Add description and request reviewers
@@ -280,8 +288,6 @@ docs/...          # Documentation (e.g., docs/update-readme)
 - [ ] Documentation updated if needed
 
 ---
-
-
 
 ## 🛠️ Common Commands
 

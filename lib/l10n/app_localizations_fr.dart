@@ -15,16 +15,53 @@ class AppLocalizationsFr extends AppLocalizations {
   String get welcome => 'Bienvenue';
 
   @override
+  String get welcome_back => 'Welcome Back!';
+
+  @override
+  String get or => '— OR —';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get auth => 'Your trusted companion for every stage of motherhood';
+
+  @override
+  String get auth2 =>
+      'Let Gestanéa guide you through pregnancy, baby care, and beyond.';
+
+  @override
   String get login => 'Connexion';
+
+  @override
+  String get forgot => 'Forgot Password?';
+
+  @override
+  String get notRegistered => 'Not registered yet?';
+
+  @override
+  String get createAccount => 'Create an Account';
 
   @override
   String get signup => 'S\'inscrire';
 
   @override
+  String get your_name => 'Your Name';
+
+  @override
   String get email => 'Email';
 
   @override
+  String get enter_email => 'Enter your email';
+
+  @override
+  String get enter_name => 'Enter your Name';
+
+  @override
   String get password => 'Mot de passe';
+
+  @override
+  String get rememberMe => 'Remember me';
 
   @override
   String get logout => 'Déconnexion';
