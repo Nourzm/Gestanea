@@ -14,7 +14,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> get _pages => [
         const HomeScreen(),
-        const HealthLogScreen(), // Add Health Log here
+        const HealthLogPage(), // Add Health Log here
         Container(child: Center(child: Text('Coming Soon'))), // Placeholder
       ];
 
