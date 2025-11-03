@@ -16,8 +16,9 @@ class HealthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      color: const Color.fromARGB(255, 247, 240, 254), // Slightly whiter purple
       child: Column(
         children: [
           Stack(
@@ -29,7 +30,6 @@ class HealthHeader extends StatelessWidget {
                   style: AppTextStyles.headline1.copyWith(
                     color: AppColors.main500,
                     fontSize: 40,
-                    fontFamily: 'Lato',
                     letterSpacing: -0.40,
                   ),
                   textAlign: TextAlign.center,
@@ -41,7 +41,7 @@ class HealthHeader extends StatelessWidget {
                   width: 45,
                   height: 45,
                   decoration: ShapeDecoration(
-                    color: AppColors.bg_1,
+                    color: const Color(0xFFF5EBFF),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(11.04),
                     ),
@@ -77,7 +77,7 @@ class HealthHeader extends StatelessWidget {
           Text(
             subtitle,
             style: AppTextStyles.body1.copyWith(
-              color: AppColors.textSecondary,
+              color: AppColors.main500, // Changed to purple
               fontSize: 14,
             ),
             textAlign: TextAlign.center,

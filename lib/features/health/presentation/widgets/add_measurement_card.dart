@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class AddMeasurementCard extends StatelessWidget {
@@ -14,7 +15,7 @@ class AddMeasurementCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.pink600, AppColors.pink500],
@@ -40,22 +41,23 @@ class AddMeasurementCard extends StatelessWidget {
           children: [
             Text(
               localizations.add,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+              style: AppTextStyles.subtitle1.copyWith(
+                color: AppColors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               localizations.measurement,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+              style: AppTextStyles.body1.copyWith(
+                color: AppColors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
@@ -63,7 +65,7 @@ class AddMeasurementCard extends StatelessWidget {
               child: const Icon(
                 Icons.add,
                 color: Colors.white,
-                size: 24,
+                size: 20,
               ),
             ),
           ],

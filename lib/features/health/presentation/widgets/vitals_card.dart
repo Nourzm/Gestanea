@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class VitalsCard extends StatelessWidget {
   final IconData icon;
@@ -22,9 +23,9 @@ class VitalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.main300,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -43,47 +44,52 @@ class VitalsCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.main500, size: 24),
-              const SizedBox(width: 8),
+              Icon(icon, color: AppColors.main500, size: 20),
+              const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: 13,
+                    color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: statusColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              status,
-              style: TextStyle(
-                fontSize: 12,
-                color: textColor,
-                fontWeight: FontWeight.w500,
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                value,
+                style: AppTextStyles.headline2.copyWith(
+                  fontSize: 16,
+                  color: AppColors.textDark,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                decoration: BoxDecoration(
+                  color: statusColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  status,
+                  style: AppTextStyles.smallLabel.copyWith(
+                    color: textColor,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

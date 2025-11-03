@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class HealthTipCard extends StatelessWidget {
   final String message;
@@ -9,7 +10,7 @@ class HealthTipCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFE8D5F2),
         borderRadius: BorderRadius.circular(16),
@@ -30,10 +31,9 @@ class HealthTipCard extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: const TextStyle(
-          color: Color(0xFF7B4BA6),
-          fontSize: 13,
-          fontFamily: 'Lato',
+        style: AppTextStyles.body1.copyWith(
+          color: const Color(0xFF7B4BA6),
+          fontSize: 12,
         ),
       ),
     );

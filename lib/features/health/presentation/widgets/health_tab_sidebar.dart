@@ -22,34 +22,41 @@ class HealthTabSidebar extends StatelessWidget {
       case 'symptoms':
         return localizations.symptoms;
       case 'labResults':
-        return localizations.labResults.replaceAll(' ', '\n'); // Add line break
+        return localizations.labResults.replaceAll(' ', '\n');
       case 'riskAlerts':
-        return localizations.riskAlerts.replaceAll(' ', '\n'); // Add line break
+        return localizations.riskAlerts.replaceAll(' ', '\n');
       case 'mood':
         return localizations.mood;
       default:
         return labelKey;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 75,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: ListView.separated(
-        itemCount: tabs.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 15),
-        itemBuilder: (context, index) {
-          final tab = tabs[index];
-          final isSelected = selectedIndex == index;
-          return _buildTabItem(
-            context: context,
-            icon: tab['icon'],
-            labelKey: tab['labelKey'],
-            isSelected: isSelected,
-            onTap: () => onTabSelected(index),
-          );
-        },
+      width: 60,
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: const BoxDecoration(
+              color: const Color.fromARGB(255, 247, 240, 254), // Slightly whiter purple
+ // Whiter purple - same as header
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          tabs.length,
+          (index) {
+            final tab = tabs[index];
+            final isSelected = selectedIndex == index;
+            return _buildTabItem(
+              context: context,
+              icon: tab['icon'],
+              labelKey: tab['labelKey'],
+              isSelected: isSelected,
+              onTap: () => onTabSelected(index),
+            );
+          },
+        ),
       ),
     );
   }
@@ -63,50 +70,38 @@ class HealthTabSidebar extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: ShapeDecoration(
-              color: isSelected ? AppColors.main500 : AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+      child: Container(
+        width: 50,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.main500 : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
               ),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 6,
-                  offset: Offset(2, 2),
-                  spreadRadius: 0,
-                ),
-                BoxShadow(
-                  color: AppColors.white,
-                  blurRadius: 6,
-                  offset: Offset(-2, -2),
-                  spreadRadius: 0,
-                ),
-              ],
+              child: Icon(
+                icon,
+                color: isSelected ? AppColors.white : AppColors.main500,
+                size: 24,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: isSelected ? AppColors.white : AppColors.main500,
-              size: 28,
+            const SizedBox(height: 4),
+            Text(
+              _getLocalizedLabel(context, labelKey),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: isSelected ? AppColors.main500 : AppColors.textDark,
+                fontSize: 8,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                height: 1.2,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _getLocalizedLabel(context, labelKey),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected ? AppColors.main500 : AppColors.textSecondary,
-              fontSize: 9,
-              fontFamily: 'Lato',
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              height: 1.33,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

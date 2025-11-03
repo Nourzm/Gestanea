@@ -14,97 +14,137 @@ class VitalsTabContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Container(
-      decoration: const ShapeDecoration(
-        color: AppColors.main300,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
-        ),
-        shadows: [
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-4, -4),
-            spreadRadius: 0,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AppColors.main300,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Top Row: Weight & Heart Rate
-            Row(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                Expanded(
-                  child: VitalsCard(
-                    icon: Icons.monitor_weight_outlined,
-                    title: localizations.weight,
-                    value: '69 Kg',
-                    status: localizations.normal,
-                    statusColor: const Color(0xFFB8E6B8),
-                    textColor: const Color(0xFF2D5F2D),
-                  ),
+                // Top Row: Weight & Heart Rate
+                Row(
+                  children: [
+                    Expanded(
+                      child: VitalsCard(
+                        icon: Icons.monitor_weight_outlined,
+                        title: localizations.weight,
+                        value: '69 Kg',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: VitalsCard(
+                        icon: Icons.favorite,
+                        title: localizations.heartRate,
+                        value: '72 bpm',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: VitalsCard(
-                    icon: Icons.favorite,
-                    title: localizations.heartRate,
-                    value: '72 bpm',
-                    status: localizations.normal,
-                    statusColor: const Color(0xFFB8E6B8),
-                    textColor: const Color(0xFF2D5F2D),
-                  ),
+
+                const SizedBox(height: 12),
+
+                // Second Row: Blood Pressure & Add Measurement
+                Row(
+                  children: [
+                    Expanded(
+                      child: VitalsCard(
+                        icon: Icons.favorite,
+                        title: localizations.bloodPressure,
+                        value: '120/80',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: AddMeasurementCard(
+                        onTap: () {
+                          // Handle add measurement
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // BMI Card
+                const BMICard(),
+
+                const SizedBox(height: 16),
+
+                // Weight Progress Chart
+                WeightProgressChart(),
+
+                const SizedBox(height: 16),
+
+                // Health Tip
+                HealthTipCard(
+                  message: localizations.healthTipMessage,
                 ),
               ],
             ),
-
-            const SizedBox(height: 12),
-
-            // Second Row: Blood Pressure & Add Measurement
-            Row(
-              children: [
-                Expanded(
-                  child: VitalsCard(
-                    icon: Icons.favorite,
-                    title: localizations.bloodPressure,
-                    value: '120/80',
-                    status: localizations.normal,
-                    statusColor: const Color(0xFFB8E6B8),
-                    textColor: const Color(0xFF2D5F2D),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: AddMeasurementCard(
-                    onTap: () {
-                      // Handle add measurement
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // BMI Card
-            const BMICard(),
-
-            const SizedBox(height: 16),
-
-            // Weight Progress Chart
-            const WeightProgressChart(),
-
-            const SizedBox(height: 16),
-
-            // Health Tip
-            HealthTipCard(
-              message: localizations.healthTipMessage,
-            ),
-          ],
+          ),
         ),
-      ),
+        
+        // TOP inset shadow overlay
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: IgnorePointer(
+            child: Container(
+              height: 25,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        
+        // LEFT inset shadow overlay
+        Positioned(
+          top: 0,
+          left: 0,
+          bottom: 0,
+          child: IgnorePointer(
+            child: Container(
+              width: 25,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
