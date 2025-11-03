@@ -36,7 +36,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get language => 'اللغة';
 
   @override
-  String get darkMode => 'الوضع الليلي';
+  String get darkMode => 'الوضع الداكن';
 
   @override
   String get notifications => 'الإشعارات';
@@ -63,6 +63,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String daysLeft(int days) {
-    return '$days أيام متبقية';
+    return '$days يوم متبقي';
   }
+
+  @override
+  String get healthLog => 'سجل الصحة';
+
+  @override
+  String get trackYourWellness => 'تتبع عافيتك';
+
+  @override
+  String get vitals => 'العلامات الحيوية';
+
+  @override
+  String get symptoms => 'الأعراض';
+
+  @override
+  String get labResults => 'نتائج المختبر';
+
+  @override
+  String get riskAlerts => 'تنبيهات المخاطر';
+
+  @override
+  String get mood => 'المزاج';
+
+  @override
+  String get weight => 'الوزن';
+
+  @override
+  String get heartRate => 'معدل ضربات القلب';
+
+  @override
+  String get bloodPressure => 'ضغط الدم';
+
+  @override
+  String get normal => 'طبيعي';
+
+  @override
+  String get add => 'إضافة';
+
+  @override
+  String get measurement => 'قياس';
+
+  @override
+  String get healthTipMessage =>
+      'عمل رائع! أنت تحافظين على وتيرة صحية لزيادة الوزن. استمري في نظامك الغذائي المتوازن وممارسة التمارين الخفيفة.';
+
+  @override
+  String get onTrack => 'على المسار الصحيح';
 }

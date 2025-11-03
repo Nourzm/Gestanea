@@ -15,7 +15,33 @@
   "about": "À propos",
   "version": "Version",
   "pregnant": "Enceinte",
-  "postpartum": "Après l'accouchement",
+  "postpartum": "Post-partum",
   "week": "Semaine {week}",
-  "daysLeft": "{days} jours restants"
+  "@week": {
+    "description": "Numéro de semaine",
+    "placeholders": {
+      "week": {"type": "int"}
+    }
+  },
+  "daysLeft": "{days} jours restants",
+  "@daysLeft": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "healthLog": "Journal de Santé",
+  "trackYourWellness": "Suivez votre bien-être",
+  "vitals": "Signes Vitaux",
+  "symptoms": "Symptômes",
+  "labResults": "Résultats Labo",
+  "riskAlerts": "Alertes Risque",
+  "mood": "Humeur",
+  "weight": "Poids",
+  "heartRate": "Rythme Cardiaque",
+  "bloodPressure": "Tension Artérielle",
+  "normal": "Normal",
+  "add": "Ajouter",
+  "measurement": "Mesure",
+  "healthTipMessage": "Excellent travail! Vous maintenez un rythme de prise de poids sain. Continuez avec votre alimentation équilibrée et vos exercices doux.",
+  "onTrack": "Sur la Bonne Voie"
 }

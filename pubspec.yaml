@@ -1,4 +1,4 @@
-name: pregnancy_baby_app
+name: gestanea
 description: A comprehensive pregnancy and baby care mobile app.
 publish_to: none
 version: 0.1.0
@@ -15,6 +15,7 @@ dependencies:
   intl: ^0.20.2
 
   shared_preferences: ^2.5.3
+  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +30,15 @@ flutter:
     - assets/images/onboarding2.png
     - assets/images/onboarding3.png
     - assets/images/fetus-inside-heart-shape-womb.png
+  generate: true
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Regular.ttf
+        - asset: assets/fonts/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lato-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Lato-BoldItalic.ttf
+          weight: 700
+          style: italic

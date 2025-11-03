@@ -28,5 +28,21 @@
     "placeholders": {
       "days": {"type": "int"}
     }
-  }
+  },
+
+  "healthLog": "Health Log",
+  "trackYourWellness": "Track your wellness",
+  "vitals": "Vitals",
+  "symptoms": "Symptoms",
+  "labResults": "Lab\nResults",
+  "riskAlerts": "Risk\nAlerts",
+  "mood": "Mood",
+  "weight": "Weight",
+  "heartRate": "Heart Rate",
+  "bloodPressure": "Blood Pressure",
+  "normal": "Normal",
+  "add": "Add",
+  "measurement": "Measurement",
+  "healthTipMessage": "Great job! You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
+  "onTrack": "On Track"
 }

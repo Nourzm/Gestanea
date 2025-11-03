@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pregnancy_baby_app/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:pregnancy_baby_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:pregnancy_baby_app/features/onboarding/presentation/pages/splash_screen.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/splash_screen.dart';
 
 import 'core/constants/app_routes.dart'; // your AppRoutes class
 

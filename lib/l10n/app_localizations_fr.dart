@@ -54,7 +54,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pregnant => 'Enceinte';
 
   @override
-  String get postpartum => 'Après l\'accouchement';
+  String get postpartum => 'Post-partum';
 
   @override
   String week(int week) {
@@ -65,4 +65,50 @@ class AppLocalizationsFr extends AppLocalizations {
   String daysLeft(int days) {
     return '$days jours restants';
   }
+
+  @override
+  String get healthLog => 'Journal de Santé';
+
+  @override
+  String get trackYourWellness => 'Suivez votre bien-être';
+
+  @override
+  String get vitals => 'Signes Vitaux';
+
+  @override
+  String get symptoms => 'Symptômes';
+
+  @override
+  String get labResults => 'Résultats Labo';
+
+  @override
+  String get riskAlerts => 'Alertes Risque';
+
+  @override
+  String get mood => 'Humeur';
+
+  @override
+  String get weight => 'Poids';
+
+  @override
+  String get heartRate => 'Rythme Cardiaque';
+
+  @override
+  String get bloodPressure => 'Tension Artérielle';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get add => 'Ajouter';
+
+  @override
+  String get measurement => 'Mesure';
+
+  @override
+  String get healthTipMessage =>
+      'Excellent travail! Vous maintenez un rythme de prise de poids sain. Continuez avec votre alimentation équilibrée et vos exercices doux.';
+
+  @override
+  String get onTrack => 'Sur la Bonne Voie';
 }

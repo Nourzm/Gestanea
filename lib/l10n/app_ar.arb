@@ -9,7 +9,7 @@
   "logout": "تسجيل الخروج",
   "settings": "الإعدادات",
   "language": "اللغة",
-  "darkMode": "الوضع الليلي",
+  "darkMode": "الوضع الداكن",
   "notifications": "الإشعارات",
   "help": "المساعدة",
   "about": "حول",
@@ -17,5 +17,31 @@
   "pregnant": "حامل",
   "postpartum": "ما بعد الولادة",
   "week": "الأسبوع {week}",
-  "daysLeft": "{days} أيام متبقية"
+  "@week": {
+    "description": "رقم الأسبوع",
+    "placeholders": {
+      "week": {"type": "int"}
+    }
+  },
+  "daysLeft": "{days} يوم متبقي",
+  "@daysLeft": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "healthLog": "سجل الصحة",
+  "trackYourWellness": "تتبع عافيتك",
+  "vitals": "العلامات الحيوية",
+  "symptoms": "الأعراض",
+  "labResults": "نتائج المختبر",
+  "riskAlerts": "تنبيهات المخاطر",
+  "mood": "المزاج",
+  "weight": "الوزن",
+  "heartRate": "معدل ضربات القلب",
+  "bloodPressure": "ضغط الدم",
+  "normal": "طبيعي",
+  "add": "إضافة",
+  "measurement": "قياس",
+  "healthTipMessage": "عمل رائع! أنت تحافظين على وتيرة صحية لزيادة الوزن. استمري في نظامك الغذائي المتوازن وممارسة التمارين الخفيفة.",
+  "onTrack": "على المسار الصحيح"
 }

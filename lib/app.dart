@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:pregnancy_baby_app/core/constants/app_routes.dart';
-import 'package:pregnancy_baby_app/l10n/app_localizations.dart';
-import 'package:pregnancy_baby_app/routes.dart';
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/routes.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -24,10 +24,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pregnancy & Baby Care',
+      title: 'Gestanéa',
       debugShowCheckedModeBanner: false,
       
       theme: ThemeData(
+        fontFamily: 'Lato',
         primarySwatch: Colors.purple,
         useMaterial3: true,
       ),
