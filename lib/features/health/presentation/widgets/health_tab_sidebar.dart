@@ -22,16 +22,15 @@ class HealthTabSidebar extends StatelessWidget {
       case 'symptoms':
         return localizations.symptoms;
       case 'labResults':
-        return localizations.labResults;
+        return localizations.labResults.replaceAll(' ', '\n'); // Add line break
       case 'riskAlerts':
-        return localizations.riskAlerts;
+        return localizations.riskAlerts.replaceAll(' ', '\n'); // Add line break
       case 'mood':
         return localizations.mood;
       default:
         return labelKey;
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
