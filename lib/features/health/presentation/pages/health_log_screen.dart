@@ -9,14 +9,14 @@ import '../widgets/lab_results_tab_content.dart';
 import '../widgets/risk_alerts_tab_content.dart';
 import '../widgets/mood_tab_content.dart';
 
-class HealthLogPage extends StatefulWidget {
-  const HealthLogPage({super.key});
+class HealthLogScreen extends StatefulWidget {
+  const HealthLogScreen({super.key});
 
   @override
-  State<HealthLogPage> createState() => _HealthLogPageState();
+  State<HealthLogScreen> createState() => _HealthLogScreenState();
 }
 
-class _HealthLogPageState extends State<HealthLogPage> {
+class _HealthLogScreenState extends State<HealthLogScreen> {
   int _selectedTabIndex = 0;
 
   final List<Map<String, dynamic>> _tabs = [

@@ -28,7 +28,7 @@ class _DashboardPageState extends State<DashboardPage> {
       isPregnant
           ? const WeekTrackerPage()
           : PostpartumTrackPage(babyGender: babyGender),
-      const HealthLogPage(), // ✅ Replace placeholder with actual Health page
+      const HealthLogScreen(), // ✅ Replace placeholder with actual Health page
       _buildPlaceholderPage('Plan', Icons.calendar_today),
       const MarketplacePage(), // ✅ Replace placeholder with actual Market page
     ];

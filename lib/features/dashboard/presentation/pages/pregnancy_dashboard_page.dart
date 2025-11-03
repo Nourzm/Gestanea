@@ -4,6 +4,7 @@ import '../widgets/week_progress_card.dart';
 import '../widgets/upcoming_reminders_widget.dart';
 import '../widgets/health_alerts_widget.dart';
 import '../providers/dashboard_provider.dart';
+import 'package:gestanea/core/constants/app_routes.dart'; 
 
 class PregnancyDashboardPage extends StatefulWidget {
   const PregnancyDashboardPage({super.key});
@@ -118,15 +119,10 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                         'Search nearby',
                         const Color(0xFF9B7FDB),
                         Icons.medical_services_outlined,
-                        () {
-                          // TODO: Team will implement - Navigate to doctor search
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => _PlaceholderPage(title: 'Find Doctor'),
-                            ),
-                          );
-                        },
+        () {
+          // ✅ Navigate to actual doctors screen instead of placeholder
+          Navigator.pushNamed(context, AppRoutes.doctors);
+        },
                       ),
                     ),
                     const SizedBox(width: 12),
