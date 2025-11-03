@@ -67,6 +67,34 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get market => 'السوق';
+
+  @override
+  String get maternityWear => 'ملابس الأمومة';
+
+  @override
+  String get painRelief => 'تخفيف الألم';
+
+  @override
+  String get skinCare => 'العناية بالبشرة';
+
+  @override
+  String get pregnancyPillow => 'وسادة الحمل';
+
+  @override
+  String get backSupportBelt => 'حزام دعم الظهر';
+
+  @override
+  String get searchHint => 'ابحث عما تحتاجه...';
+
+  @override
+  String get dontMissOut => 'لا تفوت الفرصة!';
+
+  @override
+  String get discountUpTo => 'خصم يصل إلى 50٪';
+
+  @override
+  String get upgradeNow => 'قم بالترقية الآن';
   String get healthLog => 'سجل الصحة';
 
   @override

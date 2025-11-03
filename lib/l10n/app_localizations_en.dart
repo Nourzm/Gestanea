@@ -67,6 +67,34 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get market => 'Market';
+
+  @override
+  String get maternityWear => 'Maternity Wear';
+
+  @override
+  String get painRelief => 'Pain Relief';
+
+  @override
+  String get skinCare => 'Skin Care';
+
+  @override
+  String get pregnancyPillow => 'Pregnancy Pillow';
+
+  @override
+  String get backSupportBelt => 'Back Support Belt';
+
+  @override
+  String get searchHint => 'Find what you need...';
+
+  @override
+  String get dontMissOut => 'Don\'t miss out!';
+
+  @override
+  String get discountUpTo => 'Discount up to 50%';
+
+  @override
+  String get upgradeNow => 'Upgrade Now';
   String get healthLog => 'Health Log';
 
   @override
