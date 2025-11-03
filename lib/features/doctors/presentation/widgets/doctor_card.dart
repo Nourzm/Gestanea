@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pregnancy_baby_app/core/constants/app_colors.dart';
-import 'package:pregnancy_baby_app/features/doctors/data/models/doctors_model.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/doctors/data/models/doctors_model.dart';
 import 'doctor_info.dart';
 
 class DoctorCard extends StatelessWidget {

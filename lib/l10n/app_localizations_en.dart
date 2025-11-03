@@ -95,6 +95,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get upgradeNow => 'Upgrade Now';
+
+  @override
   String get healthLog => 'Health Log';
 
   @override

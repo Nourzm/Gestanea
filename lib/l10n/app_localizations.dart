@@ -267,6 +267,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upgrade Now'**
   String get upgradeNow;
+
   /// No description provided for @healthLog.
   ///
   /// In en, this message translates to:
