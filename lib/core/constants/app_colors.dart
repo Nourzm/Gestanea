@@ -16,6 +16,8 @@ class AppColors {
   //neutral
   static const Color purpleGrey = Color(0xFFD7D0DD);
   static const Color white = Colors.white;
+  static const Color error1 = Color(0xffF4716A);
+  static const Color error2 = Color(0xffFFA1A2);
 
   //pinks
   static const Color pink600 = Color(0xFFFB64B6);

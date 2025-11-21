@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -11,13 +12,13 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   // Added unique 'id' to each notification for stable keys
-  List<Map<String, String>> notifications = List.generate(6, (index) {
+  List<Map<String, String>> notifications = List.generate(7, (index) {
     return {
       "id": "${index + 1}",
       "title": "Title of the event",
       "description": index == 2
           ? "Lorem ipsum dolor sit amet consectetur Enim. This one has extra text to test expansion and truncation in the UI. More details can go here..."
-          : "Lorem ipsum dolor sit amet consectetur Enim.",
+          : "Lorem ipsum dolor sit amet consectetur Enim. This one has extra text to test Lorem ipsum dolor sit amet consectetur",
       "time": "1 day ago",
     };
   });
@@ -25,11 +26,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.bg_1,
       appBar: AppBar(
-        title: const Text('Notifications'),
+        backgroundColor: AppColors.bg_1,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.main500,
+            size: 24, // change size
+          ),
+          onPressed: () {
+            Navigator.pop(context); // back action
+          },
+        ),
+        title: Text(
+          'Notifications',
+          style: AppTextStyles.headline1.copyWith(
+            color: AppColors.main500,
+            fontSize: 32,
+            fontFamily: 'Lato',
+            letterSpacing: -0.40,
+          ),
+          textAlign: TextAlign.center,
+        ),
         centerTitle: true,
-        backgroundColor: AppColors.white,
         elevation: 0,
       ),
       body: notifications.isEmpty
@@ -105,7 +125,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       itemCount: notifications.length,
       separatorBuilder: (_, __) => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 24),
-        child: Divider(height: 24, thickness: 0.5),
+        child: SizedBox(height: 24),
       ),
       itemBuilder: (context, index) {
         final item = notifications[index];
@@ -130,7 +150,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             },
             background: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(255, 110, 110, 1),
+                color: Color(0xffFF6C6E),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Align(
@@ -144,6 +164,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         'assets/icons/Delete.svg',
                         width: 24,
                         height: 24,
+                        color: AppColors.white,
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -166,13 +187,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                  ),
-                  color: draggingStates[index] ?? false
-                      ? AppColors.main400
-                      : Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x66AEAEC0),
+                      blurRadius: 3,
+                      offset: Offset(2, 2),
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFFFFFFF),
+                      blurRadius: 6,
+                      offset: Offset(-2, -2),
+                    ),
+                  ],
+                  borderRadius: draggingStates[index] ?? false
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        )
+                      : BorderRadius.circular(12),
+                  color: AppColors.main300,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,9 +214,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       width: 92,
                       height: 92,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0E0E0),
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      child: Image.asset("assets/images/fetus.png"),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -195,7 +228,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
-                              color: AppColors.main400,
+                              color: Colors.black,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -212,14 +245,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     item["description"]!,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      color: Colors.black12,
+                                      color: Color(0xff1C2229),
                                     ),
-                                    maxLines: isExpanded ? null : 2,
+                                    maxLines: isExpanded ? null : 3,
                                     overflow: isExpanded
                                         ? TextOverflow.visible
                                         : TextOverflow.ellipsis,
                                   ),
-                                  if (item["description"]!.length > 60)
+                                  if (item["description"]!.length > 120)
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -260,7 +293,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             item["time"]!,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: AppColors.main400,
+                              color: AppColors.main600,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
