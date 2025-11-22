@@ -12,10 +12,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'رعاية الحمل والطفل';
 
   @override
-  String get welcome => 'أهلا وسهلا';
+  String get welcome => 'مرحباً';
 
   @override
-  String get login => 'دخول';
+  String get login => 'تسجيل الدخول';
 
   @override
   String get signup => 'إنشاء حساب';
@@ -45,44 +45,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get about => 'حول';
 
   @override
-  String get welcome_back => 'Welcome Back!';
+  String get welcome_back => 'مرحباً بعودتك!';
 
   @override
-  String get or => '— OR —';
+  String get or => '— أو —';
 
   @override
-  String get register => 'Register';
+  String get register => 'تسجيل';
 
   @override
-  String get auth => 'Your trusted companion for every stage of motherhood';
+  String get auth => 'رفيقك الموثوق في كل مرحلة من مراحل الأمومة';
 
   @override
-  String get auth2 =>
-      'Let Gestanéa guide you through pregnancy, baby care, and beyond.';
+  String get auth2 => 'دع Gestanéa ترشدك خلال الحمل، ورعاية الطفل، وما بعده.';
 
   @override
-  String get forgot => 'Forgot Password?';
+  String get forgot => 'نسيت كلمة المرور؟';
 
   @override
-  String get notRegistered => 'Not registered yet?';
+  String get notRegistered => 'لم تقم بالتسجيل بعد؟';
 
   @override
-  String get createAccount => 'Create an Account';
+  String get createAccount => 'إنشاء حساب';
 
   @override
-  String get your_name => 'Your Name';
+  String get your_name => 'اسمك';
 
   @override
   String get email => 'البريد الإلكتروني';
 
   @override
-  String get enter_email => 'Enter your email';
+  String get enter_email => 'أدخل بريدك الإلكتروني';
 
   @override
-  String get enter_name => 'Enter your Name';
+  String get enter_name => 'أدخل اسمك';
 
   @override
-  String get rememberMe => 'Remember me';
+  String get rememberMe => 'تذكرني';
 
   @override
   String get version => 'الإصدار';
@@ -100,14 +99,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String daysLeft(int days) {
-    return '$days يوم متبقي';
+    return '$days أيام متبقية';
   }
 
   @override
   String get market => 'السوق';
 
   @override
-  String get maternityWear => 'ملابس الأمومة';
+  String get maternityWear => 'ملابس الحمل';
 
   @override
   String get painRelief => 'تخفيف الألم';
@@ -128,7 +127,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dontMissOut => 'لا تفوت الفرصة!';
 
   @override
-  String get discountUpTo => 'خصم يصل إلى 50٪';
+  String get discountUpTo => 'خصم يصل إلى 50%';
 
   @override
   String get upgradeNow => 'قم بالترقية الآن';
@@ -137,19 +136,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get healthLog => 'سجل الصحة';
 
   @override
-  String get trackYourWellness => 'تتبع عافيتك';
+  String get trackYourWellness => 'تابع صحتك';
 
   @override
-  String get vitals => 'العلامات الحيوية';
+  String get vitals => 'المؤشرات الحيوية';
 
   @override
   String get symptoms => 'الأعراض';
 
   @override
-  String get labResults => 'نتائج المختبر';
+  String get labResults => 'نتائج\nالمختبر';
 
   @override
-  String get riskAlerts => 'تنبيهات المخاطر';
+  String get riskAlerts => 'تنبيهات\nالمخاطر';
 
   @override
   String get mood => 'المزاج';
@@ -170,11 +169,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get add => 'إضافة';
 
   @override
-  String get measurement => 'قياس';
+  String get measurement => 'القياس';
 
   @override
   String get healthTipMessage =>
-      'عمل رائع! أنت تحافظين على وتيرة صحية لزيادة الوزن. استمري في نظامك الغذائي المتوازن وممارسة التمارين الخفيفة.';
+      'عمل رائع! أنت تحافظ على وتيرة زيادة وزن صحية. استمر في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.';
 
   @override
   String get onTrack => 'على المسار الصحيح';

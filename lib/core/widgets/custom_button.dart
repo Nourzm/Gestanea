@@ -90,7 +90,10 @@ class AppButton extends StatelessWidget {
 
             // Visible suffix icon (right side)
             if (iconWidget != null)
-              iconWidget
+              Padding(
+                padding:EdgeInsets.only(right:10),
+                child: iconWidget,
+              )
             else
               const SizedBox(width: 22, height: 22),
           ],

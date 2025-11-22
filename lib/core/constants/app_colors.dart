@@ -33,7 +33,6 @@ class AppColors {
   static const Color blue300 = Color(0xFFC2E0FF);
   static const Color blue200 = Color(0xFFE1F0FF);
 
-
   // Text
   static const Color textPrimary = Color(0xFF1A1F36);
   static const Color textSecondary = Color(0xFFCAD5E2);
@@ -45,14 +44,27 @@ class AppColors {
 
   // Borders & dividers
 
+  //shadows
+  static const List<BoxShadow> shadow1 = [
+    BoxShadow(
+      color: Color(0x66AEAEC0),
+      blurRadius: 3,
+      offset: Offset(2, 2),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: Color(0xFFFFFFFF),
+      blurRadius: 6,
+      offset: Offset(-2, -2),
+      spreadRadius: 0,
+    ),
+  ];
+
   //gradients
 
   static const Gradient splashGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      Colors.white,
-      Color(0xFFB599CE),
-    ],
+    colors: [Colors.white, Color(0xFFB599CE)],
   );
 }

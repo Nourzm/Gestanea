@@ -187,18 +187,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x66AEAEC0),
-                      blurRadius: 3,
-                      offset: Offset(2, 2),
-                    ),
-                    BoxShadow(
-                      color: Color(0xFFFFFFFF),
-                      blurRadius: 6,
-                      offset: Offset(-2, -2),
-                    ),
-                  ],
+                  boxShadow: AppColors.shadow1,
                   borderRadius: draggingStates[index] ?? false
                       ? BorderRadius.only(
                           topLeft: Radius.circular(12),
