@@ -5,11 +5,13 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 class DoctorsFilterBar extends StatelessWidget {
   final int doctorCount;
   final VoidCallback? onFilterTap;
+  final bool hasActiveFilters;
 
   const DoctorsFilterBar({
     Key? key,
     required this.doctorCount,
     this.onFilterTap,
+    this.hasActiveFilters = false,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class DoctorsFilterBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '$doctorCount Doctors Found',
+            '$doctorCount Doctor${doctorCount == 1 ? '' : 's'} Found',
             style: AppTextStyles.headline2.copyWith(
               fontFamily: 'Lato',
               fontSize: 16,
@@ -33,7 +35,9 @@ class DoctorsFilterBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.background,
+                color: hasActiveFilters
+                    ? AppColors.main500
+                    : AppColors.background,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -52,17 +56,36 @@ class DoctorsFilterBar extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.tune, color: AppColors.main500, size: 18),
+                  Icon(
+                    Icons.tune,
+                    color: hasActiveFilters
+                        ? AppColors.white
+                        : AppColors.main500,
+                    size: 18,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     'Filter',
                     style: AppTextStyles.body1.copyWith(
                       fontFamily: 'Lato',
                       fontSize: 14,
-                      color: AppColors.main500,
+                      color: hasActiveFilters
+                          ? AppColors.white
+                          : AppColors.main500,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (hasActiveFilters) ...[
+                    const SizedBox(width: 4),
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/doctors/data/models/doctors_model.dart';
+import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'doctor_info.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -14,7 +15,20 @@ class DoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (onTap != null) {
+          onTap!();
+        } else {
+          // Navigate to doctor details page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  DoctorDetailScreen(doctor: _convertDoctorToMap(doctor)),
+            ),
+          );
+        }
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
@@ -76,5 +90,22 @@ class DoctorCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper method to convert Doctor model to Map for DoctorDetailScreen
+  Map<String, dynamic> _convertDoctorToMap(Doctor doctor) {
+    return {
+      'name': doctor.name,
+      'specialty': doctor.specialty,
+      'rating': doctor.rating,
+      'total_reviews': doctor.reviews,
+      'distance_km': doctor.distanceInKm,
+      'address': '123 Medical Center Blvd, ${doctor.specialty} Department',
+      'phone_number': '(555) 789-456-438',
+      'latitude': 36.753769,
+      'longitude': 3.058756,
+      'opening_hours':
+          'Open Now\nMon-Fri: 9:00 AM - 6:00 PM\nSat: 10:00 AM - 4:00 PM\nSun: Closed',
+    };
   }
 }

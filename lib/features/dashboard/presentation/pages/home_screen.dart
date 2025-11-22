@@ -3,7 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/notificationsCard.dart';
+import 'package:gestanea/core/widgets/notificationsCard.dart';
+import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -143,50 +144,64 @@ class HomeScreen extends StatelessWidget {
 
                     // Our Doctors Card
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(screenWidth * 0.045),
-                        decoration: BoxDecoration(
-                          color: AppColors.homeCards,
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF000000).withOpacity(0.25),
-                              blurRadius: 8,
-                              offset: const Offset(5, 3),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DoctorsScreen(),
                             ),
-                            BoxShadow(
-                              color: const Color(0xFFffffff),
-                              blurRadius: 10,
-                              offset: const Offset(-5, -5),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/Stethoscope.svg",
-                              color: Color(0xFF9C27B0),
-                              width: 32,
-                            ),
-                            SizedBox(height: screenHeight * 0.015),
-                            Text(
-                              'Our Doctors',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF9C27B0),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(screenWidth * 0.045),
+                          decoration: BoxDecoration(
+                            color: AppColors.homeCards,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF000000,
+                                ).withOpacity(0.25),
+                                blurRadius: 8,
+                                offset: const Offset(5, 3),
                               ),
-                            ),
-                            SizedBox(height: screenHeight * 0.005),
-                            Text(
-                              'find the best doctor',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.032,
-                                color: const Color(0xFF9C27B0).withOpacity(0.7),
+                              BoxShadow(
+                                color: const Color(0xFFffffff),
+                                blurRadius: 10,
+                                offset: const Offset(-5, -5),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/Stethoscope.svg",
+                                color: Color(0xFF9C27B0),
+                                width: 32,
+                              ),
+                              SizedBox(height: screenHeight * 0.015),
+                              Text(
+                                'Our Doctors',
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF9C27B0),
+                                ),
+                              ),
+                              SizedBox(height: screenHeight * 0.005),
+                              Text(
+                                'find the best doctor',
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.032,
+                                  color: const Color(
+                                    0xFF9C27B0,
+                                  ).withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

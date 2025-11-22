@@ -7,8 +7,14 @@ import 'package:gestanea/core/widgets/notificationsCard.dart';
 class Header extends StatelessWidget {
   final String title;
   final VoidCallback? onNotificationTapped;
+  final bool showBackButton;
 
-  const Header({super.key, required this.title, this.onNotificationTapped});
+  const Header({
+    super.key,
+    required this.title,
+    this.onNotificationTapped,
+    this.showBackButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,19 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(width: 48, height: 48),
+          // Conditionally show back button or empty space
+          showBackButton
+              ? IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.main500,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : SizedBox(width: 48, height: 48),
 
           Expanded(
             child: Center(

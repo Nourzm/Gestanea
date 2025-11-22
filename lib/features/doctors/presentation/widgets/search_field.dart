@@ -6,12 +6,14 @@ class SearchField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
+  final VoidCallback? onClear;
 
   const SearchField({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.icon,
+    this.onClear,
   }) : super(key: key);
 
   @override
@@ -43,15 +45,33 @@ class SearchField extends StatelessWidget {
             fontFamily: 'Lato',
             fontSize: 14,
             color: AppColors.textPrimary,
+            fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppTextStyles.body1.copyWith(
               fontFamily: 'Lato',
-              fontSize: 13,
-              color: AppColors.textSecondary.withOpacity(0.6),
+              fontSize: 14,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w400,
             ),
             prefixIcon: Icon(icon, color: AppColors.main500, size: 20),
+            suffixIcon: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: controller,
+              builder: (context, value, child) {
+                if (value.text.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return IconButton(
+                  icon: const Icon(
+                    Icons.clear,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                  onPressed: onClear,
+                );
+              },
+            ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
