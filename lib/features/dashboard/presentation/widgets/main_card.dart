@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class PregnancyProgressCard extends StatelessWidget {
-  const PregnancyProgressCard({super.key});
-
+  const PregnancyProgressCard({super.key, required this.onTap});
+  final void Function(int)  onTap;
   // Color Palette extracted from the image
   final Color bgLight = const Color(0xFFF8D9F8);
   final Color bgDark = const Color(0xFFF1C0F2);
@@ -21,14 +22,19 @@ class PregnancyProgressCard extends StatelessWidget {
           Container(
             width: double.infinity,
             height:
-                260, // Slightly shorter than total stack to allow button overhang
+                320, // Slightly shorter than total stack to allow button overhang
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [bgLight, bgDark],
               ),
-              borderRadius: BorderRadius.circular(45),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+                bottomLeft: Radius.elliptical(120, 70),
+                bottomRight: Radius.elliptical(120, 70),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Color(0x3F000000),
@@ -76,37 +82,41 @@ class PregnancyProgressCard extends StatelessWidget {
             ),
           ),
 
-          // 2. The Floating "More" Button
           Positioned(
-            bottom: 15, // Adjusts how much it sits on the edge
-            child: Container(
-              height: 30,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: textPurple.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "More",
-                    style: TextStyle(
-                      color: textPurple,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+            bottom: 10, // Adjust as needed
+            child: GestureDetector(
+              onTap: () => onTap(1),
+              child: Container(
+                height: 30,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 0.5, color: AppColors.main600),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x4C000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(Icons.arrow_forward, size: 16, color: textPurple),
-                ],
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "More",
+                      style: TextStyle(
+                        color: textPurple,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.arrow_forward, size: 16, color: textPurple),
+                  ],
+                ),
               ),
             ),
           ),

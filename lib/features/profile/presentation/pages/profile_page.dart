@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/profile/presentation/pages/languages_page.dart';
 
 class HeaderCurveClipper extends CustomClipper<Path> {
   final double curveStartRatio = 0.8824;
@@ -80,7 +81,7 @@ class ProfileSettingsScreen extends StatelessWidget {
                     _SettingsTile(
                       icon: "assets/icons/lang.svg",
                       title: 'Language',
-                      destination: NotificationsPage(),
+                      destination: LanguageSettingsScreen(),
                     ),
                     _SettingsTile(
                       icon: "assets/icons/heartplus.svg",
@@ -218,10 +219,21 @@ class ProfileSettingsScreen extends StatelessWidget {
         alignment: Alignment.bottomRight,
         children: [
           // Profile Image
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: Colors.white,
-            // Placeholder Image - replace with an AssetImage or NetworkImage
+          Container(
+            width: 100, // radius * 2
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white, // your border color
+                width: 3, // border thickness
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage("assets/images/profile.png"),
+              backgroundColor: Colors.transparent,
+            ),
           ),
           // Edit Button
           Container(

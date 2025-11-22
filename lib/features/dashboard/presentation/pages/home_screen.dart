@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
+import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.onNavigate});
+  final void Function(int) onNavigate;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +85,7 @@ class HomeScreen extends StatelessWidget {
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: PregnancyProgressCard(),
+                child: PregnancyProgressCard(onTap: onNavigate),
               ),
               SizedBox(height: screenHeight * 0.025),
 
@@ -92,53 +95,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     // Our Tips Card
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(screenWidth * 0.045),
-                        decoration: BoxDecoration(
-                          color: AppColors.main500,
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF000000).withOpacity(0.25),
-                              blurRadius: 8,
-                              offset: const Offset(5, 3),
-                            ),
-                            BoxShadow(
-                              color: const Color(0xFFffffff),
-                              blurRadius: 10,
-                              offset: const Offset(-5, -5),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/stars.svg",
-                              width: 32,
-                            ),
-                            SizedBox(height: screenHeight * 0.015),
-                            Text(
-                              'Our Tips',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(height: screenHeight * 0.005),
-                            Text(
-                              'follow best practices',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.032,
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    Expanded(child: ClickableTipsCard(targetPage: Tips())),
 
                     SizedBox(width: screenWidth * 0.04),
 

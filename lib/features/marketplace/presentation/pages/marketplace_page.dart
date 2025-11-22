@@ -7,24 +7,6 @@ import '../widgets/search_bar.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
 
-void main() {
-  runApp(Market());
-}
-
-class Market extends StatelessWidget {
-  const Market({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // Add localization delegates and supported locales
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-
-      home: const MarketplacePage(),
-    );
-  }
-}
 
 class MarketplacePage extends StatefulWidget {
   const MarketplacePage({super.key});
