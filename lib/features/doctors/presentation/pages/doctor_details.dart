@@ -111,57 +111,30 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
+      appBar: AppBar(
+        backgroundColor: AppColors.bg_1,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          'Doctor Details',
+          style: AppTextStyles.headline1.copyWith(
+            color: AppColors.main500,
+            fontSize: 32,
+            fontFamily: 'Lato',
+            letterSpacing: -0.40,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // Header with back button (Neumorphic)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: AppColors.main300,
-                      borderRadius: BorderRadius.circular(11),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                          spreadRadius: 0,
-                        ),
-                        BoxShadow(
-                          color: AppColors.white,
-                          blurRadius: 6,
-                          offset: Offset(-3, -3),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.main600,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Doctor Details',
-                      style: AppTextStyles.headline2.copyWith(
-                        color: AppColors.main600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(width: 45), // Balance the back button
-                ],
-              ),
-            ),
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
@@ -191,7 +164,6 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       ),
                       child: Row(
                         children: [
-                          // Avatar (Neumorphic)
                           Container(
                             width: 60,
                             height: 60,
