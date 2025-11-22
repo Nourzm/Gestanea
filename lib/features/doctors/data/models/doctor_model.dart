@@ -26,6 +26,7 @@ class Doctor {
     this.distanceKm,
     this.openingHours,
   });
+
   // Convert Doctor to Map for DoctorDetailScreen
   Map<String, dynamic> toMap() {
     return {

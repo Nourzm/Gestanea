@@ -35,8 +35,4 @@ class DoctorFilter {
       gender != null ||
       minReviews != null ||
       (specialties != null && specialties!.isNotEmpty);
-
-  void clear() {
-    // Helper method - actual clearing done via copyWith in state
-  }
 }

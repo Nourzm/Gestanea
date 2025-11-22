@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/features/doctors/data/models/doctors_model.dart';
+import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'doctor_info.dart';
 
@@ -23,8 +23,7 @@ class DoctorCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  DoctorDetailScreen(doctor: _convertDoctorToMap(doctor)),
+              builder: (context) => DoctorDetailScreen(doctor: doctor.toMap()),
             ),
           );
         }
@@ -90,21 +89,5 @@ class DoctorCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // Helper method to convert Doctor model to Map for DoctorDetailScreen
-  Map<String, dynamic> _convertDoctorToMap(Doctor doctor) {
-    return {
-      'name': doctor.name,
-      'specialty': doctor.specialty,
-      'rating': doctor.rating,
-      'total_reviews': doctor.reviews,
-      'distance_km': doctor.distanceInKm,
-      'address': doctor.address,
-      'phone_number': doctor.phoneNumber,
-      'latitude': doctor.latitude,
-      'longitude': doctor.longitude,
-      'opening_hours': doctor.openingHours,
-    };
   }
 }
