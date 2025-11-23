@@ -7,8 +7,11 @@ import 'package:gestanea/features/doctors/presentation/widgets/location_selector
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
-import 'package:gestanea/features/doctors/data/models/doctors_model.dart';
+import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/features/doctors/domain/usecases/get_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/domain/usecases/search_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/domain/usecases/filter_doctors_usecase.dart';
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({Key? key}) : super(key: key);
@@ -23,61 +26,41 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   DoctorFilter _currentFilter = DoctorFilter();
   String _searchQuery = '';
 
-  final List<Doctor> _allDoctors = [
-    Doctor(
-      name: 'Dr. Sarah Johnson',
-      specialty: 'Cardiologist',
-      distance: '0.8 km away',
-      rating: 4.8,
-      reviews: 156,
-      gender: 'Female',
-    ),
-    Doctor(
-      name: 'Dr. Michael Chen',
-      specialty: 'General Practitioner',
-      distance: '1.2 km away',
-      rating: 4.6,
-      reviews: 203,
-      gender: 'Male',
-    ),
-    Doctor(
-      name: 'Dr. Emily Rodriguez',
-      specialty: 'Pediatrician',
-      distance: '1.5 km away',
-      rating: 4.9,
-      reviews: 312,
-      gender: 'Female',
-    ),
-    Doctor(
-      name: 'Dr. James Williams',
-      specialty: 'Dermatologist',
-      distance: '2.1 km away',
-      rating: 4.7,
-      reviews: 189,
-      gender: 'Male',
-    ),
-    Doctor(
-      name: 'Dr. Aisha Ahmed',
-      specialty: 'Gynecologist',
-      distance: '0.5 km away',
-      rating: 4.9,
-      reviews: 445,
-      gender: 'Female',
-    ),
-    Doctor(
-      name: 'Dr. Robert Thompson',
-      specialty: 'Orthopedic Surgeon',
-      distance: '3.2 km away',
-      rating: 4.5,
-      reviews: 98,
-      gender: 'Male',
-    ),
-  ];
+  // Use cases
+  final _getDoctorsUseCase = GetDoctorsUseCase();
+  final _searchDoctorsUseCase = SearchDoctorsUseCase();
+  final _filterDoctorsUseCase = FilterDoctorsUseCase();
+
+  // Doctors data
+  late final List<Doctor> _allDoctors;
 
   @override
   void initState() {
     super.initState();
+    _loadDoctors();
     _searchController.addListener(_onSearchChanged);
+  }
+
+  void _loadDoctors() {
+    // Get doctors from use case and convert entities to models
+    final doctorEntities = _getDoctorsUseCase.execute();
+
+    _allDoctors = doctorEntities.map((entity) {
+      return Doctor(
+        name: entity.name,
+        specialty: entity.specialty,
+        distance: '${entity.distanceKm.toStringAsFixed(1)} km away',
+        rating: entity.rating,
+        reviews: entity.totalReviews,
+        gender: entity.gender,
+        address: entity.address,
+        phoneNumber: entity.phoneNumber,
+        latitude: entity.latitude,
+        longitude: entity.longitude,
+        distanceKm: entity.distanceKm,
+        openingHours: entity.openingHours,
+      );
+    }).toList();
   }
 
   void _onSearchChanged() {
@@ -87,47 +70,36 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   List<Doctor> get _filteredDoctors {
-    List<Doctor> filtered = List.from(_allDoctors);
+    // Convert Doctor models to entities for filtering
+    final doctorEntities = _allDoctors.map((doctor) {
+      return _getDoctorsUseCase.execute().firstWhere(
+        (entity) => entity.name == doctor.name,
+      );
+    }).toList();
 
-    // Apply search filter
-    if (_searchQuery.isNotEmpty) {
-      final query = _searchQuery.toLowerCase().trim();
-      filtered = filtered.where((doctor) {
-        final matchesName = doctor.name.toLowerCase().contains(query);
-        final matchesSpecialty = doctor.specialty.toLowerCase().contains(query);
-        return matchesName || matchesSpecialty;
-      }).toList();
-    }
+    // Apply search
+    var filtered = _searchDoctorsUseCase.execute(doctorEntities, _searchQuery);
 
-    // Apply distance filter
-    if (_currentFilter.maxDistance != null) {
-      filtered = filtered.where((doctor) {
-        return doctor.distanceInKm <= _currentFilter.maxDistance!;
-      }).toList();
-    }
+    // Apply filters
+    filtered = _filterDoctorsUseCase.execute(filtered, _currentFilter);
 
-    // Apply rating filter
-    if (_currentFilter.minRating != null) {
-      filtered = filtered.where((doctor) {
-        return doctor.rating >= _currentFilter.minRating!;
-      }).toList();
-    }
-
-    // Apply gender filter
-    if (_currentFilter.gender != null) {
-      filtered = filtered.where((doctor) {
-        return doctor.gender == _currentFilter.gender;
-      }).toList();
-    }
-
-    // Apply reviews filter
-    if (_currentFilter.minReviews != null) {
-      filtered = filtered.where((doctor) {
-        return doctor.reviews >= _currentFilter.minReviews!;
-      }).toList();
-    }
-
-    return filtered;
+    // Convert back to models
+    return filtered.map((entity) {
+      return Doctor(
+        name: entity.name,
+        specialty: entity.specialty,
+        distance: '${entity.distanceKm.toStringAsFixed(1)} km away',
+        rating: entity.rating,
+        reviews: entity.totalReviews,
+        gender: entity.gender,
+        address: entity.address,
+        phoneNumber: entity.phoneNumber,
+        latitude: entity.latitude,
+        longitude: entity.longitude,
+        distanceKm: entity.distanceKm,
+        openingHours: entity.openingHours,
+      );
+    }).toList();
   }
 
   void _showLocationPicker() {
@@ -137,49 +109,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.textSecondary.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ...[
-                'Use current location',
-                'Algiers',
-                'Oran',
-                'Constantine',
-                'Annaba',
-                'Blida',
-              ].map((location) {
-                return ListTile(
-                  leading: Icon(
-                    location == 'Use current location'
-                        ? Icons.my_location
-                        : Icons.location_on_outlined,
-                    color: AppColors.main500,
-                  ),
-                  title: Text(location),
-                  onTap: () {
-                    setState(() {
-                      _selectedLocation = location;
-                    });
-                    Navigator.pop(context);
-                  },
-                );
-              }).toList(),
-            ],
-          ),
-        );
-      },
+      builder: (context) => _buildLocationBottomSheet(),
     );
   }
 
@@ -242,6 +172,50 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLocationBottomSheet() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: AppColors.textSecondary.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ...[
+            'Use current location',
+            'Algiers',
+            'Oran',
+            'Constantine',
+            'Annaba',
+            'Blida',
+          ].map((location) {
+            return ListTile(
+              leading: Icon(
+                location == 'Use current location'
+                    ? Icons.my_location
+                    : Icons.location_on_outlined,
+                color: AppColors.main500,
+              ),
+              title: Text(location),
+              onTap: () {
+                setState(() {
+                  _selectedLocation = location;
+                });
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ],
       ),
     );
   }
