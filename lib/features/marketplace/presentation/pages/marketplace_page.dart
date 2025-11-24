@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import '../../../../core/widgets/header.dart';
-import '../widgets/search_bar.dart';
+import 'package:gestanea/core/widgets/header.dart';
+import 'package:gestanea/core/widgets/search_bar.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
-
 
 class MarketplacePage extends StatefulWidget {
   const MarketplacePage({super.key});
@@ -80,7 +79,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
             // Search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: MarketplaceSearchBar(
+              child: searchBar(
                 controller: _searchController,
                 hintText: l10n.searchHint,
                 onSearchTapped: () {

@@ -65,5 +65,81 @@
   "add": "إضافة",
   "measurement": "القياس",
   "healthTipMessage": "عمل رائع! أنت تحافظ على وتيرة زيادة وزن صحية. استمر في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.",
-  "onTrack": "على المسار الصحيح"
+  "onTrack": "على المسار الصحيح",
+
+  "doctors": "الأطباء",
+  "findDoctors": "ابحث عن الأطباء بالاسم أو التخصص",
+  "useCurrentLocation": "استخدام موقعي الحالي",
+  "algiers": "الجزائر",
+  "oran": "وهران",
+  "constantine": "قسنطينة",
+  "annaba": "عنابة",
+  "blida": "البليدة",
+  "doctorsFoundSingle": "تم العثور على طبيب واحد",
+  "doctorsFoundPlural": "تم العثور على {count} أطباء",
+  "@doctorsFoundPlural": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "filter": "تصفية",
+  "filterDoctors": "تصفية الأطباء",
+  "clearAll": "مسح الكل",
+  "maximumDistance": "المسافة القصوى",
+  "upToKm": "حتى {distance} كم",
+  "@upToKm": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "minimumRating": "التقييم الأدنى",
+  "ratingAndAbove": "{rating} وما فوق",
+  "@ratingAndAbove": {
+    "placeholders": {
+      "rating": {"type": "String"}
+    }
+  },
+  "gender": "الجنس",
+  "all": "الكل",
+  "male": "ذكر",
+  "female": "أنثى",
+  "minimumReviews": "الحد الأدنى من المراجعات",
+  "atLeastReviews": "على الأقل {count} مراجعة",
+  "@atLeastReviews": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cancel": "إلغاء",
+  "applyFilters": "تطبيق التصفية",
+  "kmAway": "على بعد {distance} كم",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "reviews": "مراجعات",
+  "noDoctorsFound": "لم يتم العثور على أطباء",
+  "noResults": "لا توجد نتائج",
+  "noMatchingDoctors": "لا يوجد أطباء يطابقون \"{query}\"",
+  "@noMatchingDoctors": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "tryAdjustingFilters": "حاول تعديل التصفية",
+  "doctorDetails": "تفاصيل الطبيب",
+  "couldNotOpenMaps": "تعذر فتح الخرائط",
+  "phoneNumberNotAvailable": "رقم الهاتف غير متوفر",
+  "couldNotMakePhoneCall": "تعذر إجراء المكالمة الهاتفية",
+  "gynecologist": "طبيب نساء وتوليد",
+  "pediatrician": "طبيب أطفال",
+  "obstetrician": "طبيب توليد",
+  "generalPractitioner": "طبيب عام",
+  "getDirections": "احصل على الاتجاهات",
+  "contactInformation": "معلومات الاتصال",
+  "address": "العنوان",
+  "phoneNumber": "رقم الهاتف",
+  "openingHours": "ساعات العمل",
+  "callNow": "اتصل الآن"
 }

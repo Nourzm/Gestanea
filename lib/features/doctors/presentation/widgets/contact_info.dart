@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class ContactInfoSection extends StatelessWidget {
   final Map<String, dynamic> doctor;
@@ -61,6 +62,7 @@ class ContactInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
@@ -85,23 +87,23 @@ class ContactInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Contact Information', style: AppTextStyles.headline2),
+          Text(l10n.contactInformation, style: AppTextStyles.headline2),
           const SizedBox(height: 20),
           _buildContactItem(
             icon: Icons.location_on_outlined,
-            title: 'Address',
+            title: l10n.address,
             content: doctor['address'],
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.phone_outlined,
-            title: 'Phone Number',
+            title: l10n.phoneNumber,
             content: doctor['phone_number'],
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.access_time_outlined,
-            title: 'Opening Hours',
+            title: l10n.openingHours,
             content: doctor['opening_hours'],
           ),
         ],

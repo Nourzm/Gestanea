@@ -2,18 +2,18 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
-class MarketplaceSearchBar extends StatelessWidget {
+class searchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onSearchTapped;
   final String hintText;
 
-  const MarketplaceSearchBar({
+  const searchBar({
     super.key,
     required this.controller,
     this.onChanged,
     this.onSearchTapped,
-    this.hintText = 'Find what you need...',
+    required this.hintText,
   });
 
   @override
@@ -30,13 +30,13 @@ class MarketplaceSearchBar extends StatelessWidget {
             offset: Offset(-2.5, -2.5),
             blurRadius: 5,
             spreadRadius: -5,
-            inset: true
+            inset: true,
           ),
           BoxShadow(
             color: const Color(0xFF000000).withOpacity(0.25),
             offset: const Offset(2.5, 2.5),
             blurRadius: 5,
-            inset: true
+            inset: true,
           ),
         ],
       ),

@@ -3,7 +3,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/category_card.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/tipFinal_card.dart';
-import 'package:gestanea/features/marketplace/presentation/widgets/search_bar.dart';
+import 'package:gestanea/core/widgets/search_bar.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class Tips extends StatelessWidget {
@@ -49,7 +49,7 @@ class Tips extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: Column(
             children: [
-              MarketplaceSearchBar(
+              searchBar(
                 controller: searchController,
                 hintText: l10n.searchHint,
                 onSearchTapped: () {
@@ -79,7 +79,7 @@ class Tips extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              
+
               ProductCardToggle(initialExpanded: true),
               ProductCardToggle(),
               ProductCardToggle(),

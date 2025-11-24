@@ -179,4 +179,152 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onTrack => 'Sur la bonne voie';
+
+  @override
+  String get doctors => 'Médecins';
+
+  @override
+  String get findDoctors => 'trouver des médecins par nom ou spécialité';
+
+  @override
+  String get useCurrentLocation => 'Utiliser ma position actuelle';
+
+  @override
+  String get algiers => 'Alger';
+
+  @override
+  String get oran => 'Oran';
+
+  @override
+  String get constantine => 'Constantine';
+
+  @override
+  String get annaba => 'Annaba';
+
+  @override
+  String get blida => 'Blida';
+
+  @override
+  String get doctorsFoundSingle => '1 Médecin Trouvé';
+
+  @override
+  String doctorsFoundPlural(int count) {
+    return '$count Médecins Trouvés';
+  }
+
+  @override
+  String get filter => 'Filtrer';
+
+  @override
+  String get filterDoctors => 'Filtrer les médecins';
+
+  @override
+  String get clearAll => 'Tout effacer';
+
+  @override
+  String get maximumDistance => 'Distance maximale';
+
+  @override
+  String upToKm(String distance) {
+    return 'Jusqu\'à $distance km';
+  }
+
+  @override
+  String get minimumRating => 'Évaluation minimale';
+
+  @override
+  String ratingAndAbove(String rating) {
+    return '$rating et plus';
+  }
+
+  @override
+  String get gender => 'Genre';
+
+  @override
+  String get all => 'Tous';
+
+  @override
+  String get male => 'Homme';
+
+  @override
+  String get female => 'Femme';
+
+  @override
+  String get minimumReviews => 'Avis minimum';
+
+  @override
+  String atLeastReviews(int count) {
+    return 'Au moins $count avis';
+  }
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String kmAway(String distance) {
+    return 'à $distance km';
+  }
+
+  @override
+  String get reviews => 'avis';
+
+  @override
+  String get noDoctorsFound => 'Aucun médecin trouvé';
+
+  @override
+  String get noResults => 'Aucun résultat';
+
+  @override
+  String noMatchingDoctors(String query) {
+    return 'Aucun médecin ne correspond à \"$query\"';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'Essayez d\'ajuster vos filtres';
+
+  @override
+  String get doctorDetails => 'Détails du médecin';
+
+  @override
+  String get couldNotOpenMaps => 'Impossible d\'ouvrir les cartes';
+
+  @override
+  String get phoneNumberNotAvailable => 'Numéro de téléphone non disponible';
+
+  @override
+  String get couldNotMakePhoneCall =>
+      'Impossible de passer l\'appel téléphonique';
+
+  @override
+  String get gynecologist => 'Gynécologue';
+
+  @override
+  String get pediatrician => 'Pédiatre';
+
+  @override
+  String get obstetrician => 'Obstétricien';
+
+  @override
+  String get generalPractitioner => 'Médecin généraliste';
+
+  @override
+  String get getDirections => 'Obtenir l\'itinéraire';
+
+  @override
+  String get contactInformation => 'Informations de contact';
+
+  @override
+  String get address => 'Adresse';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get openingHours => 'Heures d\'ouverture';
+
+  @override
+  String get callNow => 'Appeler maintenant';
 }

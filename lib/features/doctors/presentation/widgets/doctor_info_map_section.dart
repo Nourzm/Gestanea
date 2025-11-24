@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorInfoMapSection extends StatelessWidget {
   final Map<String, dynamic> doctor;
@@ -18,6 +19,7 @@ class DoctorInfoMapSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lat = doctor['latitude'] ?? 36.753769;
     final lng = doctor['longitude'] ?? 3.058756;
     final distance = doctor['distance_km'] ?? 0.0;
@@ -215,7 +217,7 @@ class DoctorInfoMapSection extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '${distance.toStringAsFixed(1)} km away',
+                      l10n.kmAway(distance.toStringAsFixed(1)),
                       style: AppTextStyles.body1.copyWith(
                         fontWeight: FontWeight.w500,
                         color: AppColors.textPrimary,
@@ -260,7 +262,7 @@ class DoctorInfoMapSection extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Get Directions',
+                      l10n.getDirections,
                       style: AppTextStyles.body1.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.white,

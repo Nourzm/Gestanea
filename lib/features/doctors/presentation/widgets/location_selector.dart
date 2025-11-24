@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class LocationSelector extends StatelessWidget {
   final String selectedLocation;
@@ -14,51 +15,64 @@ class LocationSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          height: 40,
           decoration: BoxDecoration(
             color: AppColors.bg_1,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(color: AppColors.white, width: 0.5),
             boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.7),
-                offset: const Offset(-4, -4),
-                blurRadius: 8,
-                spreadRadius: 0,
+              const BoxShadow(
+                color: AppColors.white,
+                offset: Offset(-2.5, -2.5),
+                blurRadius: 5,
+                spreadRadius: -5,
+                inset: true,
               ),
               BoxShadow(
-                color: AppColors.main400.withOpacity(0.3),
-                offset: const Offset(4, 4),
-                blurRadius: 8,
-                spreadRadius: 0,
+                color: const Color(0xFF000000).withOpacity(0.25),
+                offset: const Offset(2.5, 2.5),
+                blurRadius: 5,
+                inset: true,
               ),
             ],
           ),
           child: Row(
             children: [
-              const Icon(Icons.location_on, color: AppColors.main500, size: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Icon(
+                  Icons.location_on,
+                  color: AppColors.main500,
+                  size: 20,
+                ),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  selectedLocation == 'Use current location'
-                      ? 'Use current location'
+                  selectedLocation == l10n.useCurrentLocation
+                      ? l10n.useCurrentLocation
                       : selectedLocation,
-                  style: AppTextStyles.body1.copyWith(
+                  style: const TextStyle(
+                    color: AppColors.main500,
+                    fontSize: 16,
                     fontFamily: 'Lato',
-                    fontSize: 14,
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.main500,
-                size: 20,
+              const Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: AppColors.main500,
+                  size: 24,
+                ),
               ),
             ],
           ),

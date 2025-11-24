@@ -177,4 +177,151 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onTrack => 'على المسار الصحيح';
+
+  @override
+  String get doctors => 'الأطباء';
+
+  @override
+  String get findDoctors => 'ابحث عن الأطباء بالاسم أو التخصص';
+
+  @override
+  String get useCurrentLocation => 'استخدام موقعي الحالي';
+
+  @override
+  String get algiers => 'الجزائر';
+
+  @override
+  String get oran => 'وهران';
+
+  @override
+  String get constantine => 'قسنطينة';
+
+  @override
+  String get annaba => 'عنابة';
+
+  @override
+  String get blida => 'البليدة';
+
+  @override
+  String get doctorsFoundSingle => 'تم العثور على طبيب واحد';
+
+  @override
+  String doctorsFoundPlural(int count) {
+    return 'تم العثور على $count أطباء';
+  }
+
+  @override
+  String get filter => 'تصفية';
+
+  @override
+  String get filterDoctors => 'تصفية الأطباء';
+
+  @override
+  String get clearAll => 'مسح الكل';
+
+  @override
+  String get maximumDistance => 'المسافة القصوى';
+
+  @override
+  String upToKm(String distance) {
+    return 'حتى $distance كم';
+  }
+
+  @override
+  String get minimumRating => 'التقييم الأدنى';
+
+  @override
+  String ratingAndAbove(String rating) {
+    return '$rating وما فوق';
+  }
+
+  @override
+  String get gender => 'الجنس';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String get male => 'ذكر';
+
+  @override
+  String get female => 'أنثى';
+
+  @override
+  String get minimumReviews => 'الحد الأدنى من المراجعات';
+
+  @override
+  String atLeastReviews(int count) {
+    return 'على الأقل $count مراجعة';
+  }
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get applyFilters => 'تطبيق التصفية';
+
+  @override
+  String kmAway(String distance) {
+    return 'على بعد $distance كم';
+  }
+
+  @override
+  String get reviews => 'مراجعات';
+
+  @override
+  String get noDoctorsFound => 'لم يتم العثور على أطباء';
+
+  @override
+  String get noResults => 'لا توجد نتائج';
+
+  @override
+  String noMatchingDoctors(String query) {
+    return 'لا يوجد أطباء يطابقون \"$query\"';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'حاول تعديل التصفية';
+
+  @override
+  String get doctorDetails => 'تفاصيل الطبيب';
+
+  @override
+  String get couldNotOpenMaps => 'تعذر فتح الخرائط';
+
+  @override
+  String get phoneNumberNotAvailable => 'رقم الهاتف غير متوفر';
+
+  @override
+  String get couldNotMakePhoneCall => 'تعذر إجراء المكالمة الهاتفية';
+
+  @override
+  String get gynecologist => 'طبيب نساء وتوليد';
+
+  @override
+  String get pediatrician => 'طبيب أطفال';
+
+  @override
+  String get obstetrician => 'طبيب توليد';
+
+  @override
+  String get generalPractitioner => 'طبيب عام';
+
+  @override
+  String get getDirections => 'احصل على الاتجاهات';
+
+  @override
+  String get contactInformation => 'معلومات الاتصال';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get phoneNumber => 'رقم الهاتف';
+
+  @override
+  String get openingHours => 'ساعات العمل';
+
+  @override
+  String get callNow => 'اتصل الآن';
 }

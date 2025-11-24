@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/header.dart';
-import 'package:gestanea/features/doctors/presentation/widgets/search_field.dart';
+import 'package:gestanea/core/widgets/search_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/location_selector.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_sheet.dart';
@@ -12,6 +12,7 @@ import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
 import 'package:gestanea/features/doctors/domain/usecases/get_doctors_usecase.dart';
 import 'package:gestanea/features/doctors/domain/usecases/search_doctors_usecase.dart';
 import 'package:gestanea/features/doctors/domain/usecases/filter_doctors_usecase.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       return Doctor(
         name: entity.name,
         specialty: entity.specialty,
-        distance: '${entity.distanceKm.toStringAsFixed(1)} km away',
+        distance: '${entity.distanceKm.toStringAsFixed(1)}',
         rating: entity.rating,
         reviews: entity.totalReviews,
         gender: entity.gender,
@@ -88,7 +89,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       return Doctor(
         name: entity.name,
         specialty: entity.specialty,
-        distance: '${entity.distanceKm.toStringAsFixed(1)} km away',
+        distance: '${entity.distanceKm.toStringAsFixed(1)}',
         rating: entity.rating,
         reviews: entity.totalReviews,
         gender: entity.gender,
@@ -133,6 +134,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final displayDoctors = _filteredDoctors;
 
     return Scaffold(
@@ -140,35 +142,47 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Header(title: 'Doctors', showBackButton: true),
-            const SizedBox(height: 20),
-            SearchField(
-              controller: _searchController,
-              hintText: 'Search doctors by name or specialty...',
-              icon: Icons.search,
-            ),
-            const SizedBox(height: 16),
-            LocationSelector(
-              selectedLocation: _selectedLocation,
-              onTap: _showLocationPicker,
-            ),
-            const SizedBox(height: 20),
-            DoctorsFilterBar(
-              doctorCount: displayDoctors.length,
-              onFilterTap: _showFilterBottomSheet,
-              hasActiveFilters: _currentFilter.hasActiveFilters,
-            ),
-            const SizedBox(height: 16),
+            Header(title: l10n.doctors, showBackButton: true),
             Expanded(
-              child: displayDoctors.isEmpty
-                  ? _buildEmptyState()
-                  : ListView.builder(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      itemCount: displayDoctors.length,
-                      itemBuilder: (context, index) {
-                        return DoctorCard(doctor: displayDoctors[index]);
-                      },
+                      child: searchBar(
+                        controller: _searchController,
+                        hintText: l10n.findDoctors,
+                      ),
                     ),
+                    const SizedBox(height: 16),
+                    LocationSelector(
+                      selectedLocation: _selectedLocation,
+                      onTap: _showLocationPicker,
+                    ),
+                    const SizedBox(height: 20),
+                    DoctorsFilterBar(
+                      doctorCount: displayDoctors.length,
+                      onFilterTap: _showFilterBottomSheet,
+                      hasActiveFilters: _currentFilter.hasActiveFilters,
+                    ),
+                    const SizedBox(height: 16),
+                    displayDoctors.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            itemCount: displayDoctors.length,
+                            itemBuilder: (context, index) {
+                              return DoctorCard(doctor: displayDoctors[index]);
+                            },
+                          ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -177,6 +191,16 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   Widget _buildLocationBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
+    final locations = [
+      l10n.useCurrentLocation,
+      l10n.algiers,
+      l10n.oran,
+      l10n.constantine,
+      l10n.annaba,
+      l10n.blida,
+    ];
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -191,17 +215,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          ...[
-            'Use current location',
-            'Algiers',
-            'Oran',
-            'Constantine',
-            'Annaba',
-            'Blida',
-          ].map((location) {
+          ...locations.asMap().entries.map((entry) {
+            final location = entry.value;
+            final isCurrentLocation = entry.key == 0;
             return ListTile(
               leading: Icon(
-                location == 'Use current location'
+                isCurrentLocation
                     ? Icons.my_location
                     : Icons.location_on_outlined,
                 color: AppColors.main500,
@@ -221,6 +240,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40.0),
@@ -236,7 +256,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              _searchQuery.isNotEmpty ? 'No doctors found' : 'No results',
+              _searchQuery.isNotEmpty ? l10n.noDoctorsFound : l10n.noResults,
               style: AppTextStyles.headline2.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 18,
@@ -247,8 +267,8 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             const SizedBox(height: 8),
             Text(
               _searchQuery.isNotEmpty
-                  ? 'No doctors match "$_searchQuery"'
-                  : 'Try adjusting your filters',
+                  ? l10n.noMatchingDoctors(_searchQuery)
+                  : l10n.tryAdjustingFilters,
               textAlign: TextAlign.center,
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',

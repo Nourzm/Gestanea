@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   final DoctorFilter currentFilter;
@@ -81,13 +82,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Filter Doctors',
+            l10n.filterDoctors,
             style: AppTextStyles.headline2.copyWith(
               fontFamily: 'Lato',
               fontSize: 20,
@@ -98,7 +100,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           TextButton(
             onPressed: _clearFilters,
             child: Text(
-              'Clear All',
+              l10n.clearAll,
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 14,
@@ -113,11 +115,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildDistanceFilter() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Maximum Distance',
+          l10n.maximumDistance,
           style: AppTextStyles.headline2.copyWith(
             fontFamily: 'Lato',
             fontSize: 16,
@@ -127,7 +130,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Up to ${_maxDistance.toStringAsFixed(1)} km',
+          l10n.upToKm(_maxDistance.toStringAsFixed(1)),
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 14,
@@ -160,11 +163,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildRatingFilter() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Minimum Rating',
+          l10n.minimumRating,
           style: AppTextStyles.headline2.copyWith(
             fontFamily: 'Lato',
             fontSize: 16,
@@ -178,7 +182,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             const Icon(Icons.star, color: Color(0xFFFFB800), size: 16),
             const SizedBox(width: 4),
             Text(
-              '${_minRating.toStringAsFixed(1)} and above',
+              l10n.ratingAndAbove(_minRating.toStringAsFixed(1)),
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 14,
@@ -213,11 +217,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildGenderFilter() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gender',
+          l10n.gender,
           style: AppTextStyles.headline2.copyWith(
             fontFamily: 'Lato',
             fontSize: 16,
@@ -229,9 +234,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         Wrap(
           spacing: 12,
           children: [
-            _buildGenderChip('All', null),
-            _buildGenderChip('Male', 'Male'),
-            _buildGenderChip('Female', 'Female'),
+            _buildGenderChip(l10n.all, null),
+            _buildGenderChip(l10n.male, 'Male'),
+            _buildGenderChip(l10n.female, 'Female'),
           ],
         ),
       ],
@@ -280,11 +285,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildReviewsFilter() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Minimum Reviews',
+          l10n.minimumReviews,
           style: AppTextStyles.headline2.copyWith(
             fontFamily: 'Lato',
             fontSize: 16,
@@ -294,7 +300,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ),
         const SizedBox(height: 8),
         Text(
-          'At least ${_minReviews.toInt()} reviews',
+          l10n.atLeastReviews(_minReviews.toInt()),
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 14,
@@ -327,6 +333,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildActionButtons() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
@@ -342,7 +349,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               elevation: 0,
             ),
             child: Text(
-              'Cancel',
+              l10n.cancel,
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 16,
@@ -366,7 +373,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               elevation: 0,
             ),
             child: Text(
-              'Apply Filters',
+              l10n.applyFilters,
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 16,

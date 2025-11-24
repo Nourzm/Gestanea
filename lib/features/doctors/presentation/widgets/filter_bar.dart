@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsFilterBar extends StatelessWidget {
   final int doctorCount;
@@ -16,13 +17,18 @@ class DoctorsFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final displayText = doctorCount == 1
+        ? l10n.doctorsFoundSingle
+        : l10n.doctorsFoundPlural(doctorCount);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '$doctorCount Doctor${doctorCount == 1 ? '' : 's'} Found',
+            displayText,
             style: AppTextStyles.headline2.copyWith(
               fontFamily: 'Lato',
               fontSize: 16,
@@ -65,7 +71,7 @@ class DoctorsFilterBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    'Filter',
+                    l10n.filter,
                     style: AppTextStyles.body1.copyWith(
                       fontFamily: 'Lato',
                       fontSize: 14,

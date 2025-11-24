@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorInfo extends StatelessWidget {
   final Doctor doctor;
@@ -10,6 +11,7 @@ class DoctorInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,7 +40,7 @@ class DoctorInfo extends StatelessWidget {
             const Icon(Icons.location_on, size: 14, color: AppColors.main500),
             const SizedBox(width: 4),
             Text(
-              doctor.distance,
+              l10n.kmAway(doctor.distance),
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 12,
@@ -60,7 +62,7 @@ class DoctorInfo extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '(${doctor.reviews} reviews)',
+              '(${doctor.reviews} ${l10n.reviews})',
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 11,

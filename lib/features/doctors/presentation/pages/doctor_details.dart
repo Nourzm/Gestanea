@@ -8,8 +8,9 @@ import 'package:gestanea/features/doctors/domain/usecases/map_navigation_usecase
 import 'package:gestanea/features/doctors/domain/usecases/phone_call_usecase.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_info_map_section.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/contact_info.dart';
-import 'package:gestanea/features/doctors/presentation/widgets/directions_section.dart';
+
 import 'package:gestanea/features/doctors/presentation/widgets/call_now.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
   final Map<String, dynamic>? doctor;
@@ -48,9 +49,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
     final success = await _mapNavigationUseCase.openDirections(lat, lng);
 
     if (!success && mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not open maps'),
+        SnackBar(
+          content: Text(l10n.couldNotOpenMaps),
           backgroundColor: AppColors.alerts,
         ),
       );
@@ -62,9 +64,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
 
     if (phoneNumber.isEmpty) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Phone number not available'),
+          SnackBar(
+            content: Text(l10n.phoneNumberNotAvailable),
             backgroundColor: AppColors.alerts,
           ),
         );
@@ -75,9 +78,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
     final success = await _phoneCallUseCase.makePhoneCall(phoneNumber);
 
     if (!success && mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not make phone call'),
+        SnackBar(
+          content: Text(l10n.couldNotMakePhoneCall),
           backgroundColor: AppColors.alerts,
         ),
       );
@@ -86,6 +90,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       appBar: AppBar(
@@ -95,7 +100,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Doctor Details',
+          l10n.doctorDetails,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -119,7 +124,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
               const SizedBox(height: 24),
               ContactInfoSection(doctor: _doctor),
               const SizedBox(height: 24),
-              const DirectionsSection(),
+
               const SizedBox(height: 24),
               CallNowSection(onPressed: _makePhoneCall),
               const SizedBox(height: 24),

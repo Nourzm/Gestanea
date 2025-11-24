@@ -65,5 +65,81 @@
   "add": "Ajouter",
   "measurement": "Mesure",
   "healthTipMessage": "Bravo ! Vous maintenez un rythme de prise de poids sain. Continuez votre alimentation équilibrée et vos exercices doux.",
-  "onTrack": "Sur la bonne voie"
+  "onTrack": "Sur la bonne voie",
+
+  "doctors": "Médecins",
+  "findDoctors": "trouver des médecins par nom ou spécialité",
+  "useCurrentLocation": "Utiliser ma position actuelle",
+  "algiers": "Alger",
+  "oran": "Oran",
+  "constantine": "Constantine",
+  "annaba": "Annaba",
+  "blida": "Blida",
+  "doctorsFoundSingle": "1 Médecin Trouvé",
+  "doctorsFoundPlural": "{count} Médecins Trouvés",
+  "@doctorsFoundPlural": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "filter": "Filtrer",
+  "filterDoctors": "Filtrer les médecins",
+  "clearAll": "Tout effacer",
+  "maximumDistance": "Distance maximale",
+  "upToKm": "Jusqu'à {distance} km",
+  "@upToKm": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "minimumRating": "Évaluation minimale",
+  "ratingAndAbove": "{rating} et plus",
+  "@ratingAndAbove": {
+    "placeholders": {
+      "rating": {"type": "String"}
+    }
+  },
+  "gender": "Genre",
+  "all": "Tous",
+  "male": "Homme",
+  "female": "Femme",
+  "minimumReviews": "Avis minimum",
+  "atLeastReviews": "Au moins {count} avis",
+  "@atLeastReviews": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cancel": "Annuler",
+  "applyFilters": "Appliquer les filtres",
+  "kmAway": "à {distance} km",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "reviews": "avis",
+  "noDoctorsFound": "Aucun médecin trouvé",
+  "noResults": "Aucun résultat",
+  "noMatchingDoctors": "Aucun médecin ne correspond à \"{query}\"",
+  "@noMatchingDoctors": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
+  "doctorDetails": "Détails du médecin",
+  "couldNotOpenMaps": "Impossible d'ouvrir les cartes",
+  "phoneNumberNotAvailable": "Numéro de téléphone non disponible",
+  "couldNotMakePhoneCall": "Impossible de passer l'appel téléphonique",
+  "gynecologist": "Gynécologue",
+  "pediatrician": "Pédiatre",
+  "obstetrician": "Obstétricien",
+  "generalPractitioner": "Médecin généraliste",
+  "getDirections": "Obtenir l'itinéraire",
+  "contactInformation": "Informations de contact",
+  "address": "Adresse",
+  "phoneNumber": "Numéro de téléphone",
+  "openingHours": "Heures d'ouverture",
+  "callNow": "Appeler maintenant"
 }
