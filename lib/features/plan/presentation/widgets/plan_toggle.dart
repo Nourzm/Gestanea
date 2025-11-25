@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import '../pages/medicines_page.dart';
-import '../pages/appointments_page.dart';
+import '../pages/plan_page.dart'; // Ensure only this correct import exists
 
 class PlanToggle extends StatelessWidget {
-  final bool showMedicine;
-  final Function(bool) onToggle;
+  final PlanSection selectedSection;
+  final Function(PlanSection) onToggle;
   final double screenWidth;
   final double screenHeight;
 
   const PlanToggle({
     Key? key,
-    required this.showMedicine,
+    required this.selectedSection,
     required this.onToggle,
     required this.screenWidth,
     required this.screenHeight,
@@ -51,16 +50,14 @@ class PlanToggle extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                onToggle(false);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MedicinesPage()),
-                );
+                onToggle(PlanSection.medicines);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
                 decoration: BoxDecoration(
-                  color: showMedicine ? AppColors.main500 : Colors.transparent,
+                  color: selectedSection == PlanSection.medicines
+                      ? AppColors.main500
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(22),
                 ),
                 child: Row(
@@ -68,7 +65,9 @@ class PlanToggle extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/pills.svg",
-                      color: showMedicine ? Colors.white : Colors.black87,
+                      color: selectedSection == PlanSection.medicines
+                          ? Colors.white
+                          : Colors.black87,
                       width: 20,
                       height: 20,
                     ),
@@ -78,7 +77,9 @@ class PlanToggle extends StatelessWidget {
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
                         fontWeight: FontWeight.w600,
-                        color: showMedicine ? Colors.white : Colors.black87,
+                        color: selectedSection == PlanSection.medicines
+                            ? Colors.white
+                            : Colors.black87,
                       ),
                     ),
                   ],
@@ -89,16 +90,14 @@ class PlanToggle extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                onToggle(false);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AppointmentsPage()),
-                );
+                onToggle(PlanSection.appointments);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
                 decoration: BoxDecoration(
-                  color: !showMedicine ? AppColors.main500 : Colors.transparent,
+                  color: selectedSection == PlanSection.appointments
+                      ? AppColors.main500
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(22),
                 ),
                 child: Row(
@@ -106,7 +105,9 @@ class PlanToggle extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.calendar_today_outlined,
-                      color: !showMedicine ? Colors.white : Colors.black87,
+                      color: selectedSection == PlanSection.appointments
+                          ? Colors.white
+                          : Colors.black87,
                       size: 18,
                     ),
                     SizedBox(width: 8),
@@ -115,7 +116,9 @@ class PlanToggle extends StatelessWidget {
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
                         fontWeight: FontWeight.w600,
-                        color: !showMedicine ? Colors.white : Colors.black87,
+                        color: selectedSection == PlanSection.appointments
+                            ? Colors.white
+                            : Colors.black87,
                       ),
                     ),
                   ],

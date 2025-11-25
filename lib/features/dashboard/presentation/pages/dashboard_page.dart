@@ -5,7 +5,7 @@ import 'postpartum_dashboard_page.dart';
 import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
 import 'postpartum_track_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
-import 'package:gestanea/features/plan/presentation/pages/plan_page.dart ';
+import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
 
 class DashboardPage extends StatefulWidget {

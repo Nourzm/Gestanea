@@ -4,9 +4,7 @@ import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/week_calendar.dart';
 import '../widgets/plan_toggle.dart';
-import '../widgets/medicine_progress_card.dart';
-import '../widgets/add_button.dart';
-import '../widgets/upcoming_appointments_card.dart';
+import 'main_content.dart';
 
 class PlanMainPage extends StatefulWidget {
   const PlanMainPage({super.key});
@@ -15,8 +13,10 @@ class PlanMainPage extends StatefulWidget {
   State<PlanMainPage> createState() => _PlanMainPageState();
 }
 
+enum PlanSection { none, medicines, appointments }
+
 class _PlanMainPageState extends State<PlanMainPage> {
-  bool showMedicine = true; // true = Medicine, false = Appointments
+  PlanSection selectedSection = PlanSection.none;
   DateTime selectedDate = DateTime.now();
 
   // Get days for the week
@@ -59,7 +59,7 @@ class _PlanMainPageState extends State<PlanMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    // Removed unused localization variable
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final weekDays = getWeekDays();
@@ -119,81 +119,39 @@ class _PlanMainPageState extends State<PlanMainPage> {
                         horizontal: screenWidth * 0.05,
                       ),
                       child: PlanToggle(
-                        showMedicine: showMedicine,
-                        onToggle: (value) {
+                        selectedSection: selectedSection,
+                        onToggle: (section) {
                           setState(() {
-                            showMedicine = value;
+                            selectedSection = section;
                           });
                         },
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
                     ),
-
                     SizedBox(height: screenHeight * 0.025),
-
-                    // Today's Medicine Progress Card
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                      ),
-                      child: MedicineProgressCard(
+                    if (selectedSection == PlanSection.none)
+                      MainContent(
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
-                        progress: 0.25,
-                        takenText: '1 of 4 taken',
-                      ),
-                    ),
 
-                    SizedBox(height: screenHeight * 0.025),
-
-                    // Add New Medicine Button
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
+                        showMedicine: true,
+                      )
+                    else if (selectedSection == PlanSection.medicines)
+                      // Replace with your medicines page content widget
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                        ),
+                      )
+                    else if (selectedSection == PlanSection.appointments)
+                      // Replace with your appointments page content widget
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                        ),
+                        child: Text('Appointments Page Content'),
                       ),
-                      child: AddButton(
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
-                        text: localization.addNewMedicine,
-                        onTap: () {
-                          // Add medicine action
-                        },
-                      ),
-                    ),
-
-                    SizedBox(height: screenHeight * 0.025),
-
-                    // Upcoming Appointments Card
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                      ),
-                      child: UpcomingAppointmentsCard(
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
-                        scheduledCount: 3,
-                      ),
-                    ),
-
-                    SizedBox(height: screenHeight * 0.025),
-
-                    // Add New Appointment Button
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                      ),
-                      child: AddButton(
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
-                        text: localization.addNewAppointment,
-                        onTap: () {
-                          // Add appointment action
-                        },
-                      ),
-                    ),
-
-                    SizedBox(height: screenHeight * 0.1),
                   ],
                 ),
               ),
