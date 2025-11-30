@@ -2,7 +2,11 @@ name: gestanea
 description: A comprehensive pregnancy and baby care mobile app.
 publish_to: none
 version: 0.1.0
-
+ 
+dependency_overrides:
+  flutter_inset_box_shadow:
+    path: ./patches/flutter_inset_box_shadow
+    
 environment:
   sdk: ^3.9.2
 
