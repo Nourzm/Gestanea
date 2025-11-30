@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/widgets/Sub_Header.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class MedicinesPage extends StatefulWidget {
   const MedicinesPage({super.key});
@@ -11,83 +11,156 @@ class MedicinesPage extends StatefulWidget {
 }
 
 class _MedicinesPageState extends State<MedicinesPage> {
-  DateTime selectedDate = DateTime.now();
   String selectedFilter = 'All'; // All, Taken, Missed
+  bool _showFilters = true;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50 && _showFilters) {
+      setState(() {
+        _showFilters = false;
+      });
+    } else if (_scrollController.offset <= 50 && !_showFilters) {
+      setState(() {
+        _showFilters = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Filter Pills (All, Taken, Missed)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Row(
-                  children: [
-                    _buildFilterPill('All', 4),
-                    SizedBox(width: 12),
-                    _buildFilterPill('Taken', 1),
-                    SizedBox(width: 12),
-                    _buildFilterPill('Missed', 2),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: screenHeight * 0.025),
-
-              // Medicine List
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SubHeader(
+              title: localizations.medicine,
+              showBackButton: true,
+              onBackPressed: () => Navigator.of(context).pop(),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildMedicineCard(
-                      'Captopril',
-                      '2 Capsules',
-                      '20:00',
-                      'Daily',
-                      'assets/images/captopril.png', // placeholder
-                      'Take',
-                      AppColors.main500,
-                      false,
+                    // Filter Pills (All, Taken, Missed) - with animation
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      height: _showFilters ? null : 0,
+                      curve: Curves.easeInOut,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity: _showFilters ? 1.0 : 0.0,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.05,
+                          ),
+                          child: Row(
+                            children: [
+                              _buildFilterPill('All', 4),
+                              SizedBox(width: 12),
+                              _buildFilterPill('Taken', 1),
+                              SizedBox(width: 12),
+                              _buildFilterPill('Missed', 2),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    SizedBox(height: screenHeight * 0.015),
-                    _buildMedicineCard(
-                      'B 12',
-                      '1 Injection',
-                      '22:00',
-                      'Daily',
-                      'assets/images/b12.png', // placeholder
-                      'Taken',
-                      Colors.green,
-                      true,
+
+                    SizedBox(height: screenHeight * 0.025),
+
+                    // Medicine List
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.05,
+                      ),
+                      child: Column(
+                        children: [
+                          _buildMedicineCard(
+                            'Captopril',
+                            '2 Capsules',
+                            '20:00',
+                            'Daily',
+                            'assets/images/captopril.png',
+                            'Take',
+                            AppColors.main500,
+                            false,
+                            screenWidth,
+                            screenHeight,
+                          ),
+                          SizedBox(height: screenHeight * 0.015),
+                          _buildMedicineCard(
+                            'B 12',
+                            '1 Injection',
+                            '22:00',
+                            'Daily',
+                            'assets/images/b12.png',
+                            'Taken',
+                            Colors.green,
+                            true,
+                            screenWidth,
+                            screenHeight,
+                          ),
+                          SizedBox(height: screenHeight * 0.015),
+                          _buildMedicineCard(
+                            'I-DROP MGD',
+                            '2 Drops',
+                            '22:00',
+                            'Daily',
+                            'assets/images/idrop.png',
+                            'Take',
+                            AppColors.main500,
+                            false,
+                            screenWidth,
+                            screenHeight,
+                            showMissedBadge: true,
+                          ),
+                          SizedBox(height: screenHeight * 0.015),
+                          _buildMedicineCard(
+                            'Niacin',
+                            '0.5 Pill',
+                            '22:00',
+                            'Daily',
+                            'assets/images/niacin.png',
+                            'Take',
+                            AppColors.main500,
+                            false,
+                            screenWidth,
+                            screenHeight,
+                            showMissedBadge: true,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: screenHeight * 0.015),
-                    _buildMedicineCard(
-                      'I-DROP MGD',
-                      '2 Drops',
-                      '22:00',
-                      'Daily',
-                      'assets/images/idrop.png', // placeholder
-                      'Take',
-                      AppColors.main500,
-                      false,
-                      showMissedBadge: true,
-                    ),
+
+                    SizedBox(height: screenHeight * 0.1),
                   ],
                 ),
               ),
-
-              SizedBox(height: screenHeight * 0.1),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -145,12 +218,11 @@ class _MedicinesPageState extends State<MedicinesPage> {
     String imagePath,
     String buttonText,
     Color buttonColor,
-    bool isTaken, {
+    bool isTaken,
+    double screenWidth,
+    double screenHeight, {
     bool showMissedBadge = false,
   }) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.04),
       decoration: BoxDecoration(

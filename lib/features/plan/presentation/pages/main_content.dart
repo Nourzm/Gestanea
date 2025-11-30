@@ -4,8 +4,8 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/medicine_progress_card.dart';
-import '../widgets/add_button.dart';
 import '../widgets/upcoming_appointments_card.dart';
+import 'package:gestanea/core/widgets/neumorphic_button.dart';
 
 class MainContent extends StatelessWidget {
   final double screenWidth;
@@ -40,13 +40,15 @@ class MainContent extends StatelessWidget {
         // Add New Medicine Button
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-          child: AddButton(
+          child: NeumorphicButton(
             screenWidth: screenWidth,
             screenHeight: screenHeight,
             text: localization.addNewMedicine,
-            onTap: () {
+            onPressed: () {
               // Add medicine action
             },
+            icon: const Icon(Icons.add, color: AppColors.white, size: 24),
+            color: AppColors.main500,
           ),
         ),
         SizedBox(height: screenHeight * 0.025),
@@ -63,13 +65,15 @@ class MainContent extends StatelessWidget {
         // Add New Appointment Button
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-          child: AddButton(
+          child: NeumorphicButton(
             screenWidth: screenWidth,
             screenHeight: screenHeight,
             text: localization.addNewAppointment,
-            onTap: () {
+            onPressed: () {
               // Add appointment action
             },
+            icon: const Icon(Icons.add, color: AppColors.white, size: 24),
+            color: AppColors.main500,
           ),
         ),
       ],

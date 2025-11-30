@@ -5,6 +5,8 @@ import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/week_calendar.dart';
 import '../widgets/plan_toggle.dart';
 import 'main_content.dart';
+import 'medicines_page.dart';
+import 'appointments_page.dart';
 
 class PlanMainPage extends StatefulWidget {
   const PlanMainPage({super.key});
@@ -57,9 +59,20 @@ class _PlanMainPageState extends State<PlanMainPage> {
     return '$weekday, $month ${date.day}';
   }
 
+  void _navigateToPage(PlanSection section) {
+    if (section == PlanSection.medicines) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const MedicinesPage()));
+    } else if (section == PlanSection.appointments) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const AppointmentsPage()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Removed unused localization variable
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final weekDays = getWeekDays();
@@ -73,6 +86,7 @@ class _PlanMainPageState extends State<PlanMainPage> {
             Header(title: 'Plan', showBackButton: false),
             Expanded(
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -121,37 +135,21 @@ class _PlanMainPageState extends State<PlanMainPage> {
                       child: PlanToggle(
                         selectedSection: selectedSection,
                         onToggle: (section) {
-                          setState(() {
-                            selectedSection = section;
-                          });
+                          _navigateToPage(section);
                         },
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025),
-                    if (selectedSection == PlanSection.none)
-                      MainContent(
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
 
-                        showMedicine: true,
-                      )
-                    else if (selectedSection == PlanSection.medicines)
-                      // Replace with your medicines page content widget
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.05,
-                        ),
-                      )
-                    else if (selectedSection == PlanSection.appointments)
-                      // Replace with your appointments page content widget
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.05,
-                        ),
-                        child: Text('Appointments Page Content'),
-                      ),
+                    SizedBox(height: screenHeight * 0.025),
+
+                    // Main Content
+                    MainContent(
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight,
+                      showMedicine: true,
+                    ),
                   ],
                 ),
               ),

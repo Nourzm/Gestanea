@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 
-class AddButton extends StatelessWidget {
+class NeumorphicButton extends StatelessWidget {
   final double screenWidth;
   final double screenHeight;
-  final VoidCallback onTap;
-  final String text;
+  final VoidCallback onPressed;
 
-  const AddButton({
+  final String text;
+  final Icon icon;
+  final Color color;
+
+  const NeumorphicButton({
     Key? key,
     required this.screenWidth,
     required this.screenHeight,
-    required this.onTap,
+    required this.onPressed,
     required this.text,
+    required this.icon,
+    this.color = AppColors.main500,
   }) : super(key: key);
 
   @override
@@ -39,7 +44,7 @@ class AddButton extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.main500,
+          color: color,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: Color(0xFFDFE2E8), width: 1),
           boxShadow: const [
@@ -55,7 +60,7 @@ class AddButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.add, color: AppColors.white, size: 24),
+              icon,
               const SizedBox(width: 8),
               Text(
                 text,
