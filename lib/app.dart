@@ -7,13 +7,19 @@ import 'package:gestanea/routes.dart';
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static void setAppLocale(BuildContext context, Locale locale) {
+    // We safely look up the private state object and call its public method.
+    // The public signature does not expose the private type.
+    context.findAncestorStateOfType<_MyAppState>()?.setLocale(locale);
+  }
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
- // default language
-  Locale _locale = const Locale('en'); 
+  // default language
+  Locale _locale = const Locale('en');
 
   void setLocale(Locale locale) {
     setState(() {
@@ -26,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Gestanéa',
       debugShowCheckedModeBanner: false,
-      
+
       theme: ThemeData(
         fontFamily: 'Lato',
         primarySwatch: Colors.purple,
@@ -53,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       },
 
       //routing - proper flow with splash → onboarding → login → dashboard
-      initialRoute: AppRoutes.splash, // ✅ Start with splash screen
+      initialRoute: AppRoutes.dashboard, // ✅ Start with splash screen
       routes: appRoutes,
     );
   }

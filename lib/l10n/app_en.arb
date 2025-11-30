@@ -4,7 +4,6 @@
   "welcome": "Welcome",
   "login": "Login",
   "signup": "Sign Up",
-  "email": "Email",
   "password": "Password",
   "logout": "Logout",
   "settings": "Settings",
@@ -13,6 +12,20 @@
   "notifications": "Notifications",
   "help": "Help",
   "about": "About",
+   "welcome_back": "Welcome Back!",
+  "or": "— OR —",
+  "register": "Register",
+  "auth": "Your trusted companion for every stage of motherhood",
+  "auth2": "Let Gestanéa guide you through pregnancy, baby care, and beyond.",
+  "forgot": "Forgot Password?",
+  "notRegistered": "Not registered yet?",
+  "createAccount": "Create an Account",
+  "signup": "Sign Up",
+  "your_name": "Your Name",
+  "email": "Email",
+  "enter_email": "Enter your email",
+  "enter_name": "Enter your Name",
+  "rememberMe": "Remember me",
   "version": "Version",
   "pregnant": "Pregnant",
   "postpartum": "Postpartum",
@@ -84,5 +97,81 @@
   "add": "Add",
   "measurement": "Measurement",
   "healthTipMessage": "Great job! You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
-  "onTrack": "On Track"
+  "onTrack": "On Track",
+
+  "doctors": "Doctors",
+  "findDoctors": "find doctors by name or speciality",
+  "useCurrentLocation": "Use current location",
+  "algiers": "Algiers",
+  "oran": "Oran",
+  "constantine": "Constantine",
+  "annaba": "Annaba",
+  "blida": "Blida",
+  "doctorsFoundSingle": "1 Doctor Found",
+  "doctorsFoundPlural": "{count} Doctors Found",
+  "@doctorsFoundPlural": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "filter": "Filter",
+  "filterDoctors": "Filter Doctors",
+  "clearAll": "Clear All",
+  "maximumDistance": "Maximum Distance",
+  "upToKm": "Up to {distance} km",
+  "@upToKm": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "minimumRating": "Minimum Rating",
+  "ratingAndAbove": "{rating} and above",
+  "@ratingAndAbove": {
+    "placeholders": {
+      "rating": {"type": "String"}
+    }
+  },
+  "gender": "Gender",
+  "all": "All",
+  "male": "Male",
+  "female": "Female",
+  "minimumReviews": "Minimum Reviews",
+  "atLeastReviews": "At least {count} reviews",
+  "@atLeastReviews": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cancel": "Cancel",
+  "applyFilters": "Apply Filters",
+  "kmAway": "{distance} km away",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "reviews": "reviews",
+  "noDoctorsFound": "No doctors found",
+  "noResults": "No results",
+  "noMatchingDoctors": "No doctors match \"{query}\"",
+  "@noMatchingDoctors": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "tryAdjustingFilters": "Try adjusting your filters",
+  "doctorDetails": "Doctor Details",
+  "couldNotOpenMaps": "Could not open maps",
+  "phoneNumberNotAvailable": "Phone number not available",
+  "couldNotMakePhoneCall": "Could not make phone call",
+  "gynecologist": "Gynecologist",
+  "pediatrician": "Pediatrician",
+  "obstetrician": "Obstetrician",
+  "generalPractitioner": "General Practitioner",
+  "getDirections": "Get Directions",
+  "contactInformation": "Contact Information",
+  "address": "Address",
+  "phoneNumber": "Phone Number",
+  "openingHours": "Opening Hours",
+  "callNow": "Call Now"
 }

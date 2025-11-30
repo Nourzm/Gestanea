@@ -124,12 +124,6 @@ abstract class AppLocalizations {
   /// **'Sign Up'**
   String get signup;
 
-  /// No description provided for @email.
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
-  String get email;
-
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -177,6 +171,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About'**
   String get about;
+
+  /// No description provided for @welcome_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back!'**
+  String get welcome_back;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'— OR —'**
+  String get or;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @auth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trusted companion for every stage of motherhood'**
+  String get auth;
+
+  /// No description provided for @auth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Gestanéa guide you through pregnancy, baby care, and beyond.'**
+  String get auth2;
+
+  /// No description provided for @forgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgot;
+
+  /// No description provided for @notRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not registered yet?'**
+  String get notRegistered;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an Account'**
+  String get createAccount;
+
+  /// No description provided for @your_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get your_name;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @enter_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enter_email;
+
+  /// No description provided for @enter_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Name'**
+  String get enter_name;
+
+  /// No description provided for @rememberMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get rememberMe;
 
   /// No description provided for @version.
   ///
@@ -357,6 +429,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On Track'**
   String get onTrack;
+
+  /// No description provided for @doctors.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctors'**
+  String get doctors;
+
+  /// No description provided for @findDoctors.
+  ///
+  /// In en, this message translates to:
+  /// **'find doctors by name or speciality'**
+  String get findDoctors;
+
+  /// No description provided for @useCurrentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use current location'**
+  String get useCurrentLocation;
+
+  /// No description provided for @algiers.
+  ///
+  /// In en, this message translates to:
+  /// **'Algiers'**
+  String get algiers;
+
+  /// No description provided for @oran.
+  ///
+  /// In en, this message translates to:
+  /// **'Oran'**
+  String get oran;
+
+  /// No description provided for @constantine.
+  ///
+  /// In en, this message translates to:
+  /// **'Constantine'**
+  String get constantine;
+
+  /// No description provided for @annaba.
+  ///
+  /// In en, this message translates to:
+  /// **'Annaba'**
+  String get annaba;
+
+  /// No description provided for @blida.
+  ///
+  /// In en, this message translates to:
+  /// **'Blida'**
+  String get blida;
+
+  /// No description provided for @doctorsFoundSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Doctor Found'**
+  String get doctorsFoundSingle;
+
+  /// No description provided for @doctorsFoundPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Doctors Found'**
+  String doctorsFoundPlural(int count);
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @filterDoctors.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Doctors'**
+  String get filterDoctors;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @maximumDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Distance'**
+  String get maximumDistance;
+
+  /// No description provided for @upToKm.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {distance} km'**
+  String upToKm(String distance);
+
+  /// No description provided for @minimumRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Rating'**
+  String get minimumRating;
+
+  /// No description provided for @ratingAndAbove.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} and above'**
+  String ratingAndAbove(String rating);
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @minimumReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Reviews'**
+  String get minimumReviews;
+
+  /// No description provided for @atLeastReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {count} reviews'**
+  String atLeastReviews(int count);
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @kmAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away'**
+  String kmAway(String distance);
+
+  /// No description provided for @reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'reviews'**
+  String get reviews;
+
+  /// No description provided for @noDoctorsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No doctors found'**
+  String get noDoctorsFound;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// No description provided for @noMatchingDoctors.
+  ///
+  /// In en, this message translates to:
+  /// **'No doctors match \"{query}\"'**
+  String noMatchingDoctors(String query);
+
+  /// No description provided for @tryAdjustingFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get tryAdjustingFilters;
+
+  /// No description provided for @doctorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor Details'**
+  String get doctorDetails;
+
+  /// No description provided for @couldNotOpenMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open maps'**
+  String get couldNotOpenMaps;
+
+  /// No description provided for @phoneNumberNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number not available'**
+  String get phoneNumberNotAvailable;
+
+  /// No description provided for @couldNotMakePhoneCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not make phone call'**
+  String get couldNotMakePhoneCall;
+
+  /// No description provided for @gynecologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Gynecologist'**
+  String get gynecologist;
+
+  /// No description provided for @pediatrician.
+  ///
+  /// In en, this message translates to:
+  /// **'Pediatrician'**
+  String get pediatrician;
+
+  /// No description provided for @obstetrician.
+  ///
+  /// In en, this message translates to:
+  /// **'Obstetrician'**
+  String get obstetrician;
+
+  /// No description provided for @generalPractitioner.
+  ///
+  /// In en, this message translates to:
+  /// **'General Practitioner'**
+  String get generalPractitioner;
+
+  /// No description provided for @getDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get getDirections;
+
+  /// No description provided for @contactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get contactInformation;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @openingHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening Hours'**
+  String get openingHours;
+
+  /// No description provided for @callNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Now'**
+  String get callNow;
 }
 
 class _AppLocalizationsDelegate
