@@ -1,57 +1,145 @@
 {
-  "appTitle": "Soins de la Grossesse et du Bébé",
+  "@@locale": "fr",
+  "appTitle": "Grossesse et soins du bébé",
   "welcome": "Bienvenue",
   "login": "Connexion",
   "signup": "S'inscrire",
-  "email": "Email",
   "password": "Mot de passe",
   "logout": "Déconnexion",
   "settings": "Paramètres",
   "language": "Langue",
-  "darkMode": "Mode Sombre",
+  "darkMode": "Mode sombre",
   "notifications": "Notifications",
   "help": "Aide",
   "about": "À propos",
+  "welcome_back": "Bon retour !",
+  "or": "— OU —",
+  "register": "S'inscrire",
+  "auth": "Votre compagnon de confiance à chaque étape de la maternité",
+  "auth2": "Laissez Gestanéa vous guider pendant la grossesse, les soins du bébé et au-delà.",
+  "forgot": "Mot de passe oublié ?",
+  "notRegistered": "Pas encore inscrit ?",
+  "createAccount": "Créer un compte",
+  "your_name": "Votre nom",
+  "email": "E-mail",
+  "enter_email": "Entrez votre e-mail",
+  "enter_name": "Entrez votre nom",
+  "rememberMe": "Se souvenir de moi",
   "version": "Version",
   "pregnant": "Enceinte",
-  "postpartum": "Post-partum",
+  "postpartum": "Postpartum",
   "week": "Semaine {week}",
-  "daysLeft": "{days} jours restants",
-  "market": "Marché",
-  "maternityWear": "Vêtements de Maternité",
-  "painRelief": "Soulagement de la Douleur",
-  "skinCare": "Soins de la Peau",
-  "pregnancyPillow": "Oreiller de Grossesse",
-  "backSupportBelt": "Ceinture de Soutien Dorsal",
-  "searchHint": "Trouvez ce dont vous avez besoin...",
-  "dontMissOut": "Ne manquez pas!",
-  "discountUpTo": "Réduction jusqu'à 50%",
-  "upgradeNow": "Mettre à niveau maintenant",
   "@week": {
-    "description": "Numéro de semaine",
+    "description": "Numéro de la semaine",
     "placeholders": {
       "week": {"type": "int"}
     }
   },
-  "daysLeft": "{days} jours restants",
+  "daysLeft": "Il reste {days} jours",
   "@daysLeft": {
     "placeholders": {
       "days": {"type": "int"}
     }
   },
-  "healthLog": "Journal de Santé",
+  "market": "Marché",
+  "maternityWear": "Vêtements de maternité",
+  "painRelief": "Soulagement de la douleur",
+  "skinCare": "Soins de la peau",
+  "pregnancyPillow": "Coussin de grossesse",
+  "backSupportBelt": "Ceinture de soutien dorsal",
+  "searchHint": "Trouvez ce dont vous avez besoin...",
+  "dontMissOut": "Ne ratez pas !",
+  "discountUpTo": "Remise jusqu'à 50%",
+  "upgradeNow": "Améliorez maintenant",
+  "healthLog": "Journal de santé",
   "trackYourWellness": "Suivez votre bien-être",
-  "vitals": "Signes Vitaux",
+  "vitals": "Signes vitaux",
   "symptoms": "Symptômes",
-  "labResults": "Résultats Labo",
-  "riskAlerts": "Alertes Risque",
+  "labResults": "Résultats\nde laboratoire",
+  "riskAlerts": "Alertes\nde risque",
   "mood": "Humeur",
   "weight": "Poids",
-  "heartRate": "Rythme Cardiaque",
-  "bloodPressure": "Tension Artérielle",
+  "heartRate": "Fréquence cardiaque",
+  "bloodPressure": "Tension artérielle",
   "normal": "Normal",
   "add": "Ajouter",
   "measurement": "Mesure",
-  "healthTipMessage": "Excellent travail! Vous maintenez un rythme de prise de poids sain. Continuez avec votre alimentation équilibrée et vos exercices doux.",
-  "onTrack": "Sur la Bonne Voie"
+  "healthTipMessage": "Bravo ! Vous maintenez un rythme de prise de poids sain. Continuez votre alimentation équilibrée et vos exercices doux.",
+  "onTrack": "Sur la bonne voie",
+
+  "doctors": "Médecins",
+  "findDoctors": "trouver des médecins par nom ou spécialité",
+  "useCurrentLocation": "Utiliser ma position actuelle",
+  "algiers": "Alger",
+  "oran": "Oran",
+  "constantine": "Constantine",
+  "annaba": "Annaba",
+  "blida": "Blida",
+  "doctorsFoundSingle": "1 Médecin Trouvé",
+  "doctorsFoundPlural": "{count} Médecins Trouvés",
+  "@doctorsFoundPlural": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "filter": "Filtrer",
+  "filterDoctors": "Filtrer les médecins",
+  "clearAll": "Tout effacer",
+  "maximumDistance": "Distance maximale",
+  "upToKm": "Jusqu'à {distance} km",
+  "@upToKm": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "minimumRating": "Évaluation minimale",
+  "ratingAndAbove": "{rating} et plus",
+  "@ratingAndAbove": {
+    "placeholders": {
+      "rating": {"type": "String"}
+    }
+  },
+  "gender": "Genre",
+  "all": "Tous",
+  "male": "Homme",
+  "female": "Femme",
+  "minimumReviews": "Avis minimum",
+  "atLeastReviews": "Au moins {count} avis",
+  "@atLeastReviews": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cancel": "Annuler",
+  "applyFilters": "Appliquer les filtres",
+  "kmAway": "à {distance} km",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "reviews": "avis",
+  "noDoctorsFound": "Aucun médecin trouvé",
+  "noResults": "Aucun résultat",
+  "noMatchingDoctors": "Aucun médecin ne correspond à \"{query}\"",
+  "@noMatchingDoctors": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
+  "doctorDetails": "Détails du médecin",
+  "couldNotOpenMaps": "Impossible d'ouvrir les cartes",
+  "phoneNumberNotAvailable": "Numéro de téléphone non disponible",
+  "couldNotMakePhoneCall": "Impossible de passer l'appel téléphonique",
+  "gynecologist": "Gynécologue",
+  "pediatrician": "Pédiatre",
+  "obstetrician": "Obstétricien",
+  "generalPractitioner": "Médecin généraliste",
+  "getDirections": "Obtenir l'itinéraire",
+  "contactInformation": "Informations de contact",
+  "address": "Adresse",
+  "phoneNumber": "Numéro de téléphone",
+  "openingHours": "Heures d'ouverture",
+  "callNow": "Appeler maintenant"
 }

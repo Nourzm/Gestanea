@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               // App logo
               Image.asset(
-                'assets/images/fetus-inside-heart-shape-womb.png',
+                'assets/images/fetus.png',
                 height: 230,
               ),
               const SizedBox(height: 20),

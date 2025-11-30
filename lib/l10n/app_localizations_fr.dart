@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Soins de la Grossesse et du Bébé';
+  String get appTitle => 'Grossesse et soins du bébé';
 
   @override
   String get welcome => 'Bienvenue';
@@ -19,9 +19,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signup => 'S\'inscrire';
-
-  @override
-  String get email => 'Email';
 
   @override
   String get password => 'Mot de passe';
@@ -36,7 +33,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get language => 'Langue';
 
   @override
-  String get darkMode => 'Mode Sombre';
+  String get darkMode => 'Mode sombre';
 
   @override
   String get notifications => 'Notifications';
@@ -48,13 +45,54 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
+  String get welcome_back => 'Bon retour !';
+
+  @override
+  String get or => '— OU —';
+
+  @override
+  String get register => 'S\'inscrire';
+
+  @override
+  String get auth =>
+      'Votre compagnon de confiance à chaque étape de la maternité';
+
+  @override
+  String get auth2 =>
+      'Laissez Gestanéa vous guider pendant la grossesse, les soins du bébé et au-delà.';
+
+  @override
+  String get forgot => 'Mot de passe oublié ?';
+
+  @override
+  String get notRegistered => 'Pas encore inscrit ?';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get your_name => 'Votre nom';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get enter_email => 'Entrez votre e-mail';
+
+  @override
+  String get enter_name => 'Entrez votre nom';
+
+  @override
+  String get rememberMe => 'Se souvenir de moi';
+
+  @override
   String get version => 'Version';
 
   @override
   String get pregnant => 'Enceinte';
 
   @override
-  String get postpartum => 'Post-partum';
+  String get postpartum => 'Postpartum';
 
   @override
   String week(int week) {
@@ -63,56 +101,56 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String daysLeft(int days) {
-    return '$days jours restants';
+    return 'Il reste $days jours';
   }
 
   @override
   String get market => 'Marché';
 
   @override
-  String get maternityWear => 'Vêtements de Maternité';
+  String get maternityWear => 'Vêtements de maternité';
 
   @override
-  String get painRelief => 'Soulagement de la Douleur';
+  String get painRelief => 'Soulagement de la douleur';
 
   @override
-  String get skinCare => 'Soins de la Peau';
+  String get skinCare => 'Soins de la peau';
 
   @override
-  String get pregnancyPillow => 'Oreiller de Grossesse';
+  String get pregnancyPillow => 'Coussin de grossesse';
 
   @override
-  String get backSupportBelt => 'Ceinture de Soutien Dorsal';
+  String get backSupportBelt => 'Ceinture de soutien dorsal';
 
   @override
   String get searchHint => 'Trouvez ce dont vous avez besoin...';
 
   @override
-  String get dontMissOut => 'Ne manquez pas!';
+  String get dontMissOut => 'Ne ratez pas !';
 
   @override
-  String get discountUpTo => 'Réduction jusqu\'à 50%';
+  String get discountUpTo => 'Remise jusqu\'à 50%';
 
   @override
-  String get upgradeNow => 'Mettre à niveau maintenant';
+  String get upgradeNow => 'Améliorez maintenant';
 
   @override
-  String get healthLog => 'Journal de Santé';
+  String get healthLog => 'Journal de santé';
 
   @override
   String get trackYourWellness => 'Suivez votre bien-être';
 
   @override
-  String get vitals => 'Signes Vitaux';
+  String get vitals => 'Signes vitaux';
 
   @override
   String get symptoms => 'Symptômes';
 
   @override
-  String get labResults => 'Résultats Labo';
+  String get labResults => 'Résultats\nde laboratoire';
 
   @override
-  String get riskAlerts => 'Alertes Risque';
+  String get riskAlerts => 'Alertes\nde risque';
 
   @override
   String get mood => 'Humeur';
@@ -121,10 +159,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weight => 'Poids';
 
   @override
-  String get heartRate => 'Rythme Cardiaque';
+  String get heartRate => 'Fréquence cardiaque';
 
   @override
-  String get bloodPressure => 'Tension Artérielle';
+  String get bloodPressure => 'Tension artérielle';
 
   @override
   String get normal => 'Normal';
@@ -137,8 +175,156 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get healthTipMessage =>
-      'Excellent travail! Vous maintenez un rythme de prise de poids sain. Continuez avec votre alimentation équilibrée et vos exercices doux.';
+      'Bravo ! Vous maintenez un rythme de prise de poids sain. Continuez votre alimentation équilibrée et vos exercices doux.';
 
   @override
-  String get onTrack => 'Sur la Bonne Voie';
+  String get onTrack => 'Sur la bonne voie';
+
+  @override
+  String get doctors => 'Médecins';
+
+  @override
+  String get findDoctors => 'trouver des médecins par nom ou spécialité';
+
+  @override
+  String get useCurrentLocation => 'Utiliser ma position actuelle';
+
+  @override
+  String get algiers => 'Alger';
+
+  @override
+  String get oran => 'Oran';
+
+  @override
+  String get constantine => 'Constantine';
+
+  @override
+  String get annaba => 'Annaba';
+
+  @override
+  String get blida => 'Blida';
+
+  @override
+  String get doctorsFoundSingle => '1 Médecin Trouvé';
+
+  @override
+  String doctorsFoundPlural(int count) {
+    return '$count Médecins Trouvés';
+  }
+
+  @override
+  String get filter => 'Filtrer';
+
+  @override
+  String get filterDoctors => 'Filtrer les médecins';
+
+  @override
+  String get clearAll => 'Tout effacer';
+
+  @override
+  String get maximumDistance => 'Distance maximale';
+
+  @override
+  String upToKm(String distance) {
+    return 'Jusqu\'à $distance km';
+  }
+
+  @override
+  String get minimumRating => 'Évaluation minimale';
+
+  @override
+  String ratingAndAbove(String rating) {
+    return '$rating et plus';
+  }
+
+  @override
+  String get gender => 'Genre';
+
+  @override
+  String get all => 'Tous';
+
+  @override
+  String get male => 'Homme';
+
+  @override
+  String get female => 'Femme';
+
+  @override
+  String get minimumReviews => 'Avis minimum';
+
+  @override
+  String atLeastReviews(int count) {
+    return 'Au moins $count avis';
+  }
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String kmAway(String distance) {
+    return 'à $distance km';
+  }
+
+  @override
+  String get reviews => 'avis';
+
+  @override
+  String get noDoctorsFound => 'Aucun médecin trouvé';
+
+  @override
+  String get noResults => 'Aucun résultat';
+
+  @override
+  String noMatchingDoctors(String query) {
+    return 'Aucun médecin ne correspond à \"$query\"';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'Essayez d\'ajuster vos filtres';
+
+  @override
+  String get doctorDetails => 'Détails du médecin';
+
+  @override
+  String get couldNotOpenMaps => 'Impossible d\'ouvrir les cartes';
+
+  @override
+  String get phoneNumberNotAvailable => 'Numéro de téléphone non disponible';
+
+  @override
+  String get couldNotMakePhoneCall =>
+      'Impossible de passer l\'appel téléphonique';
+
+  @override
+  String get gynecologist => 'Gynécologue';
+
+  @override
+  String get pediatrician => 'Pédiatre';
+
+  @override
+  String get obstetrician => 'Obstétricien';
+
+  @override
+  String get generalPractitioner => 'Médecin généraliste';
+
+  @override
+  String get getDirections => 'Obtenir l\'itinéraire';
+
+  @override
+  String get contactInformation => 'Informations de contact';
+
+  @override
+  String get address => 'Adresse';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get openingHours => 'Heures d\'ouverture';
+
+  @override
+  String get callNow => 'Appeler maintenant';
 }

@@ -1,6 +1,6 @@
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:flutter/material.dart';
-import 'pregnancy_dashboard_page.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'postpartum_dashboard_page.dart';
 import '../../../pregnancy/presentation/pages/week_tracker_page.dart';
 import 'postpartum_track_page.dart';
@@ -19,11 +19,17 @@ class _DashboardPageState extends State<DashboardPage> {
   bool isPregnant = true;
   String babyGender = 'girl';
 
+  void _setPageIndex(index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = [
       isPregnant
-          ? const PregnancyDashboardPage()
+          ? HomeScreen(onNavigate: _setPageIndex)
           : PostpartumDashboardPage(babyGender: babyGender),
       isPregnant
           ? const WeekTrackerPage()
@@ -34,10 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -52,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: SafeArea(
           child: BottomNavigationBar(
             currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
+            onTap: (index) => _setPageIndex(index),
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
             selectedItemColor: const Color(0xFF9B7FDB),
@@ -93,15 +96,15 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ),
       ),
-      floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton(
-              onPressed: () {
-                _showModeDialog();
-              },
-              backgroundColor: const Color(0xFF9B7FDB),
-              child: const Icon(Icons.settings),
-            )
-          : null,
+      // floatingActionButton: _currentIndex == 0
+      //     ? FloatingActionButton(
+      //         onPressed: () {
+      //           _showModeDialog();
+      //         },
+      //         backgroundColor: const Color(0xFF9B7FDB),
+      //         child: const Icon(Icons.settings),
+      //       )
+      //     : null,
     );
   }
 
@@ -134,44 +137,44 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _showModeDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Change Mode'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Pregnancy Mode'),
-              onTap: () {
-                setState(() => isPregnant = true);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Postpartum Mode (Girl)'),
-              onTap: () {
-                setState(() {
-                  isPregnant = false;
-                  babyGender = 'girl';
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Postpartum Mode (Boy)'),
-              onTap: () {
-                setState(() {
-                  isPregnant = false;
-                  babyGender = 'boy';
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // void _showModeDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Change Mode'),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           ListTile(
+  //             title: const Text('Pregnancy Mode'),
+  //             onTap: () {
+  //               setState(() => isPregnant = true);
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           ListTile(
+  //             title: const Text('Postpartum Mode (Girl)'),
+  //             onTap: () {
+  //               setState(() {
+  //                 isPregnant = false;
+  //                 babyGender = 'girl';
+  //               });
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           ListTile(
+  //             title: const Text('Postpartum Mode (Boy)'),
+  //             onTap: () {
+  //               setState(() {
+  //                 isPregnant = false;
+  //                 babyGender = 'boy';
+  //               });
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

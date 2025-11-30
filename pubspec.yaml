@@ -2,7 +2,11 @@ name: gestanea
 description: A comprehensive pregnancy and baby care mobile app.
 publish_to: none
 version: 0.1.0
-
+ 
+dependency_overrides:
+  flutter_inset_box_shadow:
+    path: ./patches/flutter_inset_box_shadow
+    
 environment:
   sdk: ^3.9.2
 
@@ -29,6 +33,8 @@ dependencies:
 
   shared_preferences: ^2.5.3
   fl_chart: ^0.69.0
+  flutter_svg: ^2.2.2
+  flutter_inset_box_shadow: ^1.0.8
 
 dev_dependencies:
   flutter_test:
@@ -36,14 +42,16 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-  
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
     - assets/images/onboarding1.png
     - assets/images/onboarding2.png
     - assets/images/onboarding3.png
-    - assets/images/fetus-inside-heart-shape-womb.png
+    - assets/images/onboarding4.png
+    - assets/images/kickcounter.png
+    - assets/images/fetus.png
   generate: true
   fonts:
     - family: Lato

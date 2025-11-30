@@ -21,9 +21,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signup => 'Sign Up';
 
   @override
-  String get email => 'Email';
-
-  @override
   String get password => 'Password';
 
   @override
@@ -46,6 +43,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about => 'About';
+
+  @override
+  String get welcome_back => 'Welcome Back!';
+
+  @override
+  String get or => '— OR —';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get auth => 'Your trusted companion for every stage of motherhood';
+
+  @override
+  String get auth2 =>
+      'Let Gestanéa guide you through pregnancy, baby care, and beyond.';
+
+  @override
+  String get forgot => 'Forgot Password?';
+
+  @override
+  String get notRegistered => 'Not registered yet?';
+
+  @override
+  String get createAccount => 'Create an Account';
+
+  @override
+  String get your_name => 'Your Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get enter_email => 'Enter your email';
+
+  @override
+  String get enter_name => 'Enter your Name';
+
+  @override
+  String get rememberMe => 'Remember me';
 
   @override
   String get version => 'Version';
@@ -141,4 +178,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onTrack => 'On Track';
+
+  @override
+  String get doctors => 'Doctors';
+
+  @override
+  String get findDoctors => 'find doctors by name or speciality';
+
+  @override
+  String get useCurrentLocation => 'Use current location';
+
+  @override
+  String get algiers => 'Algiers';
+
+  @override
+  String get oran => 'Oran';
+
+  @override
+  String get constantine => 'Constantine';
+
+  @override
+  String get annaba => 'Annaba';
+
+  @override
+  String get blida => 'Blida';
+
+  @override
+  String get doctorsFoundSingle => '1 Doctor Found';
+
+  @override
+  String doctorsFoundPlural(int count) {
+    return '$count Doctors Found';
+  }
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get filterDoctors => 'Filter Doctors';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get maximumDistance => 'Maximum Distance';
+
+  @override
+  String upToKm(String distance) {
+    return 'Up to $distance km';
+  }
+
+  @override
+  String get minimumRating => 'Minimum Rating';
+
+  @override
+  String ratingAndAbove(String rating) {
+    return '$rating and above';
+  }
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get minimumReviews => 'Minimum Reviews';
+
+  @override
+  String atLeastReviews(int count) {
+    return 'At least $count reviews';
+  }
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String kmAway(String distance) {
+    return '$distance km away';
+  }
+
+  @override
+  String get reviews => 'reviews';
+
+  @override
+  String get noDoctorsFound => 'No doctors found';
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String noMatchingDoctors(String query) {
+    return 'No doctors match \"$query\"';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'Try adjusting your filters';
+
+  @override
+  String get doctorDetails => 'Doctor Details';
+
+  @override
+  String get couldNotOpenMaps => 'Could not open maps';
+
+  @override
+  String get phoneNumberNotAvailable => 'Phone number not available';
+
+  @override
+  String get couldNotMakePhoneCall => 'Could not make phone call';
+
+  @override
+  String get gynecologist => 'Gynecologist';
+
+  @override
+  String get pediatrician => 'Pediatrician';
+
+  @override
+  String get obstetrician => 'Obstetrician';
+
+  @override
+  String get generalPractitioner => 'General Practitioner';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get contactInformation => 'Contact Information';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get openingHours => 'Opening Hours';
+
+  @override
+  String get callNow => 'Call Now';
 }
