@@ -64,10 +64,10 @@ class NeumorphicButton extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 text,
-                style: AppTextStyles.subtitle1.copyWith(
+                style: AppTextStyles.headline2.copyWith(
                   color: AppColors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

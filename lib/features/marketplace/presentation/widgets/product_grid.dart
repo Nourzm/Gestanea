@@ -61,6 +61,7 @@ class ProductGrid extends StatelessWidget {
             oldPrice: product.oldPrice,
             discount: product.discount,
             discountBgColor: product.discountBgColor,
+            onTap: () => onProductTapped?.call(index),
           );
         },
       ),

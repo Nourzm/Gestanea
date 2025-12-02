@@ -6,6 +6,7 @@ import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
+import 'product_details.dart';
 
 class MarketplacePage extends StatefulWidget {
   const MarketplacePage({super.key});
@@ -232,7 +233,21 @@ class _MarketplacePageState extends State<MarketplacePage> {
                   // Category sidebar - use localized categories
                   CategorySidebar(categories: _getCategories(context)),
                   // Product grid - use localized products
-                  Expanded(child: ProductGrid(products: _getProducts(context))),
+                  Expanded(
+                    child: ProductGrid(
+                      products: _getProducts(context),
+                      onProductTapped: (index) {
+                        final products = _getProducts(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetailPage(product: products[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

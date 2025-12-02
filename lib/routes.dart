@@ -31,5 +31,6 @@ Map<String, WidgetBuilder> appRoutes = {
   // AppRoutes.education: (context) => const EducationScreen(),
   AppRoutes.doctors: (context) => const DoctorsScreen(),
   AppRoutes.marketplace: (context) => const MarketplacePage(),
+  // Product details route will receive arguments
   // AppRoutes.profile: (context) => const ProfileScreen(),
 };
