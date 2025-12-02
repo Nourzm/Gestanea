@@ -9,9 +9,9 @@ import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_she
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
-import 'package:gestanea/features/doctors/domain/usecases/get_doctors_usecase.dart';
-import 'package:gestanea/features/doctors/domain/usecases/search_doctors_usecase.dart';
-import 'package:gestanea/features/doctors/domain/usecases/filter_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/logic/get_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/logic/search_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/logic/filter_doctors_usecase.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsScreen extends StatefulWidget {

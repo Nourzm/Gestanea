@@ -44,7 +44,7 @@ class WeekCalendar extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [AppColors.main500, AppColors.pink500],
+                      colors: [AppColors.main500, AppColors.lightPurple],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [

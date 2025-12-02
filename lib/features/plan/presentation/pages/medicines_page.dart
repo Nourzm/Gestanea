@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/features/plan/presentation/widgets/medicine_card.dart';
 
 class MedicinesPage extends StatefulWidget {
   const MedicinesPage({super.key});
@@ -98,57 +99,57 @@ class _MedicinesPageState extends State<MedicinesPage> {
                       ),
                       child: Column(
                         children: [
-                          _buildMedicineCard(
-                            'Captopril',
-                            '2 Capsules',
-                            '20:00',
-                            'Daily',
-                            'assets/images/captopril.png',
-                            'Take',
-                            AppColors.main500,
-                            false,
-                            screenWidth,
-                            screenHeight,
+                          MedicineCard(
+                            name: 'Captopril',
+                            dosage: '2 Capsules',
+                            time: '20:00',
+                            frequency: 'Daily',
+                            imagePath: 'assets/images/captopril.png',
+                            buttonText: 'Take',
+                            buttonColor: AppColors.main500,
+                            isTaken: false,
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
                           ),
                           SizedBox(height: screenHeight * 0.015),
-                          _buildMedicineCard(
-                            'B 12',
-                            '1 Injection',
-                            '22:00',
-                            'Daily',
-                            'assets/images/b12.png',
-                            'Taken',
-                            Colors.green,
-                            true,
-                            screenWidth,
-                            screenHeight,
+                          MedicineCard(
+                            name: 'B 12',
+                            dosage: '1 Injection',
+                            time: '22:00',
+                            frequency: 'Daily',
+                            imagePath: 'assets/images/b12.png',
+                            buttonText: 'Taken',
+                            buttonColor: Colors.green,
+                            isTaken: true,
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
                           ),
                           SizedBox(height: screenHeight * 0.015),
-                          _buildMedicineCard(
-                            'I-DROP MGD',
-                            '2 Drops',
-                            '22:00',
-                            'Daily',
-                            'assets/images/idrop.png',
-                            'Take',
-                            AppColors.main500,
-                            false,
-                            screenWidth,
-                            screenHeight,
+                          MedicineCard(
+                            name: 'I-DROP MGD',
+                            dosage: '2 Drops',
+                            time: '22:00',
+                            frequency: 'Daily',
+                            imagePath: 'assets/images/idrop.png',
+                            buttonText: 'Take',
+                            buttonColor: AppColors.main500,
+                            isTaken: false,
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
                             showMissedBadge: true,
                           ),
                           SizedBox(height: screenHeight * 0.015),
-                          _buildMedicineCard(
-                            'Niacin',
-                            '0.5 Pill',
-                            '22:00',
-                            'Daily',
-                            'assets/images/niacin.png',
-                            'Take',
-                            AppColors.main500,
-                            false,
-                            screenWidth,
-                            screenHeight,
+                          MedicineCard(
+                            name: 'Niacin',
+                            dosage: '0.5 Pill',
+                            time: '22:00',
+                            frequency: 'Daily',
+                            imagePath: 'assets/images/niacin.png',
+                            buttonText: 'Take',
+                            buttonColor: AppColors.main500,
+                            isTaken: false,
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
                             showMissedBadge: true,
                           ),
                         ],
@@ -177,12 +178,33 @@ class _MedicinesPageState extends State<MedicinesPage> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.main300 : Colors.transparent,
+          color: isSelected ? AppColors.main300 : AppColors.bg_1,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? AppColors.main500 : Colors.grey.shade300,
+            color: isSelected ? AppColors.main500 : Colors.transparent,
             width: 1,
           ),
+          // Neumorphism shadows
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF000000).withOpacity(0.25),
+                    blurRadius: 4,
+                    offset: const Offset(2, 2),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: const Color(0xFF000000).withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(4, 4),
+                  ),
+                  const BoxShadow(
+                    color: Color(0xFFFFFFFF),
+                    blurRadius: 6,
+                    offset: Offset(-4, -4),
+                  ),
+                ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -210,154 +232,5 @@ class _MedicinesPageState extends State<MedicinesPage> {
     );
   }
 
-  Widget _buildMedicineCard(
-    String name,
-    String dosage,
-    String time,
-    String frequency,
-    String imagePath,
-    String buttonText,
-    Color buttonColor,
-    bool isTaken,
-    double screenWidth,
-    double screenHeight, {
-    bool showMissedBadge = false,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(screenWidth * 0.04),
-      decoration: BoxDecoration(
-        color: AppColors.bg_1,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF000000).withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(4, 4),
-          ),
-          BoxShadow(
-            color: const Color(0xFFFFFFFF),
-            blurRadius: 10,
-            offset: const Offset(-4, -4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              // Medicine Image
-              Container(
-                width: screenWidth * 0.2,
-                height: screenWidth * 0.2,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.medication, size: 40, color: Colors.grey);
-                  },
-                ),
-              ),
-              SizedBox(width: screenWidth * 0.04),
-              // Medicine Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.045,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      dosage,
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.035,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        Text(
-                          ' | ',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
-                        Text(
-                          frequency,
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.012),
-                    // Take/Taken Button
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: buttonColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        buttonText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.038,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          // Missed Badge
-          if (showMissedBadge)
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.error1,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Missed',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
+  // ...existing code...
 }

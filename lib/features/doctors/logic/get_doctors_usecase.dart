@@ -1,5 +1,5 @@
 import 'package:gestanea/features/doctors/data/datasources/mock_doctor_data.dart';
-import 'package:gestanea/features/doctors/domain/entities/doctor_entity.dart';
+import 'package:gestanea/features/doctors/data/models/doctor_entity.dart';
 
 class GetDoctorsUseCase {
   List<DoctorEntity> execute() {

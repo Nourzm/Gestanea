@@ -4,8 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/doctors/data/datasources/mock_doctor_data.dart';
-import 'package:gestanea/features/doctors/domain/usecases/map_navigation_usecase.dart';
-import 'package:gestanea/features/doctors/domain/usecases/phone_call_usecase.dart';
+import 'package:gestanea/features/doctors/logic/map_navigation_usecase.dart';
+import 'package:gestanea/features/doctors/logic/phone_call_usecase.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_info_map_section.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/contact_info.dart';
 

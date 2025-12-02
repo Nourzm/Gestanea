@@ -1,5 +1,5 @@
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
-import 'package:gestanea/features/doctors/domain/entities/doctor_entity.dart';
+import 'package:gestanea/features/doctors/data/models/doctor_entity.dart';
 
 class FilterDoctorsUseCase {
   List<DoctorEntity> execute(List<DoctorEntity> doctors, DoctorFilter filter) {
