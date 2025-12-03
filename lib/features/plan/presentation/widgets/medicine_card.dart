@@ -1,33 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/database/models/medicine_model.dart';
+import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 
 class MedicineCard extends StatelessWidget {
-  final String name;
-  final String dosage;
-  final String time;
-  final String frequency;
-  final String imagePath;
-  final String buttonText;
-  final Color buttonColor;
-  final bool isTaken;
+  final MedicineModel medicine;
+  final MedicineLoggedModel? log;
+  final String scheduledTime;
   final double screenWidth;
   final double screenHeight;
-  final bool showMissedBadge;
+  final VoidCallback? onTakeMedicine;
 
   const MedicineCard({
     Key? key,
-    required this.name,
-    required this.dosage,
-    required this.time,
-    required this.frequency,
-    required this.imagePath,
-    required this.buttonText,
-    required this.buttonColor,
-    required this.isTaken,
+    required this.medicine,
+    this.log,
+    required this.scheduledTime,
     required this.screenWidth,
     required this.screenHeight,
-    this.showMissedBadge = false,
+    this.onTakeMedicine,
   }) : super(key: key);
+
+  bool get isTaken => log?.status == 'taken';
+  bool get isMissed => log?.status == 'missed';
+
+  String get buttonText {
+    if (isTaken) return 'Taken';
+    if (isMissed) return 'Missed';
+    return 'Take';
+  }
+
+  Color get buttonColor {
+    if (isTaken) return Colors.green;
+    if (isMissed) return Colors.red.shade300;
+    return AppColors.main500;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +84,19 @@ class MedicineCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.medication, size: 40, color: Colors.grey);
-                  },
-                ),
+                child: medicine.medicineImageUrl != null
+                    ? Image.network(
+                        medicine.medicineImageUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.medication,
+                            size: 40,
+                            color: Colors.grey,
+                          );
+                        },
+                      )
+                    : Icon(Icons.medication, size: 40, color: Colors.grey),
               ),
               SizedBox(width: screenWidth * 0.04),
               Expanded(
@@ -91,7 +104,7 @@ class MedicineCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      medicine.medicineName,
                       style: TextStyle(
                         fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.bold,
@@ -100,7 +113,7 @@ class MedicineCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      dosage,
+                      medicine.dosage,
                       style: TextStyle(
                         fontSize: screenWidth * 0.035,
                         color: Colors.grey.shade700,
@@ -110,7 +123,7 @@ class MedicineCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          time,
+                          scheduledTime,
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             fontWeight: FontWeight.w600,
@@ -125,7 +138,7 @@ class MedicineCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          frequency,
+                          medicine.frequencyType,
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: Colors.grey.shade700,
@@ -134,27 +147,30 @@ class MedicineCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.012),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: buttonColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: buttonColor.withOpacity(0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                    GestureDetector(
+                      onTap: isTaken ? null : onTakeMedicine,
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: buttonColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: buttonColor.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          buttonText,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.038,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
-                      child: Text(
-                        buttonText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.038,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -163,7 +179,7 @@ class MedicineCard extends StatelessWidget {
               ),
             ],
           ),
-          if (showMissedBadge)
+          if (isMissed)
             Positioned(
               top: 0,
               right: 0,

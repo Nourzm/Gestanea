@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/header.dart';
@@ -7,11 +8,10 @@ import 'package:gestanea/features/doctors/presentation/widgets/location_selector
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
-import 'package:gestanea/features/doctors/logic/get_doctors_usecase.dart';
-import 'package:gestanea/features/doctors/logic/search_doctors_usecase.dart';
-import 'package:gestanea/features/doctors/logic/filter_doctors_usecase.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctors_event.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctors_state.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsScreen extends StatefulWidget {
@@ -24,83 +24,16 @@ class DoctorsScreen extends StatefulWidget {
 class _DoctorsScreenState extends State<DoctorsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedLocation = 'Algiers';
-  DoctorFilter _currentFilter = DoctorFilter();
-  String _searchQuery = '';
-
-  // Use cases
-  final _getDoctorsUseCase = GetDoctorsUseCase();
-  final _searchDoctorsUseCase = SearchDoctorsUseCase();
-  final _filterDoctorsUseCase = FilterDoctorsUseCase();
-
-  // Doctors data
-  late final List<Doctor> _allDoctors;
 
   @override
   void initState() {
     super.initState();
-    _loadDoctors();
+    context.read<DoctorsBloc>().add(LoadDoctors());
     _searchController.addListener(_onSearchChanged);
   }
 
-  void _loadDoctors() {
-    // Get doctors from use case and convert entities to models
-    final doctorEntities = _getDoctorsUseCase.execute();
-
-    _allDoctors = doctorEntities.map((entity) {
-      return Doctor(
-        name: entity.name,
-        specialty: entity.specialty,
-        distance: '${entity.distanceKm.toStringAsFixed(1)}',
-        rating: entity.rating,
-        reviews: entity.totalReviews,
-        gender: entity.gender,
-        address: entity.address,
-        phoneNumber: entity.phoneNumber,
-        latitude: entity.latitude,
-        longitude: entity.longitude,
-        distanceKm: entity.distanceKm,
-        openingHours: entity.openingHours,
-      );
-    }).toList();
-  }
-
   void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text;
-    });
-  }
-
-  List<Doctor> get _filteredDoctors {
-    // Convert Doctor models to entities for filtering
-    final doctorEntities = _allDoctors.map((doctor) {
-      return _getDoctorsUseCase.execute().firstWhere(
-        (entity) => entity.name == doctor.name,
-      );
-    }).toList();
-
-    // Apply search
-    var filtered = _searchDoctorsUseCase.execute(doctorEntities, _searchQuery);
-
-    // Apply filters
-    filtered = _filterDoctorsUseCase.execute(filtered, _currentFilter);
-
-    // Convert back to models
-    return filtered.map((entity) {
-      return Doctor(
-        name: entity.name,
-        specialty: entity.specialty,
-        distance: '${entity.distanceKm.toStringAsFixed(1)}',
-        rating: entity.rating,
-        reviews: entity.totalReviews,
-        gender: entity.gender,
-        address: entity.address,
-        phoneNumber: entity.phoneNumber,
-        latitude: entity.latitude,
-        longitude: entity.longitude,
-        distanceKm: entity.distanceKm,
-        openingHours: entity.openingHours,
-      );
-    }).toList();
+    context.read<DoctorsBloc>().add(SearchDoctors(_searchController.text));
   }
 
   void _showLocationPicker() {
@@ -114,18 +47,17 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     );
   }
 
-  void _showFilterBottomSheet() {
+  void _showFilterBottomSheet(DoctorFilter currentFilter) {
+    final doctorsBloc = context.read<DoctorsBloc>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return FilterBottomSheet(
-          currentFilter: _currentFilter,
+          currentFilter: currentFilter,
           onApplyFilter: (filter) {
-            setState(() {
-              _currentFilter = filter;
-            });
+            doctorsBloc.add(FilterDoctors(filter));
           },
         );
       },
@@ -135,7 +67,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final displayDoctors = _filteredDoctors;
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
@@ -144,44 +75,67 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           children: [
             Header(title: l10n.doctors, showBackButton: true),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: searchBar(
-                        controller: _searchController,
-                        hintText: l10n.findDoctors,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    LocationSelector(
-                      selectedLocation: _selectedLocation,
-                      onTap: _showLocationPicker,
-                    ),
-                    const SizedBox(height: 20),
-                    DoctorsFilterBar(
-                      doctorCount: displayDoctors.length,
-                      onFilterTap: _showFilterBottomSheet,
-                      hasActiveFilters: _currentFilter.hasActiveFilters,
-                    ),
-                    const SizedBox(height: 16),
-                    displayDoctors.isEmpty
-                        ? _buildEmptyState()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
+              child: BlocBuilder<DoctorsBloc, DoctorsState>(
+                builder: (context, state) {
+                  if (state is DoctorsLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is DoctorsError) {
+                    return Center(child: Text(state.message));
+                  }
+
+                  if (state is DoctorsLoaded) {
+                    final displayDoctors = state.doctors;
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20.0,
                             ),
-                            itemCount: displayDoctors.length,
-                            itemBuilder: (context, index) {
-                              return DoctorCard(doctor: displayDoctors[index]);
-                            },
+                            child: searchBar(
+                              controller: _searchController,
+                              hintText: l10n.findDoctors,
+                            ),
                           ),
-                  ],
-                ),
+                          const SizedBox(height: 16),
+                          LocationSelector(
+                            selectedLocation: _selectedLocation,
+                            onTap: _showLocationPicker,
+                          ),
+                          const SizedBox(height: 20),
+                          DoctorsFilterBar(
+                            doctorCount: displayDoctors.length,
+                            onFilterTap: () =>
+                                _showFilterBottomSheet(state.currentFilter),
+                            hasActiveFilters: state.hasActiveFilters,
+                          ),
+                          const SizedBox(height: 16),
+                          displayDoctors.isEmpty
+                              ? _buildEmptyState(state.searchQuery)
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                  ),
+                                  itemCount: displayDoctors.length,
+                                  itemBuilder: (context, index) {
+                                    return DoctorCard(
+                                      doctor: displayDoctors[index],
+                                    );
+                                  },
+                                ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return const SizedBox();
+                },
               ),
             ),
           ],
@@ -239,7 +193,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(String searchQuery) {
     final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
@@ -248,7 +202,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              _searchQuery.isNotEmpty
+              searchQuery.isNotEmpty
                   ? Icons.search_off
                   : Icons.medical_services_outlined,
               size: 64,
@@ -256,7 +210,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              _searchQuery.isNotEmpty ? l10n.noDoctorsFound : l10n.noResults,
+              searchQuery.isNotEmpty ? l10n.noDoctorsFound : l10n.noResults,
               style: AppTextStyles.headline2.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 18,
@@ -266,8 +220,8 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _searchQuery.isNotEmpty
-                  ? l10n.noMatchingDoctors(_searchQuery)
+              searchQuery.isNotEmpty
+                  ? l10n.noMatchingDoctors(searchQuery)
                   : l10n.tryAdjustingFilters,
               textAlign: TextAlign.center,
               style: AppTextStyles.body1.copyWith(

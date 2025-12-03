@@ -3,9 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/doctors/data/datasources/mock_doctor_data.dart';
-import 'package:gestanea/features/doctors/logic/map_navigation_usecase.dart';
-import 'package:gestanea/features/doctors/logic/phone_call_usecase.dart';
+import 'package:gestanea/core/database/models/doctor_model.dart';
+import 'package:gestanea/features/doctors/logic/utils/map_helper.dart'
+    as map_helper;
+import 'package:gestanea/features/doctors/logic/utils/phone_helper.dart'
+    as phone_helper;
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_info_map_section.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/contact_info.dart';
 
@@ -13,9 +15,9 @@ import 'package:gestanea/features/doctors/presentation/widgets/call_now.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
-  final Map<String, dynamic>? doctor;
+  final DoctorModel doctor;
 
-  const DoctorDetailScreen({super.key, this.doctor});
+  const DoctorDetailScreen({super.key, required this.doctor});
 
   @override
   State<DoctorDetailScreen> createState() => _DoctorDetailScreenState();
@@ -23,30 +25,26 @@ class DoctorDetailScreen extends StatefulWidget {
 
 class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   final MapController _mapController = MapController();
-  late Map<String, dynamic> _doctor;
-
-  // Use cases
-  final _mapNavigationUseCase = MapNavigationUseCase();
-  final _phoneCallUseCase = PhoneCallUseCase();
+  late DoctorModel _doctor;
 
   @override
   void initState() {
     super.initState();
-    _doctor = widget.doctor ?? MockDoctorData.sampleDoctor;
+    _doctor = widget.doctor;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mapController.move(
-        LatLng(_doctor['latitude'], _doctor['longitude']),
+        LatLng(_doctor.latitude ?? 0, _doctor.longitude ?? 0),
         15.0,
       );
     });
   }
 
   Future<void> _openDirections() async {
-    final lat = _doctor['latitude'];
-    final lng = _doctor['longitude'];
+    final lat = _doctor.latitude ?? 0;
+    final lng = _doctor.longitude ?? 0;
 
-    final success = await _mapNavigationUseCase.openDirections(lat, lng);
+    final success = await map_helper.openDirections(lat, lng);
 
     if (!success && mounted) {
       final l10n = AppLocalizations.of(context)!;
@@ -60,7 +58,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   }
 
   Future<void> _makePhoneCall() async {
-    final phoneNumber = _doctor['phone_number'] ?? '';
+    final phoneNumber = _doctor.phone ?? '';
 
     if (phoneNumber.isEmpty) {
       if (mounted) {
@@ -75,7 +73,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
       return;
     }
 
-    final success = await _phoneCallUseCase.makePhoneCall(phoneNumber);
+    final success = await phone_helper.makePhoneCall(phoneNumber);
 
     if (!success && mounted) {
       final l10n = AppLocalizations.of(context)!;

@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/core/database/models/product_category_model.dart';
 import 'category_item.dart';
 
-class CategoryModel {
-  final String label;
-  final String imageAsset;
-
-  const CategoryModel({required this.label, required this.imageAsset});
-}
-
 class CategorySidebar extends StatelessWidget {
-  final List<CategoryModel> categories;
+  final List<ProductCategoryModel> categories;
   final Function(int)? onCategoryTapped;
 
   const CategorySidebar({
@@ -29,9 +23,8 @@ class CategorySidebar extends StatelessWidget {
         itemBuilder: (context, index) {
           final category = categories[index];
           return CategoryItem(
-            label: category.label,
-            imageAsset: category.imageAsset,
-
+            label: category.name ?? '',
+            imageAsset: category.imageUrl ?? '',
             onTap: () => onCategoryTapped?.call(index),
           );
         },

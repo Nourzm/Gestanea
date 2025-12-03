@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
+import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'doctor_info.dart';
 
 class DoctorCard extends StatelessWidget {
-  final Doctor doctor;
+  final DoctorModel doctor;
   final VoidCallback? onTap;
 
   const DoctorCard({Key? key, required this.doctor, this.onTap})
@@ -23,7 +23,7 @@ class DoctorCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DoctorDetailScreen(doctor: doctor.toMap()),
+              builder: (context) => DoctorDetailScreen(doctor: doctor),
             ),
           );
         }

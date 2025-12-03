@@ -17,20 +17,28 @@ class UpcomingRemindersWidget extends StatelessWidget {
     return Column(
       children: [
         // Appointments (next 3)
-        ...appointments.take(3).map((apt) => _buildReminderItem(
-              apt.title,
-              _formatTime(apt.dateTime),
-              _getIconForType(apt.type),
-              const Color(0xFF9B7FDB),
-            )),
-        
+        ...appointments
+            .take(3)
+            .map(
+              (apt) => _buildReminderItem(
+                apt.title,
+                _formatTime(apt.dateTime),
+                _getIconForType(apt.type),
+                const Color(0xFF9B7FDB),
+              ),
+            ),
+
         // Medicines (next 2)
-        ...medicines.take(2).map((med) => _buildReminderItem(
-              med.medicineName,
-              '${_formatTime(med.nextDoseTime)} - ${med.dosage}',
-              Icons.medication,
-              const Color(0xFFE8A5C8),
-            )),
+        ...medicines
+            .take(2)
+            .map(
+              (med) => _buildReminderItem(
+                med.medicineName,
+                '${_formatTime(med.nextDoseTime)} - ${med.dosage}',
+                Icons.medication,
+                const Color(0xFFE8A5C8),
+              ),
+            ),
       ],
     );
   }
@@ -59,10 +67,7 @@ class UpcomingRemindersWidget extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             child: Icon(icon, color: Colors.white, size: 24),
           ),
           const SizedBox(width: 16),
@@ -80,10 +85,7 @@ class UpcomingRemindersWidget extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   time,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -119,8 +121,20 @@ class UpcomingRemindersWidget extends StatelessWidget {
     } else if (difference.inDays < 7) {
       return 'In ${difference.inDays} days';
     } else {
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       return '${months[dateTime.month - 1]} ${dateTime.day}, ${dateTime.year}';
     }
   }

@@ -2,13 +2,17 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/product_model.dart';
+import 'package:gestanea/core/database/models/product_variant_model.dart';
+import 'package:gestanea/core/database/models/product_spec_model.dart';
+import 'package:gestanea/core/database/models/product_review_model.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/product_grid.dart';
+import 'package:gestanea/features/marketplace/data/datasources/mock_marketplace_data.dart';
 import '../widgets/neumorphic_section.dart';
 import '../widgets/review_card.dart';
 import '../widgets/quantity_button.dart';
-import '../bloc/product_quantity_bloc.dart';
+import '../../logic/product_quantity_bloc.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductModel product;
@@ -24,19 +28,22 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   int _selectedSizeIndex = 0;
   int _currentImageIndex = 0;
 
-  final List<Color> _availableColors = [
-    const Color(0xFFD4A5E8),
-    const Color(0xFFFF91C7),
-    const Color(0xFF9E9E9E),
-  ];
+  late List<ProductVariantModel> _colorVariants;
+  late List<ProductVariantModel> _sizeVariants;
+  late List<ProductSpecModel> _specs;
+  late List<ProductReviewModel> _reviews;
 
-  final List<String> _availableSizes = ['Standard', 'Large', 'XL'];
-
-  final List<String> _productImages = [
-    'assets/images/product.png',
-    'assets/images/product.png',
-    'assets/images/product.png',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    final allVariants = MockMarketplaceData.getProductVariants(
+      widget.product.id,
+    );
+    _colorVariants = allVariants.where((v) => v.type == 'color').toList();
+    _sizeVariants = allVariants.where((v) => v.type == 'size').toList();
+    _specs = MockMarketplaceData.getProductSpecs(widget.product.id);
+    _reviews = MockMarketplaceData.getProductReviews(widget.product.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +106,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: Image.asset(
-                            _productImages[_currentImageIndex],
+                            widget.product.imageUrls[_currentImageIndex],
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return const Center(
@@ -120,7 +127,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          _productImages.length,
+                          widget.product.imageUrls.length,
                           (index) => GestureDetector(
                             onTap: () {
                               setState(() {
@@ -151,7 +158,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
-                                  _productImages[index],
+                                  widget.product.imageUrls[index],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -166,27 +173,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 const SizedBox(height: 24),
 
                 // Discount badge
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.main500,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '30% OFF',
-                      style: AppTextStyles.smallLabel.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                if (widget.product.discountPercentage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.main500,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${widget.product.discountPercentage}% OFF',
+                        style: AppTextStyles.smallLabel.copyWith(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
                 const SizedBox(height: 12),
 
@@ -197,7 +205,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Premium Pregnancy Pillow',
+                        widget.product.productName,
                         style: AppTextStyles.headline2.copyWith(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -217,7 +225,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '4.8 (234 reviews)',
+                            '${widget.product.rating} (${widget.product.reviewsCount} reviews)',
                             style: AppTextStyles.body1.copyWith(
                               color: AppColors.main500,
                               fontSize: 13,
@@ -237,7 +245,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Row(
                     children: [
                       Text(
-                        '\$22.40',
+                        '\$${widget.product.price.toStringAsFixed(2)}',
                         style: AppTextStyles.headline1.copyWith(
                           fontSize: 32,
                           fontWeight: FontWeight.w700,
@@ -245,14 +253,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        '\$32.00',
-                        style: AppTextStyles.body1.copyWith(
-                          fontSize: 18,
-                          decoration: TextDecoration.lineThrough,
-                          color: AppColors.main400,
+                      if (widget.product.originalPrice != null)
+                        Text(
+                          '\$${widget.product.originalPrice!.toStringAsFixed(2)}',
+                          style: AppTextStyles.body1.copyWith(
+                            fontSize: 18,
+                            decoration: TextDecoration.lineThrough,
+                            color: AppColors.main400,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -277,7 +286,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         const SizedBox(height: 12),
                         Row(
                           children: List.generate(
-                            _availableColors.length,
+                            _colorVariants.length,
                             (index) => GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -289,7 +298,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 40,
                                 margin: const EdgeInsets.only(right: 12),
                                 decoration: BoxDecoration(
-                                  color: _availableColors[index],
+                                  color: _colorVariants[index].colorHex != null
+                                      ? Color(
+                                          int.parse(
+                                            _colorVariants[index].colorHex!
+                                                .replaceFirst('#', '0xFF'),
+                                          ),
+                                        )
+                                      : AppColors.main300,
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: _selectedColorIndex == index
@@ -334,7 +350,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         const SizedBox(height: 12),
                         Row(
                           children: List.generate(
-                            _availableSizes.length,
+                            _sizeVariants.length,
                             (index) => GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -368,7 +384,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   ],
                                 ),
                                 child: Text(
-                                  _availableSizes[index],
+                                  _sizeVariants[index].value,
                                   style: AppTextStyles.body1.copyWith(
                                     color: _selectedSizeIndex == index
                                         ? AppColors.white
@@ -529,7 +545,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Experience ultimate comfort during pregnancy with our Premium Pregnancy Pillow. Designed with premium memory foam and a full-body C-shape, this pillow provides optimal support for your back, hips, knees, neck, and belly.',
+                          widget.product.description ??
+                              'No description available',
                           style: AppTextStyles.body1.copyWith(
                             fontSize: 13,
                             color: AppColors.textPrimary,
@@ -559,13 +576,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildSpecRow('Material', 'Premium Memory Foam'),
-                        const SizedBox(height: 12),
-                        _buildSpecRow('Cover', '100% Cotton'),
-                        const SizedBox(height: 12),
-                        _buildSpecRow('Dimensions', '54" x 31" x 7"'),
-                        const SizedBox(height: 12),
-                        _buildSpecRow('Weight', '4.5 lbs'),
+                        ..._specs.map(
+                          (spec) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildSpecRow(spec.name, spec.value),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -605,15 +621,19 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
-                    children: [
-                      ReviewCard(
-                        name: 'Sarah Mitchell',
-                        rating: 5,
-                        review:
-                            'This pillow has been a game-changer!  I\'m sleeping so much better now. The quality is excellent and it\'s super comfortable.',
-                      ),
-                      const SizedBox(height: 12),
-                    ],
+                    children: _reviews
+                        .take(3)
+                        .map(
+                          (review) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: ReviewCard(
+                              name: review.reviewerName,
+                              rating: review.rating,
+                              review: review.reviewText ?? '',
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
 

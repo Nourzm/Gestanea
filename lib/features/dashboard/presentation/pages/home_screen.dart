@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
@@ -7,6 +8,7 @@ import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -106,7 +108,10 @@ class HomeScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const DoctorsScreen(),
+                              builder: (context) => BlocProvider(
+                                create: (context) => DoctorsBloc(),
+                                child: const DoctorsScreen(),
+                              ),
                             ),
                           );
                         },

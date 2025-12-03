@@ -3,6 +3,11 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/features/plan/presentation/widgets/medicine_card.dart';
+import 'package:gestanea/core/database/models/medicine_model.dart';
+import 'package:gestanea/core/database/models/medicine_logged_model.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_local_data_source.dart';
+import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
+import 'package:uuid/uuid.dart';
 
 class MedicinesPage extends StatefulWidget {
   const MedicinesPage({super.key});
@@ -15,11 +20,107 @@ class _MedicinesPageState extends State<MedicinesPage> {
   String selectedFilter = 'All'; // All, Taken, Missed
   bool _showFilters = true;
   final ScrollController _scrollController = ScrollController();
+  final PlanLocalDataSource _dataSource = PlanLocalDataSource();
+  List<MedicineModel> _medicines = [];
+  List<MedicineLoggedModel> _medicineLogs = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _loadMedicines();
+  }
+
+  Future<void> _loadMedicines() async {
+    // TODO: Replace with actual user ID from auth
+    // final userId = PlanMockData.mockUserId;
+
+    try {
+      // Use mock data for now
+      // final medicines = await _dataSource.getMedicines(userId);
+      // final logs = await _dataSource.getMedicineLogs(userId, DateTime.now());
+
+      final mockMedicines = PlanMockData.getMockMedicines();
+      final mockLogs = PlanMockData.getMockMedicineLogs(mockMedicines);
+
+      setState(() {
+        _medicines = mockMedicines;
+        _medicineLogs = mockLogs;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error
+    }
+  }
+
+  List<MedicineModel> get filteredMedicines {
+    if (selectedFilter == 'All') {
+      return _medicines;
+    } else if (selectedFilter == 'Taken') {
+      return _medicines.where((med) {
+        final log = _medicineLogs.firstWhere(
+          (l) => l.medicineId == med.id,
+          orElse: () => MedicineLoggedModel(
+            id: '',
+            medicineId: '',
+            userId: '',
+            loggedDate: DateTime.now(),
+            status: '',
+            loggedAt: DateTime.now(),
+          ),
+        );
+        return log.status == 'taken';
+      }).toList();
+    } else {
+      // Missed
+      return _medicines.where((med) {
+        final log = _medicineLogs.firstWhere(
+          (l) => l.medicineId == med.id,
+          orElse: () => MedicineLoggedModel(
+            id: '',
+            medicineId: '',
+            userId: '',
+            loggedDate: DateTime.now(),
+            status: '',
+            loggedAt: DateTime.now(),
+          ),
+        );
+        return log.status == 'missed';
+      }).toList();
+    }
+  }
+
+  int _getFilterCount(String filter) {
+    if (filter == 'All') {
+      return _medicines.length;
+    } else if (filter == 'Taken') {
+      return _medicineLogs.where((l) => l.status == 'taken').length;
+    } else {
+      return _medicineLogs.where((l) => l.status == 'missed').length;
+    }
+  }
+
+  Future<void> _handleTakeMedicine(MedicineModel medicine) async {
+    final uuid = Uuid();
+    final log = MedicineLoggedModel(
+      id: uuid.v4(),
+      medicineId: medicine.id,
+      userId: PlanMockData.mockUserId,
+      loggedDate: DateTime.now(),
+      status: 'taken',
+      loggedAt: DateTime.now(),
+    );
+
+    // TODO: Save to database
+    // await _dataSource.logMedicine(log);
+
+    setState(() {
+      _medicineLogs.add(log);
+    });
   }
 
   @override
@@ -97,63 +198,58 @@ class _MedicinesPageState extends State<MedicinesPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
                       ),
-                      child: Column(
-                        children: [
-                          MedicineCard(
-                            name: 'Captopril',
-                            dosage: '2 Capsules',
-                            time: '20:00',
-                            frequency: 'Daily',
-                            imagePath: 'assets/images/captopril.png',
-                            buttonText: 'Take',
-                            buttonColor: AppColors.main500,
-                            isTaken: false,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          MedicineCard(
-                            name: 'B 12',
-                            dosage: '1 Injection',
-                            time: '22:00',
-                            frequency: 'Daily',
-                            imagePath: 'assets/images/b12.png',
-                            buttonText: 'Taken',
-                            buttonColor: Colors.green,
-                            isTaken: true,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          MedicineCard(
-                            name: 'I-DROP MGD',
-                            dosage: '2 Drops',
-                            time: '22:00',
-                            frequency: 'Daily',
-                            imagePath: 'assets/images/idrop.png',
-                            buttonText: 'Take',
-                            buttonColor: AppColors.main500,
-                            isTaken: false,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                            showMissedBadge: true,
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          MedicineCard(
-                            name: 'Niacin',
-                            dosage: '0.5 Pill',
-                            time: '22:00',
-                            frequency: 'Daily',
-                            imagePath: 'assets/images/niacin.png',
-                            buttonText: 'Take',
-                            buttonColor: AppColors.main500,
-                            isTaken: false,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                            showMissedBadge: true,
-                          ),
-                        ],
-                      ),
+                      child: _isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.main500,
+                              ),
+                            )
+                          : filteredMedicines.isEmpty
+                          ? Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(screenHeight * 0.05),
+                                child: Text(
+                                  'No medicines found',
+                                  style: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Column(
+                              children: filteredMedicines.map((medicine) {
+                                final log = _medicineLogs.firstWhere(
+                                  (l) => l.medicineId == medicine.id,
+                                  orElse: () => MedicineLoggedModel(
+                                    id: '',
+                                    medicineId: '',
+                                    userId: '',
+                                    loggedDate: DateTime.now(),
+                                    status: '',
+                                    loggedAt: DateTime.now(),
+                                  ),
+                                );
+                                final hasLog = log.id.isNotEmpty;
+
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: screenHeight * 0.015,
+                                  ),
+                                  child: MedicineCard(
+                                    medicine: medicine,
+                                    log: hasLog ? log : null,
+                                    scheduledTime:
+                                        medicine.scheduledTimes?.first ??
+                                        '00:00',
+                                    screenWidth: screenWidth,
+                                    screenHeight: screenHeight,
+                                    onTakeMedicine: () =>
+                                        _handleTakeMedicine(medicine),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                     ),
 
                     SizedBox(height: screenHeight * 0.1),
@@ -167,8 +263,9 @@ class _MedicinesPageState extends State<MedicinesPage> {
     );
   }
 
-  Widget _buildFilterPill(String label, int count) {
+  Widget _buildFilterPill(String label, int? providedCount) {
     final isSelected = selectedFilter == label;
+    final count = providedCount ?? _getFilterCount(label);
     return GestureDetector(
       onTap: () {
         setState(() {

@@ -17,10 +17,10 @@ class DashboardProvider extends ChangeNotifier {
   DashboardProvider({
     GetPregnancyDashboardUseCase? getPregnancyDashboardUseCase,
     GetPostpartumDashboardUseCase? getPostpartumDashboardUseCase,
-  })  : _getPregnancyDashboardUseCase =
-            getPregnancyDashboardUseCase ?? GetPregnancyDashboardUseCase(),
-        _getPostpartumDashboardUseCase =
-            getPostpartumDashboardUseCase ?? GetPostpartumDashboardUseCase();
+  }) : _getPregnancyDashboardUseCase =
+           getPregnancyDashboardUseCase ?? GetPregnancyDashboardUseCase(),
+       _getPostpartumDashboardUseCase =
+           getPostpartumDashboardUseCase ?? GetPostpartumDashboardUseCase();
 
   PregnancyDashboard? get pregnancyDashboard => _pregnancyDashboard;
   PostpartumDashboard? get postpartumDashboard => _postpartumDashboard;

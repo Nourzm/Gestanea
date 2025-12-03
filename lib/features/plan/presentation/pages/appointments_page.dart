@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/core/database/models/appointment_model.dart';
+import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
 
 class AppointmentsPage extends StatefulWidget {
   const AppointmentsPage({super.key});
@@ -13,11 +15,31 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   bool _showBadge = true;
   final ScrollController _scrollController = ScrollController();
+  List<AppointmentModel> _appointments = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _loadAppointments();
+  }
+
+  Future<void> _loadAppointments() async {
+    try {
+      // Use mock data for now
+      // TODO: Replace with actual data from database
+      final mockAppointments = PlanMockData.getMockAppointments();
+
+      setState(() {
+        _appointments = mockAppointments;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -70,39 +92,39 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
                       ),
-                      child: Column(
-                        children: [
-                          _buildAppointmentCard(
-                            'Follow-up Visit',
-                            'Dr. Sarah Johnson',
-                            'Tomorrow',
-                            '10:00 AM',
-                            Icons.favorite_border,
-                            screenWidth,
-                            screenHeight,
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          _buildAppointmentCard(
-                            'Radiology Appointment',
-                            'Radiology Dept',
-                            'Feb 5, 2025',
-                            '2:30 PM',
-                            Icons.access_time,
-                            screenWidth,
-                            screenHeight,
-                          ),
-                          SizedBox(height: screenHeight * 0.015),
-                          _buildAppointmentCard(
-                            'Blood Test',
-                            'Lab Services',
-                            'Feb 10, 2025',
-                            '9:00 AM',
-                            Icons.science_outlined,
-                            screenWidth,
-                            screenHeight,
-                          ),
-                        ],
-                      ),
+                      child: _isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.main500,
+                              ),
+                            )
+                          : _appointments.isEmpty
+                          ? Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(screenHeight * 0.05),
+                                child: Text(
+                                  'No appointments found',
+                                  style: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Column(
+                              children: _appointments.map((appointment) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: screenHeight * 0.015,
+                                  ),
+                                  child: _buildAppointmentCard(
+                                    appointment,
+                                    screenWidth,
+                                    screenHeight,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                     ),
 
                     SizedBox(height: screenHeight * 0.1),
@@ -116,50 +138,70 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     );
   }
 
+  IconData _getIconForAppointmentType(String? type) {
+    switch (type) {
+      case 'Checkup':
+        return Icons.favorite_border;
+      case 'Imaging':
+        return Icons.camera_alt_outlined;
+      case 'Lab Test':
+        return Icons.science_outlined;
+      default:
+        return Icons.access_time;
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final tomorrow = now.add(Duration(days: 1));
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return 'Today';
+    } else if (date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day) {
+      return 'Tomorrow';
+    } else {
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    }
+  }
+
+  String _formatTime(DateTime date) {
+    final hour = date.hour > 12
+        ? date.hour - 12
+        : (date.hour == 0 ? 12 : date.hour);
+    final minute = date.minute.toString().padLeft(2, '0');
+    final period = date.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute $period';
+  }
+
   Widget _buildAppointmentCard(
-    String title,
-    String subtitle,
-    String date,
-    String time,
-    IconData icon,
+    AppointmentModel appointment,
     double screenWidth,
     double screenHeight,
   ) {
-    // Parse date and time to DateTime (simple demo, real parsing may need localization)
-    DateTime? appointmentDateTime;
-    if (date == 'Tomorrow') {
-      appointmentDateTime = DateTime.now().add(Duration(days: 1));
-    } else {
-      try {
-        appointmentDateTime = DateTime.parse(date);
-      } catch (_) {
-        appointmentDateTime = DateTime.now();
-      }
-    }
-    // Add time if possible
-    if (appointmentDateTime != null && time.contains(':')) {
-      final timeParts = time.split(' ');
-      final hourMinute = timeParts[0].split(':');
-      int hour = int.tryParse(hourMinute[0]) ?? 0;
-      int minute = int.tryParse(hourMinute[1]) ?? 0;
-      if (timeParts.length > 1 &&
-          timeParts[1].toLowerCase() == 'pm' &&
-          hour < 12) {
-        hour += 12;
-      }
-      appointmentDateTime = DateTime(
-        appointmentDateTime.year,
-        appointmentDateTime.month,
-        appointmentDateTime.day,
-        hour,
-        minute,
-      );
-    }
     final now = DateTime.now();
-    final remaining = appointmentDateTime.difference(now);
+    final remaining = appointment.appointmentDate.difference(now);
     final totalSeconds = remaining.inSeconds > 0 ? remaining.inSeconds : 0;
-    final maxSeconds = 86400; // 1 day for demo
-    final progress = (totalSeconds / maxSeconds).clamp(0.0, 1.0);
+    final icon = _getIconForAppointmentType(appointment.appointmentType);
+    final dateStr = _formatDate(appointment.appointmentDate);
+    final timeStr = _formatTime(appointment.appointmentDate);
 
     return Stack(
       children: [
@@ -205,7 +247,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          appointment.title,
                           style: TextStyle(
                             fontSize: screenWidth * 0.042,
                             fontWeight: FontWeight.bold,
@@ -214,7 +256,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          subtitle,
+                          appointment.doctorName ??
+                              appointment.location ??
+                              'Appointment',
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: Colors.grey.shade600,
@@ -230,7 +274,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              date,
+                              dateStr,
                               style: TextStyle(
                                 fontSize: screenWidth * 0.032,
                                 color: Colors.grey.shade600,
@@ -244,7 +288,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              time,
+                              timeStr,
                               style: TextStyle(
                                 fontSize: screenWidth * 0.032,
                                 color: Colors.grey.shade600,
@@ -258,7 +302,6 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 ],
               ),
               SizedBox(height: 12),
-           
             ],
           ),
         ),

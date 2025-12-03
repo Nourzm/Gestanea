@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class ContactInfoSection extends StatelessWidget {
-  final Map<String, dynamic> doctor;
+  final DoctorModel doctor;
 
   const ContactInfoSection({super.key, required this.doctor});
 
@@ -92,19 +93,19 @@ class ContactInfoSection extends StatelessWidget {
           _buildContactItem(
             icon: Icons.location_on_outlined,
             title: l10n.address,
-            content: doctor['address'],
+            content: doctor.address ?? 'N/A',
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.phone_outlined,
             title: l10n.phoneNumber,
-            content: doctor['phone_number'],
+            content: doctor.phone ?? 'N/A',
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.access_time_outlined,
             title: l10n.openingHours,
-            content: doctor['opening_hours'],
+            content: 'Mon-Sat: 8:00 AM - 6:00 PM',
           ),
         ],
       ),

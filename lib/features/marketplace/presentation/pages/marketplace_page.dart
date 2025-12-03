@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/product_model.dart';
+import 'package:gestanea/core/database/models/product_category_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
+import 'package:gestanea/features/marketplace/data/datasources/mock_marketplace_data.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
 import 'product_details.dart';
@@ -17,52 +20,14 @@ class MarketplacePage extends StatefulWidget {
 
 class _MarketplacePageState extends State<MarketplacePage> {
   final TextEditingController _searchController = TextEditingController();
+  late List<ProductCategoryModel> _categories;
+  late List<ProductModel> _products;
 
-  // Move data initialization to methods that use context for localization
-  List<CategoryModel> _getCategories(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      CategoryModel(
-        label: l10n.maternityWear,
-        imageAsset: 'assets/images/Maternity_wear.webp',
-      ),
-      CategoryModel(
-        label: l10n.painRelief,
-        imageAsset: 'assets/images/pain.webp',
-      ),
-      CategoryModel(
-        label: l10n.skinCare,
-        imageAsset: 'assets/images/skin_care.webp',
-      ),
-    ];
-  }
-
-  List<ProductModel> _getProducts(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      ProductModel(
-        imageAsset: 'assets/images/product.png',
-        title: l10n.pregnancyPillow,
-        price: 22.40,
-        discountBgColor: AppColors.main500,
-      ),
-      ProductModel(
-        imageAsset: 'assets/images/Back_pain_belt.webp',
-        title: l10n.backSupportBelt,
-        price: 22.40,
-        oldPrice: 32.00,
-        discount: '30%',
-        discountBgColor: AppColors.main500,
-      ),
-      ProductModel(
-        imageAsset: 'assets/images/Back_pain_belt.webp',
-        title: l10n.backSupportBelt,
-        price: 22.40,
-        oldPrice: 32.00,
-        discount: '30%',
-        discountBgColor: AppColors.main500,
-      ),
-    ];
+  @override
+  void initState() {
+    super.initState();
+    _categories = MockMarketplaceData.getCategories();
+    _products = MockMarketplaceData.getProducts();
   }
 
   @override
@@ -230,19 +195,18 @@ class _MarketplacePageState extends State<MarketplacePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category sidebar - use localized categories
-                  CategorySidebar(categories: _getCategories(context)),
-                  // Product grid - use localized products
+                  // Category sidebar
+                  CategorySidebar(categories: _categories),
+                  // Product grid
                   Expanded(
                     child: ProductGrid(
-                      products: _getProducts(context),
+                      products: _products,
                       onProductTapped: (index) {
-                        final products = _getProducts(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                ProductDetailPage(product: products[index]),
+                                ProductDetailPage(product: _products[index]),
                           ),
                         );
                       },

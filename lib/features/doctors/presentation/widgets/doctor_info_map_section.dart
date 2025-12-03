@@ -3,10 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorInfoMapSection extends StatelessWidget {
-  final Map<String, dynamic> doctor;
+  final DoctorModel doctor;
   final MapController mapController;
   final VoidCallback onGetDirections;
 
@@ -20,9 +21,9 @@ class DoctorInfoMapSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final lat = doctor['latitude'] ?? 36.753769;
-    final lng = doctor['longitude'] ?? 3.058756;
-    final distance = doctor['distance_km'] ?? 0.0;
+    final lat = doctor.latitude ?? 36.753769;
+    final lng = doctor.longitude ?? 3.058756;
+    final distance = doctor.distance ?? 0.0;
 
     return Column(
       children: [
@@ -80,16 +81,16 @@ class DoctorInfoMapSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(doctor['name'], style: AppTextStyles.headline2),
+                    Text(doctor.name, style: AppTextStyles.headline2),
                     const SizedBox(height: 4),
-                    Text(doctor['specialty'], style: AppTextStyles.body1),
+                    Text(doctor.specialty ?? '', style: AppTextStyles.body1),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         const Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
-                          '${doctor['rating']}',
+                          '${doctor.rating ?? 0}',
                           style: AppTextStyles.body1.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppColors.textPrimary,

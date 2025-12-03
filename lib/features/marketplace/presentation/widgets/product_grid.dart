@@ -1,24 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/database/models/product_model.dart';
 import 'product_card.dart';
-
-class ProductModel {
-  final String imageAsset;
-  final String title;
-  final double price;
-  final double? oldPrice;
-  final String? discount;
-  final Color discountBgColor;
-
-  const ProductModel({
-    required this.imageAsset,
-    required this.title,
-    required this.price,
-    this.oldPrice,
-    this.discount,
-    this.discountBgColor = AppColors.main500,
-  });
-}
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
@@ -54,13 +37,18 @@ class ProductGrid extends StatelessWidget {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
+          final discount = product.discountPercentage != null
+              ? '${product.discountPercentage}% OFF'
+              : null;
           return ProductCard(
-            imageAsset: product.imageAsset,
-            title: product.title,
+            imageAsset: product.imageUrls.isNotEmpty
+                ? product.imageUrls[0]
+                : '',
+            title: product.productName,
             price: product.price,
-            oldPrice: product.oldPrice,
-            discount: product.discount,
-            discountBgColor: product.discountBgColor,
+            oldPrice: product.originalPrice,
+            discount: discount,
+            discountBgColor: AppColors.main500,
             onTap: () => onProductTapped?.call(index),
           );
         },
