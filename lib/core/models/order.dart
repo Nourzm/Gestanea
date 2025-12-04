@@ -48,4 +48,28 @@ class Order {
       'updated_at': updatedAt.toIso8601String(),
     };
   }
+
+  Order copyWith({
+    String? id,
+    String? userId,
+    String? orderNumber,
+    double? totalAmount,
+    String? status,
+    String? paymentMethod,
+    String? shippingAddress,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      orderNumber: orderNumber ?? this.orderNumber,
+      totalAmount: totalAmount ?? this.totalAmount,
+      status: status ?? this.status,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

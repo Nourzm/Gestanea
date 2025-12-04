@@ -159,14 +159,8 @@ class MarketplaceRepository {
       if (existing.isNotEmpty) {
         // Update quantity
         final existingItem = CartItem.fromMap(existing.first);
-        final updated = CartItem(
-          id: existingItem.id,
-          userId: existingItem.userId,
-          productId: existingItem.productId,
+        final updated = existingItem.copyWith(
           quantity: existingItem.quantity + item.quantity,
-          selectedColor: existingItem.selectedColor,
-          selectedSize: existingItem.selectedSize,
-          createdAt: existingItem.createdAt,
         );
         await db.update('cart_items', updated.toMap(), where: 'id = ?', whereArgs: [updated.id]);
         return Result.success(updated, 'Cart updated');
@@ -268,17 +262,7 @@ class MarketplaceRepository {
   Future<Result<Order>> updateOrder(Order order) async {
     try {
       final db = await _dbHelper.database;
-      final updated = Order(
-        id: order.id,
-        userId: order.userId,
-        orderNumber: order.orderNumber,
-        totalAmount: order.totalAmount,
-        status: order.status,
-        paymentMethod: order.paymentMethod,
-        shippingAddress: order.shippingAddress,
-        createdAt: order.createdAt,
-        updatedAt: DateTime.now(),
-      );
+      final updated = order.copyWith(updatedAt: DateTime.now());
       await db.update('orders', updated.toMap(), where: 'id = ?', whereArgs: [order.id]);
       return Result.success(updated, 'Order updated');
     } catch (e) {

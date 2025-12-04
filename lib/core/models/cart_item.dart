@@ -40,4 +40,24 @@ class CartItem {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+  CartItem copyWith({
+    String? id,
+    String? userId,
+    String? productId,
+    int? quantity,
+    String? selectedColor,
+    String? selectedSize,
+    DateTime? createdAt,
+  }) {
+    return CartItem(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      productId: productId ?? this.productId,
+      quantity: quantity ?? this.quantity,
+      selectedColor: selectedColor ?? this.selectedColor,
+      selectedSize: selectedSize ?? this.selectedSize,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
