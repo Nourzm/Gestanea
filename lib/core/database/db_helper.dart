@@ -9,7 +9,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('gestanea. db');
+    _database = await _initDB('gestanea.db');
     return _database!;
   }
 
@@ -21,473 +21,475 @@ class DatabaseHelper {
       path,
       version: 1,
       onCreate: _createDB,
-      onConfigure: _onConfigure,
     );
   }
 
-  Future<void> _onConfigure(Database db) async {
-    await db.execute('PRAGMA foreign_keys = ON');
-  }
-
   Future<void> _createDB(Database db, int version) async {
-    // Users table
+    const idType = 'TEXT PRIMARY KEY';
+    const textType = 'TEXT NOT NULL';
+    const textTypeNullable = 'TEXT';
+    const intType = 'INTEGER NOT NULL';
+    const intTypeNullable = 'INTEGER';
+    const realType = 'REAL NOT NULL';
+    const realTypeNullable = 'REAL';
+    const boolType = 'INTEGER NOT NULL'; // SQLite uses 0/1 for boolean
+
+    // 1. Users table
     await db.execute('''
       CREATE TABLE users (
-        id TEXT PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        name TEXT NOT NULL,
-        phone TEXT,
-        country TEXT,
-        language TEXT,
-        theme TEXT,
-        notifications_enabled INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        id $idType,
+        email $textType,
+        name $textType,
+        phone $textTypeNullable,
+        profile_image $textTypeNullable,
+        created_at $textType,
+        updated_at $textType
       )
     ''');
 
-    // Pregnancies table
+    // 2. Pregnancies table
     await db.execute('''
       CREATE TABLE pregnancies (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        lmp_date TEXT NOT NULL,
-        due_date TEXT NOT NULL,
-        current_week INTEGER,
-        current_trimester TEXT,
-        is_active INTEGER DEFAULT 1,
-        medical_conditions TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        start_date $textType,
+        due_date $textType,
+        is_active $boolType,
+        medical_conditions $textTypeNullable,
+        notes $textTypeNullable,
+        created_at $textType,
+        updated_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
 
-    // Kick counts table
-    await db.execute('''
-      CREATE TABLE kick_counts (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        kick_count INTEGER NOT NULL,
-        duration_minutes INTEGER,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-      )
-    ''');
-
-    // Babies table
+    // 3. Babies table
     await db.execute('''
       CREATE TABLE babies (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        name TEXT NOT NULL,
-        gender TEXT,
-        date_of_birth TEXT NOT NULL,
-        birth_weight REAL,
-        birth_height REAL,
-        theme_color TEXT,
-        is_active INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        name $textType,
+        gender $textType,
+        birth_date $textType,
+        birth_weight $realTypeNullable,
+        birth_height $realTypeNullable,
+        blood_type $textTypeNullable,
+        profile_image $textTypeNullable,
+        created_at $textType,
+        updated_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
 
-    // Baby growth table
+    // 4. Kick counts table
+    await db.execute('''
+      CREATE TABLE kick_counts (
+        id $idType,
+        pregnancy_id $textType,
+        date $textType,
+        start_time $textType,
+        end_time $textTypeNullable,
+        count $intType,
+        duration_minutes $intTypeNullable,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE CASCADE
+      )
+    ''');
+
+    // 5. Baby growth table
     await db.execute('''
       CREATE TABLE baby_growth (
-        id TEXT PRIMARY KEY,
-        baby_id TEXT NOT NULL,
-        recorded_date TEXT NOT NULL,
-        weight REAL,
-        weight_percentile INTEGER,
-        height_percentile INTEGER,
-        growth_status TEXT,
-        notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        baby_id $textType,
+        date $textType,
+        weight $realType,
+        height $realType,
+        head_circumference $realTypeNullable,
+        notes $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
       )
     ''');
 
-    // Milestones table
+    // 6. Milestones table
     await db.execute('''
       CREATE TABLE milestones (
-        id TEXT PRIMARY KEY,
-        baby_id TEXT NOT NULL,
-        milestone_name TEXT NOT NULL,
-        expected_age_months INTEGER,
-        achieved_date TEXT,
-        notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        baby_id $textType,
+        title $textType,
+        description $textTypeNullable,
+        category $textType,
+        expected_age_months $intTypeNullable,
+        achieved $boolType,
+        achieved_date $textTypeNullable,
+        notes $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
       )
     ''');
 
-    // Feeding logs table
+    // 7. Feeding logs table
     await db.execute('''
       CREATE TABLE feeding_logs (
-        id TEXT PRIMARY KEY,
-        baby_id TEXT NOT NULL,
-        feeding_type TEXT NOT NULL,
-        duration_minutes INTEGER,
-        amount_ml REAL,
-        breast_side TEXT,
-        logged_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        baby_id $textType,
+        date $textType,
+        time $textType,
+        type $textType,
+        duration_minutes $intTypeNullable,
+        amount_ml $realTypeNullable,
+        breast_side $textTypeNullable,
+        notes $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
       )
     ''');
 
-    // Vitals table
+    // 8. Vitals table
     await db.execute('''
       CREATE TABLE vitals (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        vital_type TEXT NOT NULL,
-        value REAL NOT NULL,
-        unit TEXT,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        date $textType,
+        time $textType,
+        type $textType,
+        value $realType,
+        unit $textType,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Symptoms table
+    // 9. Symptoms table
     await db.execute('''
       CREATE TABLE symptoms (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        symptom_name TEXT NOT NULL,
-        severity TEXT,
-        notes TEXT,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        date $textType,
+        time $textType,
+        symptom $textType,
+        severity $intType,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Moods table
+    // 10. Moods table
     await db.execute('''
       CREATE TABLE moods (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        mood TEXT NOT NULL,
-        intensity INTEGER,
-        notes TEXT,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        date $textType,
+        time $textType,
+        mood $textType,
+        intensity $intType,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Lab results table
+    // 11. Lab results table
     await db.execute('''
       CREATE TABLE lab_results (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        test_name TEXT NOT NULL,
-        value REAL,
-        unit TEXT,
-        normal_range_min REAL,
-        normal_range_max REAL,
-        interpretation TEXT,
-        lab_date TEXT NOT NULL,
-        report_image_url TEXT,
-        extracted_by_ocr INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        date $textType,
+        test_name $textType,
+        value $realType,
+        unit $textType,
+        reference_range $textTypeNullable,
+        status $textType,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Risk alerts table
+    // 12. Risk alerts table
     await db.execute('''
       CREATE TABLE risk_alerts (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        alert_type TEXT NOT NULL,
-        severity TEXT NOT NULL,
-        message TEXT NOT NULL,
-        recommendation TEXT,
-        is_resolved INTEGER DEFAULT 0,
-        detected_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        resolved_at TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        alert_type $textType,
+        severity $textType,
+        message $textType,
+        recommendations $textTypeNullable,
+        is_resolved $boolType,
+        created_at $textType,
+        resolved_at $textTypeNullable,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Appointments table
+    // 13. Appointments table
     await db.execute('''
       CREATE TABLE appointments (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        baby_id TEXT,
-        title TEXT NOT NULL,
-        doctor_name TEXT,
-        appointment_type TEXT,
-        appointment_date TEXT NOT NULL,
-        location TEXT,
-        notes TEXT,
-        reminder_time TEXT,
-        is_completed INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        baby_id $textTypeNullable,
+        doctor_id $textTypeNullable,
+        title $textType,
+        description $textTypeNullable,
+        date $textType,
+        time $textType,
+        location $textTypeNullable,
+        status $textType,
+        notes $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-        FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL,
+        FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE SET NULL,
+        FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE SET NULL
       )
     ''');
 
-    // Medicines table
+    // 14. Medicines table
     await db.execute('''
       CREATE TABLE medicines (
-        id TEXT PRIMARY KEY,
-        user_id TEXT,
-        baby_id TEXT,
-        medicine_name TEXT NOT NULL,
-        dosage TEXT NOT NULL,
-        type TEXT,
-        frequency_type TEXT NOT NULL,
-        frequency_value INTEGER,
-        scheduled_times TEXT,
-        start_date TEXT NOT NULL,
-        end_date TEXT,
-        max_doses INTEGER,
-        medicine_image_url TEXT,
-        is_active INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        pregnancy_id $textTypeNullable,
+        baby_id $textTypeNullable,
+        name $textType,
+        dosage $textType,
+        frequency $textType,
+        times_per_day $intType,
+        start_date $textType,
+        end_date $textTypeNullable,
+        is_active $boolType,
+        notes $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-        FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
+        FOREIGN KEY (pregnancy_id) REFERENCES pregnancies (id) ON DELETE SET NULL,
+        FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE SET NULL
       )
     ''');
 
-    // Medicine logged table
+    // 15. Medicine logs table
     await db.execute('''
-      CREATE TABLE medicine_logged (
-        id TEXT PRIMARY KEY,
-        medicine_id TEXT NOT NULL,
-        user_id TEXT NOT NULL,
-        logged_date TEXT NOT NULL,
-        status TEXT NOT NULL,
-        notes TEXT,
-        logged_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (medicine_id) REFERENCES medicines (id) ON DELETE CASCADE,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      CREATE TABLE medicine_logs (
+        id $idType,
+        medicine_id $textType,
+        scheduled_time $textType,
+        taken_time $textTypeNullable,
+        status $textType,
+        notes $textTypeNullable,
+        created_at $textType,
+        FOREIGN KEY (medicine_id) REFERENCES medicines (id) ON DELETE CASCADE
       )
     ''');
 
-    // Reminders table
+    // 16. Reminders table
     await db.execute('''
       CREATE TABLE reminders (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        reminder_type TEXT NOT NULL,
-        reference_id TEXT,
-        title TEXT NOT NULL,
-        description TEXT,
-        reminder_time TEXT NOT NULL,
-        repeat_pattern TEXT,
-        is_completed INTEGER DEFAULT 0,
-        completed_at TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        title $textType,
+        description $textTypeNullable,
+        date $textType,
+        time $textType,
+        type $textType,
+        is_completed $boolType,
+        created_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
 
-    // Tips table
+    // 17. Tips table
     await db.execute('''
       CREATE TABLE tips (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        category TEXT,
-        target_audience TEXT,
-        image_url TEXT,
-        source TEXT,
-        is_active INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        id $idType,
+        title $textType,
+        content $textType,
+        category $textType,
+        stage $textTypeNullable,
+        image_url $textTypeNullable,
+        created_at $textType
       )
     ''');
 
-    // User saved tips table
+    // 18. User saved tips table
     await db.execute('''
       CREATE TABLE user_saved_tips (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        tip_id TEXT NOT NULL,
-        saved_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        tip_id $textType,
+        saved_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (tip_id) REFERENCES tips (id) ON DELETE CASCADE
       )
     ''');
 
-    // Doctors table
+    // 19. Doctors table
     await db.execute('''
       CREATE TABLE doctors (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        specialty TEXT,
-        distance REAL,
-        gender TEXT,
-        phone TEXT,
-        email TEXT,
-        latitude REAL,
-        longitude REAL,
-        rating REAL,
-        reviews_count INTEGER DEFAULT 0,
-        address TEXT,
-        isfavorite INTEGER
+        id $idType,
+        name $textType,
+        specialty $textType,
+        gender $textType,
+        phone $textType,
+        email $textTypeNullable,
+        address $textType,
+        latitude $realType,
+        longitude $realType,
+        rating $realType,
+        years_experience $intTypeNullable,
+        photo_url $textTypeNullable,
+        created_at $textType
       )
     ''');
 
-    // Product categories table
+    // 20. User favorite doctors table
+    await db.execute('''
+      CREATE TABLE user_favorite_doctors (
+        id $idType,
+        user_id $textType,
+        doctor_id $textType,
+        favorited_at $textType,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE
+      )
+    ''');
+
+    // 21. Product categories table
     await db.execute('''
       CREATE TABLE product_categories (
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        image_url TEXT,
-        display_order INTEGER,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        id $idType,
+        name $textType,
+        icon $textTypeNullable,
+        image_url $textTypeNullable,
+        created_at $textType
       )
     ''');
 
-    // Products table
+    // 22. Products table
     await db.execute('''
       CREATE TABLE products (
-        id TEXT PRIMARY KEY,
-        product_name TEXT NOT NULL,
-        description TEXT,
-        category_id TEXT NOT NULL,
-        target_audience TEXT,
-        price REAL NOT NULL,
-        original_price REAL,
-        discount_percentage INTEGER,
-        currency TEXT DEFAULT 'USD',
-        rating REAL DEFAULT 0,
-        reviews_count INTEGER DEFAULT 0,
-        image_urls TEXT NOT NULL,
-        vendor_name TEXT,
-        is_available INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (category_id) REFERENCES product_categories (id) ON DELETE SET NULL
+        id $idType,
+        category_id $textType,
+        name $textType,
+        description $textType,
+        price $realType,
+        discount_percentage $realTypeNullable,
+        image_url $textType,
+        rating $realTypeNullable,
+        reviews_count $intTypeNullable,
+        stock_quantity $intType,
+        created_at $textType,
+        FOREIGN KEY (category_id) REFERENCES product_categories (id) ON DELETE CASCADE
       )
     ''');
 
-    // Product variants table
+    // 23. Product variants table
     await db.execute('''
       CREATE TABLE product_variants (
-        id TEXT PRIMARY KEY,
-        product_id TEXT NOT NULL,
-        type TEXT NOT NULL,
-        value TEXT NOT NULL,
-        color_hex TEXT,
-        stock INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        product_id $textType,
+        variant_type $textType,
+        variant_value $textType,
+        price_adjustment $realTypeNullable,
+        created_at $textType,
         FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
       )
     ''');
 
-    // Product specs table
+    // 24. Product specs table
     await db.execute('''
       CREATE TABLE product_specs (
-        id TEXT PRIMARY KEY,
-        product_id TEXT NOT NULL,
-        name TEXT NOT NULL,
-        value TEXT NOT NULL,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        product_id $textType,
+        spec_name $textType,
+        spec_value $textType,
+        created_at $textType,
         FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
       )
     ''');
 
-    // Product reviews table
+    // 25. Product reviews table
     await db.execute('''
       CREATE TABLE product_reviews (
-        id TEXT PRIMARY KEY,
-        product_id TEXT NOT NULL,
-        user_id TEXT NOT NULL,
-        reviewer_name TEXT NOT NULL,
-        rating INTEGER NOT NULL,
-        review_text TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        product_id $textType,
+        user_id $textType,
+        rating $realType,
+        comment $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
 
-    // Cart items table
+    // 26. Cart items table
     await db.execute('''
       CREATE TABLE cart_items (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        product_id TEXT NOT NULL,
-        product_name TEXT NOT NULL,
-        product_price REAL NOT NULL,
-        variant_color TEXT,
-        variant_size TEXT,
-        quantity INTEGER NOT NULL DEFAULT 1,
-        added_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        product_id $textType,
+        quantity $intType,
+        selected_color $textTypeNullable,
+        selected_size $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
       )
     ''');
 
-    // Orders table
+    // 27. Orders table
     await db.execute('''
       CREATE TABLE orders (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        full_name TEXT NOT NULL,
-        phone_number TEXT NOT NULL,
-        delivery_address TEXT NOT NULL,
-        city TEXT NOT NULL,
-        special_instructions TEXT,
-        payment_method TEXT NOT NULL,
-        subtotal REAL NOT NULL,
-        delivery_fee REAL NOT NULL,
-        total_amount REAL NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        order_date TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        id $idType,
+        user_id $textType,
+        order_number $textType,
+        total_amount $realType,
+        status $textType,
+        payment_method $textTypeNullable,
+        shipping_address $textTypeNullable,
+        created_at $textType,
+        updated_at $textType,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
 
-    // Order items table
+    // 28. Order items table
     await db.execute('''
       CREATE TABLE order_items (
-        id TEXT PRIMARY KEY,
-        order_id TEXT NOT NULL,
-        product_id TEXT NOT NULL,
-        product_name TEXT NOT NULL,
-        variant_color TEXT,
-        variant_size TEXT,
-        quantity INTEGER NOT NULL,
-        unit_price REAL NOT NULL,
-        subtotal REAL NOT NULL,
+        id $idType,
+        order_id $textType,
+        product_id $textType,
+        quantity $intType,
+        price $realType,
+        selected_color $textTypeNullable,
+        selected_size $textTypeNullable,
+        created_at $textType,
         FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
-        FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE SET NULL
-      )
-    ''');
-
-    // User activity log table
-    await db.execute('''
-      CREATE TABLE user_activity_log (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        activity_type TEXT NOT NULL,
-        activity_details TEXT,
-        page_visited TEXT,
-        session_id TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
       )
     ''');
   }
 
   Future<void> close() async {
     final db = await instance.database;
-    db.close();
+    await db.close();
+  }
+
+  Future<bool> isDatabaseEmpty() async {
+    final db = await instance.database;
+    final result = await db.query('users', limit: 1);
+    return result.isEmpty;
   }
 }
