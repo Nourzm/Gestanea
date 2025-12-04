@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/category_card.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/tipFinal_card.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/features/education/logic/education_cubit.dart';
+import 'package:gestanea/features/education/logic/education_state.dart';
 
 class Tips extends StatelessWidget {
   const Tips({super.key});
