@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'dialogs/add_symptom_dialog.dart';
 
 class SymptomsTabContent extends StatelessWidget {
   const SymptomsTabContent({super.key});
@@ -215,42 +216,47 @@ class SymptomsTabContent extends StatelessWidget {
   }
 
   Widget _buildAddSymptomButton() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.pink600, AppColors.pink500],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
+    return GestureDetector(
+      onTap: () {
+        showAddSymptomDialog(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.pink600, AppColors.pink500],
           ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.add, color: AppColors.white, size: 24),
-          const SizedBox(width: 8),
-          Text(
-            'Log New Symptom',
-            style: AppTextStyles.subtitle1.copyWith(
-              color: AppColors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(2, 2),
+              spreadRadius: 0,
             ),
-          ),
-        ],
+            BoxShadow(
+              color: AppColors.white,
+              blurRadius: 6,
+              offset: Offset(-3, -3),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.add, color: AppColors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'Log New Symptom',
+              style: AppTextStyles.subtitle1.copyWith(
+                color: AppColors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

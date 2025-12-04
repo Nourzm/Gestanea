@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'dialogs/upload_lab_results_dialog.dart';
 
 class LabResultsTabContent extends StatelessWidget {
   const LabResultsTabContent({super.key});
@@ -231,42 +232,47 @@ class LabResultsTabContent extends StatelessWidget {
   }
 
   Widget _buildUploadButton() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.blue600, AppColors.blue500],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
+    return GestureDetector(
+      onTap: () {
+        showUploadLabResultsDialog(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.blue600, AppColors.blue500],
           ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.upload_file, color: AppColors.white, size: 24),
-          const SizedBox(width: 8),
-          Text(
-            'Upload Lab Results',
-            style: AppTextStyles.subtitle1.copyWith(
-              color: AppColors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(2, 2),
+              spreadRadius: 0,
             ),
-          ),
-        ],
+            BoxShadow(
+              color: AppColors.white,
+              blurRadius: 6,
+              offset: Offset(-3, -3),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.upload_file, color: AppColors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'Upload Lab Results',
+              style: AppTextStyles.subtitle1.copyWith(
+                color: AppColors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

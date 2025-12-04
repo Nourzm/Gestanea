@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'dialogs/add_mood_dialog.dart';
 
 class MoodTabContent extends StatelessWidget {
   const MoodTabContent({super.key});
@@ -150,46 +151,51 @@ class MoodTabContent extends StatelessWidget {
       {'emoji': '😢', 'label': 'Sad'},
     ];
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: moods.map((mood) {
-          return Column(
-            children: [
-              Text(
-                mood['emoji']!,
-                style: const TextStyle(fontSize: 32),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                mood['label']!,
-                style: AppTextStyles.smallLabel.copyWith(
-                  fontSize: 11,
-                  color: AppColors.textDark,
+    return GestureDetector(
+      onTap: () {
+        showAddMoodDialog(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(2, 2),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: AppColors.white,
+              blurRadius: 6,
+              offset: Offset(-3, -3),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: moods.map((mood) {
+            return Column(
+              children: [
+                Text(
+                  mood['emoji']!,
+                  style: const TextStyle(fontSize: 32),
                 ),
-              ),
-            ],
-          );
-        }).toList(),
+                const SizedBox(height: 4),
+                Text(
+                  mood['label']!,
+                  style: AppTextStyles.smallLabel.copyWith(
+                    fontSize: 11,
+                    color: AppColors.textDark,
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

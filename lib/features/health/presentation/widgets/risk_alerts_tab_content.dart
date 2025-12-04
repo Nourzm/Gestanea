@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'dialogs/alert_details_dialog.dart';
 
 class RiskAlertsTabContent extends StatelessWidget {
   const RiskAlertsTabContent({super.key});
@@ -207,75 +208,92 @@ class RiskAlertsTabContent extends StatelessWidget {
     required Color levelColor,
     required String description,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.main300,
-              borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () {
+        showAlertDetailsDialog(
+          context,
+          title: factor,
+          icon: icon,
+          severity: level.replaceAll(' Risk', ''),
+          description: description,
+          recommendedActions: [
+            'Continue monitoring regularly',
+            'Maintain a healthy lifestyle',
+            'Keep attending prenatal appointments',
+            'Report any unusual changes to your doctor',
+          ],
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(2, 2),
+              spreadRadius: 0,
             ),
-            child: Icon(icon, color: AppColors.main500, size: 24),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  factor,
-                  style: AppTextStyles.subtitle1.copyWith(
-                    fontSize: 14,
-                    color: AppColors.textDark,
-                    fontWeight: FontWeight.w600,
+            BoxShadow(
+              color: AppColors.white,
+              blurRadius: 6,
+              offset: Offset(-3, -3),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.main300,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppColors.main500, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    factor,
+                    style: AppTextStyles.subtitle1.copyWith(
+                      fontSize: 14,
+                      color: AppColors.textDark,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: AppTextStyles.smallLabel.copyWith(
-                    fontSize: 11,
-                    color: AppColors.textDark,
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: AppTextStyles.smallLabel.copyWith(
+                      fontSize: 11,
+                      color: AppColors.textDark,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: levelColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              level,
-              style: AppTextStyles.smallLabel.copyWith(
-                fontSize: 11,
-                color: const Color(0xFF2D5F2D),
+                ],
               ),
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: levelColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                level,
+                style: AppTextStyles.smallLabel.copyWith(
+                  fontSize: 11,
+                  color: const Color(0xFF2D5F2D),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
