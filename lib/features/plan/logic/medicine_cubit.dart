@@ -29,13 +29,23 @@ class MedicineCubit extends Cubit<MedicineState> {
     }
 
     final userId = userResult.data!.id;
-    final medicinesResult = await _medicineRepository.getUserMedicines(userId);
-    final logsResult = await _medicineRepository.getMedicineLogs(userId);
+    final medicinesResult = await _medicineRepository.getMedicines(userId);
 
     if (medicinesResult.isSuccess) {
+      // Load logs for each medicine
+      final medicines = medicinesResult.data ?? [];
+      final List<MedicineLog> allLogs = [];
+      
+      for (var medicine in medicines) {
+        final logsResult = await _medicineRepository.getMedicineLogs(medicine.id);
+        if (logsResult.isSuccess) {
+          allLogs.addAll(logsResult.data ?? []);
+        }
+      }
+
       emit(MedicineLoaded(
-        medicines: medicinesResult.data ?? [],
-        medicineLogs: logsResult.data ?? [],
+        medicines: medicines,
+        medicineLogs: allLogs,
       ));
     } else {
       emit(MedicineError(medicinesResult.message ?? 'Failed to load medicines'));
@@ -43,7 +53,7 @@ class MedicineCubit extends Cubit<MedicineState> {
   }
 
   Future<void> addMedicine(Medicine medicine) async {
-    final result = await _medicineRepository.createMedicine(medicine);
+    final result = await _medicineRepository.addMedicine(medicine);
     
     if (result.isSuccess) {
       emit(MedicineOperationSuccess(result.message ?? 'Medicine added successfully'));
@@ -76,7 +86,7 @@ class MedicineCubit extends Cubit<MedicineState> {
   }
 
   Future<void> logMedicine(MedicineLog log) async {
-    final result = await _medicineRepository.logMedicine(log);
+    final result = await _medicineRepository.addMedicineLog(log);
     
     if (result.isSuccess) {
       await loadMedicines();

@@ -27,7 +27,7 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
       return;
     }
 
-    final result = await _appointmentRepository.getUserAppointments(userResult.data!.id);
+    final result = await _appointmentRepository.getAppointments(userResult.data!.id);
     
     if (result.isSuccess) {
       emit(AppointmentsLoaded(result.data ?? []));
@@ -37,7 +37,7 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   }
 
   Future<void> addAppointment(Appointment appointment) async {
-    final result = await _appointmentRepository.createAppointment(appointment);
+    final result = await _appointmentRepository.addAppointment(appointment);
     
     if (result.isSuccess) {
       emit(AppointmentsOperationSuccess(result.message ?? 'Appointment added successfully'));
