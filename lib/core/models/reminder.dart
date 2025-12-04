@@ -48,4 +48,28 @@ class Reminder {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+  Reminder copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? description,
+    DateTime? date,
+    DateTime? time,
+    String? type,
+    bool? isCompleted,
+    DateTime? createdAt,
+  }) {
+    return Reminder(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      type: type ?? this.type,
+      isCompleted: isCompleted ?? this.isCompleted,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

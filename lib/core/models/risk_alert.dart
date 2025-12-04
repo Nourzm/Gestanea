@@ -52,4 +52,30 @@ class RiskAlert {
       'resolved_at': resolvedAt?.toIso8601String(),
     };
   }
+
+  RiskAlert copyWith({
+    String? id,
+    String? userId,
+    String? pregnancyId,
+    String? alertType,
+    String? severity,
+    String? message,
+    String? recommendations,
+    bool? isResolved,
+    DateTime? createdAt,
+    DateTime? resolvedAt,
+  }) {
+    return RiskAlert(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      pregnancyId: pregnancyId ?? this.pregnancyId,
+      alertType: alertType ?? this.alertType,
+      severity: severity ?? this.severity,
+      message: message ?? this.message,
+      recommendations: recommendations ?? this.recommendations,
+      isResolved: isResolved ?? this.isResolved,
+      createdAt: createdAt ?? this.createdAt,
+      resolvedAt: resolvedAt ?? this.resolvedAt,
+    );
+  }
 }

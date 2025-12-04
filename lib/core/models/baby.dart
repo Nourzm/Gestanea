@@ -71,4 +71,32 @@ class Baby {
     final now = DateTime.now();
     return now.difference(birthDate).inDays;
   }
+
+  Baby copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? gender,
+    DateTime? birthDate,
+    double? birthWeight,
+    double? birthHeight,
+    String? bloodType,
+    String? profileImage,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Baby(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      gender: gender ?? this.gender,
+      birthDate: birthDate ?? this.birthDate,
+      birthWeight: birthWeight ?? this.birthWeight,
+      birthHeight: birthHeight ?? this.birthHeight,
+      bloodType: bloodType ?? this.bloodType,
+      profileImage: profileImage ?? this.profileImage,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

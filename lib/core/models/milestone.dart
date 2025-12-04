@@ -52,4 +52,30 @@ class Milestone {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+  Milestone copyWith({
+    String? id,
+    String? babyId,
+    String? title,
+    String? description,
+    String? category,
+    int? expectedAgeMonths,
+    bool? achieved,
+    DateTime? achievedDate,
+    String? notes,
+    DateTime? createdAt,
+  }) {
+    return Milestone(
+      id: id ?? this.id,
+      babyId: babyId ?? this.babyId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      expectedAgeMonths: expectedAgeMonths ?? this.expectedAgeMonths,
+      achieved: achieved ?? this.achieved,
+      achievedDate: achievedDate ?? this.achievedDate,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

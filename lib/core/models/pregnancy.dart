@@ -60,4 +60,28 @@ class Pregnancy {
     final daysUntilDue = dueDate.difference(now).inDays;
     return (daysUntilDue / 7).ceil();
   }
+
+  Pregnancy copyWith({
+    String? id,
+    String? userId,
+    DateTime? startDate,
+    DateTime? dueDate,
+    bool? isActive,
+    String? medicalConditions,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Pregnancy(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      startDate: startDate ?? this.startDate,
+      dueDate: dueDate ?? this.dueDate,
+      isActive: isActive ?? this.isActive,
+      medicalConditions: medicalConditions ?? this.medicalConditions,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }
