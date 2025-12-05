@@ -69,7 +69,7 @@ class SymptomsTabContent extends StatelessWidget {
 const SizedBox(height: 20),
 
 // Add Symptom Button
-_buildAddSymptomButton(),
+_buildAddSymptomButton(context),
 
 const SizedBox(height: 20),
 
@@ -215,8 +215,17 @@ const SizedBox(height: 20),
     );
   }
 
-  Widget _buildAddSymptomButton() {
-    return Container(
+ Widget _buildAddSymptomButton(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const AddSymptomDialog(),
+      );
+    },
+    child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -231,7 +240,7 @@ const SizedBox(height: 20),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -241,7 +250,7 @@ const SizedBox(height: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.add, color: AppColors.white, size: 24),
+          const Icon(Icons.add, color: AppColors. white, size: 24),
           const SizedBox(width: 8),
           Text(
             'Log New Symptom',
@@ -253,9 +262,9 @@ const SizedBox(height: 20),
           ),
         ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _buildFrequencyChart() {
     return Container(
       padding: const EdgeInsets.all(14),

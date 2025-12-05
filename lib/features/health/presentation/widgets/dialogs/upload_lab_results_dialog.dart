@@ -489,9 +489,9 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
           border: InputBorder.none,
           hintText: label,
           hintStyle: AppTextStyles.body1. copyWith(
-            color: AppColors.textSecondary,
-            fontSize: 14,
-          ),
+  color: Colors.grey. shade600,  // Much more readable!
+  fontSize: 14,
+),
         ),
         style: AppTextStyles.body1. copyWith(
           color: AppColors.textDark,

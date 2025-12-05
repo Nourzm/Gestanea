@@ -128,7 +128,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withOpacity(0.3),
+                      color: Colors.grey. shade600.withOpacity(0.3),
                       borderRadius: BorderRadius. circular(2),
                     ),
                   ),
@@ -178,7 +178,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                       hint: Text(
                         'Select symptom',
                         style: AppTextStyles.body1.copyWith(
-                          color: AppColors.textSecondary,
+                          color: Colors.grey. shade600,
                         ),
                       ),
                       value: _selectedSymptom,
@@ -393,10 +393,10 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: label,
-          hintStyle: AppTextStyles.body1.copyWith(
-            color: AppColors.textSecondary,
-            fontSize: 14,
-          ),
+          hintStyle: AppTextStyles.body1. copyWith(
+  color: Colors.grey. shade600,  // Much more readable!
+  fontSize: 14,
+),
         ),
         style: AppTextStyles.body1.copyWith(
           color: AppColors.textDark,

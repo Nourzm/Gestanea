@@ -208,7 +208,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                             'Low',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 12,
-                              color: AppColors. textSecondary,
+                              color: Colors.grey. shade600,
                             ),
                           ),
                           Text(
@@ -223,7 +223,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                             'High',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: Colors.grey. shade600,
                             ),
                           ),
                         ],
@@ -324,10 +324,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'How was your day?',
-                      hintStyle: AppTextStyles.body1.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 14,
-                      ),
+                      hintStyle: AppTextStyles.body1. copyWith(
+  color: Colors.grey. shade600,  // Much more readable!
+  fontSize: 14,
+),
                     ),
                     style: AppTextStyles.body1.copyWith(
                       color: AppColors.textDark,

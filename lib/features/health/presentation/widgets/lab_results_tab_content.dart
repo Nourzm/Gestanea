@@ -73,7 +73,7 @@ class LabResultsTabContent extends StatelessWidget {
 const SizedBox(height: 20),
 
 // Upload Results Button
-_buildUploadButton(),
+_buildUploadButton(context),
 
 const SizedBox(height: 20),
 
@@ -231,8 +231,17 @@ const SizedBox(height: 20),
     );
   }
 
-  Widget _buildUploadButton() {
-    return Container(
+Widget _buildUploadButton(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const UploadLabResultsDialog(),
+      );
+    },
+    child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -257,7 +266,7 @@ const SizedBox(height: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.upload_file, color: AppColors.white, size: 24),
+          const Icon(Icons. upload_file, color: AppColors.white, size: 24),
           const SizedBox(width: 8),
           Text(
             'Upload Lab Results',
@@ -269,9 +278,9 @@ const SizedBox(height: 20),
           ),
         ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _buildNextAppointmentCard() {
     return Container(
       padding: const EdgeInsets.all(14),

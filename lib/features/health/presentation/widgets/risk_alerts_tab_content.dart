@@ -36,6 +36,7 @@ Future<void> _makeEmergencyCall(BuildContext context) async {
       content: Text(
         'Are you sure you want to call 911?\n\nThis will dial emergency services.',
         style: AppTextStyles.body1.copyWith(
+          color: Colors.grey. shade600,
           fontSize: 14,
         ),
       ),
@@ -44,7 +45,7 @@ Future<void> _makeEmergencyCall(BuildContext context) async {
           onPressed: () => Navigator.pop(context, false),
           child: Text(
             'Cancel',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: Colors.grey. shade600,),
           ),
         ),
         ElevatedButton(
@@ -437,8 +438,10 @@ const SizedBox(height: 16),
     );
   }
 
-  Widget _buildEmergencyContactCard() {
-    return Container(
+Widget _buildEmergencyContactCard() {
+  return GestureDetector(
+    onTap: () => _makeEmergencyCall(context),
+    child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -477,7 +480,7 @@ const SizedBox(height: 16),
               children: [
                 Text(
                   'Emergency Contact',
-                  style: AppTextStyles.body1.copyWith(
+                  style: AppTextStyles. body1.copyWith(
                     color: AppColors.white,
                     fontSize: 13,
                   ),
@@ -497,9 +500,9 @@ const SizedBox(height: 16),
           const Icon(Icons.arrow_forward, color: AppColors.white, size: 24),
         ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _buildTipCard(String message) {
     return Container(
       padding: const EdgeInsets.all(12),

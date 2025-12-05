@@ -34,7 +34,7 @@ class MoodTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
 // Mood Selector
-_buildMoodSelector(),
+_buildMoodSelector(context),
 const SizedBox(height: 20),
 
                 // Recent Mood Entries
@@ -141,16 +141,25 @@ const SizedBox(height: 20),
     );
   }
 
-  Widget _buildMoodSelector() {
-    final moods = [
-      {'emoji': '😄', 'label': 'Great'},
-      {'emoji': '😊', 'label': 'Good'},
-      {'emoji': '😐', 'label': 'Okay'},
-      {'emoji': '😔', 'label': 'Low'},
-      {'emoji': '😢', 'label': 'Sad'},
-    ];
+Widget _buildMoodSelector(BuildContext context) {
+  final moods = [
+    {'emoji': '😄', 'label': 'Great'},
+    {'emoji': '😊', 'label': 'Good'},
+    {'emoji': '😐', 'label': 'Okay'},
+    {'emoji': '😔', 'label': 'Low'},
+    {'emoji': '😢', 'label': 'Sad'},
+  ];
 
-    return Container(
+  return GestureDetector(
+    onTap: () {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const AddMoodDialog(),
+      );
+    },
+    child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -191,9 +200,9 @@ const SizedBox(height: 20),
           );
         }).toList(),
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _buildMoodEntryCard({
     required String emoji,
     required String mood,
