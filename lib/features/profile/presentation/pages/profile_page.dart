@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/profile/presentation/pages/languages_page.dart';
+import 'package:gestanea/features/profile/presentation/pages/about_app.dart';
+import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
+import 'package:gestanea/features/profile/presentation/pages/faq.dart';
+import 'package:gestanea/features/profile/presentation/pages/languages.dart';
+import 'package:gestanea/features/profile/presentation/pages/notifications_settings.dart';
+import 'package:gestanea/features/profile/presentation/pages/privacy.dart';
+import 'package:gestanea/features/profile/presentation/pages/profile_edit.dart';
+import 'package:gestanea/features/profile/presentation/pages/security.dart';
+import 'package:gestanea/features/profile/presentation/pages/support.dart';
 
 class HeaderCurveClipper extends CustomClipper<Path> {
   final double curveStartRatio = 0.8824;
@@ -76,17 +84,17 @@ class ProfileSettingsScreen extends StatelessWidget {
                     _SettingsTile(
                       icon: "assets/icons/notifications.svg",
                       title: 'Notifications',
-                      destination: NotificationsPage(),
+                      destination: NotificationsSettings(),
                     ),
                     _SettingsTile(
-                      icon: "assets/icons/lang.svg",
+                      icon: "assets/icons/Global.svg",
                       title: 'Language',
-                      destination: LanguageSettingsScreen(),
+                      destination: LanguagesPage(),
                     ),
                     _SettingsTile(
-                      icon: "assets/icons/heartplus.svg",
-                      title: 'IDK',
-                      destination: NotificationsPage(),
+                      icon: "assets/icons/privacy.svg",
+                      title: 'Security',
+                      destination: SecurityPage(),
                     ),
                   ],
                 ),
@@ -108,19 +116,35 @@ class ProfileSettingsScreen extends StatelessWidget {
                 _SettingsGroup(
                   children: [
                     _SettingsTile(
-                      icon: "assets/icons/support.svg",
+                      icon: "assets/icons/question.svg",
+                      title: 'FAQ',
+                      destination: FaqScreen(),
+                    ),
+                    _SettingsTile(
+                      icon: "assets/icons/help.svg",
                       title: 'Help & Support',
-                      destination: NotificationsPage(),
+                      destination: HelpSupportScreen(),
                     ),
                     _SettingsTile(
                       icon: "assets/icons/contactus.svg",
                       title: 'Contact us',
-                      destination: NotificationsPage(),
+                      destination: ContactUsScreen(),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                _SettingsGroup(
+                  children: [
                     _SettingsTile(
                       icon: "assets/icons/lock.svg",
                       title: 'Privacy policy',
-                      destination: NotificationsPage(),
+                      destination: PrivacyPolicyScreen(),
+                    ),
+                    _SettingsTile(
+                      icon: "assets/icons/info.svg",
+                      title: 'About App',
+                      destination: AboutScreen(),
                     ),
                   ],
                 ),
@@ -195,7 +219,7 @@ class ProfileSettingsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20), // Top spacing
-                _buildProfileAvatar(),
+                _buildProfileAvatar(context),
                 const SizedBox(height: 10),
                 const Text(
                   'Puerto Rico',
@@ -213,7 +237,7 @@ class ProfileSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileAvatar() {
+  Widget _buildProfileAvatar(BuildContext context) {
     return Center(
       child: Stack(
         alignment: Alignment.bottomRight,
@@ -236,21 +260,29 @@ class ProfileSettingsScreen extends StatelessWidget {
             ),
           ),
           // Edit Button
-          Container(
-            height: 38,
-            width: 38,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+              );
+            },
+            child: Container(
+              height: 38,
+              width: 38,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(Icons.edit, color: AppColors.main500, size: 20),
             ),
-            child: Icon(Icons.edit, color: AppColors.main500, size: 20),
           ),
         ],
       ),
@@ -333,7 +365,7 @@ class _SettingsTile extends StatelessWidget {
         },
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
-            vertical: 2,
+            vertical: 10,
             horizontal: 20,
           ),
           leading: SizedBox(
