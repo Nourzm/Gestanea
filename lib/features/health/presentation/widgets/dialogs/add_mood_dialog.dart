@@ -30,7 +30,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
   @override
   void dispose() {
     _notesController.dispose();
-    super.dispose();
+    super. dispose();
   }
 
   void _handleSave() {
@@ -41,18 +41,17 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       return;
     }
 
-    // TODO: Save to backend/local storage
     print('Mood: $_selectedMood');
     print('Energy Level: $_energyLevel');
     print('Sleep Quality: $_sleepQuality');
     print('Notes: ${_notesController.text}');
     print('Date: $_selectedDate');
     
-    Navigator. pop(context);
+    Navigator.pop(context);
     
-    ScaffoldMessenger. of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Mood logged successfully!'),
+        content: Text('Mood logged successfully! '),
         backgroundColor: Colors.green,
       ),
     );
@@ -63,13 +62,13 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+      lastDate: DateTime. now(),
     );
     
     if (date != null) {
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay. fromDateTime(_selectedDate),
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
       );
       
       if (time != null) {
@@ -90,7 +89,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context). viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
@@ -105,23 +104,21 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Drag handle
                 Center(
                   child: Container(
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withOpacity(0.3),
+                      color: AppColors.textSecondary. withOpacity(0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 
-                // Title
                 Center(
                   child: Text(
-                    'How are you feeling?',
+                    'How are you feeling? ',
                     style: AppTextStyles.headline2.copyWith(
                       fontSize: 20,
                       color: AppColors.textDark,
@@ -130,7 +127,6 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Mood Selector
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: _moods.map((mood) {
@@ -167,7 +163,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                         ),
                         child: Center(
                           child: Text(
-                            mood['emoji']! ,
+                            mood['emoji']!,
                             style: const TextStyle(fontSize: 32),
                           ),
                         ),
@@ -177,7 +173,6 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Energy Level
                 Text(
                   'Energy Level',
                   style: AppTextStyles.subtitle1.copyWith(
@@ -190,7 +185,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius. circular(16),
                     boxShadow: const [
                       BoxShadow(
                         color: Color(0x3F000000),
@@ -213,7 +208,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                             'Low',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: AppColors. textSecondary,
                             ),
                           ),
                           Text(
@@ -228,7 +223,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                             'High',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 12,
-                              color: AppColors. textSecondary,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -255,7 +250,6 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 20),
                 
-                // Sleep Quality
                 Text(
                   'Sleep Quality',
                   style: AppTextStyles.subtitle1.copyWith(
@@ -288,7 +282,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                       return GestureDetector(
                         onTap: () => setState(() => _sleepQuality = index + 1),
                         child: Icon(
-                          index < _sleepQuality ? Icons. star : Icons.star_border,
+                          index < _sleepQuality ? Icons.star : Icons.star_border,
                           color: AppColors.main500,
                           size: 32,
                         ),
@@ -298,12 +292,11 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 20),
                 
-                // Notes
                 Text(
                   'Notes (optional)',
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
-                    color: AppColors.textDark,
+                    color: AppColors. textDark,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -331,7 +324,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'How was your day?',
-                      hintStyle: AppTextStyles. body1.copyWith(
+                      hintStyle: AppTextStyles.body1.copyWith(
                         color: AppColors.textSecondary,
                         fontSize: 14,
                       ),
@@ -344,7 +337,6 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Date Time Picker
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
@@ -371,7 +363,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                         const SizedBox(width: 12),
                         Text(
                           '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
-                          style: AppTextStyles. body1.copyWith(
+                          style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
                         ),
@@ -381,7 +373,6 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Buttons
                 Row(
                   children: [
                     Expanded(

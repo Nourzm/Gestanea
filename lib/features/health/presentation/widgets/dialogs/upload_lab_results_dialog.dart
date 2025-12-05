@@ -28,7 +28,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
 
   @override
   void dispose() {
-    _testNameController. dispose();
+    _testNameController.dispose();
     _testValueController.dispose();
     _normalRangeController.dispose();
     _notesController.dispose();
@@ -61,7 +61,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
       });
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context). showSnackBar(
           SnackBar(content: Text('Error picking image: $e')),
         );
       }
@@ -74,7 +74,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
       final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
       final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
       
-      String extractedText = recognizedText.text;
+      String extractedText = recognizedText. text;
       
       setState(() {
         _extractedTextController.text = extractedText;
@@ -86,13 +86,13 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Text extracted successfully!  You can edit it below.'),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors. green,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context). showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('OCR Error: $e')),
         );
       }
@@ -100,10 +100,9 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
   }
 
   void _handleSave() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Save to backend/local storage
-      print('Test Name: ${_testNameController.text}');
-      print('Test Value: ${_testValueController.text}');
+    if (_formKey.currentState! .validate()) {
+      print('Test Name: ${_testNameController. text}');
+      print('Test Value: ${_testValueController. text}');
       print('Normal Range: ${_normalRangeController.text}');
       print('Extracted Text: ${_extractedTextController.text}');
       print('Notes: ${_notesController.text}');
@@ -126,7 +125,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2020),
-      lastDate: DateTime. now(),
+      lastDate: DateTime.now(),
     );
     
     if (date != null) {
@@ -144,7 +143,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
       ),
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
+          maxHeight: MediaQuery.of(context).size. height * 0.85,
         ),
         decoration: const BoxDecoration(
           color: Color(0xFFFAF0FF),
@@ -158,20 +157,18 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Drag handle
                 Center(
                   child: Container(
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.textSecondary. withOpacity(0.3),
+                      color: AppColors.textSecondary.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 
-                // Title
                 Center(
                   child: Text(
                     'Upload Lab Results',
@@ -183,7 +180,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Image Picker Buttons
                 Row(
                   children: [
                     Expanded(
@@ -196,7 +192,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildImagePickerButton(
-                        icon: Icons.photo_library,
+                        icon: Icons. photo_library,
                         label: 'From Gallery',
                         onTap: () => _pickImage(ImageSource.gallery),
                       ),
@@ -205,7 +201,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                 ),
                 const SizedBox(height: 20),
                 
-                // Image Preview
                 if (_selectedImage != null) ...[
                   Container(
                     height: 150,
@@ -252,7 +247,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
-                                  Icons. close,
+                                  Icons.close,
                                   color: Colors.white,
                                   size: 20,
                                 ),
@@ -266,7 +261,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                   const SizedBox(height: 16),
                 ],
                 
-                // Processing Indicator
                 if (_isProcessing) ...[
                   const Center(
                     child: CircularProgressIndicator(
@@ -277,7 +271,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                   Center(
                     child: Text(
                       'Extracting text...',
-                      style: AppTextStyles.body1.copyWith(
+                      style: AppTextStyles.body1. copyWith(
                         color: AppColors.textSecondary,
                         fontSize: 12,
                       ),
@@ -286,7 +280,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                   const SizedBox(height: 16),
                 ],
                 
-                // Extracted Text (Editable)
                 if (_extractedTextController.text.isNotEmpty) ...[
                   Row(
                     children: [
@@ -310,7 +303,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                   const SizedBox(height: 20),
                 ],
                 
-                // Manual Input Fields
                 Text(
                   'Test Details',
                   style: AppTextStyles.subtitle1.copyWith(
@@ -351,14 +343,13 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                 ),
                 const SizedBox(height: 12),
                 
-                // Date Picker
                 GestureDetector(
                   onTap: _selectDate,
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius. circular(16),
                       boxShadow: const [
                         BoxShadow(
                           color: Color(0x3F000000),
@@ -378,7 +369,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                         const SizedBox(width: 12),
                         Text(
                           'Test Date: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          style: AppTextStyles. body1.copyWith(
+                          style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
                         ),
@@ -395,7 +386,6 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Buttons
                 Row(
                   children: [
                     Expanded(
@@ -444,7 +434,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
               offset: Offset(2, 2),
             ),
             BoxShadow(
-              color: AppColors.white,
+              color: AppColors. white,
               blurRadius: 6,
               offset: Offset(-3, -3),
             ),
@@ -498,7 +488,7 @@ class _UploadLabResultsDialogState extends State<UploadLabResultsDialog> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: label,
-          hintStyle: AppTextStyles.body1.copyWith(
+          hintStyle: AppTextStyles.body1. copyWith(
             color: AppColors.textSecondary,
             fontSize: 14,
           ),

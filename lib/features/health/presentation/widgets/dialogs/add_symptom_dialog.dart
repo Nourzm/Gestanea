@@ -4,7 +4,7 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 
 class AddSymptomDialog extends StatefulWidget {
-  const AddSymptomDialog({super. key});
+  const AddSymptomDialog({super.key});
 
   @override
   State<AddSymptomDialog> createState() => _AddSymptomDialogState();
@@ -41,7 +41,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
   }
 
   void _handleSave() {
-    if (_formKey.currentState!. validate()) {
+    if (_formKey.currentState!.validate()) {
       if (_selectedSymptom == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select a symptom')),
@@ -55,7 +55,6 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
         return;
       }
 
-      // TODO: Save to backend/local storage
       final symptom = _selectedSymptom == 'Other' 
           ? _otherSymptomController.text 
           : _selectedSymptom;
@@ -63,7 +62,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
       print('Symptom: $symptom');
       print('Severity: $_selectedSeverity');
       print('Duration: ${_durationController.text}');
-      print('Notes: ${_notesController.text}');
+      print('Notes: ${_notesController. text}');
       print('Date: $_selectedDate');
       
       Navigator.pop(context);
@@ -109,7 +108,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context). viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
@@ -124,20 +123,18 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Drag handle
                 Center(
                   child: Container(
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
                       color: AppColors.textSecondary.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius. circular(2),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 
-                // Title
                 Center(
                   child: Text(
                     'Add Symptom',
@@ -149,12 +146,11 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Symptom Type Dropdown
                 Text(
                   'Symptom Type',
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
-                    color: AppColors.textDark,
+                    color: AppColors. textDark,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -199,7 +195,6 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                   ),
                 ),
                 
-                // Show text field if "Other" is selected
                 if (_selectedSymptom == 'Other') ...[
                   const SizedBox(height: 12),
                   _buildTextField(
@@ -216,7 +211,6 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 
                 const SizedBox(height: 20),
                 
-                // Severity Selector
                 Text(
                   'Severity',
                   style: AppTextStyles.subtitle1.copyWith(
@@ -242,12 +236,11 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 ),
                 const SizedBox(height: 20),
                 
-                // Duration
                 _buildTextField(
                   controller: _durationController,
                   label: 'Duration (e.g., 2 hours, All day)',
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value. isEmpty) {
                       return 'Please enter duration';
                     }
                     return null;
@@ -255,7 +248,6 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Notes
                 _buildTextField(
                   controller: _notesController,
                   label: 'Notes (optional)',
@@ -263,14 +255,13 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Date Time Picker
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius. circular(16),
                       boxShadow: const [
                         BoxShadow(
                           color: Color(0x3F000000),
@@ -286,10 +277,10 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors. main500, size: 20),
+                        const Icon(Icons.calendar_today, color: AppColors.main500, size: 20),
                         const SizedBox(width: 12),
                         Text(
-                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate. hour}:${_selectedDate. minute.toString().padLeft(2, '0')}',
+                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
                           style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
@@ -300,7 +291,6 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Buttons
                 Row(
                   children: [
                     Expanded(
@@ -337,11 +327,11 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? color : Colors.white,
-          borderRadius: BorderRadius. circular(12),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black. withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(2, 2),
                     spreadRadius: -2,
@@ -366,7 +356,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
             fontWeight: isSelected ? FontWeight. w600 : FontWeight.w500,
-            color: isSelected ? AppColors.textDark : AppColors.textSecondary,
+            color: isSelected ?  AppColors.textDark : AppColors.textSecondary,
           ),
         ),
       ),
@@ -380,7 +370,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
     String? Function(String?)? validator,
   }) {
     return Container(
-      padding: const EdgeInsets. symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -391,7 +381,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
             offset: Offset(2, 2),
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
           ),
@@ -409,7 +399,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
           ),
         ),
         style: AppTextStyles.body1.copyWith(
-          color: AppColors. textDark,
+          color: AppColors.textDark,
           fontSize: 14,
         ),
         validator: validator,

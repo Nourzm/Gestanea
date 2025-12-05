@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'dialogs/add_symptomes_dialog.dart';
+import 'dialogs/add_symptom_dialog.dart';
 
 class SymptomsTabContent extends StatelessWidget {
   const SymptomsTabContent({super.key});

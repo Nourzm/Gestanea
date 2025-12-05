@@ -29,10 +29,9 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
   }
 
   void _handleSave() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Save data to your backend/local storage
+    if (_formKey.currentState! .validate()) {
       print('Weight: ${_weightController.text} kg');
-      print('Heart Rate: ${_heartRateController.text} bpm');
+      print('Heart Rate: ${_heartRateController. text} bpm');
       print('Blood Pressure: ${_systolicController.text}/${_diastolicController.text}');
       print('Date: $_selectedDate');
       
@@ -40,7 +39,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
       
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Measurement saved successfully! '),
+          content: Text('Measurement saved successfully!'),
           backgroundColor: Colors.green,
         ),
       );
@@ -79,7 +78,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: MediaQuery.of(context). viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
@@ -93,7 +92,6 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Drag handle
                 Container(
                   width: 40,
                   height: 4,
@@ -104,17 +102,15 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 ),
                 const SizedBox(height: 20),
                 
-                // Title
                 Text(
                   'Add Measurement',
-                  style: AppTextStyles.headline2.copyWith(
+                  style: AppTextStyles.headline2. copyWith(
                     fontSize: 20,
                     color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 24),
                 
-                // Weight Input
                 _buildInputField(
                   label: 'Weight (kg)',
                   controller: _weightController,
@@ -130,7 +126,6 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Heart Rate Input
                 _buildInputField(
                   label: 'Heart Rate (bpm)',
                   controller: _heartRateController,
@@ -146,7 +141,6 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Blood Pressure
                 Text(
                   'Blood Pressure',
                   style: AppTextStyles.subtitle1.copyWith(
@@ -161,7 +155,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                       child: _buildInputField(
                         label: 'Systolic',
                         controller: _systolicController,
-                        icon: Icons. arrow_upward,
+                        icon: Icons.arrow_upward,
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) return 'Required';
@@ -192,7 +186,6 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Date Time Picker
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
@@ -219,7 +212,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                         const SizedBox(width: 12),
                         Text(
                           '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute. toString().padLeft(2, '0')}',
-                          style: AppTextStyles.body1. copyWith(
+                          style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
                         ),
@@ -229,7 +222,6 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Buttons
                 Row(
                   children: [
                     Expanded(
@@ -265,7 +257,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
     String? Function(String?)? validator,
   }) {
     return Container(
-      padding: const EdgeInsets. symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -276,7 +268,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
             offset: Offset(2, 2),
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
           ),
@@ -284,7 +276,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors. main500, size: 20),
+          Icon(icon, color: AppColors.main500, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: TextFormField(
