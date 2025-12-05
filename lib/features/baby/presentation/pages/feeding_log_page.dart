@@ -3,6 +3,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class FeedingLogPage extends StatefulWidget {
   
@@ -40,146 +42,143 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Feeding Log',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF9B7FDB),
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Today's Summary
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFB6D9), Color(0xFFFFD6E8)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: const [
-                        Icon(Icons.restaurant, color: Colors.white, size: 32),
-                        SizedBox(height: 8),
-                        Text(
-                          '8 times', // TODO: Calculate from today's data
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'Today',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 1,
-                      height: 60,
-                      color: Colors.white30,
-                    ),
-                    Column(
-                      children: const [
-                        Icon(Icons.timer, color: Colors.white, size: 32),
-                        SizedBox(height: 8),
-                        Text(
-                          '2h 15m', // TODO: Calculate from today's data
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'Total Time',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Feeding Type Selector
-              Row(
+      backgroundColor: AppColors.bg_1,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: _buildTypeButton('Breastfeed', Icons.child_care),
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  const SizedBox(width: 12),
                   Expanded(
-                    child: _buildTypeButton('Bottle', Icons.baby_changing_station),
+                    child: Center(
+                      child: Text(
+                        'Feeding Log',
+                        style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                      ),
+                    ),
                   ),
+                  const SizedBox(width: 48),
                 ],
               ),
-              const SizedBox(height: 24),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Today's Summary
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.pink500, AppColors.pink300],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: AppColors.shadow1,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Icon(Icons.restaurant, color: AppColors.white, size: 32),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '8 times', // TODO: Calculate from today's data
+                                  style: AppTextStyles.headline2.copyWith(color: AppColors.white),
+                                ),
+                                Text(
+                                  'Today',
+                                  style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 1,
+                              height: 60,
+                              color: AppColors.white.withValues(alpha: 0.3),
+                            ),
+                            Column(
+                              children: [
+                                Icon(Icons.timer, color: AppColors.white, size: 32),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '2h 15m', // TODO: Calculate from today's data
+                                  style: AppTextStyles.headline2.copyWith(color: AppColors.white),
+                                ),
+                                Text(
+                                  'Total Time',
+                                  style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-              // Recent Logs
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Recent Feedings',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                      // Feeding Type Selector
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildTypeButton('Breastfeed', Icons.child_care),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildTypeButton('Bottle', Icons.baby_changing_station),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Recent Logs
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Recent Feedings',
+                            style: AppTextStyles.headline2,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // TODO: Navigate to all feeding logs page
+                              debugPrint('Navigate to All Feeding Logs');
+                            },
+                            child: Text(
+                              'View All',
+                              style: AppTextStyles.body1.copyWith(color: AppColors.main500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      ...feedingLogs.map((log) => _buildFeedingLogItem(log)),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      // TODO: Navigate to all feeding logs page
-                      print('Navigate to All Feeding Logs');
-                    },
-                    child: const Text(
-                      'View All',
-                      style: TextStyle(color: Color(0xFF9B7FDB)),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: 12),
-              ...feedingLogs.map((log) => _buildFeedingLogItem(log)),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _showAddFeedingDialog(context);
         },
-        backgroundColor: const Color(0xFF9B7FDB),
-        icon: const Icon(Icons.add),
-        label: const Text('Add Feeding'),
+        backgroundColor: AppColors.main500,
+        icon: const Icon(Icons.add, color: AppColors.white),
+        label: Text('Add Feeding', style: AppTextStyles.bodyWhite),
       ),
     );
   }
@@ -195,31 +194,24 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF9B7FDB) : Colors.white,
+          color: isSelected ? AppColors.main500 : AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppColors.shadow1,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.grey,
+              color: isSelected ? AppColors.white : AppColors.textSecondary,
               size: 20,
             ),
             const SizedBox(width: 8),
             Text(
               type,
-              style: TextStyle(
-                fontSize: 14,
+              style: AppTextStyles.body1.copyWith(
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.grey,
+                color: isSelected ? AppColors.white : AppColors.textSecondary,
               ),
             ),
           ],
@@ -233,29 +225,23 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppColors.shadow1,
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFB6D9).withOpacity(0.2),
+              color: AppColors.pink500.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               log['type'] == 'Breastfeed'
                   ? Icons.child_care
                   : Icons.baby_changing_station,
-              color: const Color(0xFFFFB6D9),
+              color: AppColors.pink500,
               size: 24,
             ),
           ),
@@ -266,8 +252,8 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
               children: [
                 Text(
                   log['type'],
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -276,20 +262,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                   log['side'] != null
                       ? '${log['duration']} - ${log['side']} side'
                       : '${log['amount']}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: AppTextStyles.body1,
                 ),
               ],
             ),
           ),
           Text(
             log['time'],
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: AppTextStyles.body1,
           ),
         ],
       ),
@@ -306,10 +286,16 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              title: const Text('Add Feeding'),
+              title: Text(
+                'Add Feeding',
+                style: AppTextStyles.headline2.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -317,14 +303,22 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     value: feedingType,
                     decoration: InputDecoration(
                       labelText: 'Feeding Type',
+                      labelStyle: AppTextStyles.body1.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.purpleGrey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.main500),
                       ),
                     ),
                     items: ['Breastfeed', 'Bottle'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value, style: AppTextStyles.body1),
                       );
                     }).toList(),
                     onChanged: (value) {
@@ -337,29 +331,50 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                   TextField(
                     controller: durationController,
                     keyboardType: TextInputType.number,
+                    style: AppTextStyles.body1,
                     decoration: InputDecoration(
                       labelText: feedingType == 'Breastfeed'
                           ? 'Duration (minutes)'
                           : 'Amount (ml)',
+                      labelStyle: AppTextStyles.body1.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.purpleGrey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.main500),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     readOnly: true,
+                    style: AppTextStyles.body1,
                     decoration: InputDecoration(
                       labelText: 'Time',
+                      labelStyle: AppTextStyles.body1.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.purpleGrey),
                       ),
-                      suffixIcon: const Icon(Icons.access_time),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.main500),
+                      ),
+                      suffixIcon: Icon(Icons.access_time, color: AppColors.main500),
                       hintText: TimeOfDay.now().format(context),
+                      hintStyle: AppTextStyles.body1.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                     onTap: () {
                       // TODO: Show time picker
-                      print('Show time picker');
+                      debugPrint('Show time picker');
                     },
                   ),
                 ],
@@ -367,22 +382,27 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: AppTextStyles.body1.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     // TODO: Save to database
-                    print('Saving feeding: $feedingType - ${durationController.text}');
+                    debugPrint('Saving feeding: $feedingType - ${durationController.text}');
                     Navigator.pop(dialogContext);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF9B7FDB),
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.main500,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Save'),
+                  child: Text('Save', style: AppTextStyles.bodyWhite),
                 ),
               ],
             );

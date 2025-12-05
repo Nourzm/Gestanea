@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_text_styles.dart';
 
 class VaccineTrackerPage extends StatelessWidget {
 
@@ -7,147 +9,207 @@ class VaccineTrackerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryColor = isGirl ? Colors.pink.shade400 : Colors.blue.shade400;
-    final Color backgroundColor = isGirl ? const Color(0xFFFFF5FA) : const Color(0xFFE8F1FF);
-    final Color upcomingColor = isGirl ? Colors.pink.shade50 : Colors.blue.shade50;
-    final Color textColor = isGirl ? Colors.pink.shade600 : Colors.blue.shade600;
+    final Color primaryColor = isGirl ? AppColors.pink500 : AppColors.blue500;
+    final Color secondaryColor = isGirl ? AppColors.pink300 : AppColors.main300;
+    final Color backgroundColor = AppColors.bg_1;
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(
-        title: Text('Vaccine Tracker', style: TextStyle(color: primaryColor)),
-        iconTheme: IconThemeData(color: primaryColor),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [primaryColor, secondaryColor],
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Track',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: primaryColor,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: AppColors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Vaccine Tracker',
+                        style: AppTextStyles.headline2.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.notifications_none,
+                          color: AppColors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 20),
+                  // Month Selector
                   Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      border: Border.all(color: primaryColor),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: const EdgeInsets.all(6),
-                    child: Icon(Icons.notifications_none, color: primaryColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.chevron_left, color: AppColors.white),
+                        const SizedBox(width: 16),
+                        Text(
+                          'March 2024',
+                          style: AppTextStyles.subtitle1.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        const Icon(Icons.chevron_right, color: AppColors.white),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-
-              // Month Selector
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.chevron_left, color: Colors.grey[700]),
-                  const SizedBox(width: 5),
-                  const Text(
-                    'March 2024',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 5),
-                  Icon(Icons.chevron_right, color: Colors.grey[700]),
-                ],
-              ),
-              const SizedBox(height: 25),
-
-              // Vaccine List
-              Expanded(
+            ),
+            
+            // Vaccine List
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
                 child: ListView(
                   children: [
-                    vaccineCard(
+                    _buildVaccineCard(
                       title: 'BCG + HRV',
                       subtitle: 'Completed: Birth (Jan 15)',
                       completed: true,
                       primaryColor: primaryColor,
-                      upcomingColor: upcomingColor,
                     ),
-                    vaccineCard(
+                    _buildVaccineCard(
                       title: 'Rotavirus',
                       subtitle: 'Completed: 2 months (Feb 20)',
                       completed: true,
                       primaryColor: primaryColor,
-                      upcomingColor: upcomingColor,
                     ),
-                    vaccineCard(
+                    _buildVaccineCard(
                       title: 'PCV13',
                       subtitle: 'Upcoming: 2 months (April 10)',
                       completed: false,
                       primaryColor: primaryColor,
-                      upcomingColor: upcomingColor,
                     ),
-                    vaccineCard(
+                    _buildVaccineCard(
                       title: 'DTcaVPI-Hib-HBV',
                       subtitle: 'Upcoming: 3 months (May 10)',
                       completed: false,
                       primaryColor: primaryColor,
-                      upcomingColor: upcomingColor,
                     ),
                   ],
                 ),
               ),
+            ),
 
-              // See Full Schedule
-              Center(
+            // See Full Schedule
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Center(
                 child: Text(
                   'See Full Schedule',
-                  style: TextStyle(
+                  style: AppTextStyles.subtitle1.copyWith(
                     color: primaryColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget vaccineCard({
+  Widget _buildVaccineCard({
     required String title,
     required String subtitle,
     required bool completed,
     required Color primaryColor,
-    required Color upcomingColor,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: completed ? Colors.green.shade50 : upcomingColor,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: completed ? Colors.green.shade300 : upcomingColor.withOpacity(0.8),
-          width: 1,
-        ),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.shadow1,
       ),
-      child: ListTile(
-        leading: Icon(
-          completed ? Icons.check_circle : Icons.access_time,
-          color: completed ? Colors.green : primaryColor,
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(subtitle),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: completed 
+                  ? Colors.green.withValues(alpha: 0.1) 
+                  : primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              completed ? Icons.check_circle : Icons.access_time,
+              color: completed ? Colors.green : primaryColor,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: AppTextStyles.body1.copyWith(
+                    color: completed ? Colors.green : AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

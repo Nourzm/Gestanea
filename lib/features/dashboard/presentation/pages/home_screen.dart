@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       child: NotificationIcon(
-                        icon: Icon(Icons.notifications, color: Colors.purple),
+                        icon: Icon(Icons.notifications, color: AppColors.main500),
                       ),
                     ),
                   ],
@@ -152,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               SvgPicture.asset(
                                 "assets/icons/Stethoscope.svg",
-                                color: Color(0xFF9C27B0),
+                                color: AppColors.main500,
                                 width: 32,
                               ),
                               SizedBox(height: screenHeight * 0.015),
@@ -161,7 +161,7 @@ class HomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.045,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF9C27B0),
+                                  color: AppColors.main500,
                                 ),
                               ),
                               SizedBox(height: screenHeight * 0.005),
@@ -169,9 +169,7 @@ class HomeScreen extends StatelessWidget {
                                 'find the best doctor',
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
-                                  color: const Color(
-                                    0xFF9C27B0,
-                                  ).withOpacity(0.7),
+                                  color: AppColors.main500.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -277,7 +275,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           SvgPicture.asset(
                             "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
+                            color: AppColors.main500,
                             width: 28,
                           ),
                         ],
@@ -343,7 +341,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           SvgPicture.asset(
                             "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
+                            color: AppColors.main500,
                             width: 28,
                           ),
                         ],
@@ -407,7 +405,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           SvgPicture.asset(
                             "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
+                            color: AppColors.main500,
                             width: 28,
                           ),
                         ],

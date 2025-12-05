@@ -1,7 +1,6 @@
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/navbar.dart';
 import 'postpartum_dashboard_page.dart';
