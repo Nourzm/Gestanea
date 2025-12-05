@@ -1,10 +1,11 @@
-// Today's Medicine Progress Card
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/medicine_progress_card.dart';
 import '../widgets/upcoming_appointments_card.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_local_data_source.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_database_initializer.dart';
 import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
@@ -29,6 +30,8 @@ class MainContent extends StatefulWidget {
 }
 
 class _MainContentState extends State<MainContent> {
+  final PlanLocalDataSource _dataSource = PlanLocalDataSource();
+  final PlanDatabaseInitializer _dbInitializer = PlanDatabaseInitializer();
   List<MedicineModel> _medicines = [];
   List<MedicineLoggedModel> _medicineLogs = [];
   List<AppointmentModel> _appointments = [];
@@ -41,17 +44,25 @@ class _MainContentState extends State<MainContent> {
   }
 
   Future<void> _loadData() async {
+    // TODO: Replace with actual user ID from auth
+    final userId = PlanMockData.mockUserId;
+
     try {
-      // Use mock data for now
-      // TODO: Replace with actual data from database
-      final mockMedicines = PlanMockData.getMockMedicines();
-      final mockLogs = PlanMockData.getMockMedicineLogs(mockMedicines);
-      final mockAppointments = PlanMockData.getMockAppointments();
+      // Initialize database with mock data if empty
+      await _dbInitializer.initializeWithMockData(userId);
+
+      // Load from database
+      final medicines = await _dataSource.getMedicinesByDate(
+        userId,
+        DateTime.now(),
+      );
+      final logs = await _dataSource.getMedicineLogs(userId, DateTime.now());
+      final appointments = await _dataSource.getUpcomingAppointments(userId);
 
       setState(() {
-        _medicines = mockMedicines;
-        _medicineLogs = mockLogs;
-        _appointments = mockAppointments;
+        _medicines = medicines;
+        _medicineLogs = logs;
+        _appointments = appointments;
         _isLoading = false;
       });
     } catch (e) {

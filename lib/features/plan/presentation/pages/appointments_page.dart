@@ -3,6 +3,8 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_local_data_source.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_database_initializer.dart';
 import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
 
 class AppointmentsPage extends StatefulWidget {
@@ -15,6 +17,8 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   bool _showBadge = true;
   final ScrollController _scrollController = ScrollController();
+  final PlanLocalDataSource _dataSource = PlanLocalDataSource();
+  final PlanDatabaseInitializer _dbInitializer = PlanDatabaseInitializer();
   List<AppointmentModel> _appointments = [];
   bool _isLoading = true;
 
@@ -26,13 +30,18 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   }
 
   Future<void> _loadAppointments() async {
+    // TODO: Replace with actual user ID from auth
+    final userId = PlanMockData.mockUserId;
+
     try {
-      // Use mock data for now
-      // TODO: Replace with actual data from database
-      final mockAppointments = PlanMockData.getMockAppointments();
+      // Initialize database with mock data if empty
+      await _dbInitializer.initializeWithMockData(userId);
+
+      // Load from database
+      final appointments = await _dataSource.getAppointments(userId);
 
       setState(() {
-        _appointments = mockAppointments;
+        _appointments = appointments;
         _isLoading = false;
       });
     } catch (e) {
