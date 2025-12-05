@@ -25,7 +25,7 @@ class VitalsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.main300,
+        color: AppColors.main300, // ✅ Purple background
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -35,7 +35,7 @@ class VitalsCard extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -44,7 +44,6 @@ class VitalsCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
@@ -58,6 +57,8 @@ class VitalsCard extends StatelessWidget {
                     color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -65,27 +66,32 @@ class VitalsCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                value,
-                style: AppTextStyles.headline2.copyWith(
-                  fontSize: 16,
-                  color: AppColors.textDark,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.headline2.copyWith(
+                    fontSize: 16,
+                    color: AppColors.textDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 4),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: statusColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   status,
-                  style: AppTextStyles.smallLabel.copyWith(
+                  style: AppTextStyles. smallLabel.copyWith(
                     color: textColor,
-                    fontSize: 11,
+                    fontSize: 10,
                   ),
                 ),
               ),

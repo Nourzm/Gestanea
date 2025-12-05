@@ -888,4 +888,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ifYouExperienceWarnings =>
       'If you experience any warning signs, contact your healthcare provider immediately.';
+
+  @override
+  String get prePregnancyBMI => 'Pre-pregnancy BMI';
+
+  @override
+  String get normalBMI => 'Normal';
+
+  @override
+  String get currentGain => 'Current Gain';
+
+  @override
+  String get targetRange => 'Target Range';
+
+  @override
+  String get expected => 'Expected';
+
+  @override
+  String get weightProgress => 'Weight Progress';
 }

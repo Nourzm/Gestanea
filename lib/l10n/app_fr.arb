@@ -345,5 +345,11 @@
   "emergencyCall": "Appel d'urgence",
   "areYouSureCall911": "Êtes-vous sûr de vouloir appeler le 911 ?\n\nCela composera les services d'urgence.",
   "couldNotMakeEmergencyCall": "Impossible de passer l'appel d'urgence",
-  "ifYouExperienceWarnings": "Si vous ressentez des signes d'alerte, contactez immédiatement votre professionnel de santé."
+  "ifYouExperienceWarnings": "Si vous ressentez des signes d'alerte, contactez immédiatement votre professionnel de santé.",
+  "prePregnancyBMI": "IMC avant grossesse",
+"normalBMI": "Normal",
+"currentGain": "Gain actuel",
+"targetRange": "Plage cible",
+"expected": "Prévu",
+"weightProgress": "Progression du poids"
 }

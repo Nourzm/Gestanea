@@ -375,5 +375,12 @@
   "emergencyCall": "Emergency Call",
   "areYouSureCall911": "Are you sure you want to call 911?\n\nThis will dial emergency services.",
   "couldNotMakeEmergencyCall": "Could not make emergency call",
-  "ifYouExperienceWarnings": "If you experience any warning signs, contact your healthcare provider immediately."
+  "ifYouExperienceWarnings": "If you experience any warning signs, contact your healthcare provider immediately.",
+
+"prePregnancyBMI": "Pre-pregnancy BMI",
+"normalBMI": "Normal",
+"currentGain": "Current Gain",
+"targetRange": "Target Range",
+"expected": "Expected",
+"weightProgress": "Weight Progress"
 }

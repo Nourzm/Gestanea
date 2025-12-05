@@ -23,6 +23,7 @@ class VitalsTabContent extends StatelessWidget {
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
           child: SingleChildScrollView(
+            
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [

@@ -1803,6 +1803,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If you experience any warning signs, contact your healthcare provider immediately.'**
   String get ifYouExperienceWarnings;
+
+  /// No description provided for @prePregnancyBMI.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-pregnancy BMI'**
+  String get prePregnancyBMI;
+
+  /// No description provided for @normalBMI.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normalBMI;
+
+  /// No description provided for @currentGain.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Gain'**
+  String get currentGain;
+
+  /// No description provided for @targetRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Range'**
+  String get targetRange;
+
+  /// No description provided for @expected.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected'**
+  String get expected;
+
+  /// No description provided for @weightProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Progress'**
+  String get weightProgress;
 }
 
 class _AppLocalizationsDelegate

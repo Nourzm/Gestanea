@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart'; // ✅ Import notifications page
+import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import '../widgets/health_tab_sidebar.dart';
 import '../widgets/vitals_tab_content.dart';
 import '../widgets/symptoms_tab_content.dart';
@@ -54,11 +54,10 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ✅ Use common Header widget with notification navigation
+            // ✅ Header with notification navigation
             Header(
               title: localizations.healthLog,
               onNotificationTapped: () {
-                // ✅ Navigate to Notifications Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -68,12 +67,12 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
               },
             ),
 
-            // Subtitle
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+            // ✅ Subtitle - CLOSER to header (pulled up)
+            Transform.translate(
+              offset: const Offset(0, -8), // ✅ Pull up by 8 pixels
               child: Text(
                 localizations.trackYourWellness,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.main500,
                   fontSize: 14,
                   fontFamily: 'Lato',
@@ -81,6 +80,8 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
+
+            const SizedBox(height: 8), // Small gap before content
 
             // Main content with sidebar and tab content
             Expanded(

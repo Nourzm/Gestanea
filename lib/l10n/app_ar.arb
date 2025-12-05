@@ -344,5 +344,11 @@
   "emergencyCall": "مكالمة طوارئ",
   "areYouSureCall911": "هل أنتِ متأكدة أنكِ تريدين الاتصال بـ 911؟\n\nسيتم الاتصال بخدمات الطوارئ.",
   "couldNotMakeEmergencyCall": "تعذر إجراء مكالمة الطوارئ",
-  "ifYouExperienceWarnings": "إذا واجهتِ أي علامات تحذير، اتصلي بمقدم الرعاية الصحية الخاص بكِ على الفور."
+  "ifYouExperienceWarnings": "إذا واجهتِ أي علامات تحذير، اتصلي بمقدم الرعاية الصحية الخاص بكِ على الفور.",
+  "prePregnancyBMI": "مؤشر كتلة الجسم قبل الحمل",
+"normalBMI": "طبيعي",
+"currentGain": "الزيادة الحالية",
+"targetRange": "النطاق المستهدف",
+"expected": "المتوقع",
+"weightProgress": "تقدم الوزن"
 }

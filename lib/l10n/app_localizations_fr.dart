@@ -896,4 +896,22 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ifYouExperienceWarnings =>
       'Si vous ressentez des signes d\'alerte, contactez immédiatement votre professionnel de santé.';
+
+  @override
+  String get prePregnancyBMI => 'IMC avant grossesse';
+
+  @override
+  String get normalBMI => 'Normal';
+
+  @override
+  String get currentGain => 'Gain actuel';
+
+  @override
+  String get targetRange => 'Plage cible';
+
+  @override
+  String get expected => 'Prévu';
+
+  @override
+  String get weightProgress => 'Progression du poids';
 }

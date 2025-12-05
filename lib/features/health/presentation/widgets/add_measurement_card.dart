@@ -4,18 +4,18 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class AddMeasurementCard extends StatelessWidget {
-  final VoidCallback? onTap;
+  final VoidCallback?  onTap;
 
-  const AddMeasurementCard({super.key, this.onTap});
+  const AddMeasurementCard({super. key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations. of(context)!;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets. all(10), // ✅ Reduced from 12 to 10
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.pink600, AppColors.pink500],
@@ -37,37 +37,29 @@ class AddMeasurementCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              localizations.add,
-              style: AppTextStyles.subtitle1.copyWith(
-                color: AppColors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Icon(Icons.add_circle_outline, color: AppColors.white, size: 18), // ✅ Reduced from 20 to 18
+                const SizedBox(width: 4), // ✅ Reduced from 6 to 4
+                Expanded(
+                  child: Text(
+                    '${localizations.add}\n${localizations.measurement}',
+                    style: AppTextStyles.subtitle1.copyWith(
+                      fontSize: 12, // ✅ Reduced from 13 to 12
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              localizations.measurement,
-              style: AppTextStyles.body1.copyWith(
-                color: AppColors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
+            const SizedBox(height: 8), // ✅ Reduced from 8 to 6
+            const SizedBox(height: 16), // ✅ Reduced from 20 to 16
           ],
         ),
       ),

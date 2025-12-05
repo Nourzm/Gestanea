@@ -888,4 +888,22 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get ifYouExperienceWarnings =>
       'إذا واجهتِ أي علامات تحذير، اتصلي بمقدم الرعاية الصحية الخاص بكِ على الفور.';
+
+  @override
+  String get prePregnancyBMI => 'مؤشر كتلة الجسم قبل الحمل';
+
+  @override
+  String get normalBMI => 'طبيعي';
+
+  @override
+  String get currentGain => 'الزيادة الحالية';
+
+  @override
+  String get targetRange => 'النطاق المستهدف';
+
+  @override
+  String get expected => 'المتوقع';
+
+  @override
+  String get weightProgress => 'تقدم الوزن';
 }
