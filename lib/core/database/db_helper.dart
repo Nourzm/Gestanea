@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -492,29 +492,6 @@ class DatabaseHelper {
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
-  }
-
-  /// Ensures a mock user exists in the database for testing/development
-  Future<void> ensureMockUserExists(String userId) async {
-    final db = await database;
-
-    // Check if user exists
-    final result = await db.query(
-      'users',
-      where: 'id = ?',
-      whereArgs: [userId],
-    );
-
-    // If user doesn't exist, create it
-    if (result.isEmpty) {
-      await db.insert('users', {
-        'id': userId,
-        'email': 'mock@gestanea.app',
-        'name': 'Mock User',
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
-      });
-    }
   }
 
   Future<void> close() async {

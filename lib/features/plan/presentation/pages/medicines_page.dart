@@ -8,11 +8,11 @@ import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:uuid/uuid.dart';
 import '../../logic/plan_bloc.dart';
-import '../../core/plan_constants.dart';
-import 'plan_page.dart';
 
 class MedicinesPage extends StatefulWidget {
-  const MedicinesPage({super.key});
+  final String userId;
+
+  const MedicinesPage({super.key, required this.userId});
 
   @override
   State<MedicinesPage> createState() => _MedicinesPageState();
@@ -31,9 +31,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
   }
 
   void _loadMedicines() {
-    context.read<PlanBloc>().add(
-      LoadMedicines(userId: PlanConstants.mockUserId),
-    );
+    context.read<PlanBloc>().add(LoadMedicines(userId: widget.userId));
   }
 
   List<MedicineModel> _getFilteredMedicines(
@@ -95,7 +93,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
     final log = MedicineLoggedModel(
       id: uuid.v4(),
       medicineId: medicine.id,
-      userId: PlanConstants.mockUserId,
+      userId: widget.userId,
       loggedDate: DateTime.now(),
       status: 'taken',
       loggedAt: DateTime.now(),
@@ -139,9 +137,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
               title: localizations.medicine,
               showBackButton: true,
               onBackPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const PlanMainPage()),
-                );
+                Navigator.of(context).pop();
               },
             ),
             Expanded(

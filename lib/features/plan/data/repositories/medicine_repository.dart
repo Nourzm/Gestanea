@@ -115,12 +115,6 @@ class MedicineDB extends MedicineRepository {
 
     try {
       final dbHelper = DatabaseHelper.instance;
-
-      // Ensure user exists before inserting medicine
-      if (medicine.userId != null) {
-        await dbHelper.ensureMockUserExists(medicine.userId!);
-      }
-
       final db = await dbHelper.database;
       await db.insert('medicines', medicine.toMap());
 

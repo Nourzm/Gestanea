@@ -5,11 +5,11 @@ import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
 import '../../logic/plan_bloc.dart';
-import '../../core/plan_constants.dart';
-import 'plan_page.dart';
 
 class AppointmentsPage extends StatefulWidget {
-  const AppointmentsPage({super.key});
+  final String userId;
+
+  const AppointmentsPage({super.key, required this.userId});
 
   @override
   State<AppointmentsPage> createState() => _AppointmentsPageState();
@@ -27,9 +27,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   }
 
   void _loadAppointments() {
-    context.read<PlanBloc>().add(
-      LoadAppointments(userId: PlanConstants.mockUserId),
-    );
+    context.read<PlanBloc>().add(LoadAppointments(userId: widget.userId));
   }
 
   @override
@@ -67,9 +65,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
               title: localizations.appointments,
               showBackButton: true,
               onBackPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const PlanMainPage()),
-                );
+                Navigator.of(context).pop();
               },
             ),
             Expanded(
@@ -220,9 +216,6 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     double screenWidth,
     double screenHeight,
   ) {
-    final now = DateTime.now();
-    final remaining = appointment.appointmentDate.difference(now);
-    final totalSeconds = remaining.inSeconds > 0 ? remaining.inSeconds : 0;
     final icon = _getIconForAppointmentType(appointment.appointmentType);
     final dateStr = _formatDate(appointment.appointmentDate);
     final timeStr = _formatTime(appointment.appointmentDate);
@@ -329,60 +322,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             ],
           ),
         ),
-        // Animated badge for remaining time at top right
-        Positioned(
-          top: 0,
-          right: 0,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: totalSeconds > 0 ? null : 0,
-            curve: Curves.easeInOut,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: totalSeconds > 0 ? 1.0 : 0.0,
-              child: Padding(
-                padding: EdgeInsets.only(right: screenWidth * 0.05, top: 8),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.main600,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.access_time, color: Colors.white, size: 14),
-                      SizedBox(width: 4),
-                      Text(
-                        totalSeconds > 0
-                            ? _formatDuration(Duration(seconds: totalSeconds))
-                            : 'Now',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
       ],
     );
-  }
-
-  String _formatDuration(Duration duration) {
-    if (duration.inDays > 0) {
-      return '${duration.inDays}d ${duration.inHours % 24}h';
-    } else if (duration.inHours > 0) {
-      return '${duration.inHours}h ${duration.inMinutes % 60}m';
-    } else if (duration.inMinutes > 0) {
-      return '${duration.inMinutes}m';
-    } else {
-      return '${duration.inSeconds}s';
-    }
   }
 }

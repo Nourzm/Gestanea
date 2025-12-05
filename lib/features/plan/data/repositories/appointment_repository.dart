@@ -106,10 +106,6 @@ class AppointmentDB extends AppointmentRepository {
 
     try {
       final dbHelper = DatabaseHelper.instance;
-
-      // Ensure user exists before inserting appointment
-      await dbHelper.ensureMockUserExists(appointment.userId);
-
       final db = await dbHelper.database;
       await db.insert('appointments', appointment.toMap());
 

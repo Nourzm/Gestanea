@@ -8,15 +8,16 @@ import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'add_medicine_flow.dart';
 import 'add_appointment_flow.dart';
 import '../../logic/plan_bloc.dart';
-import '../../core/plan_constants.dart';
 
 class MainContent extends StatefulWidget {
+  final String userId;
   final double screenWidth;
   final double screenHeight;
   final bool showMedicine;
 
   const MainContent({
     Key? key,
+    required this.userId,
     required this.screenWidth,
     required this.screenHeight,
     required this.showMedicine,
@@ -35,12 +36,12 @@ class _MainContentState extends State<MainContent> {
 
   void _loadData() {
     context.read<PlanBloc>().add(
-      LoadPlanData(userId: PlanConstants.mockUserId, date: DateTime.now()),
+      LoadPlanData(userId: widget.userId, date: DateTime.now()),
     );
   }
 
   Map<String, int> _getMedicineStats(medicines, medicineLogs) {
-    final total = medicines.length;
+    final total = medicineLogs.where((log) => log.status == 'All').length;
     final taken = medicineLogs.where((log) => log.status == 'taken').length;
     return {'total': total, 'taken': taken};
   }
@@ -106,7 +107,7 @@ class _MainContentState extends State<MainContent> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          AddMedicineFlow(userId: PlanConstants.mockUserId),
+                          AddMedicineFlow(userId: widget.userId),
                     ),
                   );
                   if (result == true) {
@@ -144,7 +145,7 @@ class _MainContentState extends State<MainContent> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          AddAppointmentFlow(userId: PlanConstants.mockUserId),
+                          AddAppointmentFlow(userId: widget.userId),
                     ),
                   );
                   if (result == true) {
