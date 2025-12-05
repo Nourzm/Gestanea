@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
-import 'package:gestanea/features/plan/data/repositories/plan_local_data_source.dart';
-import 'package:gestanea/features/plan/data/repositories/plan_database_initializer.dart';
-import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
+import '../../logic/plan_bloc.dart';
+import '../../core/plan_constants.dart';
+import 'plan_page.dart';
 
 class AppointmentsPage extends StatefulWidget {
   const AppointmentsPage({super.key});
@@ -17,10 +18,6 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   bool _showBadge = true;
   final ScrollController _scrollController = ScrollController();
-  final PlanLocalDataSource _dataSource = PlanLocalDataSource();
-  final PlanDatabaseInitializer _dbInitializer = PlanDatabaseInitializer();
-  List<AppointmentModel> _appointments = [];
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -29,26 +26,10 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     _loadAppointments();
   }
 
-  Future<void> _loadAppointments() async {
-    // TODO: Replace with actual user ID from auth
-    final userId = PlanMockData.mockUserId;
-
-    try {
-      // Initialize database with mock data if empty
-      await _dbInitializer.initializeWithMockData(userId);
-
-      // Load from database
-      final appointments = await _dataSource.getAppointments(userId);
-
-      setState(() {
-        _appointments = appointments;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _loadAppointments() {
+    context.read<PlanBloc>().add(
+      LoadAppointments(userId: PlanConstants.mockUserId),
+    );
   }
 
   @override
@@ -85,7 +66,11 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             SubHeader(
               title: localizations.appointments,
               showBackButton: true,
-              onBackPressed: () => Navigator.of(context).pop(),
+              onBackPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const PlanMainPage()),
+                );
+              },
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -101,14 +86,40 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
                       ),
-                      child: _isLoading
-                          ? Center(
+                      child: BlocBuilder<PlanBloc, PlanState>(
+                        builder: (context, state) {
+                          if (state is PlanLoading) {
+                            return Center(
                               child: CircularProgressIndicator(
                                 color: AppColors.main500,
                               ),
-                            )
-                          : _appointments.isEmpty
-                          ? Center(
+                            );
+                          }
+
+                          if (state is PlanError) {
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(screenHeight * 0.05),
+                                child: Text(
+                                  'Error: ${state.message}',
+                                  style: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          List<AppointmentModel> appointments = [];
+                          if (state is AppointmentsLoaded) {
+                            appointments = state.appointments;
+                          } else if (state is PlanLoaded) {
+                            appointments = state.appointments;
+                          }
+
+                          if (appointments.isEmpty) {
+                            return Center(
                               child: Padding(
                                 padding: EdgeInsets.all(screenHeight * 0.05),
                                 child: Text(
@@ -119,21 +130,25 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                                   ),
                                 ),
                               ),
-                            )
-                          : Column(
-                              children: _appointments.map((appointment) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: screenHeight * 0.015,
-                                  ),
-                                  child: _buildAppointmentCard(
-                                    appointment,
-                                    screenWidth,
-                                    screenHeight,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                            );
+                          }
+
+                          return Column(
+                            children: appointments.map((appointment) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: screenHeight * 0.015,
+                                ),
+                                child: _buildAppointmentCard(
+                                  appointment,
+                                  screenWidth,
+                                  screenHeight,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
                     ),
 
                     SizedBox(height: screenHeight * 0.1),

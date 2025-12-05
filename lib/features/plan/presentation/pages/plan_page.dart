@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
@@ -7,17 +8,35 @@ import '../widgets/plan_toggle.dart';
 import 'main_content.dart';
 import 'medicines_page.dart';
 import 'appointments_page.dart';
+import '../../logic/plan_bloc.dart';
+import '../../data/repositories/medicine_repository.dart';
+import '../../data/repositories/appointment_repository.dart';
 
-class PlanMainPage extends StatefulWidget {
+class PlanMainPage extends StatelessWidget {
   const PlanMainPage({super.key});
 
   @override
-  State<PlanMainPage> createState() => _PlanMainPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => PlanBloc(
+        medicineRepository: MedicineRepository.getInstance(),
+        appointmentRepository: AppointmentRepository.getInstance(),
+      ),
+      child: const _PlanMainPageContent(),
+    );
+  }
+}
+
+class _PlanMainPageContent extends StatefulWidget {
+  const _PlanMainPageContent({super.key});
+
+  @override
+  State<_PlanMainPageContent> createState() => _PlanMainPageState();
 }
 
 enum PlanSection { none, medicines, appointments }
 
-class _PlanMainPageState extends State<PlanMainPage> {
+class _PlanMainPageState extends State<_PlanMainPageContent> {
   PlanSection selectedSection = PlanSection.none;
   DateTime selectedDate = DateTime.now();
 
@@ -60,14 +79,21 @@ class _PlanMainPageState extends State<PlanMainPage> {
   }
 
   void _navigateToPage(PlanSection section) {
+    final bloc = context.read<PlanBloc>();
     if (section == PlanSection.medicines) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => const MedicinesPage()));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>
+              BlocProvider.value(value: bloc, child: const MedicinesPage()),
+        ),
+      );
     } else if (section == PlanSection.appointments) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => const AppointmentsPage()));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>
+              BlocProvider.value(value: bloc, child: const AppointmentsPage()),
+        ),
+      );
     }
   }
 
