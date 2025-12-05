@@ -12,7 +12,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get security => 'الأمان';
 
   @override
-  String get i_gave_birth => 'لقد ولدت';
+  String get i_gave_birth => 'لقد ولدتُ';
 
   @override
   String get no_longer_pregnant => 'لم أعد حاملاً';
@@ -21,7 +21,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get help_support => 'المساعدة والدعم';
 
   @override
-  String get contact_us => 'اتصل بنا';
+  String get contact_us => 'اتصلي بنا';
 
   @override
   String get privacy_policy => 'سياسة الخصوصية';
@@ -39,7 +39,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get save_changes => 'حفظ التغييرات';
 
   @override
-  String get logout_confirmation => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+  String get logout_confirmation => 'هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟';
 
   @override
   String get cancel => 'إلغاء';
@@ -210,7 +210,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get about => 'حول';
 
   @override
-  String get welcome_back => 'مرحباً بعودتك! ';
+  String get welcome_back => 'مرحباً بعودتكِ! ';
 
   @override
   String get or => '— أو —';
@@ -219,34 +219,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get register => 'تسجيل';
 
   @override
-  String get auth => 'رفيقك الموثوق في كل مرحلة من مراحل الأمومة';
+  String get auth => 'رفيقكِ الموثوق في كل مرحلة من مراحل الأمومة';
 
   @override
-  String get auth2 => 'دع Gestanéa ترشدك خلال الحمل، ورعاية الطفل، وما بعده.';
+  String get auth2 => 'دعي Gestanéa ترشدكِ خلال الحمل، ورعاية الطفل، وما بعده.';
 
   @override
-  String get forgot => 'نسيت كلمة المرور؟';
+  String get forgot => 'نسيتِ كلمة المرور؟';
 
   @override
-  String get notRegistered => 'لم تقم بالتسجيل بعد؟';
+  String get notRegistered => 'لم تقومي بالتسجيل بعد؟';
 
   @override
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get your_name => 'اسمك';
+  String get your_name => 'اسمكِ';
 
   @override
   String get email => 'البريد الإلكتروني';
 
   @override
-  String get enter_email => 'أدخل بريدك الإلكتروني';
+  String get enter_email => 'أدخلي بريدكِ الإلكتروني';
 
   @override
-  String get enter_name => 'أدخل اسمك';
+  String get enter_name => 'أدخلي اسمكِ';
 
   @override
-  String get rememberMe => 'تذكرني';
+  String get rememberMe => 'تذكريني';
 
   @override
   String get version => 'الإصدار';
@@ -286,22 +286,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backSupportBelt => 'حزام دعم الظهر';
 
   @override
-  String get searchHint => 'ابحث عما تحتاجه.. .';
+  String get searchHint => 'ابحثي عما تحتاجينه.. .';
 
   @override
-  String get dontMissOut => 'لا تفوت الفرصة! ';
+  String get dontMissOut => 'لا تفوتي الفرصة! ';
 
   @override
   String get discountUpTo => 'خصم يصل إلى 50%';
 
   @override
-  String get upgradeNow => 'قم بالترقية الآن';
+  String get upgradeNow => 'قومي بالترقية الآن';
 
   @override
   String get healthLog => 'سجل الصحة';
 
   @override
-  String get trackYourWellness => 'تابع صحتك';
+  String get trackYourWellness => 'تابعي صحتكِ';
 
   @override
   String get vitals => 'المؤشرات الحيوية';
@@ -338,7 +338,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get healthTipMessage =>
-      'عمل رائع! أنت تحافظ على وتيرة زيادة وزن صحية.  استمر في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.';
+      'عمل رائع! أنتِ تحافظين على وتيرة زيادة وزن صحية. استمري في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.';
 
   @override
   String get onTrack => 'على المسار الصحيح';
@@ -347,10 +347,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get doctors => 'الأطباء';
 
   @override
-  String get findDoctors => 'ابحث عن الأطباء بالاسم أو التخصص';
+  String get findDoctors => 'ابحثي عن الأطباء بالاسم أو التخصص';
 
   @override
-  String get useCurrentLocation => 'استخدام موقعي الحالي';
+  String get useCurrentLocation => 'استخدمي موقعي الحالي';
 
   @override
   String get algiers => 'الجزائر';
@@ -446,7 +446,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get tryAdjustingFilters => 'حاول تعديل التصفية';
+  String get tryAdjustingFilters => 'حاولي تعديل التصفية';
 
   @override
   String get doctorDetails => 'تفاصيل الطبيب';
@@ -473,7 +473,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get generalPractitioner => 'طبيب عام';
 
   @override
-  String get getDirections => 'احصل على الاتجاهات';
+  String get getDirections => 'احصلي على الاتجاهات';
 
   @override
   String get contactInformation => 'معلومات الاتصال';
@@ -488,7 +488,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get openingHours => 'ساعات العمل';
 
   @override
-  String get callNow => 'اتصل الآن';
+  String get callNow => 'اتصلي الآن';
 
   @override
   String get recentSymptoms => 'الأعراض الأخيرة';
@@ -544,7 +544,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commonSymptomsWeek24 =>
-      'تشمل الأعراض الشائعة في الأسبوع 24 آلام الظهر والتورم وصعوبات النوم.  حافظ على رطوبتك واسترح عندما تستطيع.';
+      'تشمل الأعراض الشائعة في الأسبوع 24 آلام الظهر والتورم وصعوبات النوم.  حافظي على رطوبتكِ واستريحي عندما تستطيعين.';
 
   @override
   String get addMeasurement => 'إضافة قياس';
@@ -599,7 +599,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get symptomType => 'نوع العرض';
 
   @override
-  String get selectSymptom => 'اختر العرض';
+  String get selectSymptom => 'اختاري العرض';
 
   @override
   String get nausea => 'غثيان';
@@ -623,7 +623,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get other => 'أخرى';
 
   @override
-  String get specifySymptom => 'حدد العرض';
+  String get specifySymptom => 'حددي العرض';
 
   @override
   String get pleaseSpecifySymptom => 'الرجاء تحديد العرض';
@@ -668,7 +668,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verySad => 'حزينة جداً';
 
   @override
-  String get pleaseSelectMood => 'الرجاء اختيار مزاجك';
+  String get pleaseSelectMood => 'الرجاء اختيار مزاجكِ';
 
   @override
   String get energyLevel => 'مستوى الطاقة';
@@ -683,7 +683,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sleepQuality => 'جودة النوم';
 
   @override
-  String get howWasYourDay => 'كيف كان يومك؟';
+  String get howWasYourDay => 'كيف كان يومكِ؟';
 
   @override
   String get moodLoggedSuccessfully => 'تم تسجيل المزاج بنجاح!';
@@ -705,7 +705,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get textExtractedSuccessfully =>
-      'تم استخراج النص بنجاح!  يمكنك تعديله أدناه.';
+      'تم استخراج النص بنجاح!  يمكنكِ تعديله أدناه.';
 
   @override
   String get ocrError => 'خطأ في التعرف الضوئي';
@@ -741,7 +741,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noImage => 'لا توجد صورة';
 
   @override
-  String get labResultsUploadedSuccessfully => 'تم تحميل نتائج المختبر بنجاح! ';
+  String get labResultsUploadedSuccessfully => 'تم تحميل نتائج المختبر بنجاح!';
 
   @override
   String get recentLabResults => 'نتائج المختبر الأخيرة';
@@ -766,7 +766,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get keepLabResultsOrganized =>
-      'احتفظ بجميع نتائج المختبر منظمة.  شاركها مع مقدم الرعاية الصحية الخاص بك أثناء الفحوصات.';
+      'احتفظي بجميع نتائج المختبر منظمة.  شاركيها مع مقدم الرعاية الصحية الخاص بكِ أثناء الفحوصات.';
 
   @override
   String get howAreYouFeelingToday => 'كيف تشعرين اليوم؟';
@@ -784,7 +784,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get recentEntries => 'الإدخالات الأخيرة';
 
   @override
-  String get feltEnergeticToday => 'شعرت بالنشاط اليوم';
+  String get feltEnergeticToday => 'شعرتُ بالنشاط اليوم';
 
   @override
   String get relaxingEvening => 'مساء مريح';
@@ -809,20 +809,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selfCareSuggestions => 'اقتراحات العناية الذاتية';
 
   @override
-  String get takeShortWalk => 'قم بنزهة قصيرة';
+  String get takeShortWalk => 'قومي بنزهة قصيرة';
 
   @override
-  String get practiceDeepBreathing => 'مارس التنفس العميق';
+  String get practiceDeepBreathing => 'مارسي التنفس العميق';
 
   @override
-  String get listenToCalmingMusic => 'استمع لموسيقى هادئة';
+  String get listenToCalmingMusic => 'استمعي لموسيقى هادئة';
 
   @override
-  String get connectWithLovedOnes => 'تواصل مع أحبائك';
+  String get connectWithLovedOnes => 'تواصلي مع أحبائكِ';
 
   @override
   String get trackingMoodHelps =>
-      'يساعد تتبع مزاجك في تحديد الأنماط وإدارة الصحة العاطفية أثناء الحمل.';
+      'يساعد تتبع مزاجكِ في تحديد الأنماط وإدارة الصحة العاطفية أثناء الحمل.';
 
   @override
   String get overallRiskLevel => 'مستوى المخاطر الإجمالي';
@@ -873,19 +873,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emergencyContact => 'جهة الاتصال في حالات الطوارئ';
 
   @override
-  String get call911OrProvider => 'اتصل بـ 911 أو مزودك';
+  String get call911OrProvider => 'اتصلي بـ 911 أو بمقدم الرعاية';
 
   @override
   String get emergencyCall => 'مكالمة طوارئ';
 
   @override
   String get areYouSureCall911 =>
-      'هل أنت متأكد أنك تريد الاتصال بـ 911؟\n\nسيتم الاتصال بخدمات الطوارئ.';
+      'هل أنتِ متأكدة أنكِ تريدين الاتصال بـ 911؟\n\nسيتم الاتصال بخدمات الطوارئ.';
 
   @override
   String get couldNotMakeEmergencyCall => 'تعذر إجراء مكالمة الطوارئ';
 
   @override
   String get ifYouExperienceWarnings =>
-      'إذا واجهت أي علامات تحذير، اتصل بمقدم الرعاية الصحية الخاص بك على الفور.';
+      'إذا واجهتِ أي علامات تحذير، اتصلي بمقدم الرعاية الصحية الخاص بكِ على الفور.';
 }
