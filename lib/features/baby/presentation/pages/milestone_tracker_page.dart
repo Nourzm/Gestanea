@@ -3,6 +3,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class MilestoneTrackerPage extends StatefulWidget {
   const MilestoneTrackerPage({super.key});
@@ -59,104 +61,104 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
     double percentage = (completedCount / totalCount * 100);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Milestones',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF9B7FDB),
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Progress Card
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF9B7FDB), Color(0xFFD4B5E8)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+      backgroundColor: AppColors.bg_1,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          '$completedCount/$totalCount',
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Completed',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${percentage.toInt()}%',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Milestones',
+                        style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
               ),
-              const SizedBox(height: 24),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Progress Card
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.main500, AppColors.main300],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: AppColors.shadow1,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  '$completedCount/$totalCount',
+                                  style: AppTextStyles.numberHighlight.copyWith(fontSize: 32),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Completed',
+                                  style: AppTextStyles.body1.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: AppColors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${percentage.toInt()}%',
+                                  style: AppTextStyles.numberHighlight.copyWith(fontSize: 24),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-              // Milestones List
-              const Text(
-                'Developmental Milestones',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                      // Milestones List
+                      Text(
+                        'Developmental Milestones',
+                        style: AppTextStyles.headline2,
+                      ),
+                      const SizedBox(height: 12),
+                      ...milestones.map((milestone) => _buildMilestoneItem(
+                            milestone['title'],
+                            milestone['age'],
+                            milestone['completed'],
+                            milestone['date'],
+                          )),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
-              ...milestones.map((milestone) => _buildMilestoneItem(
-                    milestone['title'],
-                    milestone['age'],
-                    milestone['completed'],
-                    milestone['date'],
-                  )),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -172,19 +174,13 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: completed ? const Color(0xFF9B7FDB) : Colors.transparent,
+          color: completed ? AppColors.main500 : Colors.transparent,
           width: 2,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppColors.shadow1,
       ),
       child: Row(
         children: [
@@ -192,12 +188,12 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: completed ? const Color(0xFF9B7FDB) : Colors.grey[200],
+              color: completed ? AppColors.main500 : AppColors.purpleGrey,
               shape: BoxShape.circle,
             ),
             child: Icon(
               completed ? Icons.check : Icons.emoji_events_outlined,
-              color: completed ? Colors.white : Colors.grey,
+              color: completed ? AppColors.white : AppColors.textSecondary,
               size: 20,
             ),
           ),
@@ -208,11 +204,10 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 16,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
-                    decoration:
-                        completed ? TextDecoration.lineThrough : null,
+                    decoration: completed ? TextDecoration.lineThrough : null,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -220,10 +215,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                   completed && date != null
                       ? 'Completed: $date'
                       : 'Expected at $age',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: AppTextStyles.smallLabel,
                 ),
               ],
             ),
@@ -233,11 +225,11 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               onPressed: () {
                 setState(() {
                   // TODO: Mark milestone as completed and save to database
-                  print('Mark $title as completed');
+                  debugPrint('Mark $title as completed');
                 });
               },
               icon: const Icon(Icons.check_circle_outline),
-              color: const Color(0xFF9B7FDB),
+              color: AppColors.main500,
             ),
         ],
       ),
