@@ -305,6 +305,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get blida => 'البليدة';
 
   @override
+  String get bouira => 'البويرة';
+
+  @override
   String get doctorsFoundSingle => 'تم العثور على طبيب واحد';
 
   @override

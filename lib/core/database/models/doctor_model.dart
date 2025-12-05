@@ -2,7 +2,7 @@ class DoctorModel {
   final String id;
   final String name;
   final String? specialty;
-  final double?  distance;
+  final double? distance;
   final String? gender;
   final String? phone;
   final String? email;
@@ -12,21 +12,23 @@ class DoctorModel {
   final int reviewsCount;
   final String? address;
   final bool isFavorite;
+  final String? wilaya;
 
   DoctorModel({
     required this.id,
     required this.name,
-    this. specialty,
+    this.specialty,
     this.distance,
     this.gender,
     this.phone,
-    this. email,
+    this.email,
     this.latitude,
     this.longitude,
     this.rating,
-    this. reviewsCount = 0,
+    this.reviewsCount = 0,
     this.address,
     this.isFavorite = false,
+    this.wilaya,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,7 +45,8 @@ class DoctorModel {
       'rating': rating,
       'reviews_count': reviewsCount,
       'address': address,
-      'isfavorite': isFavorite ?  1 : 0,
+      'isfavorite': isFavorite ? 1 : 0,
+      'wilaya': wilaya,
     };
   }
 
@@ -59,17 +62,16 @@ class DoctorModel {
       phone: map['phone'] as String?,
       email: map['email'] as String?,
       latitude: map['latitude'] != null
-          ?  (map['latitude'] as num). toDouble()
+          ? (map['latitude'] as num).toDouble()
           : null,
       longitude: map['longitude'] != null
           ? (map['longitude'] as num).toDouble()
           : null,
-      rating: map['rating'] != null
-          ? (map['rating'] as num).toDouble()
-          : null,
-      reviewsCount: map['reviews_count'] as int?  ?? 0,
+      rating: map['rating'] != null ? (map['rating'] as num).toDouble() : null,
+      reviewsCount: map['reviews_count'] as int? ?? 0,
       address: map['address'] as String?,
       isFavorite: (map['isfavorite'] as int?) == 1,
+      wilaya: map['wilaya'] as String?,
     );
   }
 
@@ -87,21 +89,23 @@ class DoctorModel {
     int? reviewsCount,
     String? address,
     bool? isFavorite,
+    String? wilaya,
   }) {
     return DoctorModel(
-      id: id ??  this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       specialty: specialty ?? this.specialty,
-      distance: distance ?? this. distance,
-      gender: gender ??  this.gender,
+      distance: distance ?? this.distance,
+      gender: gender ?? this.gender,
       phone: phone ?? this.phone,
       email: email ?? this.email,
-      latitude: latitude ?? this. latitude,
-      longitude: longitude ??  this.longitude,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       rating: rating ?? this.rating,
-      reviewsCount: reviewsCount ??  this.reviewsCount,
+      reviewsCount: reviewsCount ?? this.reviewsCount,
       address: address ?? this.address,
       isFavorite: isFavorite ?? this.isFavorite,
+      wilaya: wilaya ?? this.wilaya,
     );
   }
 }

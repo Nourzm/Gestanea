@@ -307,6 +307,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get blida => 'Blida';
 
   @override
+  String get bouira => 'Bouira';
+
+  @override
   String get doctorsFoundSingle => '1 Médecin Trouvé';
 
   @override

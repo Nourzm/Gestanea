@@ -682,6 +682,12 @@ abstract class AppLocalizations {
   /// **'Blida'**
   String get blida;
 
+  /// No description provided for @bouira.
+  ///
+  /// In en, this message translates to:
+  /// **'Bouira'**
+  String get bouira;
+
   /// No description provided for @doctorsFoundSingle.
   ///
   /// In en, this message translates to:

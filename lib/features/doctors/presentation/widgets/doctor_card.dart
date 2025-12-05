@@ -2,32 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
-import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'doctor_info.dart';
 
 class DoctorCard extends StatelessWidget {
   final DoctorModel doctor;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
-  const DoctorCard({Key? key, required this.doctor, this.onTap})
+  const DoctorCard({Key? key, required this.doctor, required this.onTap})
     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (onTap != null) {
-          onTap!();
-        } else {
-          // Navigate to doctor details page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DoctorDetailScreen(doctor: doctor),
-            ),
-          );
-        }
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),

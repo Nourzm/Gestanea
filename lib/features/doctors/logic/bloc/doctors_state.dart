@@ -13,6 +13,7 @@ class DoctorsLoaded extends DoctorsState {
   final bool hasActiveFilters;
   final DoctorFilter currentFilter;
   final String searchQuery;
+  final String selectedLocation;
 
   DoctorsLoaded({
     required this.doctors,
@@ -20,6 +21,7 @@ class DoctorsLoaded extends DoctorsState {
     required this.hasActiveFilters,
     required this.currentFilter,
     required this.searchQuery,
+    required this.selectedLocation,
   });
 }
 

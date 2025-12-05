@@ -8,10 +8,12 @@ import 'package:gestanea/features/doctors/presentation/widgets/location_selector
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
+import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_event.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_state.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctor_detail_bloc.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsScreen extends StatefulWidget {
@@ -23,7 +25,6 @@ class DoctorsScreen extends StatefulWidget {
 
 class _DoctorsScreenState extends State<DoctorsScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedLocation = 'Algiers';
 
   @override
   void initState() {
@@ -36,14 +37,71 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     context.read<DoctorsBloc>().add(SearchDoctors(_searchController.text));
   }
 
-  void _showLocationPicker() {
+  void _navigateToDoctorDetail(dynamic doctor) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => DoctorDetailBloc(),
+          child: DoctorDetailScreen(doctor: doctor),
+        ),
+      ),
+    );
+  }
+
+  void _showLocationPicker(String currentLocation) {
+    final l10n = AppLocalizations.of(context)!;
+    final doctorsBloc = context.read<DoctorsBloc>();
+    final locations = [
+      l10n.useCurrentLocation,
+      l10n.algiers,
+      l10n.oran,
+      l10n.constantine,
+      l10n.annaba,
+      l10n.blida,
+      l10n.bouira,
+    ];
+
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.bg_1,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => _buildLocationBottomSheet(),
+      builder: (modalContext) => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.textSecondary.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ...locations.asMap().entries.map((entry) {
+              final location = entry.value;
+              final isCurrentLocation = entry.key == 0;
+              return ListTile(
+                leading: Icon(
+                  isCurrentLocation
+                      ? Icons.my_location
+                      : Icons.location_on_outlined,
+                  color: AppColors.main500,
+                ),
+                title: Text(location),
+                onTap: () {
+                  doctorsBloc.add(SelectLocation(location));
+                  Navigator.pop(modalContext);
+                },
+              );
+            }).toList(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -103,8 +161,9 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                           ),
                           const SizedBox(height: 16),
                           LocationSelector(
-                            selectedLocation: _selectedLocation,
-                            onTap: _showLocationPicker,
+                            selectedLocation: state.selectedLocation,
+                            onTap: () =>
+                                _showLocationPicker(state.selectedLocation),
                           ),
                           const SizedBox(height: 20),
                           DoctorsFilterBar(
@@ -124,8 +183,11 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                                   ),
                                   itemCount: displayDoctors.length,
                                   itemBuilder: (context, index) {
+                                    final doctor = displayDoctors[index];
                                     return DoctorCard(
-                                      doctor: displayDoctors[index],
+                                      doctor: doctor,
+                                      onTap: () =>
+                                          _navigateToDoctorDetail(doctor),
                                     );
                                   },
                                 ),
@@ -140,55 +202,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildLocationBottomSheet() {
-    final l10n = AppLocalizations.of(context)!;
-    final locations = [
-      l10n.useCurrentLocation,
-      l10n.algiers,
-      l10n.oran,
-      l10n.constantine,
-      l10n.annaba,
-      l10n.blida,
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AppColors.textSecondary.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 20),
-          ...locations.asMap().entries.map((entry) {
-            final location = entry.value;
-            final isCurrentLocation = entry.key == 0;
-            return ListTile(
-              leading: Icon(
-                isCurrentLocation
-                    ? Icons.my_location
-                    : Icons.location_on_outlined,
-                color: AppColors.main500,
-              ),
-              title: Text(location),
-              onTap: () {
-                setState(() {
-                  _selectedLocation = location;
-                });
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
-        ],
       ),
     );
   }

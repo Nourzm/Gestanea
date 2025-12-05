@@ -23,3 +23,9 @@ class SortDoctors extends DoctorsEvent {
 }
 
 class ClearFilters extends DoctorsEvent {}
+
+class SelectLocation extends DoctorsEvent {
+  final String location;
+
+  SelectLocation(this.location);
+}

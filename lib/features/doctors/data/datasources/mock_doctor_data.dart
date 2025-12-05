@@ -15,6 +15,7 @@ class MockDoctorData {
         rating: 5.0,
         reviewsCount: 14,
         gender: 'Male',
+        wilaya: 'Bouira',
       ),
       DoctorModel(
         id: '2',
@@ -28,6 +29,7 @@ class MockDoctorData {
         rating: 3.0,
         reviewsCount: 2,
         gender: 'Female',
+        wilaya: 'Bouira',
       ),
       DoctorModel(
         id: '3',
@@ -41,6 +43,7 @@ class MockDoctorData {
         rating: 5.0,
         reviewsCount: 3,
         gender: 'Male',
+        wilaya: 'Bouira',
       ),
       DoctorModel(
         id: '4',
@@ -54,6 +57,7 @@ class MockDoctorData {
         rating: 5.0,
         reviewsCount: 1,
         gender: 'Male',
+        wilaya: 'Bouira',
       ),
       DoctorModel(
         id: '5',
@@ -68,6 +72,7 @@ class MockDoctorData {
         rating: 3.9,
         reviewsCount: 7,
         gender: 'Female',
+        wilaya: 'Bouira',
       ),
     ];
   }

@@ -19,14 +19,22 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
     );
   }
 
   Future<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add wilaya column to doctors table
+      await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -338,7 +346,8 @@ class DatabaseHelper {
         rating REAL,
         reviews_count INTEGER DEFAULT 0,
         address TEXT,
-        isfavorite INTEGER
+        isfavorite INTEGER,
+        wilaya TEXT
       )
     ''');
 

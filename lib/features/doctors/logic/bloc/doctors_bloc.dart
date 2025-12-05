@@ -12,12 +12,14 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
     on<FilterDoctors>(_onFilterDoctors);
     on<SortDoctors>(_onSortDoctors);
     on<ClearFilters>(_onClearFilters);
+    on<SelectLocation>(_onSelectLocation);
   }
 
   List<DoctorModel> _allDoctors = [];
   String _currentQuery = '';
   DoctorFilter _currentFilter = DoctorFilter();
   String _currentSort = 'none';
+  String _selectedLocation = 'Use current location';
 
   void _onLoadDoctors(LoadDoctors event, Emitter<DoctorsState> emit) {
     emit(DoctorsLoading());
@@ -51,8 +53,20 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
     _applyFiltersAndEmit(emit);
   }
 
+  void _onSelectLocation(SelectLocation event, Emitter<DoctorsState> emit) {
+    _selectedLocation = event.location;
+    _applyFiltersAndEmit(emit);
+  }
+
   void _applyFiltersAndEmit(Emitter<DoctorsState> emit) {
     List<DoctorModel> filtered = List.from(_allDoctors);
+
+    // Apply location filter (wilaya)
+    if (_selectedLocation != 'Use current location') {
+      filtered = filtered
+          .where((doctor) => doctor.wilaya == _selectedLocation)
+          .toList();
+    }
 
     // Apply search
     if (_currentQuery.isNotEmpty) {
@@ -113,6 +127,9 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
       case 'reviews':
         filtered.sort((a, b) => b.reviewsCount.compareTo(a.reviewsCount));
         break;
+      default:
+        // Default sort by distance ascending
+        filtered.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
     }
 
     emit(
@@ -123,15 +140,8 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
             _currentFilter.hasActiveFilters || _currentQuery.isNotEmpty,
         currentFilter: _currentFilter,
         searchQuery: _currentQuery,
+        selectedLocation: _selectedLocation,
       ),
     );
-  }
-
-  List<String> getAllSpecialties() {
-    return _allDoctors
-        .map((doctor) => doctor.specialty ?? '')
-        .where((specialty) => specialty.isNotEmpty)
-        .toSet()
-        .toList();
   }
 }

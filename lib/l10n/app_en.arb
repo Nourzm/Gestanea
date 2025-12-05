@@ -144,6 +144,7 @@
   "constantine": "Constantine",
   "annaba": "Annaba",
   "blida": "Blida",
+  "bouira": "Bouira",
   "doctorsFoundSingle": "1 Doctor Found",
   "doctorsFoundPlural": "{count} Doctors Found",
   "@doctorsFoundPlural": {
