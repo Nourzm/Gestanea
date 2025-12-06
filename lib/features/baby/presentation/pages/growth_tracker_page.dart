@@ -618,11 +618,14 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
     _heightController.clear();
     _selectedDate = DateTime.now();
     
+    // Capture the cubit reference BEFORE showing the dialog
+    final babyCubit = context.read<BabyCubit>();
+    
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (builderContext, setDialogState) {
             return AlertDialog(
               backgroundColor: const Color(0xFFFDF8FF),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -672,7 +675,7 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                   GestureDetector(
                     onTap: () async {
                       final picked = await showDatePicker(
-                        context: context,
+                        context: builderContext,
                         initialDate: _selectedDate,
                         firstDate: DateTime(2020),
                         lastDate: DateTime.now(),
@@ -713,14 +716,15 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                     final height = double.tryParse(_heightController.text);
                     
                     if (weight != null || height != null) {
-                      context.read<BabyCubit>().addGrowthRecord(
+                      // Use the captured babyCubit reference
+                      babyCubit.addGrowthRecord(
                         recordedDate: _selectedDate,
                         weight: weight,
                         height: height,
                       );
                       Navigator.pop(dialogContext);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      ScaffoldMessenger.of(dialogContext).showSnackBar(
                         const SnackBar(content: Text('Please enter at least one measurement')),
                       );
                     }
