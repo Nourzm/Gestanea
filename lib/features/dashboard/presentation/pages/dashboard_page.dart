@@ -182,6 +182,7 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
                   child: FancyNavBar(
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
+                    barHeight: 80,
                     items: [
                       NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
                       NavBarItem(icon: "assets/icons/track.svg", label: "Track"),
