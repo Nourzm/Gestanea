@@ -10,8 +10,6 @@ import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' show DoctorsScreen;
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/baby_settings_page.dart';
-import 'package:intl/intl.dart';
 import 'postpartum_track_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
@@ -28,14 +26,11 @@ class PostpartumDashboardPage extends StatefulWidget {
 }
 
 class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
-  int _selectedNavIndex = 0;
-  String? _cachedBabyId;
-
-  Color get primaryColor =>
-      widget.babyGender == 'girl' ? const Color(0xFFFF9EC9) : const Color(0xFF87CEEB);
-
-  Color get lightColor =>
-      widget.babyGender == 'girl' ? const Color(0xFFFFC6E0) : const Color(0xFFB0E0E6);
+  // Blue theme colors matching the mockup
+  Color get primaryColor => const Color(0xFF5B9BD5);
+  Color get lightBlue => const Color(0xFFD6E9F8);
+  Color get cardBlue => const Color(0xFFE8F4FC);
+  Color get accentBlue => const Color(0xFF4A90D9);
 
   String _getUserId() {
     final authState = context.read<AuthBloc>().state;
@@ -47,27 +42,25 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
 
   String _formatAgeText(DateTime dateOfBirth) {
     final now = DateTime.now();
-    final age = now.year * 12 + now.month - (dateOfBirth.year * 12 + dateOfBirth.month);
+    final months = (now.year - dateOfBirth.year) * 12 + (now.month - dateOfBirth.month);
     
-    if (age == 0) {
+    if (months == 0) {
       return 'Newborn';
-    } else if (age == 1) {
+    } else if (months == 1) {
       return '1 month old';
-    } else if (age < 12) {
-      return '$age months old';
-    } else if (age == 12) {
-      return '1 year old';
+    } else if (months < 12) {
+      return '$months months old';
     } else {
-      final years = age ~/ 12;
-      final remainingMonths = age % 12;
+      final years = months ~/ 12;
+      final remainingMonths = months % 12;
       if (remainingMonths == 0) {
         return '$years ${years == 1 ? 'year' : 'years'} old';
       }
-      return '$years ${years == 1 ? 'year' : 'years'} and $remainingMonths ${remainingMonths == 1 ? 'month' : 'months'} old';
+      return '$years years, $remainingMonths months old';
     }
   }
 
-  void _navigateToTrackPage(String babyId) {
+  void _navigateToTrackPage() {
     final userId = _getUserId();
     Navigator.push(
       context,
@@ -85,535 +78,319 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     );
   }
 
-  void _navigateToBabySettings(String babyId) {
-    final userId = _getUserId();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => BabyCubit(
-            repository: BabyRepository(
-              BabyLocalDataSource(DatabaseHelper.instance),
-            ),
-            userId: userId,
-          )..loadBabyProfile(),
-          child: BabySettingsPage(
-            babyGender: widget.babyGender,
-            babyId: babyId,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _handleNavigation(int index, String babyId) {
-    switch (index) {
-      case 0:
-        // Stay on home
-        setState(() => _selectedNavIndex = 0);
-        break;
-      case 1:
-        // Track tab
-        _navigateToTrackPage(babyId);
-        break;
-      case 2:
-        // Health tab
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const DoctorsScreen()),
-        );
-        break;
-      case 3:
-        // Plan tab
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Plan tab coming soon'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        break;
-      case 4:
-        // Market tab
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Marketplace coming soon'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8FF),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: BlocBuilder<BabyCubit, BabyState>(
         builder: (context, state) {
-          // Cache baby ID for navigation
-          if (state is BabyLoaded) {
-            _cachedBabyId = state.baby.id;
-          }
-
           // Extract data from state
           String babyName = 'Baby';
           DateTime babyDateOfBirth = DateTime.now();
-          double babyWeight = 0.0;
-          double babyHeight = 0.0;
-          List milestones = [];
+          String nextVaccineDate = 'Dec 15';
+          int upcomingVaccines = 3;
+          String growthStatus = 'On track';
 
           if (state is BabyLoaded) {
             babyName = state.baby.name;
             babyDateOfBirth = state.baby.dateOfBirth;
-            milestones = state.milestones;
-            
-            // Get latest growth record if available
-            if (state.latestGrowth != null) {
-              babyWeight = state.latestGrowth!.weight ?? 0.0;
-              babyHeight = state.latestGrowth!.height ?? 0.0;
-            }
           }
 
           return SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.05,
-                vertical: screenHeight * 0.02,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ==================== GREETING HEADER ====================
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => _navigateToBabySettings(
-                          _cachedBabyId ?? '',
-                        ),
-                        child: Text(
-                          'Hello Mama !',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.05,
-                            fontWeight: FontWeight.w600,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ),
-                      // Notification Bell
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const NotificationsPage(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                              screenWidth * 0.03,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 6,
-                              ),
-                            ],
-                          ),
-                          padding: EdgeInsets.all(screenWidth * 0.02),
-                          child: Icon(
-                            Icons.notifications_none,
-                            color: primaryColor,
-                            size: screenWidth * 0.06,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.025),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ==================== HEADER ====================
+                    _buildHeader(),
+                    const SizedBox(height: 24),
 
-                  // ==================== BABY INFO CARD ====================
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(screenWidth * 0.05),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [primaryColor, lightColor],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(screenWidth * 0.05),
-                      boxShadow: [
-                        BoxShadow(
-                          color: primaryColor.withValues(alpha: 0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+                    // ==================== BABY CARD ====================
+                    _buildBabyCard(
+                      babyName: babyName,
+                      ageText: _formatAgeText(babyDateOfBirth),
+                      nextVaccineDate: nextVaccineDate,
+                      upcomingVaccines: upcomingVaccines,
+                      growthStatus: growthStatus,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Baby name and age
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: screenWidth * 0.07,
-                              backgroundColor: Colors.white.withValues(alpha: 0.3),
-                              child: Icon(
-                                Icons.child_care,
-                                size: screenWidth * 0.08,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(width: screenWidth * 0.03),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    babyName,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.05,
-                                    ),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.005),
-                                  Text(
-                                    _formatAgeText(babyDateOfBirth),
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: screenWidth * 0.035,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
+                    const SizedBox(height: 20),
 
-                        // Stats grid (Weight, Height, Growth)
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(screenWidth * 0.03),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(screenWidth * 0.03),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildStatItem(
-                                label: 'Weight',
-                                value: babyWeight > 0
-                                    ? '${babyWeight.toStringAsFixed(1)} kg'
-                                    : '--',
-                                screenWidth: screenWidth,
-                              ),
-                              VerticalDivider(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                thickness: 1,
-                              ),
-                              _buildStatItem(
-                                label: 'Height',
-                                value: babyHeight > 0
-                                    ? '${babyHeight.toStringAsFixed(0)} cm'
-                                    : '--',
-                                screenWidth: screenWidth,
-                              ),
-                              VerticalDivider(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                thickness: 1,
-                              ),
-                              _buildStatItem(
-                                label: 'Growth',
-                                value: 'On Track',
-                                screenWidth: screenWidth,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.015),
+                    // ==================== TIPS & DOCTORS ====================
+                    _buildQuickActions(),
+                    const SizedBox(height: 24),
 
-                        // View More button
-                        Align(
-                          alignment: Alignment.center,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: primaryColor,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: screenWidth * 0.04,
-                                vertical: screenHeight * 0.008,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  screenWidth * 0.05,
-                                ),
-                              ),
-                            ),
-                            onPressed: () => _navigateToTrackPage(
-                              _cachedBabyId ?? '',
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'More Details',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: screenWidth * 0.035,
-                                  ),
-                                ),
-                                SizedBox(width: screenWidth * 0.02),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  size: screenWidth * 0.035,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.025),
-
-                  // ==================== QUICK ACTIONS ====================
-                  Row(
-                    children: [
-                      // Our Tips Card
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const tips.Tips(),
-                              ),
-                            );
-                          },
-                          child: _buildActionCard(
-                            icon: Icons.lightbulb_outline,
-                            title: 'Our Tips',
-                            subtitle: 'follow best practices',
-                            color: primaryColor,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: screenWidth * 0.03),
-                      // Our Doctors Card
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const DoctorsScreen(),
-                              ),
-                            );
-                          },
-                          child: _buildActionCard(
-                            icon: Icons.medical_services_outlined,
-                            title: 'Our Doctors',
-                            subtitle: 'find the best doctor',
-                            color: lightColor,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.03),
-
-                  // ==================== UPCOMING SECTION ====================
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Upcoming Events',
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          _handleNavigation(3, _cachedBabyId ?? '');
-                        },
-                        child: Text(
-                          'see all',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.015),
-
-                  // Upcoming events list
-                  if (milestones.isNotEmpty)
-                    ...milestones.take(3).map((milestone) => Padding(
-                          padding: EdgeInsets.only(bottom: screenHeight * 0.015),
-                          child: _buildEventCard(
-                            title: milestone.milestoneName,
-                            date: milestone.achievedDate != null
-                                ? DateFormat('MMM d, yyyy').format(milestone.achievedDate!)
-                                : 'TBD',
-                            icon: Icons.celebration,
-                            color: primaryColor,
-                            screenWidth: screenWidth,
-                          ),
-                        ))
-                  else
-                    _buildEventCard(
-                      title: 'No upcoming events',
-                      date: 'Check back later!',
-                      icon: Icons.event_busy,
-                      color: lightColor,
-                      screenWidth: screenWidth,
-                    ),
-
-                  SizedBox(height: screenHeight * 0.03),
-                ],
+                    // ==================== UPCOMING SECTION ====================
+                    _buildUpcomingSection(),
+                  ],
+                ),
               ),
             ),
-          );
-        },
-      ),
-
-      // ==================== BOTTOM NAVIGATION ====================
-      bottomNavigationBar: BlocBuilder<BabyCubit, BabyState>(
-        builder: (context, state) {
-          return BottomNavigationBar(
-            currentIndex: _selectedNavIndex,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            selectedItemColor: primaryColor,
-            unselectedItemColor: Colors.grey.shade400,
-            elevation: 8,
-            onTap: (index) {
-              setState(() {
-                _selectedNavIndex = index;
-              });
-              _handleNavigation(index, _cachedBabyId ?? '');
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.trending_up),
-                label: 'Track',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
-                label: 'Health',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Plan',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Market',
-              ),
-            ],
           );
         },
       ),
     );
   }
 
-  Widget _buildStatItem({
-    required String label,
-    required String value,
-    required double screenWidth,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: screenWidth * 0.03,
-          ),
+        // Profile + Greeting
+        Row(
+          children: [
+            // Profile Avatar
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                shape: BoxShape.circle,
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/profile.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Icon(
+                    Icons.person,
+                    color: Colors.grey.shade600,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Greeting Text
+            const Text(
+              'Hello Sara !',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: screenWidth * 0.01),
-        Text(
-          value,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: screenWidth * 0.035,
+        // Notification Bell
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationsPage()),
+            );
+          },
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.notifications_outlined,
+              color: primaryColor,
+              size: 22,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildActionCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required double screenWidth,
-    required double screenHeight,
+  Widget _buildBabyCard({
+    required String babyName,
+    required String ageText,
+    required String nextVaccineDate,
+    required int upcomingVaccines,
+    required String growthStatus,
   }) {
     return Container(
-      padding: EdgeInsets.all(screenWidth * 0.04),
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(screenWidth * 0.04),
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            primaryColor.withValues(alpha: 0.7),
+            lightBlue,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.4),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: primaryColor.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: screenWidth * 0.06,
+          // Baby Avatar + Name + Age
+          Row(
+            children: [
+              // Baby Avatar
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.child_care,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 14),
+              // Name and Age
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      babyName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      ageText,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: screenHeight * 0.01),
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: screenWidth * 0.04,
+          const SizedBox(height: 14),
+
+          // Next Vaccine Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  color: Colors.white.withValues(alpha: 0.9),
+                  size: 14,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Next vaccine: $nextVaccineDate',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: screenHeight * 0.005),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: screenWidth * 0.03,
+          const SizedBox(height: 18),
+
+          // Vaccines and Growth Stats
+          Row(
+            children: [
+              // Vaccines Column
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Vaccines',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$upcomingVaccines upcoming',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Growth Column
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Growth',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      growthStatus,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // More Button
+          Center(
+            child: GestureDetector(
+              onTap: _navigateToTrackPage,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'More',
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: primaryColor,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -621,62 +398,247 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     );
   }
 
-  Widget _buildEventCard({
-    required String title,
-    required String date,
+  Widget _buildQuickActions() {
+    return Row(
+      children: [
+        // Our Tips Card
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const tips.Tips()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Lightbulb icon
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.lightbulb_outline,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Our Tips',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'follow best practices',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Our Doctors Card
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DoctorsScreen()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: lightBlue,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Stethoscope icon
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: primaryColor.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.medical_services_outlined,
+                      color: primaryColor,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Our Doctors',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'find the best doctor',
+                    style: TextStyle(
+                      color: primaryColor.withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpcomingSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Up coming',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                // Navigate to see all
+              },
+              child: Text(
+                'see all',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Doctor Checkup Card
+        _buildUpcomingCard(
+          icon: Icons.favorite,
+          iconBgColor: primaryColor,
+          title: 'Doctor Checkup',
+          subtitle: 'Today at 2:00PM',
+        ),
+        const SizedBox(height: 12),
+
+        // Vitamin D Card
+        _buildUpcomingCard(
+          icon: Icons.medication,
+          iconBgColor: primaryColor,
+          title: 'Vitamin D',
+          subtitle: 'In 2 hours',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpcomingCard({
     required IconData icon,
-    required Color color,
-    required double screenWidth,
+    required Color iconBgColor,
+    required String title,
+    required String subtitle,
   }) {
     return Container(
-      padding: EdgeInsets.all(screenWidth * 0.04),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(screenWidth * 0.03),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        color: cardBlue,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: color.withValues(alpha: 0.5),
-            radius: screenWidth * 0.05,
+          // Icon
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: iconBgColor,
+              shape: BoxShape.circle,
+            ),
             child: Icon(
               icon,
               color: Colors.white,
-              size: screenWidth * 0.04,
+              size: 22,
             ),
           ),
-          SizedBox(width: screenWidth * 0.03),
+          const SizedBox(width: 14),
+          // Text
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.037,
+                  style: const TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: screenWidth * 0.005),
+                const SizedBox(height: 2),
                 Text(
-                  date,
+                  subtitle,
                   style: TextStyle(
-                    fontSize: screenWidth * 0.032,
+                    fontSize: 13,
                     color: Colors.grey.shade600,
                   ),
                 ),
               ],
             ),
           ),
+          // Calendar icon
           Icon(
-            Icons.chevron_right,
-            color: color,
-            size: screenWidth * 0.05,
+            Icons.calendar_today_outlined,
+            color: primaryColor.withValues(alpha: 0.5),
+            size: 20,
           ),
         ],
       ),
