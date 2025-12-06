@@ -13,16 +13,20 @@ import 'package:intl/intl.dart';
 
 class FeedingLogPage extends StatefulWidget {
   final String? babyId;
+  final bool isGirl;
   
-  const FeedingLogPage({super.key, this.babyId});
+  const FeedingLogPage({super.key, this.babyId, this.isGirl = false});
 
   @override
   State<FeedingLogPage> createState() => _FeedingLogPageState();
 }
 
 class _FeedingLogPageState extends State<FeedingLogPage> {
-  String selectedType = 'Breastfeed';
+  String selectedType = 'All';
   bool _hasLoadedData = false;
+  
+  Color get primaryColor => widget.isGirl ? const Color(0xFFFF9EC9) : const Color(0xFF87CEEB);
+  Color get secondaryColor => widget.isGirl ? const Color(0xFFFFC6E0) : const Color(0xFFB0E0E6);
 
   @override
   void initState() {
@@ -105,14 +109,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(Icons.arrow_back_ios, color: primaryColor, size: 24),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Feeding Log',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            style: AppTextStyles.headline1.copyWith(color: primaryColor),
                           ),
                         ),
                       ),
@@ -131,8 +135,8 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.pink500, AppColors.pink300],
+                              gradient: LinearGradient(
+                                colors: [primaryColor, secondaryColor],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -212,7 +216,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                                 },
                                 child: Text(
                                   'See All',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.main500),
+                                  style: AppTextStyles.body1.copyWith(color: primaryColor),
                                 ),
                               ),
                             ],
@@ -244,7 +248,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
         onPressed: () {
           _showAddFeedingDialog(context);
         },
-        backgroundColor: AppColors.main500,
+        backgroundColor: primaryColor,
         icon: const Icon(Icons.add, color: AppColors.white),
         label: Text('Add Feeding', style: AppTextStyles.bodyWhite),
       ),
@@ -264,7 +268,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.main500 : AppColors.white,
+          color: isSelected ? primaryColor : AppColors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: AppColors.shadow1,
         ),
@@ -307,14 +311,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.pink500.withValues(alpha: 0.2),
+              color: primaryColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               log.feedingType == 'Breastfeed'
                   ? Icons.child_care
                   : Icons.baby_changing_station,
-              color: AppColors.pink500,
+              color: primaryColor,
               size: 24,
             ),
           ),
@@ -394,7 +398,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.main500),
+                          borderSide: BorderSide(color: primaryColor),
                         ),
                       ),
                       items: ['Breastfeed', 'Bottle'].map((String value) {
@@ -429,7 +433,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.main500),
+                          borderSide: BorderSide(color: primaryColor),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -460,7 +464,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.main500),
+                          borderSide: BorderSide(color: primaryColor),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -489,7 +493,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColors.main500),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                         ),
                         items: [null, 'Left', 'Right', 'Both'].map((String? value) {
@@ -532,9 +536,9 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.main500),
+                              borderSide: BorderSide(color: primaryColor),
                             ),
-                            suffixIcon: Icon(Icons.access_time, color: AppColors.main500),
+                            suffixIcon: Icon(Icons.access_time, color: primaryColor),
                           ),
                           controller: TextEditingController(
                             text: selectedTime.format(builderContext),
@@ -592,7 +596,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     Navigator.pop(dialogContext);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.main500,
+                    backgroundColor: primaryColor,
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -694,14 +698,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.pink500.withValues(alpha: 0.2),
+              color: primaryColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               log.feedingType == 'Breastfeed'
                   ? Icons.child_care
                   : Icons.baby_changing_station,
-              color: AppColors.pink500,
+              color: primaryColor,
               size: 24,
             ),
           ),
