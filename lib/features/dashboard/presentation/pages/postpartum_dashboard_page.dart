@@ -26,11 +26,22 @@ class PostpartumDashboardPage extends StatefulWidget {
 }
 
 class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
-  // Blue theme colors matching the mockup
-  Color get primaryColor => const Color(0xFF5B9BD5);
-  Color get lightBlue => const Color(0xFFD6E9F8);
-  Color get cardBlue => const Color(0xFFE8F4FC);
-  Color get accentBlue => const Color(0xFF4A90D9);
+  // Gender-based theme colors
+  bool get isGirl => widget.babyGender.toLowerCase() == 'girl' || 
+                     widget.babyGender.toLowerCase() == 'female';
+  
+  Color get primaryColor => isGirl 
+      ? const Color(0xFFFF9EC9)  // Pink for girls
+      : const Color(0xFF87CEEB); // Blue for boys
+  Color get lightBlue => isGirl 
+      ? const Color(0xFFFFC6E0)  // Light pink for girls
+      : const Color(0xFFD6E9F8); // Light blue for boys
+  Color get cardBlue => isGirl 
+      ? const Color(0xFFFFE4F0)  // Card pink for girls
+      : const Color(0xFFE8F4FC); // Card blue for boys
+  Color get accentBlue => isGirl 
+      ? const Color(0xFFFF85B3)  // Accent pink for girls
+      : const Color(0xFF4A90D9); // Accent blue for boys
 
   String _getUserId() {
     final authState = context.read<AuthBloc>().state;
