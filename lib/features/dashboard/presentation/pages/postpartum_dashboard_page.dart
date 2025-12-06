@@ -155,9 +155,15 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
         );
         break;
       case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const tips.Tips()),
+        _navigateToPlanPage();
+        break;
+      case 4:
+        // Market tab - handle navigation if marketplace feature exists
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Marketplace coming soon'),
+            duration: Duration(seconds: 2),
+          ),
         );
         break;
     }
@@ -442,22 +448,26 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
           });
           _handleNavigation(index);
         },
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.track_changes),
             label: 'Track',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.health_and_safety),
-            label: 'Doctors',
+            label: 'Health',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Plan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Tips',
+            icon: Icon(Icons.shopping_bag, color: primaryColor),
+            label: 'Market',
           ),
         ],
       ),
