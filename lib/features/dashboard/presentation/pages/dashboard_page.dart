@@ -1,13 +1,10 @@
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/database/db_helper.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
-import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit_factory.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
@@ -109,12 +106,7 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
           },
         ),
         BlocProvider<BabyCubit>(
-          create: (context) => BabyCubit(
-            repository: BabyRepository(
-              BabyLocalDataSource(DatabaseHelper.instance),
-            ),
-            userId: _userId ?? '0',
-          ),
+          create: (context) => BabyCubitFactory.create(_userId ?? '0'),
         ),
       ],
       child: BlocBuilder<DashboardCubit, DashboardState>(
@@ -129,7 +121,7 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
           PostpartumDashboard? postpartumDashboard;
           String currentBabyGender = babyGender;
           if (isPostpartum) {
-            postpartumDashboard = (dashboardState as PostpartumDashboardLoaded).dashboard;
+            postpartumDashboard = (dashboardState).dashboard;
             // TODO: Extract baby gender from dashboard if available
           }
 
