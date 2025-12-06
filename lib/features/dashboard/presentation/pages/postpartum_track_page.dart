@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
 
 // Import your pages
 import '../../../baby/presentation/pages/feeding_log_page.dart';
@@ -11,6 +18,32 @@ class PostpartumTrackPage extends StatelessWidget {
 
   const PostpartumTrackPage({super.key, required this.babyGender});
 
+  String _getUserId(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '';
+  }
+
+  void _navigateWithBabyCubit(BuildContext context, Widget page) {
+    final userId = _getUserId(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => BabyCubit(
+            repository: BabyRepository(
+              BabyLocalDataSource(DatabaseHelper.instance),
+            ),
+            userId: userId,
+          )..loadBabyProfile(),
+          child: page,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool isGirl = babyGender.toLowerCase() == 'girl';
@@ -20,25 +53,25 @@ class PostpartumTrackPage extends StatelessWidget {
         'title': 'Feeding Log',
         'icon': Icons.local_drink,
         'color': isGirl ? Colors.pink[100] : Colors.blue[100],
-        'page': const FeedingLogPage(),
+        'pageBuilder': () => const FeedingLogPage(),
       },
       {
         'title': 'Growth Tracker',
         'icon': Icons.monitor_weight,
         'color': isGirl ? Colors.pink[200] : Colors.blue[200],
-        'page': const GrowthTrackerPage(),
+        'pageBuilder': () => const GrowthTrackerPage(),
       },
       {
         'title': 'Milestone',
         'icon': Icons.flag,
         'color': isGirl ? Colors.pink[50] : Colors.blue[50],
-        'page': const MilestoneTrackerPage(),
+        'pageBuilder': () => const MilestoneTrackerPage(),
       },
       {
         'title': 'Vaccine',
         'icon': Icons.vaccines,
         'color': isGirl ? Colors.pink[50] : Colors.blue[50],
-        'page': VaccineTrackerPage(isGirl: isGirl), // ✅ Pass gender here
+        'pageBuilder': () => VaccineTrackerPage(isGirl: isGirl),
       },
     ];
 
@@ -58,10 +91,8 @@ class PostpartumTrackPage extends StatelessWidget {
           children: trackItems.map((item) {
             return GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => item['page']),
-                );
+                final pageBuilder = item['pageBuilder'] as Widget Function();
+                _navigateWithBabyCubit(context, pageBuilder());
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -69,7 +100,7 @@ class PostpartumTrackPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 5,
                       offset: const Offset(2, 3),
                     ),

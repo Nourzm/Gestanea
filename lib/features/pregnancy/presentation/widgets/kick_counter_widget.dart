@@ -1,5 +1,9 @@
 // lib/features/pregnancy/presentation/widgets/kick_counter_widget.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/pregnancy/data/repositories/pregnancy_repository.dart';
 
 class KickCounterWidget extends StatefulWidget {
   const KickCounterWidget({super.key});
@@ -11,28 +15,65 @@ class KickCounterWidget extends StatefulWidget {
 class _KickCounterWidgetState extends State<KickCounterWidget> {
   int kickCount = 0;
   bool isTracking = false;
+  DateTime? _startTime;
+  final PregnancyRepository _repository = PregnancyRepository();
+
+  int _getUserId() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return int.tryParse(authState.user.id) ?? 0;
+    }
+    return 0;
+  }
 
   void _startTracking() {
-    setState(() => isTracking = true);
+    setState(() {
+      isTracking = true;
+      _startTime = DateTime.now();
+      kickCount = 0;
+    });
   }
 
   void _incrementKick() {
     if (isTracking) {
       setState(() => kickCount++);
-      // TODO: Save kick with timestamp
     }
   }
 
-  void _stopTracking() {
+  Future<void> _stopTracking() async {
+    if (_startTime != null && kickCount > 0) {
+      final duration = DateTime.now().difference(_startTime!).inMinutes;
+      final userId = _getUserId();
+      
+      if (userId > 0) {
+        try {
+          await _repository.saveKickSession(
+            userId,
+            kickCount,
+            duration > 0 ? duration : 1, // At least 1 minute
+            null,
+          );
+        } catch (e) {
+          debugPrint('Error saving kick session: $e');
+        }
+      }
+    }
+
     setState(() => isTracking = false);
-    // TODO: Save session to database
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Session saved: $kickCount kicks'),
-        backgroundColor: const Color(0xFF9B7FDB),
-      ),
-    );
-    setState(() => kickCount = 0);
+    
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Session saved: $kickCount kicks'),
+          backgroundColor: const Color(0xFF9B7FDB),
+        ),
+      );
+    }
+    
+    setState(() {
+      kickCount = 0;
+      _startTime = null;
+    });
   }
 
   void _resetCounter() {
@@ -61,7 +102,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
             child: Column(
               children: [
                 Image.asset('assets/images/kickcounter.png',
-                width: 200,   // control width
+                width: 200,
                 height: 200,),
                 const SizedBox(height: 8),
                 const Text(
@@ -91,7 +132,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
       child: Column(
         children: [
           Image.asset('assets/images/kickcounter.png',
-          width: 200,   // control width
+          width: 200,
           height: 200
           ),
           GestureDetector(

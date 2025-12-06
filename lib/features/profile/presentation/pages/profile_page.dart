@@ -6,6 +6,7 @@ import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/profile/presentation/pages/about_app.dart';
 import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
 import 'package:gestanea/features/profile/presentation/pages/faq.dart';
@@ -16,6 +17,8 @@ import 'package:gestanea/features/profile/presentation/pages/profile_edit.dart';
 import 'package:gestanea/features/profile/presentation/pages/security.dart';
 import 'package:gestanea/features/profile/presentation/pages/support.dart';
 import 'package:gestanea/features/profile/presentation/widgets/logout_dia.dart';
+import 'package:gestanea/features/profile/presentation/widgets/give_birth_dialog.dart';
+import 'package:gestanea/features/profile/data/services/birth_transition_service.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class HeaderCurveClipper extends CustomClipper<Path> {
@@ -64,8 +67,123 @@ const Color kLightPurple = Color(0xFFEFE8F5);
 const Color kDangerRed = Color(0xFFD62A2A);
 const Color kInactiveText = Color(0xFFAC5DCC);
 
-class ProfileSettingsScreen extends StatelessWidget {
+class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
+
+  @override
+  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
+}
+
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+  final BirthTransitionService _birthService = BirthTransitionService();
+
+  String _getUserIdString() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '';
+  }
+
+  Future<void> _handleGiveBirth() async {
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const GiveBirthDialog(),
+    );
+
+    if (result != null) {
+      try {
+        final userId = _getUserIdString();
+        if (userId.isNotEmpty) {
+          await _birthService.giveBirthWithStringId(
+            userId: userId,
+            babyName: result['name'] as String,
+            dateOfBirth: result['dateOfBirth'] as DateTime,
+            gender: result['gender'] as String,
+            birthWeight: result['birthWeight'] as double?,
+            birthHeight: result['birthHeight'] as double?,
+          );
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Congratulations! Your baby has been added 🎉'),
+                backgroundColor: AppColors.alerts,
+                duration: Duration(seconds: 2),
+              ),
+            );
+            
+            // Pop back to dashboard - the HomeScreen will refresh automatically
+            Navigator.of(context).pop();
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: AppColors.error1,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _handleNoLongerPregnant() async {
+    final t = AppLocalizations.of(context)!;
+    
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(t.no_longer_pregnant),
+        content: const Text('Are you sure? This will end your pregnancy tracking.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(t.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(
+              'Confirm',
+              style: const TextStyle(color: AppColors.error1),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        final userId = _getUserIdString();
+        if (userId.isNotEmpty) {
+          await _birthService.endPregnancyWithStringId(userId);
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Pregnancy tracking ended'),
+                backgroundColor: Colors.grey,
+              ),
+            );
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: AppColors.error1,
+            ),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,10 +240,12 @@ class ProfileSettingsScreen extends StatelessWidget {
                       _ActionTile(
                         title: t.i_gave_birth,
                         color: AppColors.alerts,
+                        onTap: _handleGiveBirth,
                       ),
                       _ActionTile(
                         title: t.no_longer_pregnant,
                         color: AppColors.error1,
+                        onTap: _handleNoLongerPregnant,
                       ),
                     ],
                   ),
@@ -406,8 +526,9 @@ class _SettingsTile extends StatelessWidget {
 class _ActionTile extends StatelessWidget {
   final String title;
   final Color color;
+  final VoidCallback? onTap;
 
-  const _ActionTile({required this.title, required this.color});
+  const _ActionTile({required this.title, required this.color, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -417,9 +538,7 @@ class _ActionTile extends StatelessWidget {
         title,
         style: TextStyle(fontWeight: FontWeight.w600, color: color),
       ),
-      onTap: () {
-        // Implement action flows as needed
-      },
+      onTap: onTap,
     );
   }
 }

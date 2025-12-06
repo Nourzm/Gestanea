@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
-import '../../../baby/presentation/pages/baby_profile_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
+import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' show DoctorsScreen;
+import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
+import 'package:intl/intl.dart';
+import 'postpartum_track_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
   final String babyGender;
+  final PostpartumDashboard? dashboard;
 
   const PostpartumDashboardPage({
     super.key,
     required this.babyGender,
+    this.dashboard,
   });
 
   @override
@@ -24,8 +37,93 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   Color get accentColor =>
       widget.babyGender == 'girl' ? const Color(0xFFFFA6D3) : const Color(0xFF9BD3F9);
 
+  String _getUserId() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '';
+  }
+
+  String _formatAgeText(int months) {
+    if (months == 0) {
+      return 'Newborn';
+    } else if (months == 1) {
+      return '1 month old';
+    } else if (months < 12) {
+      return '$months months old';
+    } else if (months == 12) {
+      return '1 year old';
+    } else {
+      final years = months ~/ 12;
+      final remainingMonths = months % 12;
+      if (remainingMonths == 0) {
+        return '$years ${years == 1 ? 'year' : 'years'} old';
+      }
+      return '$years ${years == 1 ? 'year' : 'years'} and $remainingMonths ${remainingMonths == 1 ? 'month' : 'months'} old';
+    }
+  }
+
+  String _formatNextVaccine() {
+    final dashboard = widget.dashboard;
+    if (dashboard == null || dashboard.nextVaccines.isEmpty) {
+      return 'All caught up!';
+    }
+    final nextVaccine = dashboard.nextVaccines.first;
+    final dueDate = nextVaccine.dueDate;
+    final now = DateTime.now();
+    final difference = dueDate.difference(now).inDays;
+    
+    if (difference < 0) {
+      return '${nextVaccine.vaccineName}: Overdue';
+    } else if (difference == 0) {
+      return '${nextVaccine.vaccineName}: Today';
+    } else if (difference <= 7) {
+      return '${nextVaccine.vaccineName}: ${DateFormat('MMM d').format(dueDate)}';
+    } else {
+      return 'Next: ${DateFormat('MMM d').format(dueDate)}';
+    }
+  }
+
+  void _navigateToTrackPage() {
+    // Navigate to Track tab (index 1 in bottom nav)
+    final userId = _getUserId();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => BabyCubit(
+            repository: BabyRepository(
+              BabyLocalDataSource(DatabaseHelper.instance),
+            ),
+            userId: userId,
+          )..loadBabyProfile(),
+          child: PostpartumTrackPage(babyGender: widget.babyGender),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToPlanPage() {
+    // Navigate to Plan tab (index 3 in bottom nav) - this will be handled by parent
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Go to Plan tab to see all appointments and medicines'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final dashboard = widget.dashboard;
+    final babyName = dashboard?.babyName ?? 'Baby';
+    final babyAge = dashboard?.babyAgeInMonths ?? 0;
+    final babyWeight = dashboard?.babyWeight ?? 0.0;
+    final babyHeight = dashboard?.babyHeight ?? 0.0;
+    final growthStatus = dashboard?.growthStatus ?? 'On Track';
+    final userName = dashboard?.userName ?? 'Mama';
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDF8FF),
       body: SafeArea(
@@ -38,9 +136,9 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Hello Sara!',
-                    style: TextStyle(
+                  Text(
+                    'Hello $userName!',
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -51,7 +149,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 6,
                         ),
                       ],
@@ -77,7 +175,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: primaryColor.withOpacity(0.3),
+                      color: primaryColor.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -89,88 +187,73 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       children: [
                         CircleAvatar(
                           radius: 28,
-                          backgroundColor: Colors.white.withOpacity(0.3),
+                          backgroundColor: Colors.white.withValues(alpha: 0.3),
                           child: const Icon(Icons.child_care,
                               size: 40, color: Colors.white),
                         ),
                         const SizedBox(width: 14),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Emma',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            const Text(
-                              '3 months old',
-                              style:
-                                  TextStyle(color: Colors.white70, fontSize: 14),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.25),
-                                borderRadius: BorderRadius.circular(20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                babyName,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
                               ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.vaccines,
-                                      color: Colors.white, size: 14),
-                                  SizedBox(width: 6),
-                                  Text(
-                                    'Next vaccine: Dec 15',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 12),
-                                  ),
-                                ],
+                              Text(
+                                _formatAgeText(babyAge),
+                                style: const TextStyle(color: Colors.white70, fontSize: 14),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.25),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.vaccines,
+                                        color: Colors.white, size: 14),
+                                    const SizedBox(width: 6),
+                                    Flexible(
+                                      child: Text(
+                                        _formatNextVaccine(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        Column(
-                          children: [
-                            Text(
-                              'Vaccines',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 13),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              '3 upcoming',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                      children: [
+                        _buildStatColumn('Weight', babyWeight > 0 ? '${babyWeight.toStringAsFixed(1)} kg' : '--'),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
-                        Column(
-                          children: [
-                            Text(
-                              'Growth',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 13),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'On track',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        _buildStatColumn('Height', babyHeight > 0 ? '${babyHeight.toStringAsFixed(0)} cm' : '--'),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
+                        _buildStatColumn('Growth', growthStatus),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -182,14 +265,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const BabyProfilePage(),
-                          ),
-                        );
-                      },
+                      onPressed: _navigateToTrackPage,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -213,7 +289,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const TipsPage()),
+                          MaterialPageRoute(builder: (_) => const tips.Tips()),
                         );
                       },
                       child: _buildInfoCard(
@@ -230,7 +306,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const DoctorsPage()),
+                          MaterialPageRoute(builder: (_) => const DoctorsScreen()),
                         );
                       },
                       child: _buildInfoCard(
@@ -249,32 +325,65 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
               // Upcoming Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "Up coming",
                     style: TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                  Text(
-                    "see all",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500),
+                  GestureDetector(
+                    onTap: _navigateToPlanPage,
+                    child: const Text(
+                      "see all",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
 
-              // Reminder Cards
-              _buildReminderCard(
-                  "Doctor Checkup", "Today at 2:00PM", primaryColor),
-              const SizedBox(height: 12),
-              _buildReminderCard("Vitamin D", "In 2 hours", lightColor),
+              // Reminder Cards from dashboard data
+              if (dashboard != null && dashboard.nextVaccines.isNotEmpty)
+                ...dashboard.nextVaccines.take(2).map((vaccine) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildReminderCard(
+                    vaccine.vaccineName,
+                    DateFormat('MMM d, yyyy').format(vaccine.dueDate),
+                    primaryColor,
+                    Icons.vaccines,
+                  ),
+                ))
+              else
+                _buildReminderCard(
+                  "No upcoming vaccines",
+                  "All caught up!",
+                  lightColor,
+                  Icons.check_circle,
+                ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildStatColumn(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+      ],
     );
   }
 
@@ -291,7 +400,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.4),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -317,15 +426,15 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     );
   }
 
-  Widget _buildReminderCard(String title, String time, Color color) {
+  Widget _buildReminderCard(String title, String time, Color color, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
           ),
         ],
@@ -333,9 +442,9 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: color.withOpacity(0.7),
+            backgroundColor: color.withValues(alpha: 0.7),
             radius: 20,
-            child: const Icon(Icons.favorite, color: Colors.white),
+            child: Icon(icon, color: Colors.white),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -354,31 +463,6 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
           Icon(Icons.calendar_month, color: color),
         ],
       ),
-    );
-  }
-}
-
-// Placeholder pages for navigation
-class TipsPage extends StatelessWidget {
-  const TipsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Our Tips')),
-      body: const Center(child: Text('Tips page placeholder')),
-    );
-  }
-}
-
-class DoctorsPage extends StatelessWidget {
-  const DoctorsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Our Doctors')),
-      body: const Center(child: Text('Doctors page placeholder')),
     );
   }
 }
