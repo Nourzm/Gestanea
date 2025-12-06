@@ -3,9 +3,14 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import '../../../../../core/database/models/symptom_model.dart';
+import '../../../logic/bloc/symptoms_bloc.dart';
+import '../../../logic/bloc/symptoms_event.dart';
 
 class AddSymptomDialog extends StatefulWidget {
-  const AddSymptomDialog({super. key});
+  final SymptomsBloc bloc;
+  
+  const AddSymptomDialog({super.key, required this.bloc});
 
   @override
   State<AddSymptomDialog> createState() => _AddSymptomDialogState();
@@ -17,13 +22,13 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
   final _notesController = TextEditingController();
   final _otherSymptomController = TextEditingController();
   
-  String?  _selectedSymptom;
+  String? _selectedSymptom;
   String? _selectedSeverity;
   DateTime _selectedDate = DateTime.now();
 
   @override
   void dispose() {
-    _durationController.dispose();
+    _durationController. dispose();
     _notesController.dispose();
     _otherSymptomController.dispose();
     super.dispose();
@@ -35,12 +40,12 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
       l10n.nausea,
       l10n. headache,
       l10n. backPain,
-      l10n.swelling,
-      l10n.fatigue,
+      l10n. swelling,
+      l10n. fatigue,
       l10n. dizziness,
       l10n.heartburn,
       l10n. legCramps,
-      l10n. other,
+      l10n.other,
     ];
   }
 
@@ -61,15 +66,22 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
         return;
       }
 
-      final symptom = _selectedSymptom == l10n.other 
+      final symptomName = _selectedSymptom == l10n.other 
           ? _otherSymptomController.text 
-          : _selectedSymptom;
+          : _selectedSymptom!;
       
-      print('Symptom: $symptom');
-      print('Severity: $_selectedSeverity');
-      print('Duration: ${_durationController.text}');
-      print('Notes: ${_notesController.text}');
-      print('Date: $_selectedDate');
+      final symptom = SymptomModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: 'current_user', // TODO: Get from session/auth
+        symptomName: symptomName,
+        severity: _selectedSeverity,
+        notes: _notesController.text. isNotEmpty ? _notesController. text : null,
+        recordedAt: _selectedDate,
+        createdAt: DateTime.now(),
+      );
+      
+      // Use widget.bloc to add symptom
+      widget.bloc. add(AddSymptom(symptom));
       
       Navigator.pop(context);
       
@@ -112,17 +124,17 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations. of(context)!;
     final symptoms = _getSymptoms(context);
 
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context). viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
           color: Color(0xFFFAF0FF),
-          borderRadius: BorderRadius.vertical(top: Radius. circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -147,9 +159,9 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 Center(
                   child: Text(
                     l10n.addSymptom,
-                    style: AppTextStyles.headline2.copyWith(
+                    style: AppTextStyles.headline2. copyWith(
                       fontSize: 20,
-                      color: AppColors. textDark,
+                      color: AppColors.textDark,
                     ),
                   ),
                 ),
@@ -159,14 +171,14 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                   l10n. symptomType,
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
-                    color: AppColors. textDark,
+                    color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors. white,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: const [
                       BoxShadow(
@@ -186,7 +198,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                       isExpanded: true,
                       hint: Text(
                         l10n.selectSymptom,
-                        style: AppTextStyles.body1.copyWith(
+                        style: AppTextStyles. body1.copyWith(
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -221,7 +233,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                 const SizedBox(height: 20),
                 
                 Text(
-                  l10n.severity,
+                  l10n. severity,
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors. textDark,
@@ -235,11 +247,11 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _buildSeverityButton(l10n.moderate, const Color(0xFFFFE4B5)),
+                      child: _buildSeverityButton(l10n. moderate, const Color(0xFFFFE4B5)),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _buildSeverityButton(l10n.severe, const Color(0xFFFFB8B8)),
+                      child: _buildSeverityButton(l10n. severe, const Color(0xFFFFB8B8)),
                     ),
                   ],
                 ),
@@ -250,7 +262,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                   label: l10n.duration,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return l10n. pleaseEnterDuration;
+                      return l10n.pleaseEnterDuration;
                     }
                     return null;
                   },
@@ -364,8 +376,8 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
           textAlign: TextAlign.center,
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected ? AppColors. textDark : Colors.grey.shade600,
+            fontWeight: isSelected ? FontWeight. w600 : FontWeight.w500,
+            color: isSelected ? AppColors.textDark : Colors.grey.shade600,
           ),
         ),
       ),

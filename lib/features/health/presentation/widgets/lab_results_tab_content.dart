@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import '../../logic/bloc/lab_results_bloc.dart';
+import '../../logic/bloc/lab_results_state.dart';
+import '../pages/lab_results_list_page.dart';
 import 'dialogs/upload_lab_results_dialog.dart';
 
 class LabResultsTabContent extends StatelessWidget {
@@ -21,57 +26,74 @@ class LabResultsTabContent extends StatelessWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment. start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Recent Lab Results
                 Text(
                   l10n. recentLabResults,
-                  style: AppTextStyles.headline2.copyWith(
+                  style: AppTextStyles.headline2. copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 12),
 
-                // Lab Result Cards
-                _buildLabResultCard(
-                  context,
-                  test: l10n.hemoglobin,
-                  value: '12.5 g/dL',
-                  status: l10n.normal,
-                  statusColor: const Color(0xFFB8E6B8),
-                  date: 'Oct 28, 2025',
-                  range: '12-16 g/dL',
-                ),
-                const SizedBox(height: 12),
-                _buildLabResultCard(
-                  context,
-                  test: l10n.glucose,
-                  value: '95 mg/dL',
-                  status: l10n.normal,
-                  statusColor: const Color(0xFFB8E6B8),
-                  date: 'Oct 28, 2025',
-                  range: '70-100 mg/dL',
-                ),
-                const SizedBox(height: 12),
-                _buildLabResultCard(
-                  context,
-                  test: l10n.bloodPressure,
-                  value: '120/80 mmHg',
-                  status: l10n. normal,
-                  statusColor: const Color(0xFFB8E6B8),
-                  date: 'Oct 25, 2025',
-                  range: '<120/80 mmHg',
-                ),
-                const SizedBox(height: 12),
-                _buildLabResultCard(
-                  context,
-                  test: l10n.proteinUrine,
-                  value: l10n.negative,
-                  status: l10n.normal,
-                  statusColor: const Color(0xFFB8E6B8),
-                  date: 'Oct 25, 2025',
-                  range: l10n.negative,
+                // Dynamic Lab Result Cards from Database
+                BlocBuilder<LabResultsBloc, LabResultsState>(
+                  builder: (context, state) {
+                    if (state is LabResultsLoaded) {
+                      if (state.labResults.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Center(
+                            child: Text(
+                              'No lab results yet',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        );
+                      }
+                      
+                      // Show only the 4 most recent results
+                      final recentResults = state.labResults. take(4).toList();
+                      return Column(
+                        children: recentResults.map((result) {
+                          Color statusColor = const Color(0xFFB8E6B8);
+                          String status = l10n.normal;
+                          
+                          if (result.normalRangeMin != null && 
+                              result.normalRangeMax != null && 
+                              result.value != null) {
+                            if (result.value! < result.normalRangeMin!) {
+                              statusColor = const Color(0xFFFFE0B2);
+                              status = 'Low';
+                            } else if (result.value! > result.normalRangeMax!) {
+                              statusColor = const Color(0xFFFFB8B8);
+                              status = 'High';
+                            }
+                          }
+                          
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildLabResultCard(
+                              context,
+                              test: result.testName,
+                              value: result.value != null 
+                                  ? '${result.value} ${result. unit ?? ''}' 
+                                  : 'N/A',
+                              status: status,
+                              statusColor: statusColor,
+                              date: DateFormat('MMM dd, yyyy').format(result.labDate),
+                              range: result.normalRangeMin != null && result.normalRangeMax != null
+                                  ? '${result.normalRangeMin}-${result.normalRangeMax} ${result.unit ?? ''}'
+                                  : 'N/A',
+                            ),
+                          );
+                        }). toList(),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
 
                 const SizedBox(height: 20),
@@ -81,13 +103,47 @@ class LabResultsTabContent extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
+                // View All Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton. icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<LabResultsBloc>(),
+                                child: const LabResultsListPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.list),
+                        label: const Text('View All Lab Results'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main500,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+
+                const SizedBox(height: 20),
+
                 // Next Appointment Card
                 _buildNextAppointmentCard(context),
 
                 const SizedBox(height: 16),
 
                 // Tip Card
-                _buildTipCard(l10n.keepLabResultsOrganized),
+                _buildTipCard(l10n. keepLabResultsOrganized),
               ],
             ),
           ),
@@ -151,13 +207,13 @@ class LabResultsTabContent extends StatelessWidget {
     required String date,
     required String range,
   }) {
-    final l10n = AppLocalizations. of(context)!;
+    final l10n = AppLocalizations.of(context)!;
     
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius. circular(16),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Color(0x3F000000),
@@ -209,7 +265,7 @@ class LabResultsTabContent extends StatelessWidget {
             children: [
               Text(
                 value,
-                style: AppTextStyles.headline2. copyWith(
+                style: AppTextStyles.headline2.copyWith(
                   fontSize: 18,
                   color: AppColors.textDark,
                 ),
@@ -290,7 +346,7 @@ class LabResultsTabContent extends StatelessWidget {
   }
 
   Widget _buildNextAppointmentCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context)! ;
+    final l10n = AppLocalizations.of(context)!;
     
     return Container(
       padding: const EdgeInsets.all(14),
@@ -307,7 +363,7 @@ class LabResultsTabContent extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -319,7 +375,7 @@ class LabResultsTabContent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3),
+              color: Colors.white. withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.calendar_today, color: AppColors.white, size: 24),
@@ -330,7 +386,7 @@ class LabResultsTabContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n.nextLabAppointment,
+                  l10n. nextLabAppointment,
                   style: AppTextStyles.body1.copyWith(
                     color: AppColors.white,
                     fontSize: 13,
@@ -376,7 +432,7 @@ class LabResultsTabContent extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: AppTextStyles.body1.copyWith(
+        style: AppTextStyles.body1. copyWith(
           color: const Color(0xFF7B4BA6),
           fontSize: 12,
         ),

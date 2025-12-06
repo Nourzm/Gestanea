@@ -12,6 +12,10 @@ import '../widgets/mood_tab_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_event.dart';
+import '../../logic/bloc/symptoms_bloc.dart';
+import '../../logic/bloc/symptoms_event.dart';
+import '../../logic/bloc/lab_results_bloc.dart';
+import '../../logic/bloc/lab_results_event.dart';
 
 class HealthLogScreen extends StatefulWidget {
   const HealthLogScreen({super.key});
@@ -52,66 +56,77 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return BlocProvider(
-    create: (context) => MeasurementsBloc()..add(LoadMeasurements()),
-    child: Scaffold(
-      backgroundColor: AppColors.bg_1,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ✅ Header with notification navigation
-            Header(
-              title: localizations.healthLog,
-              onNotificationTapped: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationsPage(),
-                  ),
-                );
-              },
-            ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MeasurementsBloc().. add(LoadMeasurements()),
+        ),
+        BlocProvider(
+          create: (context) => SymptomsBloc()..add(LoadSymptoms()),
+        ),
+        BlocProvider(
+          create: (context) => LabResultsBloc()..add(LoadLabResults()),
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: AppColors.bg_1,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Header with notification navigation
+              Header(
+                title: localizations.healthLog,
+                onNotificationTapped: () {
+                  Navigator. push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsPage(),
+                    ),
+                  );
+                },
+              ),
 
-            // ✅ Subtitle - CLOSER to header (pulled up)
-            Transform.translate(
-              offset: const Offset(0, -8), // ✅ Pull up by 8 pixels
-              child: Text(
-                localizations.trackYourWellness,
-                style: const TextStyle(
-                  color: AppColors.main500,
-                  fontSize: 14,
-                  fontFamily: 'Lato',
+              // Subtitle - CLOSER to header (pulled up)
+              Transform.translate(
+                offset: const Offset(0, -8),
+                child: Text(
+                  localizations.trackYourWellness,
+                  style: const TextStyle(
+                    color: AppColors.main500,
+                    fontSize: 14,
+                    fontFamily: 'Lato',
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
 
-            const SizedBox(height: 8), // Small gap before content
+              const SizedBox(height: 8),
 
-            // Main content with sidebar and tab content
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Left Sidebar Navigation
-                  HealthTabSidebar(
-                    tabs: _tabs,
-                    selectedIndex: _selectedTabIndex,
-                    onTabSelected: (index) {
-                      setState(() => _selectedTabIndex = index);
-                    },
-                  ),
+              // Main content with sidebar and tab content
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left Sidebar Navigation
+                    HealthTabSidebar(
+                      tabs: _tabs,
+                      selectedIndex: _selectedTabIndex,
+                      onTabSelected: (index) {
+                        setState(() => _selectedTabIndex = index);
+                      },
+                    ),
 
-                  // Tab Content Area
-                  Expanded(
-                    child: _getTabContent(),
-                  ),
-                ],
+                    // Tab Content Area
+                    Expanded(
+                      child: _getTabContent(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

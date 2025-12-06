@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 6,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -30,12 +30,16 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
   if (oldVersion < 2) {
     await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
   }
   if (oldVersion < 3) {
-    // Add measurements table
+    // Old version - skip
+  }
+  if (oldVersion < 4) {
+    // Drop and recreate measurements table without foreign key
+    await db.execute('DROP TABLE IF EXISTS measurements');
     await db.execute('''
       CREATE TABLE measurements (
         id TEXT PRIMARY KEY,
@@ -44,15 +48,48 @@ class DatabaseHelper {
         heart_rate INTEGER,
         systolic INTEGER,
         diastolic INTEGER,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        recorded_at TEXT NOT NULL,
         notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        created_at TEXT NOT NULL
       )
     ''');
   }
+  if (oldVersion < 5) {
+    // Drop and recreate symptoms table without foreign key
+    await db.execute('DROP TABLE IF EXISTS symptoms');
+    await db.execute('''
+      CREATE TABLE symptoms (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        symptom_name TEXT NOT NULL,
+        severity TEXT,
+        notes TEXT,
+        recorded_at TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      )
+    ''');
+  }
+  if (oldVersion < 6) {
+  // Drop and recreate lab_results table
+  await db. execute('DROP TABLE IF EXISTS lab_results');
+  await db.execute('''
+    CREATE TABLE lab_results (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      test_name TEXT NOT NULL,
+      value REAL,
+      unit TEXT,
+      normal_range_min REAL,
+      normal_range_max REAL,
+      interpretation TEXT,
+      lab_date TEXT NOT NULL,
+      report_image_url TEXT,
+      extracted_by_ocr INTEGER DEFAULT 0,
+      created_at TEXT NOT NULL
+    )
+  ''');
 }
-
+}
   Future<void> _createDB(Database db, int version) async {
     // Users table
     await db.execute('''
@@ -180,19 +217,7 @@ class DatabaseHelper {
       )
     ''');
 
-    // Symptoms table
-    await db.execute('''
-      CREATE TABLE symptoms (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        symptom_name TEXT NOT NULL,
-        severity TEXT,
-        notes TEXT,
-        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-      )
-    ''');
+  
 
     // Moods table
     await db.execute('''
@@ -208,24 +233,23 @@ class DatabaseHelper {
       )
     ''');
 
-    // Lab results table
-    await db.execute('''
-      CREATE TABLE lab_results (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        test_name TEXT NOT NULL,
-        value REAL,
-        unit TEXT,
-        normal_range_min REAL,
-        normal_range_max REAL,
-        interpretation TEXT,
-        lab_date TEXT NOT NULL,
-        report_image_url TEXT,
-        extracted_by_ocr INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-      )
-    ''');
+  // Lab Results table
+await db.execute('''
+  CREATE TABLE lab_results (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    test_name TEXT NOT NULL,
+    value REAL,
+    unit TEXT,
+    normal_range_min REAL,
+    normal_range_max REAL,
+    interpretation TEXT,
+    lab_date TEXT NOT NULL,
+    report_image_url TEXT,
+    extracted_by_ocr INTEGER DEFAULT 0,
+    created_at TEXT NOT NULL
+  )
+''');
 
     // Risk alerts table
     await db.execute('''
@@ -518,10 +542,21 @@ await db.execute('''
     heart_rate INTEGER,
     systolic INTEGER,
     diastolic INTEGER,
-    recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    recorded_at TEXT NOT NULL,
     notes TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    created_at TEXT NOT NULL
+  )
+''');
+// Symptoms table
+await db.execute('''
+  CREATE TABLE symptoms (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    symptom_name TEXT NOT NULL,
+    severity TEXT,
+    notes TEXT,
+    recorded_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
   )
 ''');
   }

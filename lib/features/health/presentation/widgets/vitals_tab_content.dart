@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/bloc/measurements_bloc.dart';
+import '../pages/measurements_list_page.dart';
 import 'vitals_card.dart';
 import 'bmi_card.dart';
 import 'weight_progress_chart.dart';
@@ -13,7 +16,7 @@ class VitalsTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)! ;
 
     return Stack(
       children: [
@@ -23,7 +26,6 @@ class VitalsTabContent extends StatelessWidget {
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
           child: SingleChildScrollView(
-            
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
@@ -64,24 +66,31 @@ class VitalsTabContent extends StatelessWidget {
                         icon: Icons.favorite,
                         title: localizations.bloodPressure,
                         value: '120/80',
-                        status: localizations.normal,
+                        status: localizations. normal,
                         statusColor: const Color(0xFFB8E6B8),
                         textColor: const Color(0xFF2D5F2D),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-  child: AddMeasurementCard(
-    onTap: () {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => const AddMeasurementDialog(),
-      );
-    },
-  ),
-),
+                      child: Builder(
+                        builder: (ctx) {
+                          return AddMeasurementCard(
+                            onTap: () {
+                              final bloc = ctx.read<MeasurementsBloc>();
+                              showModalBottomSheet(
+                                context: ctx,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (dialogContext) => AddMeasurementDialog(
+                                  bloc: bloc,
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      ),
+                    ),
                   ],
                 ),
 
@@ -93,13 +102,47 @@ class VitalsTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Weight Progress Chart
-                WeightProgressChart(),
+                const WeightProgressChart(),
 
                 const SizedBox(height: 16),
 
                 // Health Tip
                 HealthTipCard(
                   message: localizations.healthTipMessage,
+                ),
+                
+                const SizedBox(height: 16),
+
+                // View All Measurements Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton. icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<MeasurementsBloc>(),
+                                child: const MeasurementsListPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.list),
+                        label: const Text('View All Measurements'),
+                        style: ElevatedButton. styleFrom(
+                          backgroundColor: AppColors.main500,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 ),
               ],
             ),
@@ -117,7 +160,7 @@ class VitalsTabContent extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
+                  begin: Alignment. topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.black.withValues(alpha: 0.12),
@@ -140,7 +183,7 @@ class VitalsTabContent extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
                 gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
+                  begin: Alignment. centerLeft,
                   end: Alignment.centerRight,
                   colors: [
                     Colors.black.withValues(alpha: 0.12),
