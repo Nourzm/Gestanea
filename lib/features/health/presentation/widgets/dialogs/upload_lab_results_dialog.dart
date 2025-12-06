@@ -6,8 +6,8 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import '../../pages/ocr_extraction_page.dart';
 import 'package:file_picker/file_picker.dart';
-import '../pages/pdf_extraction_page.dart';
-import '../pages/manual_lab_entry_page.dart';
+import '../../pages/pdf_extraction_page.dart';
+import '../../pages/manual_lab_entry_page.dart';
 
 class UploadLabResultsDialog extends StatelessWidget {
   const UploadLabResultsDialog({super.key});
