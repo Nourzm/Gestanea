@@ -39,7 +39,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get save_changes => 'Enregistrer les modifications';
 
   @override
-  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ?';
+  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ? ';
 
   @override
   String get cancel => 'Annuler';
@@ -210,7 +210,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
-  String get welcome_back => 'Bon retour !';
+  String get welcome_back => 'Bon retour ! ';
 
   @override
   String get or => '— OU —';
@@ -288,10 +288,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backSupportBelt => 'Ceinture de soutien dorsal';
 
   @override
-  String get searchHint => 'Trouvez ce dont vous avez besoin...';
+  String get searchHint => 'Trouvez ce dont vous avez besoin.. .';
 
   @override
-  String get dontMissOut => 'Ne ratez pas !';
+  String get dontMissOut => 'Ne ratez pas ! ';
 
   @override
   String get discountUpTo => 'Remise jusqu\'à 50%';
@@ -492,4 +492,426 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get callNow => 'Appeler maintenant';
+
+  @override
+  String get recentSymptoms => 'Symptômes récents';
+
+  @override
+  String get backPain => 'Mal de dos';
+
+  @override
+  String get mild => 'Léger';
+
+  @override
+  String get moderate => 'Modéré';
+
+  @override
+  String get severe => 'Sévère';
+
+  @override
+  String get troubleSleeping => 'Problèmes de sommeil';
+
+  @override
+  String get swollenFeet => 'Pieds enflés';
+
+  @override
+  String get heartburn => 'Brûlures d\'estomac';
+
+  @override
+  String hoursAgo(int hours) {
+    return 'il y a $hours heures';
+  }
+
+  @override
+  String get today => 'Aujourd\'hui';
+
+  @override
+  String get yesterday => 'Hier';
+
+  @override
+  String daysAgo(int days) {
+    return 'il y a $days jours';
+  }
+
+  @override
+  String get logNewSymptom => 'Enregistrer un nouveau symptôme';
+
+  @override
+  String get symptomFrequency => 'Fréquence des symptômes (7 derniers jours)';
+
+  @override
+  String get sleepIssues => 'Problèmes de sommeil';
+
+  @override
+  String get times => 'fois';
+
+  @override
+  String get commonSymptomsWeek24 =>
+      'Les symptômes courants à 24 semaines incluent les maux de dos, l\'enflure et les difficultés de sommeil.   Restez hydraté et reposez-vous quand c\'est possible.';
+
+  @override
+  String get addMeasurement => 'Ajouter une mesure';
+
+  @override
+  String get weightKg => 'Poids (kg)';
+
+  @override
+  String get heartRateBpm => 'Fréquence cardiaque (bpm)';
+
+  @override
+  String get systolic => 'Systolique';
+
+  @override
+  String get diastolic => 'Diastolique';
+
+  @override
+  String get pleaseEnterWeight => 'Veuillez entrer le poids';
+
+  @override
+  String get pleaseEnterValidNumber => 'Veuillez entrer un nombre valide';
+
+  @override
+  String get weightRange => 'Le poids doit être entre 30 et 200 kg';
+
+  @override
+  String get pleaseEnterHeartRate => 'Veuillez entrer la fréquence cardiaque';
+
+  @override
+  String get heartRateRange =>
+      'La fréquence cardiaque doit être entre 40 et 200 bpm';
+
+  @override
+  String get required => 'Requis';
+
+  @override
+  String get invalid => 'Invalide';
+
+  @override
+  String get systolicRange => '70-190';
+
+  @override
+  String get diastolicRange => '40-130';
+
+  @override
+  String get measurementSavedSuccessfully =>
+      'Mesure enregistrée avec succès !  ';
+
+  @override
+  String get addSymptom => 'Ajouter un symptôme';
+
+  @override
+  String get symptomType => 'Type de symptôme';
+
+  @override
+  String get selectSymptom => 'Sélectionner un symptôme';
+
+  @override
+  String get nausea => 'Nausée';
+
+  @override
+  String get headache => 'Mal de tête';
+
+  @override
+  String get swelling => 'Gonflement';
+
+  @override
+  String get fatigue => 'Fatigue';
+
+  @override
+  String get dizziness => 'Étourdissements';
+
+  @override
+  String get legCramps => 'Crampes dans les jambes';
+
+  @override
+  String get other => 'Autre';
+
+  @override
+  String get specifySymptom => 'Préciser le symptôme';
+
+  @override
+  String get pleaseSpecifySymptom => 'Veuillez préciser le symptôme';
+
+  @override
+  String get severity => 'Gravité';
+
+  @override
+  String get pleaseSelectSymptom => 'Veuillez sélectionner un symptôme';
+
+  @override
+  String get pleaseSelectSeverity => 'Veuillez sélectionner la gravité';
+
+  @override
+  String get duration => 'Durée (ex: 2 heures, toute la journée)';
+
+  @override
+  String get pleaseEnterDuration => 'Veuillez entrer la durée';
+
+  @override
+  String get notes => 'Notes (facultatif)';
+
+  @override
+  String get symptomLoggedSuccessfully => 'Symptôme enregistré avec succès ! ';
+
+  @override
+  String get howAreYouFeeling => 'Comment vous sentez-vous ?';
+
+  @override
+  String get veryHappy => 'Très heureuse';
+
+  @override
+  String get happy => 'Heureuse';
+
+  @override
+  String get neutral => 'Neutre';
+
+  @override
+  String get sad => 'Triste';
+
+  @override
+  String get verySad => 'Très triste';
+
+  @override
+  String get pleaseSelectMood => 'Veuillez sélectionner votre humeur';
+
+  @override
+  String get energyLevel => 'Niveau d\'énergie';
+
+  @override
+  String get low => 'Bas';
+
+  @override
+  String get high => 'Élevé';
+
+  @override
+  String get sleepQuality => 'Qualité du sommeil';
+
+  @override
+  String get howWasYourDay => 'Comment s\'est passée votre journée ?';
+
+  @override
+  String get moodLoggedSuccessfully => 'Humeur enregistrée avec succès !';
+
+  @override
+  String get uploadLabResults => 'Télécharger les résultats de laboratoire';
+
+  @override
+  String get takePhoto => 'Prendre une photo';
+
+  @override
+  String get fromGallery => 'Depuis la galerie';
+
+  @override
+  String get errorPickingImage => 'Erreur lors de la sélection de l\'image';
+
+  @override
+  String get extractingText => 'Extraction du texte..  .';
+
+  @override
+  String get textExtractedSuccessfully =>
+      'Texte extrait avec succès !  Vous pouvez le modifier ci-dessous.';
+
+  @override
+  String get ocrError => 'Erreur OCR';
+
+  @override
+  String get extractedTextEditable => 'Texte extrait (modifiable)';
+
+  @override
+  String get extractedText => 'Texte extrait';
+
+  @override
+  String get testDetails => 'Détails du test';
+
+  @override
+  String get testName => 'Nom du test';
+
+  @override
+  String get pleaseEnterTestName => 'Veuillez entrer le nom du test';
+
+  @override
+  String get testValue => 'Valeur du test';
+
+  @override
+  String get pleaseEnterTestValue => 'Veuillez entrer la valeur du test';
+
+  @override
+  String get normalRange => 'Plage normale';
+
+  @override
+  String get testDate => 'Date du test';
+
+  @override
+  String get noImage => 'Aucune image';
+
+  @override
+  String get labResultsUploadedSuccessfully =>
+      'Résultats de laboratoire téléchargés avec succès !';
+
+  @override
+  String get recentLabResults => 'Résultats de laboratoire récents';
+
+  @override
+  String get hemoglobin => 'Hémoglobine';
+
+  @override
+  String get glucose => 'Glucose';
+
+  @override
+  String get proteinUrine => 'Protéine (Urine)';
+
+  @override
+  String get negative => 'Négatif';
+
+  @override
+  String get normalRangeLabel => 'Plage normale';
+
+  @override
+  String get nextLabAppointment => 'Prochain rendez-vous de laboratoire';
+
+  @override
+  String get keepLabResultsOrganized =>
+      'Gardez tous les résultats de laboratoire organisés.  Partagez-les avec votre professionnel de santé lors des consultations.';
+
+  @override
+  String get howAreYouFeelingToday =>
+      'Comment vous sentez-vous aujourd\'hui ? ';
+
+  @override
+  String get great => 'Excellent';
+
+  @override
+  String get good => 'Bien';
+
+  @override
+  String get okay => 'Correct';
+
+  @override
+  String get recentEntries => 'Entrées récentes';
+
+  @override
+  String get feltEnergeticToday => 'Je me suis sentie énergique aujourd\'hui';
+
+  @override
+  String get relaxingEvening => 'Soirée relaxante';
+
+  @override
+  String get calm => 'Calme';
+
+  @override
+  String get tired => 'Fatiguée';
+
+  @override
+  String get needMoreSleep => 'Besoin de plus de sommeil';
+
+  @override
+  String get moodTrendsLast7Days => 'Tendances de l\'humeur (7 derniers jours)';
+
+  @override
+  String get mostlyPositiveMoods =>
+      'Majoritairement des humeurs positives cette semaine !  🌟';
+
+  @override
+  String get selfCareSuggestions => 'Suggestions de soins personnels';
+
+  @override
+  String get takeShortWalk => 'Faire une courte promenade';
+
+  @override
+  String get practiceDeepBreathing => 'Pratiquer la respiration profonde';
+
+  @override
+  String get listenToCalmingMusic => 'Écouter de la musique apaisante';
+
+  @override
+  String get connectWithLovedOnes => 'Se connecter avec ses proches';
+
+  @override
+  String get trackingMoodHelps =>
+      'Le suivi de votre humeur aide à identifier les schémas et à gérer le bien-être émotionnel pendant la grossesse.';
+
+  @override
+  String get overallRiskLevel => 'Niveau de risque global';
+
+  @override
+  String get lowRisk => 'Risque faible';
+
+  @override
+  String get allIndicatorsNormal =>
+      'Tous les indicateurs dans la plage normale';
+
+  @override
+  String get riskFactorsToMonitor => 'Facteurs de risque à surveiller';
+
+  @override
+  String get withinNormalRange => 'Dans la plage normale';
+
+  @override
+  String get gestationalDiabetes => 'Diabète gestationnel';
+
+  @override
+  String get glucoseLevelsNormal => 'Niveaux de glucose normaux';
+
+  @override
+  String get preeclampsia => 'Prééclampsie';
+
+  @override
+  String get noProteinInUrine => 'Pas de protéine dans l\'urine';
+
+  @override
+  String get warningSignsToWatch => 'Signes d\'alerte à surveiller';
+
+  @override
+  String get severeHeadache => 'Mal de tête sévère';
+
+  @override
+  String get blurredVision => 'Vision floue';
+
+  @override
+  String get severeAbdominalPain => 'Douleur abdominale sévère';
+
+  @override
+  String get decreasedFetalMovement => 'Diminution des mouvements fœtaux';
+
+  @override
+  String get vaginalBleeding => 'Saignement vaginal';
+
+  @override
+  String get emergencyContact => 'Contact d\'urgence';
+
+  @override
+  String get call911OrProvider => 'Appelez le 911 ou votre médecin';
+
+  @override
+  String get emergencyCall => 'Appel d\'urgence';
+
+  @override
+  String get areYouSureCall911 =>
+      'Êtes-vous sûr de vouloir appeler le 911 ?\n\nCela composera les services d\'urgence.';
+
+  @override
+  String get couldNotMakeEmergencyCall =>
+      'Impossible de passer l\'appel d\'urgence';
+
+  @override
+  String get ifYouExperienceWarnings =>
+      'Si vous ressentez des signes d\'alerte, contactez immédiatement votre professionnel de santé.';
+
+  @override
+  String get prePregnancyBMI => 'IMC avant grossesse';
+
+  @override
+  String get normalBMI => 'Normal';
+
+  @override
+  String get currentGain => 'Gain actuel';
+
+  @override
+  String get targetRange => 'Plage cible';
+
+  @override
+  String get expected => 'Prévu';
+
+  @override
+  String get weightProgress => 'Progression du poids';
 }
