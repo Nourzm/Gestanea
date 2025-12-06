@@ -28,9 +28,17 @@ class DashboardCubit extends Cubit<DashboardState> {
       if (isPregnant) {
         await loadPregnancyDashboard(userId);
       } else {
-        await loadPostpartumDashboard(userId);
+        // Check if user has a baby (postpartum mode)
+        final hasBaby = await _repository.hasActiveBaby(userId);
+        if (hasBaby) {
+          await loadPostpartumDashboard(userId);
+        } else {
+          // No pregnancy and no baby - default to pregnancy dashboard with default values
+          await loadPregnancyDashboard(userId);
+        }
       }
     } catch (e) {
+      // On error, emit pregnancy dashboard with default values
       emit(DashboardError(e.toString()));
     }
   }
@@ -50,6 +58,29 @@ class DashboardCubit extends Cubit<DashboardState> {
     try {
       final dashboard = await _getPostpartumDashboardUseCase.call(userId);
       emit(PostpartumDashboardLoaded(dashboard));
+    } catch (e) {
+      emit(DashboardError(e.toString()));
+    }
+  }
+
+  /// Load dashboard using string user ID (for UUID-based user IDs)
+  Future<void> loadDashboardByStringId(String userIdString) async {
+    emit(DashboardLoading());
+    try {
+      final isPregnant = await _repository.isUserPregnantByStringId(userIdString);
+      if (isPregnant) {
+        final dashboard = await _getPregnancyDashboardUseCase.callByStringId(userIdString);
+        emit(PregnancyDashboardLoaded(dashboard));
+      } else {
+        final hasBaby = await _repository.hasActiveBabyByStringId(userIdString);
+        if (hasBaby) {
+          final dashboard = await _getPostpartumDashboardUseCase.callByStringId(userIdString);
+          emit(PostpartumDashboardLoaded(dashboard));
+        } else {
+          final dashboard = await _getPregnancyDashboardUseCase.callByStringId(userIdString);
+          emit(PregnancyDashboardLoaded(dashboard));
+        }
+      }
     } catch (e) {
       emit(DashboardError(e.toString()));
     }

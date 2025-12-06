@@ -13,6 +13,15 @@ abstract class DashboardLocalDataSource {
   Future<Map<String, dynamic>?> getLatestBabyGrowth(int babyId);
   Future<List<Map<String, dynamic>>> getUpcomingMilestones(int babyId);
   Future<List<Map<String, dynamic>>> getMedicineReminders(int userId);
+  
+  // String-based methods for UUID user IDs
+  Future<Map<String, dynamic>?> getActivePregnancyByStringId(String userId);
+  Future<Map<String, dynamic>?> getActiveBabyByStringId(String userId);
+  Future<Map<String, dynamic>?> getUserByStringId(String userId);
+  Future<List<Map<String, dynamic>>> getUpcomingAppointmentsByStringId(String userId, int days);
+  Future<List<Map<String, dynamic>>> getUpcomingRemindersByStringId(String userId, int days);
+  Future<List<Map<String, dynamic>>> getUnresolvedHealthAlertsByStringId(String userId);
+  Future<List<Map<String, dynamic>>> getMedicineRemindersByStringId(String userId);
 }
 
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
@@ -24,10 +33,11 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
   @override
   Future<Map<String, dynamic>?> getActivePregnancy(int userId) async {
     final db = await _dbHelper.database;
+    // Query with string since user_id is stored as TEXT in pregnancies table
     final result = await db.query(
       'pregnancies',
       where: 'user_id = ? AND is_active = 1',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       limit: 1,
     );
     return result.isNotEmpty ? result.first : null;
@@ -36,10 +46,11 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
   @override
   Future<Map<String, dynamic>?> getActiveBaby(int userId) async {
     final db = await _dbHelper.database;
+    // Query with string since user_id is stored as TEXT in babies table
     final result = await db.query(
       'babies',
       where: 'user_id = ? AND is_active = 1',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       limit: 1,
     );
     return result.isNotEmpty ? result.first : null;
@@ -48,10 +59,11 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
   @override
   Future<Map<String, dynamic>?> getUserById(int userId) async {
     final db = await _dbHelper.database;
+    // Query with string since id is stored as TEXT in users table
     final result = await db.query(
       'users',
       where: 'id = ?',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       limit: 1,
     );
     return result.isNotEmpty ? result.first : null;
@@ -67,7 +79,7 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
       'appointments',
       where: 'user_id = ? AND appointment_date >= ? AND appointment_date <= ? AND is_completed = 0',
       whereArgs: [
-        userId,
+        userId.toString(),
         now.toIso8601String(),
         futureDate.toIso8601String(),
       ],
@@ -86,7 +98,7 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
       'reminders',
       where: 'user_id = ? AND reminder_time >= ? AND reminder_time <= ? AND is_completed = 0',
       whereArgs: [
-        userId,
+        userId.toString(),
         now.toIso8601String(),
         futureDate.toIso8601String(),
       ],
@@ -101,7 +113,7 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     final result = await db.query(
       'risk_alerts',
       where: 'user_id = ? AND is_resolved = 0',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       orderBy: 'created_at DESC',
     );
     return result;
@@ -199,6 +211,113 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     final today = DateTime(now.year, now.month, now.day);
     
     // Get medicines that have logged entries for today or upcoming
+    final result = await db.rawQuery('''
+      SELECT m.*, ml.logged_at as next_dose_time
+      FROM medicines m
+      LEFT JOIN medicine_logged ml ON m.id = ml.medicine_id
+      WHERE m.user_id = ?
+      AND (ml.logged_at IS NULL OR ml.logged_at >= ?)
+      ORDER BY ml.logged_at ASC
+      LIMIT 10
+    ''', [userId.toString(), today.toIso8601String()]);
+    
+    return result;
+  }
+
+  // ============ String-based methods for UUID user IDs ============
+
+  @override
+  Future<Map<String, dynamic>?> getActivePregnancyByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'pregnancies',
+      where: 'user_id = ? AND is_active = 1',
+      whereArgs: [userId],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getActiveBabyByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'babies',
+      where: 'user_id = ? AND is_active = 1',
+      whereArgs: [userId],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getUserByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getUpcomingAppointmentsByStringId(String userId, int days) async {
+    final db = await _dbHelper.database;
+    final now = DateTime.now();
+    final futureDate = now.add(Duration(days: days));
+    
+    final result = await db.query(
+      'appointments',
+      where: 'user_id = ? AND appointment_date >= ? AND appointment_date <= ? AND is_completed = 0',
+      whereArgs: [
+        userId,
+        now.toIso8601String(),
+        futureDate.toIso8601String(),
+      ],
+      orderBy: 'appointment_date ASC',
+    );
+    return result;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getUpcomingRemindersByStringId(String userId, int days) async {
+    final db = await _dbHelper.database;
+    final now = DateTime.now();
+    final futureDate = now.add(Duration(days: days));
+    
+    final result = await db.query(
+      'reminders',
+      where: 'user_id = ? AND reminder_time >= ? AND reminder_time <= ? AND is_completed = 0',
+      whereArgs: [
+        userId,
+        now.toIso8601String(),
+        futureDate.toIso8601String(),
+      ],
+      orderBy: 'reminder_time ASC',
+    );
+    return result;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getUnresolvedHealthAlertsByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'risk_alerts',
+      where: 'user_id = ? AND is_resolved = 0',
+      whereArgs: [userId],
+      orderBy: 'created_at DESC',
+    );
+    return result;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMedicineRemindersByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    
     final result = await db.rawQuery('''
       SELECT m.*, ml.logged_at as next_dose_time
       FROM medicines m

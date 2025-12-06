@@ -22,11 +22,17 @@ class FeedingLogPage extends StatefulWidget {
 
 class _FeedingLogPageState extends State<FeedingLogPage> {
   String selectedType = 'Breastfeed';
+  bool _hasLoadedData = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<BabyCubit>().loadFeedingLogs();
+    // Check if baby profile is already loaded
+    final cubit = context.read<BabyCubit>();
+    if (cubit.currentBabyId != null) {
+      cubit.loadFeedingLogs();
+      _hasLoadedData = true;
+    }
   }
 
   @override
@@ -34,8 +40,42 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
-        child: BlocBuilder<BabyCubit, BabyState>(
+        child: BlocConsumer<BabyCubit, BabyState>(
+          listener: (context, state) {
+            // When baby profile is loaded, load feeding logs
+            if (state is BabyLoaded && !_hasLoadedData) {
+              _hasLoadedData = true;
+              context.read<BabyCubit>().loadFeedingLogs();
+            }
+          },
           builder: (context, state) {
+            // Handle loading and error states
+            if (state is BabyLoading || state is FeedingLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            
+            if (state is BabyError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.message, style: const TextStyle(color: Colors.red)),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context.read<BabyCubit>().loadBabyProfile(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            }
+            
+            if (state is NoBabyProfile) {
+              return const Center(
+                child: Text('No baby profile found. Please add your baby first.'),
+              );
+            }
+            
             List<FeedingLogModel> feedingLogs = [];
             if (state is FeedingLoaded) {
               feedingLogs = state.feedingLogs;

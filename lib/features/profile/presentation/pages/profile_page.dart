@@ -6,6 +6,7 @@ import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/profile/presentation/pages/about_app.dart';
 import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
 import 'package:gestanea/features/profile/presentation/pages/faq.dart';
@@ -76,12 +77,12 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final BirthTransitionService _birthService = BirthTransitionService();
 
-  int _getUserId() {
+  String _getUserIdString() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      return int.tryParse(authState.user.id) ?? 0;
+      return authState.user.id;
     }
-    return 0;
+    return '';
   }
 
   Future<void> _handleGiveBirth() async {
@@ -93,9 +94,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
     if (result != null) {
       try {
-        final userId = _getUserId();
-        if (userId > 0) {
-          await _birthService.giveBirth(
+        final userId = _getUserIdString();
+        if (userId.isNotEmpty) {
+          await _birthService.giveBirthWithStringId(
             userId: userId,
             babyName: result['name'] as String,
             dateOfBirth: result['dateOfBirth'] as DateTime,
@@ -109,10 +110,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               const SnackBar(
                 content: Text('Congratulations! Your baby has been added 🎉'),
                 backgroundColor: AppColors.alerts,
+                duration: Duration(seconds: 2),
               ),
             );
-            // Navigate back to dashboard which will reload with postpartum mode
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            
+            // Pop back to dashboard - the HomeScreen will refresh automatically
+            Navigator.of(context).pop();
           }
         }
       } catch (e) {
@@ -155,9 +158,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
     if (confirm == true) {
       try {
-        final userId = _getUserId();
-        if (userId > 0) {
-          await _birthService.endPregnancy(userId);
+        final userId = _getUserIdString();
+        if (userId.isNotEmpty) {
+          await _birthService.endPregnancyWithStringId(userId);
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(

@@ -5,7 +5,6 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancy/data/repositories/pregnancy_repository.dart';
 import '../../../../main.dart' show routeObserver;
-import '../widgets/week_selector_widget.dart';
 import '../widgets/fetal_visualization_widget.dart';
 import '../widgets/pregnancy_progress_bar.dart';
 import '../widgets/kick_counter_widget.dart';
@@ -97,6 +96,112 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
     return '${months[dueDate!.month - 1]} ${dueDate!.day.toString().padLeft(2, '0')}, ${dueDate!.year}';
   }
 
+  Widget _buildWeekInfoCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF9B7FDB).withValues(alpha: 0.1),
+            const Color(0xFF9B7FDB).withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF9B7FDB).withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // Week Circle
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF9B7FDB),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF9B7FDB).withValues(alpha: 0.3),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'WEEK',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 1,
+                  ),
+                ),
+                Text(
+                  '$selectedWeek',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Days Info
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    color: Color(0xFF9B7FDB),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '+$currentDay day${currentDay != 1 ? 's' : ''}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF9B7FDB),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                trimester,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '$daysLeft days to go',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -142,12 +247,8 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
               FetalVisualizationWidget(week: selectedWeek),
               const SizedBox(height: 24),
 
-              WeekSelectorWidget(
-                currentWeek: selectedWeek,
-                onWeekSelected: (week) {
-                  setState(() => selectedWeek = week);
-                },
-              ),
+              // Display current week info (read-only, auto-calculated)
+              _buildWeekInfoCard(),
               const SizedBox(height: 24),
 
               PregnancyProgressBar(

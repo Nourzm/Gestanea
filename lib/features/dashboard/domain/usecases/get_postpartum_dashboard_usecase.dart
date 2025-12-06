@@ -12,4 +12,8 @@ class GetPostpartumDashboardUseCase {
   Future<PostpartumDashboard> call(int userId) async {
     return await _repository.getPostpartumDashboard(userId);
   }
+
+  Future<PostpartumDashboard> callByStringId(String userId) async {
+    return await _repository.getPostpartumDashboardByStringId(userId);
+  }
 }

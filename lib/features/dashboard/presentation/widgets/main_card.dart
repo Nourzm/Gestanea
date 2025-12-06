@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 
 class PregnancyProgressCard extends StatelessWidget {
   const PregnancyProgressCard({super.key, required this.onTap});
@@ -13,119 +16,138 @@ class PregnancyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 280,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: double.infinity,
-            height:
-                320, // Slightly shorter than total stack to allow button overhang
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [bgLight, bgDark],
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-                bottomLeft: Radius.elliptical(120, 70),
-                bottomRight: Radius.elliptical(120, 70),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 10,
-                  offset: Offset(8, 8),
-                  spreadRadius: 0,
-                ),
-                BoxShadow(
-                  color: Color(0xFFFFFFFF),
-                  blurRadius: 8,
-                  offset: Offset(-7, -7),
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Left Stat
-                  Flexible(
-                    flex: 2,
-                    child: _buildStatItem(
-                      value: "18.9%",
-                      label: "DONE",
-                      align: CrossAxisAlignment.center,
-                    ),
-                  ),
+    return BlocBuilder<DashboardCubit, DashboardState>(
+      builder: (context, state) {
+        // Extract pregnancy data from state
+        int currentWeek = 1;
+        int currentDay = 0;
+        int daysLeft = 280;
+        double progressPercentage = 0;
 
-                  // Center Ring (The detailed part)
-                  Expanded(flex: 4, child: _buildCentralRing()),
+        if (state is PregnancyDashboardLoaded) {
+          currentWeek = state.dashboard.currentWeek;
+          currentDay = state.dashboard.currentDay;
+          daysLeft = state.dashboard.daysLeft;
+          progressPercentage = state.dashboard.progressPercentage;
+        }
 
-                  // Right Stat
-                  Flexible(
-                    flex: 2,
-                    child: _buildStatItem(
-                      value: "228",
-                      label: "DAYS TO GO",
-                      align: CrossAxisAlignment.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          Positioned(
-            bottom: 10, // Adjust as needed
-            child: GestureDetector(
-              onTap: () => onTap(1),
-              child: Container(
-                height: 30,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+        return SizedBox(
+          height: 280,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 320,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(width: 0.5, color: AppColors.main600),
-                  borderRadius: BorderRadius.circular(20),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [bgLight, bgDark],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                    bottomLeft: Radius.elliptical(120, 70),
+                    bottomRight: Radius.elliptical(120, 70),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0x4C000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
+                      color: Color(0x3F000000),
+                      blurRadius: 10,
+                      offset: Offset(8, 8),
+                      spreadRadius: 0,
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFFFFFFF),
+                      blurRadius: 8,
+                      offset: Offset(-7, -7),
                       spreadRadius: 0,
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "More",
-                      style: TextStyle(
-                        color: textPurple,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Left Stat - Progress percentage
+                      Flexible(
+                        flex: 2,
+                        child: _buildStatItem(
+                          value: "${progressPercentage.toStringAsFixed(1)}%",
+                          label: "DONE",
+                          align: CrossAxisAlignment.center,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(Icons.arrow_forward, size: 16, color: textPurple),
-                  ],
+
+                      // Center Ring with week and day
+                      Expanded(
+                        flex: 4, 
+                        child: _buildCentralRing(currentWeek, currentDay),
+                      ),
+
+                      // Right Stat - Days left
+                      Flexible(
+                        flex: 2,
+                        child: _buildStatItem(
+                          value: "$daysLeft",
+                          label: "DAYS TO GO",
+                          align: CrossAxisAlignment.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+
+              Positioned(
+                bottom: 10,
+                child: GestureDetector(
+                  onTap: () => onTap(1),
+                  child: Container(
+                    height: 30,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 0.5, color: AppColors.main600),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x4C000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "More",
+                          style: TextStyle(
+                            color: textPurple,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(Icons.arrow_forward, size: 16, color: textPurple),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildCentralRing() {
+  Widget _buildCentralRing(int week, int day) {
     return Center(
       child: Container(
         height: 160,
@@ -135,7 +157,7 @@ class PregnancyProgressCard extends StatelessWidget {
           // This creates the soft white glow BEHIND the purple ring
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha: 0.6),
               blurRadius: 30,
               spreadRadius: 0,
               offset: const Offset(0, 0),
@@ -166,7 +188,7 @@ class PregnancyProgressCard extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  "7",
+                  "$week",
                   style: TextStyle(
                     color: textPurple,
                     fontSize: 68,
@@ -178,7 +200,7 @@ class PregnancyProgressCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                "+3 day",
+                "+$day day${day != 1 ? 's' : ''}",
                 style: TextStyle(
                   color: labelPurple,
                   fontSize: 14,

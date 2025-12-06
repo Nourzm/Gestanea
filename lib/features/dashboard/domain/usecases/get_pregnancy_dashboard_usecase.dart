@@ -12,4 +12,8 @@ class GetPregnancyDashboardUseCase {
   Future<PregnancyDashboard> call(int userId) async {
     return await _repository.getPregnancyDashboard(userId);
   }
+
+  Future<PregnancyDashboard> callByStringId(String userId) async {
+    return await _repository.getPregnancyDashboardByStringId(userId);
+  }
 }

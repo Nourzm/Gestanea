@@ -22,12 +22,12 @@ class BirthTransitionService {
   }) async {
     final db = await _dbHelper.database;
 
-    // 1. Deactivate active pregnancy
+    // 1. Deactivate active pregnancy (user_id is TEXT in database)
     await db.update(
       'pregnancies',
       {'is_active': 0},
       where: 'user_id = ? AND is_active = 1',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
     );
 
     // 2. Create baby record
@@ -51,8 +51,59 @@ class BirthTransitionService {
     return baby;
   }
 
+  /// Transitions user from pregnancy to postpartum mode using string user ID
+  Future<BabyModel> giveBirthWithStringId({
+    required String userId,
+    required String babyName,
+    required DateTime dateOfBirth,
+    required String gender,
+    double? birthWeight,
+    double? birthHeight,
+  }) async {
+    final db = await _dbHelper.database;
+
+    // 1. Deactivate active pregnancy
+    await db.update(
+      'pregnancies',
+      {'is_active': 0},
+      where: 'user_id = ? AND is_active = 1',
+      whereArgs: [userId],
+    );
+
+    // 2. Create baby record
+    final now = DateTime.now();
+    final baby = BabyModel(
+      id: now.millisecondsSinceEpoch.toString(),
+      userId: userId,
+      name: babyName,
+      gender: gender,
+      dateOfBirth: dateOfBirth,
+      birthWeight: birthWeight,
+      birthHeight: birthHeight,
+      themeColor: gender == 'girl' ? '#FFB6D9' : '#87CEEB',
+      isActive: true,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    await db.insert('babies', baby.toMap());
+
+    return baby;
+  }
+
   /// Marks user as no longer pregnant without creating a baby
   Future<void> endPregnancy(int userId) async {
+    final db = await _dbHelper.database;
+    await db.update(
+      'pregnancies',
+      {'is_active': 0},
+      where: 'user_id = ? AND is_active = 1',
+      whereArgs: [userId.toString()],
+    );
+  }
+
+  /// Marks user as no longer pregnant without creating a baby (string-based)
+  Future<void> endPregnancyWithStringId(String userId) async {
     final db = await _dbHelper.database;
     await db.update(
       'pregnancies',
@@ -68,7 +119,7 @@ class BirthTransitionService {
     final result = await db.query(
       'pregnancies',
       where: 'user_id = ? AND is_active = 1',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       limit: 1,
     );
     return result.isNotEmpty;
@@ -80,7 +131,7 @@ class BirthTransitionService {
     final result = await db.query(
       'babies',
       where: 'user_id = ? AND is_active = 1',
-      whereArgs: [userId],
+      whereArgs: [userId.toString()],
       limit: 1,
     );
     return result.isNotEmpty;
