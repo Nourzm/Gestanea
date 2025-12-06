@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
+import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/auth/presentation/widgets/input_fields.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -20,20 +22,36 @@ class _SignupScreenState extends State<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _agreedToTerms = false; // New state for the checkbox
 
   void _onSignupPressed() {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill required fields')),
       );
       return;
     }
+
+    if (!_agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You must agree to the Terms and Privacy Policy'),
+        ),
+      );
+      return;
+    }
+
     context.read<AuthBloc>().add(
       SignUpRequested(name: name, email: email, password: password),
     );
+  }
+
+  void _goToLogin() {
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
   @override
@@ -49,21 +67,17 @@ class _SignupScreenState extends State<SignupScreen> {
     final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final safeAreaTop = MediaQuery.of(context).padding.top;
-
-    // Responsive sizing
-    final headerHeight = screenHeight * 0.3;
-    final welcomeFontSize = screenWidth * 0.08;
-    final loginFontSize = screenWidth * 0.045;
     final labelFontSize = screenWidth * 0.038;
+    final linkColor = AppColors.main600;
 
     return Scaffold(
+      backgroundColor: AppColors.bg_1,
       body: SafeArea(
         top: false,
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthAuthenticated) {
-              Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+              Navigator.pushReplacementNamed(context, AppRoutes.personalize);
             } else if (state is AuthFailure) {
               final message = state.message.replaceAll('Exception: ', '');
               ScaffoldMessenger.of(
@@ -77,87 +91,9 @@ class _SignupScreenState extends State<SignupScreen> {
               child: IntrinsicHeight(
                 child: Column(
                   children: [
-                    // Top section with image and welcome text
-                    SizedBox(
-                      height: headerHeight.clamp(180.0, 300.0),
-                      child: Stack(
-                        children: [
-                          // Background image
-                          Positioned.fill(
-                            child: Image.asset(
-                              'assets/images/login.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(color: AppColors.main600);
-                              },
-                            ),
-                          ),
-
-                          // Back button
-                          Positioned(
-                            top: safeAreaTop + 10,
-                            left: screenWidth * 0.04,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                  color: AppColors.white,
-                                  size: 25,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-
-                          // Welcome text
-                          Positioned(
-                            left: screenWidth * 0.1,
-                            bottom: screenHeight * 0.08,
-                            right: screenWidth * 0.1,
-                            child: Text(
-                              t.welcome_back,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: welcomeFontSize.clamp(24.0, 36.0),
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-
-                          // LOG IN text
-                          Positioned(
-                            left: screenWidth * 0.1,
-                            bottom: screenHeight * 0.035,
-                            right: screenWidth * 0.1,
-                            child: Text(
-                              t.login,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: loginFontSize.clamp(16.0, 20.0),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
+                    const HeroSection(
+                      title: "Create Account",
+                      subtitle: "Start your journey with us today",
                     ),
 
                     Expanded(
@@ -169,15 +105,15 @@ class _SignupScreenState extends State<SignupScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Input fields
+                            // Input fields and checkbox
                             Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // name label
+                                  // Full Name label
                                   Text(
-                                    t.your_name,
+                                    t.your_name, // Changed from t.your_name to t.full_name if available, otherwise keep t.your_name or manually set "Full Name"
                                     style: TextStyle(
                                       fontSize: labelFontSize.clamp(14.0, 16.0),
                                       fontWeight: FontWeight.w600,
@@ -186,18 +122,20 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                   SizedBox(height: screenHeight * 0.012),
 
-                                  // name input
+                                  // Full Name input
                                   InputField(
                                     controller: _nameController,
-                                    hintText: t.enter_name,
-                                    prefixIcon: Icons.person_2_outlined,
+                                    hintText: t
+                                        .enter_name, // Should be something like "Sarah Johnson"
+                                    prefixIcon: Icons
+                                        .person_outlined, // Changed to outline icon to match image
                                   ),
 
                                   SizedBox(height: screenHeight * 0.02),
 
                                   // Email address label
                                   Text(
-                                    t.email,
+                                    t.email, // Changed to t.email_address to match image
                                     style: TextStyle(
                                       fontSize: labelFontSize.clamp(14.0, 16.0),
                                       fontWeight: FontWeight.w600,
@@ -209,7 +147,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   // Email input
                                   InputField(
                                     controller: _emailController,
-                                    hintText: t.enter_email,
+                                    hintText: t
+                                        .enter_email, // Should be "sarah@example.com"
                                     prefixIcon: Icons.email_outlined,
                                     keyboardType: TextInputType.emailAddress,
                                   ),
@@ -228,44 +167,144 @@ class _SignupScreenState extends State<SignupScreen> {
                                   SizedBox(height: screenHeight * 0.012),
 
                                   // Password input
-                                  InputField(
-                                    controller: _passwordController,
-                                    hintText: t.password,
-                                    prefixIcon: Icons.lock_outline,
-                                    obscureText: true,
+                                  Stack(
+                                    children: [
+                                      InputField(
+                                        controller: _passwordController,
+                                        hintText: t.password,
+                                        prefixIcon: Icons.lock_outline,
+                                        obscureText: true,
+                                        // suffixIcon: Icons
+                                        //     .visibility_outlined, // Added eye icon
+                                      ),
+                                      Positioned(
+                                        top: 55,
+                                        child: Text(
+                                          'Must be at least 8 characters', // Added password hint
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
+
+                                  SizedBox(height: screenHeight * 0.012),
+
+                                  // Terms and Conditions Checkbox
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        value: _agreedToTerms,
+                                        onChanged: (bool? newValue) {
+                                          setState(() {
+                                            _agreedToTerms = newValue ?? false;
+                                          });
+                                        },
+                                        activeColor: linkColor,
+                                      ),
+                                      Expanded(
+                                        child: Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              'I agree to the ',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                // Handle Terms & Conditions tap
+                                              },
+                                              child: Text(
+                                                'Terms & Conditions',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: linkColor,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              ' and ',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                // Handle Privacy Policy tap
+                                              },
+                                              child: Text(
+                                                'Privacy Policy',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: linkColor,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: screenHeight * 0.02),
                                 ],
                               ),
                             ),
 
-                            // Bottom section with button and login link
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                SizedBox(height: screenHeight * 0.02),
-
-                                // Signup button or loader
                                 BlocBuilder<AuthBloc, AuthState>(
                                   builder: (context, state) {
-                                    final isLoading = state is AuthLoading;
-                                    if (isLoading) {
-                                      return const SizedBox(
-                                        height: 48,
-                                        child: Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      );
-                                    }
-                                    return AppButton(
-                                      onPressed: _onSignupPressed,
+                                    // final isLoading = state is AuthLoading;
+                                    return NeumorphicButton(
                                       text: t.signup,
+                                      onPressed:  _onSignupPressed,
                                     );
                                   },
                                 ),
 
+                                SizedBox(height: screenHeight * 0.015),
+
                                 // Already have an Account
-                                SizedBox(height: screenHeight * 0.01),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 10.0,
+                                    bottom: 10.0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Already have an account? ',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: _goToLogin,
+                                        child: Text(
+                                          'Sign In',
+                                          style: TextStyle(
+                                            color: linkColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],

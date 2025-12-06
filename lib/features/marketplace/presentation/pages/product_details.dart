@@ -507,8 +507,6 @@ class ProductDetailPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: NeumorphicButton(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight,
                       onPressed: () {
                         final selectedColorVariant =
                             state.colorVariants.isNotEmpty
