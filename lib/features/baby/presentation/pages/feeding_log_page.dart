@@ -184,9 +184,13 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           Row(
                             children: [
                               Expanded(
+                                child: _buildTypeButton('All', Icons.list_alt, context.read<BabyCubit>()),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
                                 child: _buildTypeButton('Breastfeed', Icons.child_care, context.read<BabyCubit>()),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: _buildTypeButton('Bottle', Icons.baby_changing_station, context.read<BabyCubit>()),
                               ),
@@ -330,7 +334,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 Text(
                   log.feedingType == 'Breastfeed'
                       ? '${log.durationMinutes ?? 0} min${log.breastSide != null ? ' - ${log.breastSide} side' : ''}'
-                      : '${log.amountMl ?? 0} ml',
+                      : '${log.durationMinutes ?? 0} min - ${log.amountMl?.toInt() ?? 0} ml',
                   style: AppTextStyles.body1,
                 ),
               ],
@@ -352,8 +356,10 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
     String feedingType = 'Breastfeed';
     String? selectedSide;
     final durationController = TextEditingController();
+    final amountController = TextEditingController();
     TimeOfDay selectedTime = TimeOfDay.now();
-    String? errorText;
+    String? durationError;
+    String? amountError;
 
     showDialog(
       context: context,
@@ -400,23 +406,23 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       onChanged: (value) {
                         setDialogState(() {
                           feedingType = value!;
-                          errorText = null;
+                          durationError = null;
+                          amountError = null;
                         });
                       },
                     ),
                     const SizedBox(height: 16),
+                    // Duration field (for both types)
                     TextField(
                       controller: durationController,
                       keyboardType: TextInputType.number,
                       style: AppTextStyles.body1,
                       decoration: InputDecoration(
-                        labelText: feedingType == 'Breastfeed'
-                            ? 'Duration (minutes) *'
-                            : 'Amount (ml) *',
+                        labelText: 'Duration (minutes) *',
                         labelStyle: AppTextStyles.body1.copyWith(
                           color: AppColors.textSecondary,
                         ),
-                        errorText: errorText,
+                        errorText: durationError,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(color: AppColors.purpleGrey),
@@ -431,11 +437,43 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         ),
                       ),
                       onChanged: (_) {
-                        if (errorText != null) {
-                          setDialogState(() => errorText = null);
+                        if (durationError != null) {
+                          setDialogState(() => durationError = null);
                         }
                       },
                     ),
+                    // Amount field (only for Bottle)
+                    if (feedingType == 'Bottle') ...[                    const SizedBox(height: 16),
+                    TextField(
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
+                      style: AppTextStyles.body1,
+                      decoration: InputDecoration(
+                        labelText: 'Amount (ml) *',
+                        labelStyle: AppTextStyles.body1.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        errorText: amountError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.purpleGrey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.main500),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                      ),
+                      onChanged: (_) {
+                        if (amountError != null) {
+                          setDialogState(() => amountError = null);
+                        }
+                      },
+                    ),
+                    ],
                     if (feedingType == 'Breastfeed') ...[
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
@@ -519,14 +557,21 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final value = int.tryParse(durationController.text);
+                    final duration = int.tryParse(durationController.text);
+                    final amount = int.tryParse(amountController.text);
                     
-                    // Validate that duration/amount is required
-                    if (value == null || value <= 0) {
+                    // Validate duration is required for all types
+                    if (duration == null || duration <= 0) {
                       setDialogState(() {
-                        errorText = feedingType == 'Breastfeed'
-                            ? 'Duration is required'
-                            : 'Amount is required';
+                        durationError = 'Duration is required';
+                      });
+                      return;
+                    }
+                    
+                    // Validate amount is required for Bottle
+                    if (feedingType == 'Bottle' && (amount == null || amount <= 0)) {
+                      setDialogState(() {
+                        amountError = 'Amount is required';
                       });
                       return;
                     }
@@ -539,8 +584,8 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     
                     babyCubit.addFeedingLog(
                       feedingType: feedingType,
-                      durationMinutes: feedingType == 'Breastfeed' ? value : null,
-                      amountMl: feedingType == 'Bottle' ? value.toDouble() : null,
+                      durationMinutes: duration,
+                      amountMl: feedingType == 'Bottle' ? amount?.toDouble() : null,
                       breastSide: selectedSide,
                       loggedAt: loggedAt,
                     );
@@ -676,7 +721,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 Text(
                   log.feedingType == 'Breastfeed'
                       ? '${log.durationMinutes ?? 0} min${log.breastSide != null ? ' - ${log.breastSide} side' : ''}'
-                      : '${log.amountMl ?? 0} ml',
+                      : '${log.durationMinutes ?? 0} min - ${log.amountMl?.toInt() ?? 0} ml',
                   style: AppTextStyles.body1,
                 ),
               ],
