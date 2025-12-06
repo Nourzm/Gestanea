@@ -13,5 +13,6 @@ class AppRoutes {
   static const String education = '/education';
   static const String doctors = '/doctors';
   static const String marketplace = '/marketplace';
+  static const String productDetails = '/product-details';
   static const String profile = '/profile';
 }

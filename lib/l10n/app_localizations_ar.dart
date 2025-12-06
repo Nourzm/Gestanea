@@ -9,6 +9,171 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get security => 'الأمان';
+
+  @override
+  String get i_gave_birth => 'لقد ولدت';
+
+  @override
+  String get no_longer_pregnant => 'لم أعد حاملاً';
+
+  @override
+  String get help_support => 'المساعدة والدعم';
+
+  @override
+  String get contact_us => 'اتصل بنا';
+
+  @override
+  String get privacy_policy => 'سياسة الخصوصية';
+
+  @override
+  String get about_app => 'حول التطبيق';
+
+  @override
+  String get change => 'تغيير';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get save_changes => 'حفظ التغييرات';
+
+  @override
+  String get logout_confirmation => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get unknown => 'غير معروف';
+
+  @override
+  String get profile => 'الملف الشخصي';
+
+  @override
+  String get profile_updated => 'تم تحديث الملف الشخصي';
+
+  @override
+  String get edit_profile => 'تعديل الملف الشخصي';
+
+  @override
+  String get change_profile_photo => 'تغيير صورة الملف الشخصي';
+
+  @override
+  String get full_name => 'الاسم الكامل';
+
+  @override
+  String get enable_notifications => 'تفعيل الإشعارات';
+
+  @override
+  String get phone => 'الهاتف';
+
+  @override
+  String get country => 'البلد';
+
+  @override
+  String get plan => 'الخطة';
+
+  @override
+  String get sundayShort => 'ح';
+
+  @override
+  String get mondayShort => 'ن';
+
+  @override
+  String get tuesdayShort => 'ث';
+
+  @override
+  String get wednesdayShort => 'ر';
+
+  @override
+  String get thursdayShort => 'خ';
+
+  @override
+  String get fridayShort => 'ج';
+
+  @override
+  String get saturdayShort => 'س';
+
+  @override
+  String get todaysMedicine => 'دواء اليوم';
+
+  @override
+  String get upcomingAppointments => 'المواعيد القادمة';
+
+  @override
+  String get scheduled => 'مجدول';
+
+  @override
+  String get addNewMedicine => 'إضافة دواء جديد';
+
+  @override
+  String get addNewAppointment => 'إضافة موعد جديد';
+
+  @override
+  String get medicine => 'الأدوية';
+
+  @override
+  String get appointments => 'المواعيد';
+
+  @override
+  String get sunday => 'الأحد';
+
+  @override
+  String get monday => 'الاثنين';
+
+  @override
+  String get tuesday => 'الثلاثاء';
+
+  @override
+  String get wednesday => 'الأربعاء';
+
+  @override
+  String get thursday => 'الخميس';
+
+  @override
+  String get friday => 'الجمعة';
+
+  @override
+  String get saturday => 'السبت';
+
+  @override
+  String get jan => 'يناير';
+
+  @override
+  String get feb => 'فبراير';
+
+  @override
+  String get mar => 'مارس';
+
+  @override
+  String get apr => 'أبريل';
+
+  @override
+  String get may => 'مايو';
+
+  @override
+  String get jun => 'يونيو';
+
+  @override
+  String get jul => 'يوليو';
+
+  @override
+  String get aug => 'أغسطس';
+
+  @override
+  String get sep => 'سبتمبر';
+
+  @override
+  String get oct => 'أكتوبر';
+
+  @override
+  String get nov => 'نوفمبر';
+
+  @override
+  String get dec => 'ديسمبر';
+
+  @override
   String get appTitle => 'رعاية الحمل والطفل';
 
   @override
@@ -203,6 +368,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get blida => 'البليدة';
 
   @override
+  String get bouira => 'البويرة';
+
+  @override
   String get doctorsFoundSingle => 'تم العثور على طبيب واحد';
 
   @override
@@ -254,9 +422,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String atLeastReviews(int count) {
     return 'على الأقل $count مراجعة';
   }
-
-  @override
-  String get cancel => 'إلغاء';
 
   @override
   String get applyFilters => 'تطبيق التصفية';

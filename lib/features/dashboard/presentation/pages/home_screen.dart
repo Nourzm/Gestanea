@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
+import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -53,13 +57,23 @@ class HomeScreen extends StatelessWidget {
                             child: Image.asset("assets/images/profile.png"),
                           ),
                           SizedBox(width: screenWidth * 0.03),
-                          Text(
-                            'Hello Sara!',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              String greeting = 'Hello!';
+                              String nameText = '';
+                              if (state is AuthAuthenticated) {
+                                nameText = state.user.name;
+                                greeting = 'Hello';
+                              }
+                              return Text(
+                                '$greeting ${nameText.isNotEmpty ? nameText : ''}',
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.05,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -106,7 +120,10 @@ class HomeScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const DoctorsScreen(),
+                              builder: (context) => BlocProvider(
+                                create: (context) => DoctorsBloc(),
+                                child: const DoctorsScreen(),
+                              ),
                             ),
                           );
                         },

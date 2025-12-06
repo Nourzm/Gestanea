@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class InputField extends StatefulWidget {
   final TextEditingController controller;
@@ -55,12 +56,27 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     final borderColor = _focusNode.hasFocus
         ? widget.focusBorderColor
-        : widget.defaultBorderColor;
+        : AppColors.white;
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: borderColor, width: 2),
+        border: Border.all(color: borderColor, width: 1),
+        boxShadow: [
+          const BoxShadow(
+            color: AppColors.white,
+            offset: Offset(-2.5, -2.5),
+            blurRadius: 5,
+            spreadRadius: -5,
+            inset: true,
+          ),
+          BoxShadow(
+            color: const Color(0xFF000000).withOpacity(0.25),
+            offset: const Offset(2.5, 2.5),
+            blurRadius: 5,
+            inset: true,
+          ),
+        ],
       ),
       child: TextField(
         controller: widget.controller,

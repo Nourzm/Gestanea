@@ -132,6 +132,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           width: _currentPage == index ? 60 : 20,
                           height: 20,
                           decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x3F000000),
+                                blurRadius: 4,
+                                offset: Offset(4, 4),
+                              ),
+                              BoxShadow(
+                                color: Color.fromARGB(70, 255, 255, 255),
+                                blurRadius: 6,
+                                offset: Offset(-2, -2),
+                              ),
+                            ],
                             color: _currentPage == index
                                 ? AppColors.main600
                                 : AppColors.purpleGrey,

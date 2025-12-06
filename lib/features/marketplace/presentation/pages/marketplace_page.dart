@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
+import '../../logic/marketplace_bloc.dart';
+import '../../logic/product_details_bloc.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
+import 'product_details.dart';
 
 class MarketplacePage extends StatefulWidget {
   const MarketplacePage({super.key});
@@ -17,51 +21,16 @@ class MarketplacePage extends StatefulWidget {
 class _MarketplacePageState extends State<MarketplacePage> {
   final TextEditingController _searchController = TextEditingController();
 
-  // Move data initialization to methods that use context for localization
-  List<CategoryModel> _getCategories(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      CategoryModel(
-        label: l10n.maternityWear,
-        imageAsset: 'assets/images/Maternity_wear.webp',
-      ),
-      CategoryModel(
-        label: l10n.painRelief,
-        imageAsset: 'assets/images/pain.webp',
-      ),
-      CategoryModel(
-        label: l10n.skinCare,
-        imageAsset: 'assets/images/skin_care.webp',
-      ),
-    ];
+  @override
+  void initState() {
+    super.initState();
+    context.read<MarketplaceBloc>().add(const LoadMarketplaceData());
   }
 
-  List<ProductModel> _getProducts(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      ProductModel(
-        imageAsset: 'assets/images/product.png',
-        title: l10n.pregnancyPillow,
-        price: 22.40,
-        discountBgColor: AppColors.main500,
-      ),
-      ProductModel(
-        imageAsset: 'assets/images/Back_pain_belt.webp',
-        title: l10n.backSupportBelt,
-        price: 22.40,
-        oldPrice: 32.00,
-        discount: '30%',
-        discountBgColor: AppColors.main500,
-      ),
-      ProductModel(
-        imageAsset: 'assets/images/Back_pain_belt.webp',
-        title: l10n.backSupportBelt,
-        price: 22.40,
-        oldPrice: 32.00,
-        discount: '30%',
-        discountBgColor: AppColors.main500,
-      ),
-    ];
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,7 +52,9 @@ class _MarketplacePageState extends State<MarketplacePage> {
                 controller: _searchController,
                 hintText: l10n.searchHint,
                 onSearchTapped: () {
-                  // Handle search tap
+                  context.read<MarketplaceBloc>().add(
+                    SearchProducts(_searchController.text),
+                  );
                 },
               ),
             ),
@@ -226,14 +197,69 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
             // Main content area with categories and products
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Category sidebar - use localized categories
-                  CategorySidebar(categories: _getCategories(context)),
-                  // Product grid - use localized products
-                  Expanded(child: ProductGrid(products: _getProducts(context))),
-                ],
+              child: BlocBuilder<MarketplaceBloc, MarketplaceState>(
+                builder: (context, state) {
+                  if (state is MarketplaceLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.main500,
+                      ),
+                    );
+                  }
+
+                  if (state is MarketplaceError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: AppTextStyles.body1.copyWith(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  if (state is MarketplaceLoaded) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Category sidebar
+                        CategorySidebar(
+                          categories: state.categories,
+                          onCategoryTapped: (index) {
+                            final categoryId = state.categories[index].id;
+                            context.read<MarketplaceBloc>().add(
+                              FilterByCategory(categoryId),
+                            );
+                          },
+                        ),
+                        // Product grid
+                        Expanded(
+                          child: ProductGrid(
+                            products: state.filteredProducts,
+                            onProductTapped: (index) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        ProductDetailsBloc()..add(
+                                          LoadProductDetails(
+                                            state.filteredProducts[index],
+                                          ),
+                                        ),
+                                    child: ProductDetailPage(
+                                      product: state.filteredProducts[index],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

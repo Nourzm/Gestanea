@@ -9,6 +9,7 @@ class ProductCard extends StatefulWidget {
   final double? oldPrice;
   final String? discount;
   final Color discountBgColor;
+  final VoidCallback? onTap;
 
   const ProductCard({
     super.key,
@@ -18,6 +19,7 @@ class ProductCard extends StatefulWidget {
     this.oldPrice,
     this.discount,
     this.discountBgColor = AppColors.main500,
+    this.onTap,
   });
 
   @override
@@ -40,121 +42,124 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.main300,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: _cardShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image section with discount badge
-          Expanded(
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      widget.imageAsset,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.image_not_supported),
-                        );
-                      },
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.main300,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: _cardShadow,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image section with discount badge
+            Expanded(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        widget.imageAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image_not_supported),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                // Only show discount badge if discount is not null
-                if (widget.discount != null)
-                  Positioned(
-                    right: 5,
-                    top: 5,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: widget.discountBgColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        widget.discount!,
-                        style: AppTextStyles.smallLabel.copyWith(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
+                  // Only show discount badge if discount is not null
+                  if (widget.discount != null)
+                    Positioned(
+                      right: 5,
+                      top: 5,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: widget.discountBgColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          widget.discount!,
+                          style: AppTextStyles.smallLabel.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          // Product title
-          Text(
-            widget.title,
-            style: const TextStyle(
-              color: Color(0xFF1C2229),
-              fontSize: 12,
-              fontFamily: 'Lato',
-              fontWeight: FontWeight.w700,
-              height: 1.38,
-              letterSpacing: -0.18,
+            const SizedBox(height: 6),
+            // Product title
+            Text(
+              widget.title,
+              style: const TextStyle(
+                color: Color(0xFF1C2229),
+                fontSize: 12,
+                fontFamily: 'Lato',
+                fontWeight: FontWeight.w700,
+                height: 1.38,
+                letterSpacing: -0.18,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          // Price and button section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Price section
-              Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "\$${widget.price.toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        color: Color(0xFF1C2229),
-                        fontSize: 11,
-                        fontFamily: 'Lato',
-                        fontWeight: FontWeight.w900,
-                        height: 1.2,
-                      ),
-                    ),
-                    // Only show old price if it's not null
-                    if (widget.oldPrice != null) ...[
-                      const SizedBox(width: 3),
+            const SizedBox(height: 4),
+            // Price and button section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Price section
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                       Text(
-                        "\$${widget.oldPrice!.toStringAsFixed(2)}",
+                        "\$${widget.price.toStringAsFixed(2)}",
                         style: const TextStyle(
-                          color: Color(0xFF9C77BE),
-                          fontSize: 9,
+                          color: Color(0xFF1C2229),
+                          fontSize: 11,
                           fontFamily: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          decoration: TextDecoration.lineThrough,
+                          fontWeight: FontWeight.w900,
                           height: 1.2,
                         ),
                       ),
+                      // Only show old price if it's not null
+                      if (widget.oldPrice != null) ...[
+                        const SizedBox(width: 3),
+                        Text(
+                          "\$${widget.oldPrice!.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            color: Color(0xFF9C77BE),
+                            fontSize: 9,
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.w400,
+                            decoration: TextDecoration.lineThrough,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

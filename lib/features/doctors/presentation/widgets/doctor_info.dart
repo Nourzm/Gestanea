@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_model.dart';
+import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorInfo extends StatelessWidget {
-  final Doctor doctor;
+  final DoctorModel doctor;
 
   const DoctorInfo({Key? key, required this.doctor}) : super(key: key);
 
@@ -26,7 +26,7 @@ class DoctorInfo extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          doctor.specialty,
+          doctor.specialty ?? '',
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 13,
@@ -40,7 +40,7 @@ class DoctorInfo extends StatelessWidget {
             const Icon(Icons.location_on, size: 14, color: AppColors.main500),
             const SizedBox(width: 4),
             Text(
-              l10n.kmAway(doctor.distance),
+              l10n.kmAway((doctor.distance ?? 0).toStringAsFixed(1)),
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 12,
@@ -52,7 +52,7 @@ class DoctorInfo extends StatelessWidget {
             const Icon(Icons.star, size: 14, color: Color(0xFFFFB800)),
             const SizedBox(width: 4),
             Text(
-              doctor.rating.toString(),
+              (doctor.rating ?? 0).toString(),
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 12,
@@ -62,7 +62,7 @@ class DoctorInfo extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '(${doctor.reviews} ${l10n.reviews})',
+              '(${doctor.reviewsCount} ${l10n.reviews})',
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 11,

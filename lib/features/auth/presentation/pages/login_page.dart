@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_event.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/auth/presentation/widgets/input_fields.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -16,6 +20,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void _onLoginPressed() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+    context.read<AuthBloc>().add(
+      LoginRequested(email: email, password: password),
+    );
+  }
 
   @override
   void dispose() {
@@ -41,208 +59,301 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: screenHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  // Top section with image and welcome text
-                  SizedBox(
-                    height: headerHeight.clamp(200.0, 350.0),
-                    child: Stack(
-                      children: [
-                        // Background image
-                        Positioned.fill(
-                          child: Image.asset(
-                            'assets/images/login.png',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(color: AppColors.main500);
-                            },
-                          ),
-                        ),
-
-                        // Back button
-                        Positioned(
-                          top: safeAreaTop + 10,
-                          left: screenWidth * 0.04,
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: AppColors.white,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthAuthenticated) {
+              Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            } else if (state is AuthFailure) {
+              final message = state.message.replaceAll('Exception: ', '');
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
+            }
+          },
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: screenHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    // Top section with image and welcome text
+                    SizedBox(
+                      height: headerHeight.clamp(200.0, 350.0),
+                      child: Stack(
+                        children: [
+                          // Background image
+                          Positioned.fill(
+                            child: Image.asset(
+                              'assets/images/login.png',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(color: AppColors.main500);
                               },
                             ),
                           ),
-                        ),
 
-                        // Welcome text
-                        Positioned(
-                          left: screenWidth * 0.1,
-                          bottom: screenHeight * 0.08,
-                          right: screenWidth * 0.1,
-                          child: Text(
-                            t.welcome_back,
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: welcomeFontSize.clamp(24.0, 36.0),
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
+                          // Back button
+                          Positioned(
+                            top: safeAreaTop + 10,
+                            left: screenWidth * 0.04,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: AppColors.white,
+                                  size: 25,
                                 ),
-                              ],
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
 
-                        // LOG IN text
-                        Positioned(
-                          left: screenWidth * 0.1,
-                          bottom: screenHeight * 0.035,
-                          right: screenWidth * 0.1,
-                          child: Text(
-                            t.login,
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: loginFontSize.clamp(16.0, 20.0),
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.5,
+                          // Welcome text
+                          Positioned(
+                            left: screenWidth * 0.1,
+                            bottom: screenHeight * 0.08,
+                            right: screenWidth * 0.1,
+                            child: Text(
+                              t.welcome_back,
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: welcomeFontSize.clamp(24.0, 36.0),
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.08,
-                        vertical: screenHeight * 0.02,
+                          // LOG IN text
+                          Positioned(
+                            left: screenWidth * 0.1,
+                            bottom: screenHeight * 0.035,
+                            right: screenWidth * 0.1,
+                            child: Text(
+                              t.login,
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: loginFontSize.clamp(16.0, 20.0),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.5,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Input fields
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Email address label
-                                Text(
-                                  t.email,
-                                  style: TextStyle(
-                                    fontSize: labelFontSize.clamp(14.0, 16.0),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                    ),
+
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.08,
+                          vertical: screenHeight * 0.02,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Input fields
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Email address label
+                                  Text(
+                                    t.email,
+                                    style: TextStyle(
+                                      fontSize: labelFontSize.clamp(14.0, 16.0),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: screenHeight * 0.012),
+                                  SizedBox(height: screenHeight * 0.012),
 
-                                // Email input
-                                InputField(
-                                  controller: _emailController,
-                                  hintText: t.enter_email,
-                                  prefixIcon: Icons.email_outlined,
-                                  keyboardType: TextInputType.emailAddress,
-                                ),
-
-                                SizedBox(height: screenHeight * 0.025),
-
-                                // Password label
-                                Text(
-                                  t.password,
-                                  style: TextStyle(
-                                    fontSize: labelFontSize.clamp(14.0, 16.0),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                  // Email input
+                                  InputField(
+                                    controller: _emailController,
+                                    hintText: t.enter_email,
+                                    prefixIcon: Icons.email_outlined,
+                                    keyboardType: TextInputType.emailAddress,
                                   ),
-                                ),
-                                SizedBox(height: screenHeight * 0.012),
 
-                                // Password input
-                                InputField(
-                                  controller: _passwordController,
-                                  hintText: t.password,
-                                  prefixIcon: Icons.lock_outline,
-                                  obscureText: true,
-                                ),
+                                  SizedBox(height: screenHeight * 0.025),
 
-                                SizedBox(height: screenHeight * 0.015),
+                                  // Password label
+                                  Text(
+                                    t.password,
+                                    style: TextStyle(
+                                      fontSize: labelFontSize.clamp(14.0, 16.0),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenHeight * 0.012),
 
-                                // Remember me and Forgot password
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            width: 24,
-                                            height: 24,
-                                            child: Checkbox(
-                                              value: _rememberMe,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  _rememberMe = value ?? false;
-                                                });
-                                              },
-                                              activeColor: AppColors.main400,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Flexible(
-                                            child: Text(
-                                              t.rememberMe,
-                                              style: TextStyle(
-                                                color: Colors.grey.shade700,
-                                                fontSize: bodyFontSize.clamp(
-                                                  12.0,
-                                                  14.0,
+                                  // Password input
+                                  InputField(
+                                    controller: _passwordController,
+                                    hintText: t.password,
+                                    prefixIcon: Icons.lock_outline,
+                                    obscureText: true,
+                                  ),
+
+                                  SizedBox(height: screenHeight * 0.015),
+
+                                  // Remember me and Forgot password
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: Checkbox(
+                                                value: _rememberMe,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _rememberMe =
+                                                        value ?? false;
+                                                  });
+                                                },
+                                                activeColor: AppColors.main400,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
                                                 ),
                                               ),
-                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 8),
+                                            Flexible(
+                                              child: Text(
+                                                t.rememberMe,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                  fontSize: bodyFontSize.clamp(
+                                                    12.0,
+                                                    14.0,
+                                                  ),
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: TextButton(
-                                        onPressed: () {},
+                                      Flexible(
+                                        child: TextButton(
+                                          onPressed: () {},
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                            ),
+                                            minimumSize: const Size(0, 36),
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
+                                          ),
+                                          child: Text(
+                                            t.forgot,
+                                            style: TextStyle(
+                                              color: AppColors.main600,
+                                              fontSize: bodyFontSize.clamp(
+                                                12.0,
+                                                14.0,
+                                              ),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Bottom section with button and signup link
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(height: screenHeight * 0.02),
+
+                                // Login button or loading indicator
+                                BlocBuilder<AuthBloc, AuthState>(
+                                  builder: (context, state) {
+                                    final isLoading = state is AuthLoading;
+                                    if (isLoading) {
+                                      return const SizedBox(
+                                        height: 48,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    }
+                                    return AppButton(
+                                      onPressed: _onLoginPressed,
+                                      text: t.login,
+                                    );
+                                  },
+                                ),
+
+                                SizedBox(height: screenHeight * 0.02),
+
+                                // Create an Account
+                                Center(
+                                  child: Wrap(
+                                    alignment: WrapAlignment.center,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      Text(
+                                        t.notRegistered,
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: bodyFontSize.clamp(
+                                            12.0,
+                                            14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            AppRoutes.signup,
+                                          );
+                                        },
                                         style: TextButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
+                                            horizontal: 4,
                                           ),
-                                          minimumSize: const Size(0, 36),
+                                          minimumSize: const Size(0, 0),
                                           tapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         child: Text(
-                                          t.forgot,
+                                          t.createAccount,
                                           style: TextStyle(
                                             color: AppColors.main600,
                                             fontSize: bodyFontSize.clamp(
@@ -251,91 +362,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                             fontWeight: FontWeight.w600,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
+                                SizedBox(height: screenHeight * 0.01),
                               ],
                             ),
-                          ),
-
-                          // Bottom section with button and signup link
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(height: screenHeight * 0.02),
-
-                              // Login button
-                              AppButton(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    AppRoutes.dashboard,
-                                  );
-                                },
-                                text: t.login,
-                              ),
-
-                              SizedBox(height: screenHeight * 0.02),
-
-                              // Create an Account
-                              Center(
-                                child: Wrap(
-                                  alignment: WrapAlignment.center,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Text(
-                                      t.notRegistered,
-                                      style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: bodyFontSize.clamp(
-                                          12.0,
-                                          14.0,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          AppRoutes.signup,
-                                        );
-                                      },
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 4,
-                                        ),
-                                        minimumSize: const Size(0, 0),
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      child: Text(
-                                        t.createAccount,
-                                        style: TextStyle(
-                                          color: AppColors.main600,
-                                          fontSize: bodyFontSize.clamp(
-                                            12.0,
-                                            14.0,
-                                          ),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.01),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

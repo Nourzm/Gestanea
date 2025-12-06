@@ -6,7 +6,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
   final dynamic suffixIcon; // IconData or SVG asset path
-  final bool filled; // true = filled, false = outlined
+  final bool filled;
   final double? maxWidth;
   final double? minHeight;
 
@@ -22,81 +22,104 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
+    final buttonHeight = minHeight ?? size.height * 0.055;
 
+    // Responsive padding
+    final verticalPadding = size.height * 0.012;
+    final horizontalPadding = size.width * 0.04;
+
+    // Icon logic
     Widget? iconWidget;
     if (suffixIcon != null) {
       if (suffixIcon is IconData) {
         iconWidget = Icon(
           suffixIcon,
-          color: filled ? AppColors.white : AppColors.main700,
-          size: 22,
+          color: filled ? Colors.white : AppColors.main700,
+          size: 20,
         );
       } else if (suffixIcon is String) {
         iconWidget = SvgPicture.asset(
           suffixIcon,
           width: 18,
           colorFilter: ColorFilter.mode(
-              filled ? AppColors.white : AppColors.main700, BlendMode.srcIn),
+            filled ? Colors.white : AppColors.main700,
+            BlendMode.srcIn,
+          ),
         );
       }
     }
 
-    return Container(
-      width: double.infinity,
-      constraints: BoxConstraints(
-        maxWidth: maxWidth ?? double.infinity,
-        minHeight: minHeight ?? screenHeight * 0.06,
-      ),
-      decoration: BoxDecoration(
-        color: filled ? AppColors.main600 : Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: filled ? Colors.transparent : AppColors.main600,
-          width: 2,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(
+          maxWidth: maxWidth ?? double.infinity,
+          minHeight: buttonHeight,
         ),
-      ),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(4, 4),
+            )
+          ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: filled ? AppColors.main600 : Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: filled ? Colors.transparent : AppColors.main600,
+              width: 1.4,
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(4, 4),
+              ),
+            ],
           ),
           padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.018,
+            vertical: verticalPadding,
+            horizontal: horizontalPadding,
           ),
-        ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Invisible placeholder to keep text centered
-            Opacity(
-              opacity: 0,
-              child: iconWidget ?? const SizedBox(width: 22, height: 22),
-            ),
-
-            // Centered text
-            Text(
-              text,
-              style: TextStyle(
-                color: filled ? AppColors.white : AppColors.main700,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Opacity(
+                opacity: 0,
+                child: iconWidget ?? const SizedBox(width: 20, height: 20),
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
 
-            // Visible suffix icon (right side)
-            if (iconWidget != null)
-              Padding(
-                padding:EdgeInsets.only(right:10),
-                child: iconWidget,
-              )
-            else
-              const SizedBox(width: 22, height: 22),
-          ],
+              Expanded(
+                child: Center(
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      color: filled ? Colors.white : AppColors.main700,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+
+              iconWidget ??
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                  ),
+            ],
+          ),
         ),
       ),
     );

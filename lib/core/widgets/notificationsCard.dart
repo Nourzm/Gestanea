@@ -13,9 +13,9 @@ class NotificationIcon extends StatelessWidget {
   const NotificationIcon({
     super.key,
     required this.icon,
-    this.backgroundColor = AppColors.bg_1,
+    this.backgroundColor = AppColors.homeCards,
     this.borderColor = AppColors.main400,
-    this.size = 35,
+    this.size = 45,
     this.borderRadius = 11.0,
     this.elevation = 4.0,
   });
@@ -28,14 +28,7 @@ class NotificationIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(width: 0.6, color: borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: elevation,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: AppColors.shadow1,
       ),
       child: Center(child: SvgPicture.asset("assets/icons/notifications.svg")),
     );

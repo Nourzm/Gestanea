@@ -9,6 +9,171 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get security => 'Security';
+
+  @override
+  String get i_gave_birth => 'I gave birth';
+
+  @override
+  String get no_longer_pregnant => 'No longer pregnant';
+
+  @override
+  String get help_support => 'Help & Support';
+
+  @override
+  String get contact_us => 'Contact us';
+
+  @override
+  String get privacy_policy => 'Privacy policy';
+
+  @override
+  String get about_app => 'About App';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get save_changes => 'Save changes';
+
+  @override
+  String get logout_confirmation => 'Are you sure you want to log out?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get profile_updated => 'Profile updated';
+
+  @override
+  String get edit_profile => 'Edit Profile';
+
+  @override
+  String get change_profile_photo => 'Change profile photo';
+
+  @override
+  String get full_name => 'Full name';
+
+  @override
+  String get enable_notifications => 'Enable notifications';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get plan => 'Plan';
+
+  @override
+  String get sundayShort => 'S';
+
+  @override
+  String get mondayShort => 'M';
+
+  @override
+  String get tuesdayShort => 'T';
+
+  @override
+  String get wednesdayShort => 'W';
+
+  @override
+  String get thursdayShort => 'T';
+
+  @override
+  String get fridayShort => 'F';
+
+  @override
+  String get saturdayShort => 'S';
+
+  @override
+  String get todaysMedicine => 'Today\'s Medicine';
+
+  @override
+  String get upcomingAppointments => 'Upcoming Appointments';
+
+  @override
+  String get scheduled => 'Scheduled';
+
+  @override
+  String get addNewMedicine => 'Add New Medicine';
+
+  @override
+  String get addNewAppointment => 'Add New Appointment';
+
+  @override
+  String get medicine => 'Medicine';
+
+  @override
+  String get appointments => 'Appointments';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get jan => 'Jan';
+
+  @override
+  String get feb => 'Feb';
+
+  @override
+  String get mar => 'Mar';
+
+  @override
+  String get apr => 'Apr';
+
+  @override
+  String get may => 'May';
+
+  @override
+  String get jun => 'Jun';
+
+  @override
+  String get jul => 'Jul';
+
+  @override
+  String get aug => 'Aug';
+
+  @override
+  String get sep => 'Sep';
+
+  @override
+  String get oct => 'Oct';
+
+  @override
+  String get nov => 'Nov';
+
+  @override
+  String get dec => 'Dec';
+
+  @override
   String get appTitle => 'Pregnancy & Baby Care';
 
   @override
@@ -204,6 +369,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get blida => 'Blida';
 
   @override
+  String get bouira => 'Bouira';
+
+  @override
   String get doctorsFoundSingle => '1 Doctor Found';
 
   @override
@@ -255,9 +423,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String atLeastReviews(int count) {
     return 'At least $count reviews';
   }
-
-  @override
-  String get cancel => 'Cancel';
 
   @override
   String get applyFilters => 'Apply Filters';
