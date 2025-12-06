@@ -9,10 +9,7 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/routes.dart';
-
-// Core / auth imports
 import 'package:gestanea/core/database/db_helper.dart';
-
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

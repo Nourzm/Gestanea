@@ -302,7 +302,6 @@ await db.execute('''
         scheduled_times TEXT,
         start_date TEXT NOT NULL,
         end_date TEXT,
-        max_doses INTEGER,
         medicine_image_url TEXT,
         is_active INTEGER DEFAULT 1,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,

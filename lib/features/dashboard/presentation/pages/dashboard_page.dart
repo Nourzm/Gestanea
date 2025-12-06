@@ -1,6 +1,7 @@
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/navbar.dart';
@@ -10,6 +11,7 @@ import 'postpartum_track_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
+import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -40,9 +42,13 @@ class _DashboardPageState extends State<DashboardPage> {
           : PostpartumTrackPage(babyGender: babyGender),
       const HealthLogScreen(),
       const PlanMainPage(),
-      const MarketplacePage(),
+      BlocProvider(
+        create: (context) =>
+            MarketplaceBloc()..add(const LoadMarketplaceData()),
+        child: const MarketplacePage(),
+      ),
     ];
-    final double h = MediaQuery.of(context).size.height *0.09;
+    final double h = MediaQuery.of(context).size.height * 0.09;
     return Scaffold(
       body: Stack(
         children: [
@@ -70,7 +76,6 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
     );
-    ;
   }
 }
 

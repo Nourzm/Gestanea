@@ -9,6 +9,7 @@ import 'package:gestanea/features/onboarding/presentation/pages/splash_screen.da
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
+import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
@@ -35,7 +36,10 @@ Map<String, WidgetBuilder> appRoutes = {
     create: (context) => DoctorsBloc(),
     child: const DoctorsScreen(),
   ),
-  AppRoutes.marketplace: (context) => const MarketplacePage(),
+  AppRoutes.marketplace: (context) => BlocProvider(
+    create: (context) => MarketplaceBloc()..add(const LoadMarketplaceData()),
+    child: const MarketplacePage(),
+  ),
   // Product details route will receive arguments
   // AppRoutes.profile: (context) => const ProfileScreen(),
 };
