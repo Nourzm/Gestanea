@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
             return supportedLocales.first;
           },
 
-          initialRoute: AppRoutes.personalize,
+          initialRoute: AppRoutes.splash,
           routes: appRoutes,
         ),
       ),

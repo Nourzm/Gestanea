@@ -324,7 +324,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 15),
                 NeumorphicTextField(label: t.language, controller: _languageC),
                 const SizedBox(height: 15),
-                
+
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     final isLoading = state is AuthLoading;
@@ -338,31 +338,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               )
                             : NeumorphicButton(
-                                screenWidth: screenWidth,
-                                screenHeight: MediaQuery.of(
-                                  context,
-                                ).size.height,
                                 text: t.save_changes,
                                 onPressed: _onSave,
-                                icon: const Icon(
-                                  Icons.save,
-                                  color: AppColors.white,
-                                  size: 24,
-                                ),
+                                prefixIcon: Icons.save,
                                 color: AppColors.main500,
                               ),
                         const SizedBox(height: 16),
                         NeumorphicButton(
-                          screenWidth: screenWidth,
-                          screenHeight: MediaQuery.of(context).size.height,
                           text: t.cancel,
                           onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
-                            Icons.close,
-                            color: AppColors.white,
-                            size: 20,
-                          ),
-                          color: AppColors.main400,
+                          prefixIcon: Icons.close,
+                          color: AppColors.error2,
                         ),
                       ],
                     );

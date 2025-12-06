@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/db_helper.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
@@ -29,7 +28,8 @@ class DashboardPage extends StatefulWidget {
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserver, RouteAware {
+class _DashboardPageState extends State<DashboardPage>
+    with WidgetsBindingObserver, RouteAware {
   int _currentIndex = 0;
   String babyGender = 'girl';
   String? _userId;
@@ -92,8 +92,9 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     _userId = _getUserId(context);
-    final double h = MediaQuery.of(context).size.height * 0.09;
-    
+    final height = MediaQuery.of(context).size.height;
+    final double h = height * 0.09;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<DashboardCubit>(
@@ -129,7 +130,8 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
           PostpartumDashboard? postpartumDashboard;
           String currentBabyGender = babyGender;
           if (isPostpartum) {
-            postpartumDashboard = (dashboardState as PostpartumDashboardLoaded).dashboard;
+            postpartumDashboard =
+                (dashboardState as PostpartumDashboardLoaded).dashboard;
             // TODO: Extract baby gender from dashboard if available
           }
 
@@ -139,15 +141,14 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
             return Scaffold(
               backgroundColor: const Color(0xFFF5F5F5),
               body: const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF9B7FDB),
-                ),
+                child: CircularProgressIndicator(color: Color(0xFF9B7FDB)),
               ),
             );
           }
 
           // Default to pregnancy mode if not explicitly in postpartum mode
-          final bool showPregnancyMode = isPregnant || isError || dashboardState is DashboardInitial;
+          final bool showPregnancyMode =
+              isPregnant || isError || dashboardState is DashboardInitial;
 
           final pages = [
             showPregnancyMode
@@ -180,15 +181,25 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
                   right: 0,
                   bottom: 0,
                   child: FancyNavBar(
+                    barHeight: h,
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
                     barHeight: 80,
                     items: [
                       NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
-                      NavBarItem(icon: "assets/icons/track.svg", label: "Track"),
-                      NavBarItem(icon: "assets/icons/health.svg", label: "Health"),
+                      NavBarItem(
+                        icon: "assets/icons/track.svg",
+                        label: "Track",
+                      ),
+                      NavBarItem(
+                        icon: "assets/icons/health.svg",
+                        label: "Health",
+                      ),
                       NavBarItem(icon: "assets/icons/plan.svg", label: "Plan"),
-                      NavBarItem(icon: "assets/icons/market.svg", label: "Market"),
+                      NavBarItem(
+                        icon: "assets/icons/market.svg",
+                        label: "Market",
+                      ),
                     ],
                   ),
                 ),

@@ -117,7 +117,7 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
-            colors: [Color(0xffB077E5), Color(0xff9C77BE), Color(0xff9D42E8)],
+            colors: [Color(0xFFF1C0F2), Color(0xFFF8D9F8), Color(0xFFF1C0F2)],
           ),
         ),
         child: Center(
@@ -161,6 +161,13 @@ class _SplashScreenState extends State<SplashScreen>
                 'Gestanéa',
                 style: TextStyle(
                   color: Colors.white,
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x4d000000),
+                      blurRadius: 10,
+                      offset: Offset(3, 3),
+                    ),
+                  ],
                   fontSize: 46,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.5,
@@ -173,6 +180,13 @@ class _SplashScreenState extends State<SplashScreen>
                 'Your Journey, Our Care',
                 style: TextStyle(
                   color: Colors.white,
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x4d000000),
+                      blurRadius: 10,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 1.0,

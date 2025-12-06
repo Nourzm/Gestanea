@@ -504,8 +504,6 @@ class ProductDetailPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: NeumorphicButton(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight,
                       onPressed: () {
                         final selectedColorVariant =
                             state.colorVariants.isNotEmpty
@@ -542,11 +540,7 @@ class ProductDetailPage extends StatelessWidget {
                         );
                       },
                       text: 'Buy Now',
-                      icon: const Icon(
-                        Icons.shopping_bag_outlined,
-                        color: AppColors.white,
-                        size: 20,
-                      ),
+                      prefixIcon: Icons.shopping_bag_outlined,
                       color: AppColors.main600,
                     ),
                   ),
