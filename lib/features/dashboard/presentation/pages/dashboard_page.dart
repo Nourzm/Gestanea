@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
@@ -18,6 +19,7 @@ import 'postpartum_track_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
+import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 import '../../../../main.dart' show routeObserver;
 
 class DashboardPage extends StatefulWidget {
@@ -159,7 +161,11 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
                 : PostpartumTrackPage(babyGender: currentBabyGender),
             const HealthLogScreen(),
             const PlanMainPage(),
-            const MarketplacePage(),
+            BlocProvider(
+              create: (context) =>
+                  MarketplaceBloc()..add(const LoadMarketplaceData()),
+              child: const MarketplacePage(),
+            ),
           ];
 
           return Scaffold(

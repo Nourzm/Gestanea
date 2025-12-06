@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -262,7 +262,6 @@ class DatabaseHelper {
         scheduled_times TEXT,
         start_date TEXT NOT NULL,
         end_date TEXT,
-        max_doses INTEGER,
         medicine_image_url TEXT,
         is_active INTEGER DEFAULT 1,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,

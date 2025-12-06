@@ -9,10 +9,7 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/routes.dart';
-
-// Core / auth imports
 import 'package:gestanea/core/database/db_helper.dart';
-
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -102,8 +99,7 @@ class _MyAppState extends State<MyApp> {
             return supportedLocales.first;
           },
 
-          //routing - proper flow with splash → onboarding → login → dashboard
-          initialRoute: AppRoutes.splash, // ✅ Start with splash screen
+          initialRoute: AppRoutes.splash,
           routes: appRoutes,
         ),
       ),
