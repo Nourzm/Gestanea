@@ -8,6 +8,7 @@ import 'package:gestanea/core/database/models/lab_result_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
+import '../pages/manual_lab_entry_page.dart';
 
 class OcrExtractionPage extends StatefulWidget {
   final File imageFile;
@@ -62,41 +63,95 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
     }
   }
 
-  void _saveResults() {
-    if (_parsedData.isEmpty) {
-      ScaffoldMessenger. of(context).showSnackBar(
-        const SnackBar(content: Text('No data extracted.  Please add manually.')),
-      );
-      return;
-    }
-
-    // Save each extracted result
-    for (final entry in _parsedData.entries) {
-      final data = entry.value as Map<String, dynamic>;
-      final labResult = LabResultModel(
-        id: '${DateTime.now().millisecondsSinceEpoch}_${entry.key}',
-        userId: 'current_user',
-        testName: entry.key. toUpperCase(),
-        value: data['value'],
-        unit: data['unit'],
-        labDate: DateTime.now(),
-        reportImageUrl: _savedImagePath,
-        extractedByOcr: true,
-        createdAt: DateTime.now(),
-      );
-
-      context.read<LabResultsBloc>().add(AddLabResult(labResult));
-    }
-
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Lab results saved successfully! '),
-        backgroundColor: Colors.green,
-      ),
+void _saveResults() {
+  // Allow saving even if no data was auto-extracted
+  if (_savedImagePath == null) {
+    ScaffoldMessenger.of(context). showSnackBar(
+      const SnackBar(content: Text('No image saved.  Please try again.')),
     );
+    return;
   }
 
+  if (_parsedData. isEmpty) {
+    // No OCR data - show dialog to enter manually or just save image
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('No Data Extracted'),
+        content: const Text('OCR could not extract lab results. Would you like to:\n\n1. Save just the image for reference\n2. Enter data manually'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              // Save image-only record
+              final labResult = LabResultModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                userId: 'current_user',
+                testName: 'Lab Report',
+                labDate: DateTime.now(),
+                reportImageUrl: _savedImagePath,
+                extractedByOcr: false,
+                createdAt: DateTime.now(),
+              );
+              
+              context.read<LabResultsBloc>().add(AddLabResult(labResult));
+              
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Image saved!  You can add details later.'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            child: const Text('Save Image Only'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              Navigator.pop(context); // Close OCR page
+              // Navigate to manual entry
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ManualLabEntryPage(),
+                ),
+              );
+            },
+            child: const Text('Enter Manually'),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
+
+  // Save extracted results
+  for (final entry in _parsedData. entries) {
+    final data = entry.value as Map<String, dynamic>;
+    final labResult = LabResultModel(
+      id: '${DateTime.now().millisecondsSinceEpoch}_${entry.key}',
+      userId: 'current_user',
+      testName: entry.key. toUpperCase(),
+      value: data['value'],
+      unit: data['unit'],
+      labDate: DateTime.now(),
+      reportImageUrl: _savedImagePath,
+      extractedByOcr: true,
+      createdAt: DateTime.now(),
+    );
+
+    context.read<LabResultsBloc>().add(AddLabResult(labResult));
+  }
+
+  Navigator.pop(context);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Lab results saved successfully!'),
+      backgroundColor: Colors.green,
+    ),
+  );
+}
   @override
   void dispose() {
     _ocrService.dispose();

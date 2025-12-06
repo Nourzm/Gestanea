@@ -11,7 +11,7 @@ class ImageStorageService {
     final appDir = await getApplicationDocumentsDirectory();
     final labDir = Directory('${appDir.path}/$_folderName');
     
-    if (! await labDir.exists()) {
+    if (!await labDir.exists()) {
       await labDir.create(recursive: true);
     }
     
@@ -33,10 +33,10 @@ class ImageStorageService {
   }
 
   // Get image file from path
-  File?  getImage(String?  path) {
+  File? getImage(String? path) {
     if (path == null || path.isEmpty) return null;
     final file = File(path);
-    return file.existsSync() ?  file : null;
+    return file.existsSync() ? file : null;
   }
 
   // Delete image
@@ -83,9 +83,9 @@ class ImageStorageService {
       // Add all images to archive
       for (final image in images) {
         final bytes = await image.readAsBytes();
-        final fileName = image.path.split('/'). last;
-        final file = ArchiveFile(fileName, bytes. length, bytes);
-        archive. addFile(file);
+        final fileName = image.path.split('/').last;
+        final file = ArchiveFile(fileName, bytes.length, bytes);
+        archive.addFile(file);
       }
 
       // Encode to ZIP
@@ -100,7 +100,7 @@ class ImageStorageService {
       final tempDir = await getTemporaryDirectory();
       final zipPath = '${tempDir. path}/lab_results_${DateTime.now().millisecondsSinceEpoch}.zip';
       final zipFile = File(zipPath);
-      await zipFile.writeAsBytes(zipBytes);
+      await zipFile. writeAsBytes(zipBytes);
 
       return zipPath;
     } catch (e) {
@@ -117,7 +117,7 @@ class ImageStorageService {
         throw Exception('No images to export');
       }
 
-      await Share.shareXFiles(
+      await Share. shareXFiles(
         [XFile(zipPath)],
         subject: 'Lab Results',
         text: 'My lab results archive',
