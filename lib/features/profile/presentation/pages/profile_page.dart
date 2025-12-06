@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
@@ -63,7 +64,6 @@ class HeaderCurveClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
 
@@ -110,7 +110,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 duration: Duration(seconds: 2),
               ),
             );
-            
+
             // Pop back to dashboard - the HomeScreen will refresh automatically
             Navigator.of(context).pop();
           }
@@ -130,13 +130,15 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   Future<void> _handleNoLongerPregnant() async {
     final t = AppLocalizations.of(context)!;
-    
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(t.no_longer_pregnant),
-        content: const Text('Are you sure? This will end your pregnancy tracking.'),
+        content: const Text(
+          'Are you sure? This will end your pregnancy tracking.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -600,57 +602,11 @@ class _LogoutButton extends StatelessWidget {
           ).showSnackBar(SnackBar(content: Text(msg)));
         }
       },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0x3F000000),
-              blurRadius: 4,
-              offset: const Offset(4, 4),
-            ),
-            BoxShadow(
-              color: const Color(0x7FFFFFFF),
-              blurRadius: 10,
-              offset: const Offset(-6, -6),
-            ),
-          ],
-        ),
-        child: InkWell(
-          onTap: () => _confirmLogout(context),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.error2,
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: const Color(0xFFDFE2E8), width: 1),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(4, 4),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            child: Row(
-              children: [
-                SvgPicture.asset("assets/icons/Logout.svg"),
-                const SizedBox(width: 16),
-                Text(
-                  AppLocalizations.of(context)!.logout,
-                  style: const TextStyle(
-                    color: Color(0xFF191B23),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      child: NeumorphicButton(
+        text: "logout",
+        prefixIcon: Icons.logout,
+        onPressed: () => _confirmLogout(context),
+        color: AppColors.error1,
       ),
     );
   }

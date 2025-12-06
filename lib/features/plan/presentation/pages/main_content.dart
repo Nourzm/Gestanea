@@ -99,8 +99,6 @@ class _MainContentState extends State<MainContent> {
                 horizontal: widget.screenWidth * 0.05,
               ),
               child: NeumorphicButton(
-                screenWidth: widget.screenWidth,
-                screenHeight: widget.screenHeight,
                 text: localization.addNewMedicine,
                 onPressed: () async {
                   final result = await Navigator.push(
@@ -114,7 +112,7 @@ class _MainContentState extends State<MainContent> {
                     _loadData(); // Refresh data
                   }
                 },
-                icon: const Icon(Icons.add, color: AppColors.white, size: 24),
+                prefixIcon: Icons.add,
                 color: AppColors.main500,
               ),
             ),
@@ -137,8 +135,6 @@ class _MainContentState extends State<MainContent> {
                 horizontal: widget.screenWidth * 0.05,
               ),
               child: NeumorphicButton(
-                screenWidth: widget.screenWidth,
-                screenHeight: widget.screenHeight,
                 text: localization.addNewAppointment,
                 onPressed: () async {
                   final result = await Navigator.push(
@@ -152,7 +148,7 @@ class _MainContentState extends State<MainContent> {
                     _loadData(); // Refresh data
                   }
                 },
-                icon: const Icon(Icons.add, color: AppColors.white, size: 24),
+                prefixIcon: Icons.add,
                 color: AppColors.main500,
               ),
             ),
