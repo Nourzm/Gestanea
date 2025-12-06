@@ -234,7 +234,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             const SizedBox(height: 8),
             Text(
               searchQuery.isNotEmpty
-                  ? l10n.noMatchingDoctors(searchQuery)
+                  ? l10n.noMatchingDoctors()
                   : l10n.tryAdjustingFilters,
               textAlign: TextAlign.center,
               style: AppTextStyles.body1.copyWith(
