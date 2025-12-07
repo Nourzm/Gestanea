@@ -8,6 +8,7 @@ import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
 import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' show DoctorsScreen;
+import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import 'postpartum_track_page.dart';
@@ -480,7 +481,12 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const DoctorsScreen()),
+                MaterialPageRoute(
+                  builder: (_) => BlocProvider(
+                    create: (context) => DoctorsBloc(),
+                    child: const DoctorsScreen(),
+                  ),
+                ),
               );
             },
             child: Container(
