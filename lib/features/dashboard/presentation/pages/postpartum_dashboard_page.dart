@@ -30,8 +30,26 @@ class PostpartumDashboardPage extends StatefulWidget {
 
 class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   // Gender-based theme colors
-  bool get isGirl => widget.babyGender.toLowerCase() == 'girl' || 
-                     widget.babyGender.toLowerCase() == 'female';
+  late String currentBabyGender;
+
+  @override
+  void initState() {
+    super.initState();
+    currentBabyGender = widget.babyGender;
+  }
+
+  @override
+  void didUpdateWidget(PostpartumDashboardPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.babyGender != widget.babyGender) {
+      setState(() {
+        currentBabyGender = widget.babyGender;
+      });
+    }
+  }
+
+  bool get isGirl => currentBabyGender.toLowerCase() == 'girl' || 
+                     currentBabyGender.toLowerCase() == 'female';
   
   Color get primaryColor => isGirl 
       ? const Color(0xFFFF9EC9)  // Pink for girls
@@ -108,6 +126,14 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
           if (state is BabyLoaded) {
             babyName = state.baby.name;
             babyDateOfBirth = state.baby.dateOfBirth;
+            // Update gender if it changed
+            if (state.baby.gender != null && state.baby.gender != currentBabyGender) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  currentBabyGender = state.baby.gender ?? widget.babyGender;
+                });
+              });
+            }
           }
 
           return SafeArea(
@@ -175,7 +201,10 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                   child: const BabySettingsPage(),
                 ),
               ),
-            );
+            ).then((result) {
+              // Reload baby profile to get updated gender if changed
+              context.read<BabyCubit>().loadBabyProfile();
+            });
           },
           child: Row(
             children: [
