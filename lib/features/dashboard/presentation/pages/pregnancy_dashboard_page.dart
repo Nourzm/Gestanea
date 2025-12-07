@@ -1,10 +1,14 @@
 // lib/features/dashboard/presentation/pages/pregnancy_dashboard_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/week_progress_card.dart';
 import '../widgets/upcoming_reminders_widget.dart';
 import '../widgets/health_alerts_widget.dart';
 import '../providers/dashboard_provider.dart';
-import 'package:gestanea/core/constants/app_routes.dart'; 
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/core/session/session_manager.dart'; 
 
 class PregnancyDashboardPage extends StatefulWidget {
   const PregnancyDashboardPage({super.key});
@@ -15,6 +19,7 @@ class PregnancyDashboardPage extends StatefulWidget {
 
 class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
   late final DashboardProvider _provider;
+  final _sessionManager = SessionManager();
 
   @override
   void initState() {
@@ -24,6 +29,19 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
   }
 
   Future<void> _loadData() async {
+    // Get userId from session
+    final userId = await _sessionManager.getCurrentUserId();
+    if (userId != null && userId.isNotEmpty) {
+      // Convert string userId to int for the provider
+      try {
+        final intUserId = int.parse(userId);
+        _provider.setUserId(intUserId);
+      } catch (e) {
+        // If conversion fails, try using string-based method if available
+        print('Error converting userId to int: $e');
+      }
+    }
+    
     await _provider.loadPregnancyDashboard();
     if (mounted) setState(() {});
   }

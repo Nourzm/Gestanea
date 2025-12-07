@@ -77,15 +77,23 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     
     final result = await db.query(
       'appointments',
-      where: 'user_id = ? AND appointment_date >= ? AND appointment_date <= ? AND is_completed = 0',
+      where: 'user_id = ? AND appointment_date >= ? AND is_completed = 0',
       whereArgs: [
         userId.toString(),
         now.toIso8601String(),
-        futureDate.toIso8601String(),
       ],
       orderBy: 'appointment_date ASC',
     );
-    return result;
+    
+    // Filter in Dart to ensure we only get appointments within the specified days
+    return result.where((apt) {
+      try {
+        final aptDate = DateTime.parse(apt['appointment_date'].toString());
+        return aptDate.isBefore(futureDate);
+      } catch (e) {
+        return false;
+      }
+    }).toList();
   }
 
   @override
