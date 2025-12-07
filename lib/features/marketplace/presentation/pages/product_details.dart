@@ -5,6 +5,7 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/product_details_bloc.dart';
 import '../../logic/order_bloc.dart';
 import '../widgets/neumorphic_section.dart';
@@ -177,7 +178,7 @@ class ProductDetailPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${state.product.discountPercentage}% OFF',
+                          '-${state.product.discountPercentage}%',
                           style: AppTextStyles.smallLabel.copyWith(
                             color: AppColors.white,
                             fontWeight: FontWeight.w600,
@@ -216,7 +217,7 @@ class ProductDetailPage extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${state.product.rating} (${state.product.reviewsCount} reviews)',
+                              '${state.product.rating} (${AppLocalizations.of(context)!.reviewsCount(state.product.reviewsCount)})',
                               style: AppTextStyles.body1.copyWith(
                                 color: AppColors.main500,
                                 fontSize: 13,
@@ -236,7 +237,7 @@ class ProductDetailPage extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          '\$${state.product.price.toStringAsFixed(2)}',
+                          '${state.product.price.toStringAsFixed(0)} DA',
                           style: AppTextStyles.headline1.copyWith(
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
@@ -246,7 +247,7 @@ class ProductDetailPage extends StatelessWidget {
                         const SizedBox(width: 12),
                         if (state.product.originalPrice != null)
                           Text(
-                            '\$${state.product.originalPrice!.toStringAsFixed(2)}',
+                            '${state.product.originalPrice!.toStringAsFixed(0)} DA',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 18,
                               decoration: TextDecoration.lineThrough,
@@ -260,7 +261,8 @@ class ProductDetailPage extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Select Color
-                  if (state.colorVariants.isNotEmpty)
+                  if (state.colorVariants.isNotEmpty &&
+                      state.product.categoryId != 'cat_3')
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: NeumorphicSection(
@@ -268,7 +270,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Select Color',
+                              AppLocalizations.of(context)!.selectColor,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -329,7 +331,8 @@ class ProductDetailPage extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // Select Size
-                  if (state.sizeVariants.isNotEmpty)
+                  if (state.sizeVariants.isNotEmpty &&
+                      state.product.categoryId != 'cat_3')
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: NeumorphicSection(
@@ -337,7 +340,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Select Size',
+                              AppLocalizations.of(context)!.selectSize,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -482,7 +485,7 @@ class ProductDetailPage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Add to Cart',
+                                    AppLocalizations.of(context)!.addToCart,
                                     style: AppTextStyles.headline2.copyWith(
                                       color: AppColors.white,
                                       fontSize: 16,
@@ -504,8 +507,6 @@ class ProductDetailPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: NeumorphicButton(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight,
                       onPressed: () {
                         final selectedColorVariant =
                             state.colorVariants.isNotEmpty
@@ -541,12 +542,8 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                         );
                       },
-                      text: 'Buy Now',
-                      icon: const Icon(
-                        Icons.shopping_bag_outlined,
-                        color: AppColors.white,
-                        size: 20,
-                      ),
+                      text: AppLocalizations.of(context)!.buyNow,
+                      prefixIcon: Icons.shopping_bag_outlined,
                       color: AppColors.main600,
                     ),
                   ),
@@ -561,7 +558,7 @@ class ProductDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Description',
+                            AppLocalizations.of(context)!.description,
                             style: AppTextStyles.headline2.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -571,7 +568,9 @@ class ProductDetailPage extends StatelessWidget {
                           const SizedBox(height: 12),
                           Text(
                             state.product.description ??
-                                'No description available',
+                                AppLocalizations.of(
+                                  context,
+                                )!.noDescriptionAvailable,
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 13,
                               color: AppColors.textPrimary,
@@ -594,7 +593,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Specifications',
+                              AppLocalizations.of(context)!.specifications,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -625,7 +624,7 @@ class ProductDetailPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Customer Reviews',
+                                AppLocalizations.of(context)!.customerReviews,
                                 style: AppTextStyles.headline2.copyWith(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -633,7 +632,7 @@ class ProductDetailPage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'see all',
+                                AppLocalizations.of(context)!.seeAll,
                                 style: AppTextStyles.body1.copyWith(
                                   fontSize: 13,
                                   color: AppColors.main500,

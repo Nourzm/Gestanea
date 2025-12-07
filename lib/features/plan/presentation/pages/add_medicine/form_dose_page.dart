@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class FormDosePage extends StatefulWidget {
   final String? selectedForm;
@@ -39,14 +40,14 @@ class _FormDosePageState extends State<FormDosePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final forms = [
-      {'name': 'Capsule', 'icon': '💊'},
-      {'name': 'Pill', 'icon': '💊'},
-      {'name': 'Injection', 'icon': '💉'},
-      {'name': 'Spray', 'icon': '🧴'},
-      {'name': 'Drop', 'icon': '💧'},
-      {'name': 'Syrup', 'icon': '🧪'},
-      {'name': 'Others', 'icon': '•••'},
+      {'name': localizations.formPill, 'icon': '💊'},
+      {'name': localizations.formInjection, 'icon': '💉'},
+      {'name': localizations.formSpray, 'icon': '🧴'},
+      {'name': localizations.formDrop, 'icon': '💧'},
+      {'name': localizations.formSyrup, 'icon': '🧪'},
+      {'name': localizations.formOthers, 'icon': '•••'},
     ];
 
     return Column(
@@ -59,10 +60,13 @@ class _FormDosePageState extends State<FormDosePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Select Form & Dose',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.selectFormDose,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -79,8 +83,8 @@ class _FormDosePageState extends State<FormDosePage> {
             controller: _dosageController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: 'Dosage',
-              hintText: 'e.g., 5mg or 10ml',
+              labelText: AppLocalizations.of(context)!.dosage,
+              hintText: AppLocalizations.of(context)!.dosageExample,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -164,9 +168,12 @@ class _FormDosePageState extends State<FormDosePage> {
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
                 disabledForegroundColor: Colors.white,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

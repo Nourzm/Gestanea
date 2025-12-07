@@ -81,19 +81,19 @@ class _ProductCardState extends State<ProductCard> {
                       top: 5,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
+                          horizontal: 8,
+                          vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: widget.discountBgColor,
-                          borderRadius: BorderRadius.circular(5),
+                          color: AppColors.main500,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           widget.discount!,
                           style: AppTextStyles.smallLabel.copyWith(
                             color: AppColors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
                           ),
                         ),
                       ),
@@ -129,7 +129,7 @@ class _ProductCardState extends State<ProductCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "\$${widget.price.toStringAsFixed(2)}",
+                        "${widget.price.toStringAsFixed(0)} DA",
                         style: const TextStyle(
                           color: Color(0xFF1C2229),
                           fontSize: 11,
@@ -142,7 +142,7 @@ class _ProductCardState extends State<ProductCard> {
                       if (widget.oldPrice != null) ...[
                         const SizedBox(width: 3),
                         Text(
-                          "\$${widget.oldPrice!.toStringAsFixed(2)}",
+                          "${widget.oldPrice!.toStringAsFixed(0)} DA",
                           style: const TextStyle(
                             color: Color(0xFF9C77BE),
                             fontSize: 9,

@@ -217,12 +217,22 @@ class _MarketplacePageState extends State<MarketplacePage> {
                   }
 
                   if (state is MarketplaceLoaded) {
+                    // Find the index of the selected category
+                    final selectedIndex = state.selectedCategoryId != null
+                        ? state.categories.indexWhere(
+                            (cat) => cat.id == state.selectedCategoryId,
+                          )
+                        : null;
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Category sidebar
                         CategorySidebar(
                           categories: state.categories,
+                          selectedIndex: selectedIndex != -1
+                              ? selectedIndex
+                              : null,
                           onCategoryTapped: (index) {
                             final categoryId = state.categories[index].id;
                             context.read<MarketplaceBloc>().add(

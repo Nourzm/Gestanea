@@ -121,21 +121,23 @@ class _MedicinesPageState extends State<MedicinesPage> {
                                 child: Row(
                                   children: [
                                     _buildFilterPill(
-                                      'All',
+                                      localizations.all,
                                       state.allCount,
-                                      state.selectedFilter == 'All',
+                                      state.selectedFilter == localizations.all,
                                     ),
                                     SizedBox(width: 12),
                                     _buildFilterPill(
-                                      'Taken',
+                                      localizations.taken,
                                       state.takenCount,
-                                      state.selectedFilter == 'Taken',
+                                      state.selectedFilter ==
+                                          localizations.taken,
                                     ),
                                     SizedBox(width: 12),
                                     _buildFilterPill(
-                                      'Missed',
+                                      localizations.missed,
                                       state.missedCount,
-                                      state.selectedFilter == 'Missed',
+                                      state.selectedFilter ==
+                                          localizations.missed,
                                     ),
                                   ],
                                 ),
@@ -167,7 +169,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
                                 child: Padding(
                                   padding: EdgeInsets.all(screenHeight * 0.05),
                                   child: Text(
-                                    'Error: ${planState.message}',
+                                    '${localizations.error}: ${planState.message}',
                                     style: TextStyle(
                                       fontSize: screenWidth * 0.04,
                                       color: Colors.red,
@@ -190,7 +192,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
                                         screenHeight * 0.05,
                                       ),
                                       child: Text(
-                                        'No medicines found',
+                                        localizations.noMedicinesFound,
                                         style: TextStyle(
                                           fontSize: screenWidth * 0.04,
                                           color: Colors.grey.shade600,

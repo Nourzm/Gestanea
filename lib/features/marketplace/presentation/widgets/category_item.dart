@@ -7,6 +7,7 @@ class CategoryItem extends StatefulWidget {
   final String imageAsset;
   final Color textColor;
   final VoidCallback? onTap;
+  final bool isSelected;
 
   const CategoryItem({
     super.key,
@@ -14,6 +15,7 @@ class CategoryItem extends StatefulWidget {
     required this.imageAsset,
     this.textColor = AppColors.textDark,
     this.onTap,
+    this.isSelected = false,
   });
 
   @override
@@ -73,10 +75,10 @@ class _CategoryItemState extends State<CategoryItem> {
             widget.label,
             textAlign: TextAlign.center,
             style: AppTextStyles.smallLabel.copyWith(
-              color: widget.textColor,
+              color: widget.isSelected ? AppColors.main500 : widget.textColor,
               fontSize: 9,
               fontFamily: 'Lato',
-              fontWeight: FontWeight.w500,
+              fontWeight: widget.isSelected ? FontWeight.w900 : FontWeight.w500,
               height: 1.33,
             ),
           ),

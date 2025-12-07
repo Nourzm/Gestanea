@@ -117,6 +117,259 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appointments => 'المواعيد';
 
   @override
+  String get appointmentName => 'اسم الموعد';
+
+  @override
+  String get medicationName => 'اسم الدواء';
+
+  @override
+  String get nextLabel => 'التالي';
+
+  @override
+  String get doneLabel => 'تم';
+
+  @override
+  String get uploadPicture => 'ارفعي صورة';
+
+  @override
+  String get camera => 'الكاميرا';
+
+  @override
+  String get gallery => 'المعرض';
+
+  @override
+  String get removeImage => 'إزالة الصورة';
+
+  @override
+  String get tapToAddPicture => 'اضغط لإضافة صورة';
+
+  @override
+  String get optionalImageNote => 'إضافة صورة اختيارية. يمكنك تخطي هذه الخطوة.';
+
+  @override
+  String get selectFormDose => 'اختاري الشكل والجرعة';
+
+  @override
+  String get frequencySchedule => 'التكرار والجدول';
+
+  @override
+  String get frequencyType => 'نوع التكرار';
+
+  @override
+  String get frequencyValue => 'قيمة التكرار';
+
+  @override
+  String get scheduledTimesLabel => 'الأوقات المجدولة';
+
+  @override
+  String get asNeeded => 'عند الحاجة';
+
+  @override
+  String get dosage => 'الجرعة';
+
+  @override
+  String get dosageExample => 'مثال: 5mg أو 10ml';
+
+  @override
+  String get formPill => 'حبة دواء';
+
+  @override
+  String get formInjection => 'حقنة';
+
+  @override
+  String get formSpray => 'رذاذ';
+
+  @override
+  String get formDrop => 'قطرة';
+
+  @override
+  String get formSyrup => 'شراب';
+
+  @override
+  String get formOthers => 'أخرى';
+
+  @override
+  String medicinesTaken(int taken, int total) {
+    return '$taken من $total تم أخذها';
+  }
+
+  @override
+  String get daily => 'يوميًا';
+
+  @override
+  String get weekly => 'أسبوعيًا';
+
+  @override
+  String get monthly => 'شهريًا';
+
+  @override
+  String get timesPerDayExample => 'مثال: 3 مرات يوميًا';
+
+  @override
+  String get timesPerWeekExample => 'مثال: 2 مرتين أسبوعيًا';
+
+  @override
+  String get timesPerMonthExample => 'مثال: 1 مرة شهريًا';
+
+  @override
+  String get appointmentDateTime => 'تاريخ ووقت الموعد';
+
+  @override
+  String get appointmentLocation => 'مكان الموعد';
+
+  @override
+  String get selectDate => 'اختر التاريخ';
+
+  @override
+  String get selectTime => 'اختر الوقت';
+
+  @override
+  String get startDate => 'تاريخ البدء';
+
+  @override
+  String get endDate => 'تاريخ النهاية (اختياري)';
+
+  @override
+  String get selectStartDate => 'اختر تاريخ البدء';
+
+  @override
+  String get selectEndDate => 'اختر تاريخ النهاية';
+
+  @override
+  String get addTime => 'إضافة وقت';
+
+  @override
+  String get noScheduledTimesAdded => 'لم تتم إضافة أوقات مجدولة بعد';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get tomorrow => 'غداً';
+
+  @override
+  String get noAppointmentsFound => 'لا توجد مواعيد';
+
+  @override
+  String get appointment => 'موعد';
+
+  @override
+  String get pleaseAddScheduledTime => 'يرجى إضافة وقت مجدول واحد على الأقل';
+
+  @override
+  String reviewsCount(Object count) {
+    return '$count تقييمات';
+  }
+
+  @override
+  String get qty => 'الكمية';
+
+  @override
+  String get noMedicines => 'لا توجد أدوية';
+
+  @override
+  String get schedule => 'الجدول';
+
+  @override
+  String get availability => 'التوفر';
+
+  @override
+  String get specialty => 'التخصص';
+
+  @override
+  String get bookAppointment => 'احجزي موعدًا';
+
+  @override
+  String get price => 'السعر';
+
+  @override
+  String get quantity => 'الكمية';
+
+  @override
+  String get checkout => 'إتمام الشراء';
+
+  @override
+  String get applyCoupon => 'تطبيق القسيمة';
+
+  @override
+  String get popular => 'شائع';
+
+  @override
+  String get offers => 'عروض';
+
+  @override
+  String get newLabel => 'جديد';
+
+  @override
+  String get contact => 'تواصل';
+
+  @override
+  String get message => 'رسالة';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get noResults => 'لا توجد نتائج';
+
+  @override
+  String get search => 'بحث';
+
+  @override
+  String get sort => 'فرز';
+
+  @override
+  String get marketplace => 'المتجر';
+
+  @override
+  String get doctorsFeatureTitle => 'الأطباء';
+
+  @override
+  String get planFeatureTitle => 'الخطة';
+
+  @override
+  String get addMedicine => 'أضيفي دواء';
+
+  @override
+  String get addAppointment => 'أضيفي موعدًا';
+
+  @override
+  String get error => 'خطأ';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String get reviewsLabel => 'تقييمات';
+
+  @override
+  String get rating => 'التقييم';
+
+  @override
+  String get recommended => 'موصى به';
+
+  @override
+  String get noReviews => 'لا توجد تقييمات';
+
+  @override
+  String get delivery => 'التسليم';
+
+  @override
+  String get shipping => 'الشحن';
+
+  @override
+  String get taxes => 'الضرائب';
+
+  @override
   String get sunday => 'الأحد';
 
   @override
@@ -268,7 +521,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get market => 'السوق';
+  String get market => 'المتجر';
 
   @override
   String get maternityWear => 'ملابس الحمل';
@@ -407,9 +660,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gender => 'الجنس';
 
   @override
-  String get all => 'الكل';
-
-  @override
   String get male => 'ذكر';
 
   @override
@@ -436,9 +686,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noDoctorsFound => 'لم يتم العثور على أطباء';
-
-  @override
-  String get noResults => 'لا توجد نتائج';
 
   @override
   String noMatchingDoctors(String query) {
@@ -491,419 +738,124 @@ class AppLocalizationsAr extends AppLocalizations {
   String get callNow => 'اتصلي الآن';
 
   @override
-  String get recentSymptoms => 'الأعراض الأخيرة';
+  String get all => 'الكل';
 
   @override
-  String get backPain => 'آلام الظهر';
+  String get taken => 'تم تناولها';
 
   @override
-  String get mild => 'خفيف';
+  String get missed => 'فاتت';
 
   @override
-  String get moderate => 'متوسط';
+  String get take => 'تناولي';
 
   @override
-  String get severe => 'شديد';
+  String get noMedicinesFound => 'لم يتم العثور على أدوية';
 
   @override
-  String get troubleSleeping => 'صعوبة في النوم';
+  String get pleaseLoginToViewPlan => 'يرجى تسجيل الدخول لعرض خطتك';
 
   @override
-  String get swollenFeet => 'تورم القدمين';
+  String get selectColor => 'اختاري اللون';
 
   @override
-  String get heartburn => 'حرقة المعدة';
+  String get selectSize => 'اختاري المقاس';
 
   @override
-  String hoursAgo(int hours) {
-    return 'منذ $hours ساعات';
+  String get addToCart => 'أضيفي إلى السلة';
+
+  @override
+  String get buyNow => 'اشتري الآن';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get noDescriptionAvailable => 'لا يوجد وصف متاح';
+
+  @override
+  String get specifications => 'المواصفات';
+
+  @override
+  String get customerReviews => 'تقييمات العملاء';
+
+  @override
+  String get seeAll => 'عرض الكل';
+
+  @override
+  String get completeYourOrder => 'أكملي طلبك';
+
+  @override
+  String get orderSummary => 'ملخص الطلب';
+
+  @override
+  String get product => 'المنتج';
+
+  @override
+  String get size => 'المقاس';
+
+  @override
+  String get subtotal => 'المجموع الفرعي';
+
+  @override
+  String get deliveryFee => 'رسوم التوصيل';
+
+  @override
+  String get total => 'المجموع';
+
+  @override
+  String get deliveryInformation => 'معلومات التوصيل';
+
+  @override
+  String get fullName => 'الاسم الكامل';
+
+  @override
+  String get enterYourFullName => 'أدخلي اسمك الكامل';
+
+  @override
+  String get enterYourPhoneNumber => 'أدخلي رقم هاتفك';
+
+  @override
+  String get deliveryAddress => 'عنوان التوصيل';
+
+  @override
+  String get streetAddressApartment => 'عنوان الشارع، الشقة، إلخ.';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get enterYourCity => 'أدخلي مدينتك';
+
+  @override
+  String get specialInstructions => 'تعليمات خاصة (اختياري)';
+
+  @override
+  String get addDeliveryNotes => 'أضيفي ملاحظات التوصيل، طلبات خاصة...';
+
+  @override
+  String get paymentMethod => 'طريقة الدفع';
+
+  @override
+  String get cashOnDelivery => 'الدفع عند الاستلام';
+
+  @override
+  String get creditDebitCard => 'بطاقة ائتمان / خصم';
+
+  @override
+  String get digitalWallet => 'محفظة رقمية';
+
+  @override
+  String get placeOrder => 'إتمام الطلب';
+
+  @override
+  String orderPlacedSuccessfully(String orderId) {
+    return 'تم تقديم الطلب $orderId بنجاح!';
   }
 
   @override
-  String get today => 'اليوم';
+  String get yourInformationIsSecure => 'معلوماتك آمنة ومشفرة';
 
   @override
-  String get yesterday => 'أمس';
-
-  @override
-  String daysAgo(int days) {
-    return 'منذ $days أيام';
-  }
-
-  @override
-  String get logNewSymptom => 'تسجيل عرض جديد';
-
-  @override
-  String get symptomFrequency => 'تكرار الأعراض (آخر 7 أيام)';
-
-  @override
-  String get sleepIssues => 'مشاكل النوم';
-
-  @override
-  String get times => 'مرات';
-
-  @override
-  String get commonSymptomsWeek24 =>
-      'تشمل الأعراض الشائعة في الأسبوع 24 آلام الظهر والتورم وصعوبات النوم.  حافظي على رطوبتكِ واستريحي عندما تستطيعين.';
-
-  @override
-  String get addMeasurement => 'إضافة قياس';
-
-  @override
-  String get weightKg => 'الوزن (كجم)';
-
-  @override
-  String get heartRateBpm => 'معدل ضربات القلب (نبضة/دقيقة)';
-
-  @override
-  String get systolic => 'الانقباضي';
-
-  @override
-  String get diastolic => 'الانبساطي';
-
-  @override
-  String get pleaseEnterWeight => 'الرجاء إدخال الوزن';
-
-  @override
-  String get pleaseEnterValidNumber => 'الرجاء إدخال رقم صحيح';
-
-  @override
-  String get weightRange => 'يجب أن يكون الوزن بين 30-200 كجم';
-
-  @override
-  String get pleaseEnterHeartRate => 'الرجاء إدخال معدل ضربات القلب';
-
-  @override
-  String get heartRateRange =>
-      'يجب أن يكون معدل ضربات القلب بين 40-200 نبضة/دقيقة';
-
-  @override
-  String get required => 'مطلوب';
-
-  @override
-  String get invalid => 'غير صالح';
-
-  @override
-  String get systolicRange => '70-190';
-
-  @override
-  String get diastolicRange => '40-130';
-
-  @override
-  String get measurementSavedSuccessfully => 'تم حفظ القياس بنجاح! ';
-
-  @override
-  String get addSymptom => 'إضافة عرض';
-
-  @override
-  String get symptomType => 'نوع العرض';
-
-  @override
-  String get selectSymptom => 'اختاري العرض';
-
-  @override
-  String get nausea => 'غثيان';
-
-  @override
-  String get headache => 'صداع';
-
-  @override
-  String get swelling => 'تورم';
-
-  @override
-  String get fatigue => 'إرهاق';
-
-  @override
-  String get dizziness => 'دوار';
-
-  @override
-  String get legCramps => 'تشنجات الساق';
-
-  @override
-  String get other => 'أخرى';
-
-  @override
-  String get specifySymptom => 'حددي العرض';
-
-  @override
-  String get pleaseSpecifySymptom => 'الرجاء تحديد العرض';
-
-  @override
-  String get severity => 'الشدة';
-
-  @override
-  String get pleaseSelectSymptom => 'الرجاء اختيار عرض';
-
-  @override
-  String get pleaseSelectSeverity => 'الرجاء اختيار الشدة';
-
-  @override
-  String get duration => 'المدة (مثلاً، ساعتان، طوال اليوم)';
-
-  @override
-  String get pleaseEnterDuration => 'الرجاء إدخال المدة';
-
-  @override
-  String get notes => 'ملاحظات (اختياري)';
-
-  @override
-  String get symptomLoggedSuccessfully => 'تم تسجيل العرض بنجاح!';
-
-  @override
-  String get howAreYouFeeling => 'كيف تشعرين؟';
-
-  @override
-  String get veryHappy => 'سعيدة جداً';
-
-  @override
-  String get happy => 'سعيدة';
-
-  @override
-  String get neutral => 'محايدة';
-
-  @override
-  String get sad => 'حزينة';
-
-  @override
-  String get verySad => 'حزينة جداً';
-
-  @override
-  String get pleaseSelectMood => 'الرجاء اختيار مزاجكِ';
-
-  @override
-  String get energyLevel => 'مستوى الطاقة';
-
-  @override
-  String get low => 'منخفض';
-
-  @override
-  String get high => 'مرتفع';
-
-  @override
-  String get sleepQuality => 'جودة النوم';
-
-  @override
-  String get howWasYourDay => 'كيف كان يومكِ؟';
-
-  @override
-  String get moodLoggedSuccessfully => 'تم تسجيل المزاج بنجاح!';
-
-  @override
-  String get uploadLabResults => 'تحميل نتائج المختبر';
-
-  @override
-  String get takePhoto => 'التقاط صورة';
-
-  @override
-  String get fromGallery => 'من المعرض';
-
-  @override
-  String get errorPickingImage => 'خطأ في اختيار الصورة';
-
-  @override
-  String get extractingText => 'جارٍ استخراج النص.. .';
-
-  @override
-  String get textExtractedSuccessfully =>
-      'تم استخراج النص بنجاح!  يمكنكِ تعديله أدناه.';
-
-  @override
-  String get ocrError => 'خطأ في التعرف الضوئي';
-
-  @override
-  String get extractedTextEditable => 'النص المستخرج (قابل للتعديل)';
-
-  @override
-  String get extractedText => 'النص المستخرج';
-
-  @override
-  String get testDetails => 'تفاصيل الفحص';
-
-  @override
-  String get testName => 'اسم الفحص';
-
-  @override
-  String get pleaseEnterTestName => 'الرجاء إدخال اسم الفحص';
-
-  @override
-  String get testValue => 'قيمة الفحص';
-
-  @override
-  String get pleaseEnterTestValue => 'الرجاء إدخال قيمة الفحص';
-
-  @override
-  String get normalRange => 'النطاق الطبيعي';
-
-  @override
-  String get testDate => 'تاريخ الفحص';
-
-  @override
-  String get noImage => 'لا توجد صورة';
-
-  @override
-  String get labResultsUploadedSuccessfully => 'تم تحميل نتائج المختبر بنجاح!';
-
-  @override
-  String get recentLabResults => 'نتائج المختبر الأخيرة';
-
-  @override
-  String get hemoglobin => 'الهيموجلوبين';
-
-  @override
-  String get glucose => 'الجلوكوز';
-
-  @override
-  String get proteinUrine => 'البروتين (البول)';
-
-  @override
-  String get negative => 'سلبي';
-
-  @override
-  String get normalRangeLabel => 'النطاق الطبيعي';
-
-  @override
-  String get nextLabAppointment => 'موعد المختبر القادم';
-
-  @override
-  String get keepLabResultsOrganized =>
-      'احتفظي بجميع نتائج المختبر منظمة.  شاركيها مع مقدم الرعاية الصحية الخاص بكِ أثناء الفحوصات.';
-
-  @override
-  String get howAreYouFeelingToday => 'كيف تشعرين اليوم؟';
-
-  @override
-  String get great => 'ممتاز';
-
-  @override
-  String get good => 'جيد';
-
-  @override
-  String get okay => 'لا بأس';
-
-  @override
-  String get recentEntries => 'الإدخالات الأخيرة';
-
-  @override
-  String get feltEnergeticToday => 'شعرتُ بالنشاط اليوم';
-
-  @override
-  String get relaxingEvening => 'مساء مريح';
-
-  @override
-  String get calm => 'هادئة';
-
-  @override
-  String get tired => 'متعبة';
-
-  @override
-  String get needMoreSleep => 'بحاجة للمزيد من النوم';
-
-  @override
-  String get moodTrendsLast7Days => 'اتجاهات المزاج (آخر 7 أيام)';
-
-  @override
-  String get mostlyPositiveMoods =>
-      'معظمها حالات مزاجية إيجابية هذا الأسبوع!  🌟';
-
-  @override
-  String get selfCareSuggestions => 'اقتراحات العناية الذاتية';
-
-  @override
-  String get takeShortWalk => 'قومي بنزهة قصيرة';
-
-  @override
-  String get practiceDeepBreathing => 'مارسي التنفس العميق';
-
-  @override
-  String get listenToCalmingMusic => 'استمعي لموسيقى هادئة';
-
-  @override
-  String get connectWithLovedOnes => 'تواصلي مع أحبائكِ';
-
-  @override
-  String get trackingMoodHelps =>
-      'يساعد تتبع مزاجكِ في تحديد الأنماط وإدارة الصحة العاطفية أثناء الحمل.';
-
-  @override
-  String get overallRiskLevel => 'مستوى المخاطر الإجمالي';
-
-  @override
-  String get lowRisk => 'خطر منخفض';
-
-  @override
-  String get allIndicatorsNormal => 'جميع المؤشرات ضمن النطاق الطبيعي';
-
-  @override
-  String get riskFactorsToMonitor => 'عوامل الخطر التي يجب مراقبتها';
-
-  @override
-  String get withinNormalRange => 'ضمن النطاق الطبيعي';
-
-  @override
-  String get gestationalDiabetes => 'سكري الحمل';
-
-  @override
-  String get glucoseLevelsNormal => 'مستويات الجلوكوز طبيعية';
-
-  @override
-  String get preeclampsia => 'تسمم الحمل';
-
-  @override
-  String get noProteinInUrine => 'لا يوجد بروتين في البول';
-
-  @override
-  String get warningSignsToWatch => 'علامات التحذير التي يجب مراقبتها';
-
-  @override
-  String get severeHeadache => 'صداع شديد';
-
-  @override
-  String get blurredVision => 'رؤية ضبابية';
-
-  @override
-  String get severeAbdominalPain => 'ألم شديد في البطن';
-
-  @override
-  String get decreasedFetalMovement => 'انخفاض حركة الجنين';
-
-  @override
-  String get vaginalBleeding => 'نزيف مهبلي';
-
-  @override
-  String get emergencyContact => 'جهة الاتصال في حالات الطوارئ';
-
-  @override
-  String get call911OrProvider => 'اتصلي بـ 911 أو بمقدم الرعاية';
-
-  @override
-  String get emergencyCall => 'مكالمة طوارئ';
-
-  @override
-  String get areYouSureCall911 =>
-      'هل أنتِ متأكدة أنكِ تريدين الاتصال بـ 911؟\n\nسيتم الاتصال بخدمات الطوارئ.';
-
-  @override
-  String get couldNotMakeEmergencyCall => 'تعذر إجراء مكالمة الطوارئ';
-
-  @override
-  String get ifYouExperienceWarnings =>
-      'إذا واجهتِ أي علامات تحذير، اتصلي بمقدم الرعاية الصحية الخاص بكِ على الفور.';
-
-  @override
-  String get prePregnancyBMI => 'مؤشر كتلة الجسم قبل الحمل';
-
-  @override
-  String get normalBMI => 'طبيعي';
-
-  @override
-  String get currentGain => 'الزيادة الحالية';
-
-  @override
-  String get targetRange => 'النطاق المستهدف';
-
-  @override
-  String get expected => 'المتوقع';
-
-  @override
-  String get weightProgress => 'تقدم الوزن';
+  String get openNow => 'مفتوح الآن';
 }

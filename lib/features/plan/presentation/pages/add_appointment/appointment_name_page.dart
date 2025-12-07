@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gestanea/l10n/app_localizations.dart';
+
 // Page 1: Appointment Name
 class AppointmentNamePage extends StatefulWidget {
   final String initialName;
@@ -49,10 +51,13 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Appointment Name',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.appointmentName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -107,9 +112,12 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class MedicineCard extends StatelessWidget {
   final MedicineModel medicine;
@@ -24,10 +26,11 @@ class MedicineCard extends StatelessWidget {
   bool get isTaken => log?.status == 'taken';
   bool get isMissed => log?.status == 'missed';
 
-  String get buttonText {
-    if (isTaken) return 'Taken';
-    if (isMissed) return 'Missed';
-    return 'Take';
+  String buttonText(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isTaken) return l10n.taken;
+    if (isMissed) return l10n.missed;
+    return l10n.take;
   }
 
   Color get buttonColor {
@@ -85,17 +88,7 @@ class MedicineCard extends StatelessWidget {
                   ],
                 ),
                 child: medicine.medicineImageUrl != null
-                    ? Image.network(
-                        medicine.medicineImageUrl!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.medication,
-                            size: 40,
-                            color: Colors.grey,
-                          );
-                        },
-                      )
+                    ? _buildMedicineImage(medicine.medicineImageUrl!)
                     : Icon(Icons.medication, size: 40, color: Colors.grey),
               ),
               SizedBox(width: screenWidth * 0.04),
@@ -164,7 +157,7 @@ class MedicineCard extends StatelessWidget {
                           ],
                         ),
                         child: Text(
-                          buttonText,
+                          buttonText(context),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: screenWidth * 0.038,
@@ -197,7 +190,7 @@ class MedicineCard extends StatelessWidget {
                   ],
                 ),
                 child: Text(
-                  'Missed',
+                  AppLocalizations.of(context)!.missed,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -209,5 +202,41 @@ class MedicineCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildMedicineImage(String imagePath) {
+    // Check if it's a local file path
+    if (imagePath.startsWith('/') || imagePath.contains(':\\')) {
+      final file = File(imagePath);
+      if (file.existsSync()) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.file(
+            file,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.medication, size: 40, color: Colors.grey);
+            },
+          ),
+        );
+      }
+    }
+
+    // Try as network image if not a local path
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.network(
+          imagePath,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.medication, size: 40, color: Colors.grey);
+          },
+        ),
+      );
+    }
+
+    // Default fallback
+    return Icon(Icons.medication, size: 40, color: Colors.grey);
   }
 }

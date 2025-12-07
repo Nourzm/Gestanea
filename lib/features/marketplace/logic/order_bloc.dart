@@ -144,9 +144,9 @@ class OrderInitial extends OrderState {
     this.city = '',
     this.instructions = '',
     this.paymentMethod = 'cash',
-    this.subtotal = 22.40,
-    this.deliveryFee = 5.00,
-    this.total = 27.40,
+    this.subtotal = 0.0,
+    this.deliveryFee = 0.00,
+    this.total = 0.0,
     this.productName = '',
     this.productImage = '',
     this.selectedColor = '',
@@ -284,7 +284,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   void _onInitializeOrder(InitializeOrder event, Emitter<OrderState> emit) {
     final currentData = _getCurrentData();
     final subtotal = event.productPrice * event.quantity;
-    final deliveryFee = 5.00;
+    final deliveryFee = 500.00;
     final total = subtotal + deliveryFee;
 
     emit(
@@ -341,7 +341,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   void _onCalculateTotals(CalculateTotals event, Emitter<OrderState> emit) {
     final currentData = _getCurrentData();
-    final deliveryFee = 5.00;
+    final deliveryFee = 500.00;
     final total = event.subtotal + deliveryFee;
 
     emit(

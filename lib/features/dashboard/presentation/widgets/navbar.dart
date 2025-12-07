@@ -6,12 +6,12 @@ class FancyNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final List<NavBarItem> items;
-
+  final double barHeight;
   const FancyNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
-    required this.items,
+    required this.items, required this.barHeight,
   });
 
   @override
@@ -20,7 +20,6 @@ class FancyNavBar extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     // --- RESPONSIVE VALUES ---
-    final barHeight = h * 0.09; // responsive bottom bar height
     final notchSize = w * 0.10; // size of notch curve
     final circleSize = w * 0.18; // floating circle size
     final iconSizeActive = w * 0.09; // active middle icon size

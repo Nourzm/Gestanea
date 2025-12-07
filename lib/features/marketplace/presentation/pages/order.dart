@@ -5,6 +5,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/order_bloc.dart';
 import '../widgets/neumorphic_section.dart';
 import '../widgets/delivery_form.dart';
@@ -145,11 +146,11 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                       size: 24,
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'Complete Your Order',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.completeYourOrder,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -187,7 +188,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildSectionTitle('Order Summary'),
+                              _buildSectionTitle(
+                                AppLocalizations.of(context)!.orderSummary,
+                              ),
                               const SizedBox(height: 16),
                               Row(
                                 children: [
@@ -236,7 +239,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                         Text(
                                           state.productName.isNotEmpty
                                               ? state.productName
-                                              : 'Product',
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.product,
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -289,7 +294,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                                   .isNotEmpty) ...[
                                                 const SizedBox(width: 16),
                                                 Text(
-                                                  'Size: ${state.selectedSize}',
+                                                  '${AppLocalizations.of(context)!.size}: ${state.selectedSize}',
                                                   style: AppTextStyles.body1
                                                       .copyWith(
                                                         fontSize: 12,
@@ -307,7 +312,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'Qty: ${state.quantity}',
+                                              '${AppLocalizations.of(context)!.qty}: ${state.quantity}',
                                               style: AppTextStyles.body1
                                                   .copyWith(
                                                     fontSize: 12,
@@ -344,13 +349,15 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                   return Column(
                                     children: [
                                       _buildPriceRow(
-                                        'Subtotal',
-                                        '\$${subtotal.toStringAsFixed(2)}',
+                                        AppLocalizations.of(context)!.subtotal,
+                                        "${subtotal.toStringAsFixed(0)}DA",
                                       ),
                                       const SizedBox(height: 8),
                                       _buildPriceRow(
-                                        'Delivery Fee',
-                                        '\$${deliveryFee.toStringAsFixed(2)}',
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.deliveryFee,
+                                        '${deliveryFee.toStringAsFixed(0)}DA',
                                       ),
                                       const SizedBox(height: 12),
                                       const Divider(
@@ -359,8 +366,8 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                       ),
                                       const SizedBox(height: 12),
                                       _buildPriceRow(
-                                        'Total',
-                                        '\$${total.toStringAsFixed(2)}',
+                                        AppLocalizations.of(context)!.total,
+                                        '${total.toStringAsFixed(0)}DA',
                                         isBold: true,
                                       ),
                                     ],
@@ -413,7 +420,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'Order ${state.orderId} placed successfully!',
+                                AppLocalizations.of(
+                                  context,
+                                )!.orderPlacedSuccessfully(state.orderId),
                               ),
                               backgroundColor: Colors.green,
                             ),
@@ -468,9 +477,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                       ),
                                     ),
                                   )
-                                : const Text(
-                                    'Place Order',
-                                    style: TextStyle(
+                                : Text(
+                                    AppLocalizations.of(context)!.placeOrder,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Lato',
@@ -492,9 +501,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.textSecondary,
                         ),
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.cancel,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Lato',
@@ -524,7 +533,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Your information is secure and encrypted',
+                          AppLocalizations.of(context)!.yourInformationIsSecure,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary.withOpacity(0.7),

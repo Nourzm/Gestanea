@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
+import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/auth/presentation/widgets/input_fields.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -47,12 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final safeAreaTop = MediaQuery.of(context).padding.top;
 
     // Responsive sizing
-    final headerHeight = screenHeight * 0.35;
-    final welcomeFontSize = screenWidth * 0.08;
-    final loginFontSize = screenWidth * 0.045;
     final labelFontSize = screenWidth * 0.038;
     final bodyFontSize = screenWidth * 0.035;
 
@@ -76,89 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: IntrinsicHeight(
                 child: Column(
                   children: [
-                    // Top section with image and welcome text
-                    SizedBox(
-                      height: headerHeight.clamp(200.0, 350.0),
-                      child: Stack(
-                        children: [
-                          // Background image
-                          Positioned.fill(
-                            child: Image.asset(
-                              'assets/images/login.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(color: AppColors.main500);
-                              },
-                            ),
-                          ),
-
-                          // Back button
-                          Positioned(
-                            top: safeAreaTop + 10,
-                            left: screenWidth * 0.04,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                  color: AppColors.white,
-                                  size: 25,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-
-                          // Welcome text
-                          Positioned(
-                            left: screenWidth * 0.1,
-                            bottom: screenHeight * 0.08,
-                            right: screenWidth * 0.1,
-                            child: Text(
-                              t.welcome_back,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: welcomeFontSize.clamp(24.0, 36.0),
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-
-                          // LOG IN text
-                          Positioned(
-                            left: screenWidth * 0.1,
-                            bottom: screenHeight * 0.035,
-                            right: screenWidth * 0.1,
-                            child: Text(
-                              t.login,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: loginFontSize.clamp(16.0, 20.0),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
+                    HeroSection(
+                      title: "Welcome Back",
+                      subtitle: "Login to continue your journey",
                     ),
-
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -310,9 +229,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       );
                                     }
-                                    return AppButton(
-                                      onPressed: _onLoginPressed,
+                                    return NeumorphicButton(
                                       text: t.login,
+                                      onPressed: _onLoginPressed,
                                     );
                                   },
                                 ),

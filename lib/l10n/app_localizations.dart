@@ -316,6 +316,504 @@ abstract class AppLocalizations {
   /// **'Appointments'**
   String get appointments;
 
+  /// No description provided for @appointmentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Name'**
+  String get appointmentName;
+
+  /// No description provided for @medicationName.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication Name'**
+  String get medicationName;
+
+  /// No description provided for @nextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextLabel;
+
+  /// No description provided for @doneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneLabel;
+
+  /// No description provided for @uploadPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a picture'**
+  String get uploadPicture;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @removeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Image'**
+  String get removeImage;
+
+  /// No description provided for @tapToAddPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add picture'**
+  String get tapToAddPicture;
+
+  /// No description provided for @optionalImageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding a picture is optional. You can skip this step.'**
+  String get optionalImageNote;
+
+  /// No description provided for @selectFormDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Form & Dose'**
+  String get selectFormDose;
+
+  /// No description provided for @frequencySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency & Schedule'**
+  String get frequencySchedule;
+
+  /// No description provided for @frequencyType.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Type'**
+  String get frequencyType;
+
+  /// No description provided for @frequencyValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Value'**
+  String get frequencyValue;
+
+  /// No description provided for @scheduledTimesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Times'**
+  String get scheduledTimesLabel;
+
+  /// No description provided for @asNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'As Needed'**
+  String get asNeeded;
+
+  /// No description provided for @dosage.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosage'**
+  String get dosage;
+
+  /// No description provided for @dosageExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 5mg or 10ml'**
+  String get dosageExample;
+
+  /// No description provided for @formPill.
+  ///
+  /// In en, this message translates to:
+  /// **'Pill'**
+  String get formPill;
+
+  /// No description provided for @formInjection.
+  ///
+  /// In en, this message translates to:
+  /// **'Injection'**
+  String get formInjection;
+
+  /// No description provided for @formSpray.
+  ///
+  /// In en, this message translates to:
+  /// **'Spray'**
+  String get formSpray;
+
+  /// No description provided for @formDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get formDrop;
+
+  /// No description provided for @formSyrup.
+  ///
+  /// In en, this message translates to:
+  /// **'Syrup'**
+  String get formSyrup;
+
+  /// No description provided for @formOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get formOthers;
+
+  /// Medicine taken status
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} taken'**
+  String medicinesTaken(int taken, int total);
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @timesPerDayExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 3 (times per day)'**
+  String get timesPerDayExample;
+
+  /// No description provided for @timesPerWeekExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 2 (times per week)'**
+  String get timesPerWeekExample;
+
+  /// No description provided for @timesPerMonthExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 1 (times per month)'**
+  String get timesPerMonthExample;
+
+  /// No description provided for @appointmentDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Date & Time'**
+  String get appointmentDateTime;
+
+  /// No description provided for @appointmentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment location'**
+  String get appointmentLocation;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get selectDate;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get selectTime;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date (Optional)'**
+  String get endDate;
+
+  /// No description provided for @selectStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Start Date'**
+  String get selectStartDate;
+
+  /// No description provided for @selectEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select End Date'**
+  String get selectEndDate;
+
+  /// No description provided for @addTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Time'**
+  String get addTime;
+
+  /// No description provided for @noScheduledTimesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No scheduled times added yet'**
+  String get noScheduledTimesAdded;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @noAppointmentsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No appointments found'**
+  String get noAppointmentsFound;
+
+  /// No description provided for @appointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment'**
+  String get appointment;
+
+  /// No description provided for @pleaseAddScheduledTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least one scheduled time'**
+  String get pleaseAddScheduledTime;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reviews'**
+  String reviewsCount(Object count);
+
+  /// No description provided for @qty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get qty;
+
+  /// No description provided for @noMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines'**
+  String get noMedicines;
+
+  /// No description provided for @schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get schedule;
+
+  /// No description provided for @availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// No description provided for @specialty.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialty'**
+  String get specialty;
+
+  /// No description provided for @bookAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Appointment'**
+  String get bookAppointment;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkout;
+
+  /// No description provided for @applyCoupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply coupon'**
+  String get applyCoupon;
+
+  /// No description provided for @popular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get popular;
+
+  /// No description provided for @offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers'**
+  String get offers;
+
+  /// No description provided for @newLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newLabel;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
+  /// No description provided for @message.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get message;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @marketplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Marketplace'**
+  String get marketplace;
+
+  /// No description provided for @doctorsFeatureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctors'**
+  String get doctorsFeatureTitle;
+
+  /// No description provided for @planFeatureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get planFeatureTitle;
+
+  /// No description provided for @addMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add medicine'**
+  String get addMedicine;
+
+  /// No description provided for @addAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add appointment'**
+  String get addAppointment;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @reviewsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviewsLabel;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @recommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get recommended;
+
+  /// No description provided for @noReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews'**
+  String get noReviews;
+
+  /// No description provided for @delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get delivery;
+
+  /// No description provided for @shipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get shipping;
+
+  /// No description provided for @taxes.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxes'**
+  String get taxes;
+
   /// No description provided for @sunday.
   ///
   /// In en, this message translates to:
@@ -874,12 +1372,6 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get gender;
 
-  /// No description provided for @all.
-  ///
-  /// In en, this message translates to:
-  /// **'All'**
-  String get all;
-
   /// No description provided for @male.
   ///
   /// In en, this message translates to:
@@ -927,12 +1419,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No doctors found'**
   String get noDoctorsFound;
-
-  /// No description provided for @noResults.
-  ///
-  /// In en, this message translates to:
-  /// **'No results'**
-  String get noResults;
 
   /// No description provided for @noMatchingDoctors.
   ///
@@ -1030,815 +1516,245 @@ abstract class AppLocalizations {
   /// **'Call Now'**
   String get callNow;
 
-  /// No description provided for @recentSymptoms.
+  /// No description provided for @all.
   ///
   /// In en, this message translates to:
-  /// **'Recent Symptoms'**
-  String get recentSymptoms;
+  /// **'All'**
+  String get all;
 
-  /// No description provided for @backPain.
+  /// No description provided for @taken.
   ///
   /// In en, this message translates to:
-  /// **'Back Pain'**
-  String get backPain;
+  /// **'Taken'**
+  String get taken;
 
-  /// No description provided for @mild.
+  /// No description provided for @missed.
   ///
   /// In en, this message translates to:
-  /// **'Mild'**
-  String get mild;
+  /// **'Missed'**
+  String get missed;
 
-  /// No description provided for @moderate.
+  /// No description provided for @take.
   ///
   /// In en, this message translates to:
-  /// **'Moderate'**
-  String get moderate;
+  /// **'Take'**
+  String get take;
 
-  /// No description provided for @severe.
+  /// No description provided for @noMedicinesFound.
   ///
   /// In en, this message translates to:
-  /// **'Severe'**
-  String get severe;
+  /// **'No medicines found'**
+  String get noMedicinesFound;
 
-  /// No description provided for @troubleSleeping.
+  /// No description provided for @pleaseLoginToViewPlan.
   ///
   /// In en, this message translates to:
-  /// **'Trouble Sleeping'**
-  String get troubleSleeping;
+  /// **'Please log in to view your plan'**
+  String get pleaseLoginToViewPlan;
 
-  /// No description provided for @swollenFeet.
+  /// No description provided for @selectColor.
   ///
   /// In en, this message translates to:
-  /// **'Swollen Feet'**
-  String get swollenFeet;
+  /// **'Select Color'**
+  String get selectColor;
 
-  /// No description provided for @heartburn.
+  /// No description provided for @selectSize.
   ///
   /// In en, this message translates to:
-  /// **'Heartburn'**
-  String get heartburn;
+  /// **'Select Size'**
+  String get selectSize;
 
-  /// No description provided for @hoursAgo.
+  /// No description provided for @addToCart.
   ///
   /// In en, this message translates to:
-  /// **'{hours} hours ago'**
-  String hoursAgo(int hours);
+  /// **'Add to Cart'**
+  String get addToCart;
 
-  /// No description provided for @today.
+  /// No description provided for @buyNow.
   ///
   /// In en, this message translates to:
-  /// **'Today'**
-  String get today;
+  /// **'Buy Now'**
+  String get buyNow;
 
-  /// No description provided for @yesterday.
+  /// No description provided for @description.
   ///
   /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get yesterday;
+  /// **'Description'**
+  String get description;
 
-  /// No description provided for @daysAgo.
+  /// No description provided for @noDescriptionAvailable.
   ///
   /// In en, this message translates to:
-  /// **'{days} days ago'**
-  String daysAgo(int days);
+  /// **'No description available'**
+  String get noDescriptionAvailable;
 
-  /// No description provided for @logNewSymptom.
+  /// No description provided for @specifications.
   ///
   /// In en, this message translates to:
-  /// **'Log New Symptom'**
-  String get logNewSymptom;
+  /// **'Specifications'**
+  String get specifications;
 
-  /// No description provided for @symptomFrequency.
+  /// No description provided for @customerReviews.
   ///
   /// In en, this message translates to:
-  /// **'Symptom Frequency (Last 7 Days)'**
-  String get symptomFrequency;
+  /// **'Customer Reviews'**
+  String get customerReviews;
 
-  /// No description provided for @sleepIssues.
+  /// No description provided for @seeAll.
   ///
   /// In en, this message translates to:
-  /// **'Sleep Issues'**
-  String get sleepIssues;
+  /// **'see all'**
+  String get seeAll;
 
-  /// No description provided for @times.
+  /// No description provided for @completeYourOrder.
   ///
   /// In en, this message translates to:
-  /// **'times'**
-  String get times;
+  /// **'Complete Your Order'**
+  String get completeYourOrder;
 
-  /// No description provided for @commonSymptomsWeek24.
+  /// No description provided for @orderSummary.
   ///
   /// In en, this message translates to:
-  /// **'Common symptoms at 24 weeks include back pain, swelling, and sleep difficulties.  Stay hydrated and rest when possible.'**
-  String get commonSymptomsWeek24;
+  /// **'Order Summary'**
+  String get orderSummary;
 
-  /// No description provided for @addMeasurement.
+  /// No description provided for @product.
   ///
   /// In en, this message translates to:
-  /// **'Add Measurement'**
-  String get addMeasurement;
+  /// **'Product'**
+  String get product;
 
-  /// No description provided for @weightKg.
+  /// No description provided for @size.
   ///
   /// In en, this message translates to:
-  /// **'Weight (kg)'**
-  String get weightKg;
+  /// **'Size'**
+  String get size;
 
-  /// No description provided for @heartRateBpm.
+  /// No description provided for @subtotal.
   ///
   /// In en, this message translates to:
-  /// **'Heart Rate (bpm)'**
-  String get heartRateBpm;
+  /// **'Subtotal'**
+  String get subtotal;
 
-  /// No description provided for @systolic.
+  /// No description provided for @deliveryFee.
   ///
   /// In en, this message translates to:
-  /// **'Systolic'**
-  String get systolic;
+  /// **'Delivery Fee'**
+  String get deliveryFee;
 
-  /// No description provided for @diastolic.
+  /// No description provided for @total.
   ///
   /// In en, this message translates to:
-  /// **'Diastolic'**
-  String get diastolic;
+  /// **'Total'**
+  String get total;
 
-  /// No description provided for @pleaseEnterWeight.
+  /// No description provided for @deliveryInformation.
   ///
   /// In en, this message translates to:
-  /// **'Please enter weight'**
-  String get pleaseEnterWeight;
+  /// **'Delivery Information'**
+  String get deliveryInformation;
 
-  /// No description provided for @pleaseEnterValidNumber.
+  /// No description provided for @fullName.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a valid number'**
-  String get pleaseEnterValidNumber;
+  /// **'Full Name'**
+  String get fullName;
 
-  /// No description provided for @weightRange.
+  /// No description provided for @enterYourFullName.
   ///
   /// In en, this message translates to:
-  /// **'Weight must be between 30-200 kg'**
-  String get weightRange;
+  /// **'Enter your full name'**
+  String get enterYourFullName;
 
-  /// No description provided for @pleaseEnterHeartRate.
+  /// No description provided for @enterYourPhoneNumber.
   ///
   /// In en, this message translates to:
-  /// **'Please enter heart rate'**
-  String get pleaseEnterHeartRate;
+  /// **'Enter your phone number'**
+  String get enterYourPhoneNumber;
 
-  /// No description provided for @heartRateRange.
+  /// No description provided for @deliveryAddress.
   ///
   /// In en, this message translates to:
-  /// **'Heart rate must be between 40-200 bpm'**
-  String get heartRateRange;
+  /// **'Delivery Address'**
+  String get deliveryAddress;
 
-  /// No description provided for @required.
+  /// No description provided for @streetAddressApartment.
   ///
   /// In en, this message translates to:
-  /// **'Required'**
-  String get required;
+  /// **'Street address, apartment, etc.'**
+  String get streetAddressApartment;
 
-  /// No description provided for @invalid.
+  /// No description provided for @city.
   ///
   /// In en, this message translates to:
-  /// **'Invalid'**
-  String get invalid;
+  /// **'City'**
+  String get city;
 
-  /// No description provided for @systolicRange.
+  /// No description provided for @enterYourCity.
   ///
   /// In en, this message translates to:
-  /// **'70-190'**
-  String get systolicRange;
+  /// **'Enter your city'**
+  String get enterYourCity;
 
-  /// No description provided for @diastolicRange.
+  /// No description provided for @specialInstructions.
   ///
   /// In en, this message translates to:
-  /// **'40-130'**
-  String get diastolicRange;
+  /// **'Special Instructions (Optional)'**
+  String get specialInstructions;
 
-  /// No description provided for @measurementSavedSuccessfully.
+  /// No description provided for @addDeliveryNotes.
   ///
   /// In en, this message translates to:
-  /// **'Measurement saved successfully!'**
-  String get measurementSavedSuccessfully;
+  /// **'Add delivery notes, special requests...'**
+  String get addDeliveryNotes;
 
-  /// No description provided for @addSymptom.
+  /// No description provided for @paymentMethod.
   ///
   /// In en, this message translates to:
-  /// **'Add Symptom'**
-  String get addSymptom;
+  /// **'Payment Method'**
+  String get paymentMethod;
 
-  /// No description provided for @symptomType.
+  /// No description provided for @cashOnDelivery.
   ///
   /// In en, this message translates to:
-  /// **'Symptom Type'**
-  String get symptomType;
+  /// **'Cash on Delivery'**
+  String get cashOnDelivery;
 
-  /// No description provided for @selectSymptom.
+  /// No description provided for @creditDebitCard.
   ///
   /// In en, this message translates to:
-  /// **'Select symptom'**
-  String get selectSymptom;
+  /// **'Credit / Debit Card'**
+  String get creditDebitCard;
 
-  /// No description provided for @nausea.
+  /// No description provided for @digitalWallet.
   ///
   /// In en, this message translates to:
-  /// **'Nausea'**
-  String get nausea;
+  /// **'Digital Wallet'**
+  String get digitalWallet;
 
-  /// No description provided for @headache.
+  /// No description provided for @placeOrder.
   ///
   /// In en, this message translates to:
-  /// **'Headache'**
-  String get headache;
+  /// **'Place Order'**
+  String get placeOrder;
 
-  /// No description provided for @swelling.
+  /// No description provided for @orderPlacedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'Swelling'**
-  String get swelling;
+  /// **'Order {orderId} placed successfully!'**
+  String orderPlacedSuccessfully(String orderId);
 
-  /// No description provided for @fatigue.
+  /// No description provided for @yourInformationIsSecure.
   ///
   /// In en, this message translates to:
-  /// **'Fatigue'**
-  String get fatigue;
+  /// **'Your information is secure and encrypted'**
+  String get yourInformationIsSecure;
 
-  /// No description provided for @dizziness.
+  /// No description provided for @openNow.
   ///
   /// In en, this message translates to:
-  /// **'Dizziness'**
-  String get dizziness;
-
-  /// No description provided for @legCramps.
-  ///
-  /// In en, this message translates to:
-  /// **'Leg Cramps'**
-  String get legCramps;
-
-  /// No description provided for @other.
-  ///
-  /// In en, this message translates to:
-  /// **'Other'**
-  String get other;
-
-  /// No description provided for @specifySymptom.
-  ///
-  /// In en, this message translates to:
-  /// **'Specify symptom'**
-  String get specifySymptom;
-
-  /// No description provided for @pleaseSpecifySymptom.
-  ///
-  /// In en, this message translates to:
-  /// **'Please specify the symptom'**
-  String get pleaseSpecifySymptom;
-
-  /// No description provided for @severity.
-  ///
-  /// In en, this message translates to:
-  /// **'Severity'**
-  String get severity;
-
-  /// No description provided for @pleaseSelectSymptom.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select a symptom'**
-  String get pleaseSelectSymptom;
-
-  /// No description provided for @pleaseSelectSeverity.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select severity'**
-  String get pleaseSelectSeverity;
-
-  /// No description provided for @duration.
-  ///
-  /// In en, this message translates to:
-  /// **'Duration (e.g., 2 hours, All day)'**
-  String get duration;
-
-  /// No description provided for @pleaseEnterDuration.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter duration'**
-  String get pleaseEnterDuration;
-
-  /// No description provided for @notes.
-  ///
-  /// In en, this message translates to:
-  /// **'Notes (optional)'**
-  String get notes;
-
-  /// No description provided for @symptomLoggedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Symptom logged successfully!'**
-  String get symptomLoggedSuccessfully;
-
-  /// No description provided for @howAreYouFeeling.
-  ///
-  /// In en, this message translates to:
-  /// **'How are you feeling? '**
-  String get howAreYouFeeling;
-
-  /// No description provided for @veryHappy.
-  ///
-  /// In en, this message translates to:
-  /// **'Very Happy'**
-  String get veryHappy;
-
-  /// No description provided for @happy.
-  ///
-  /// In en, this message translates to:
-  /// **'Happy'**
-  String get happy;
-
-  /// No description provided for @neutral.
-  ///
-  /// In en, this message translates to:
-  /// **'Neutral'**
-  String get neutral;
-
-  /// No description provided for @sad.
-  ///
-  /// In en, this message translates to:
-  /// **'Sad'**
-  String get sad;
-
-  /// No description provided for @verySad.
-  ///
-  /// In en, this message translates to:
-  /// **'Very Sad'**
-  String get verySad;
-
-  /// No description provided for @pleaseSelectMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select your mood'**
-  String get pleaseSelectMood;
-
-  /// No description provided for @energyLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Energy Level'**
-  String get energyLevel;
-
-  /// No description provided for @low.
-  ///
-  /// In en, this message translates to:
-  /// **'Low'**
-  String get low;
-
-  /// No description provided for @high.
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get high;
-
-  /// No description provided for @sleepQuality.
-  ///
-  /// In en, this message translates to:
-  /// **'Sleep Quality'**
-  String get sleepQuality;
-
-  /// No description provided for @howWasYourDay.
-  ///
-  /// In en, this message translates to:
-  /// **'How was your day? '**
-  String get howWasYourDay;
-
-  /// No description provided for @moodLoggedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood logged successfully!'**
-  String get moodLoggedSuccessfully;
-
-  /// No description provided for @uploadLabResults.
-  ///
-  /// In en, this message translates to:
-  /// **'Upload Lab Results'**
-  String get uploadLabResults;
-
-  /// No description provided for @takePhoto.
-  ///
-  /// In en, this message translates to:
-  /// **'Take Photo'**
-  String get takePhoto;
-
-  /// No description provided for @fromGallery.
-  ///
-  /// In en, this message translates to:
-  /// **'From Gallery'**
-  String get fromGallery;
-
-  /// No description provided for @errorPickingImage.
-  ///
-  /// In en, this message translates to:
-  /// **'Error picking image'**
-  String get errorPickingImage;
-
-  /// No description provided for @extractingText.
-  ///
-  /// In en, this message translates to:
-  /// **'Extracting text...'**
-  String get extractingText;
-
-  /// No description provided for @textExtractedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Text extracted successfully!  You can edit it below.'**
-  String get textExtractedSuccessfully;
-
-  /// No description provided for @ocrError.
-  ///
-  /// In en, this message translates to:
-  /// **'OCR Error'**
-  String get ocrError;
-
-  /// No description provided for @extractedTextEditable.
-  ///
-  /// In en, this message translates to:
-  /// **'Extracted Text (editable)'**
-  String get extractedTextEditable;
-
-  /// No description provided for @extractedText.
-  ///
-  /// In en, this message translates to:
-  /// **'Extracted text'**
-  String get extractedText;
-
-  /// No description provided for @testDetails.
-  ///
-  /// In en, this message translates to:
-  /// **'Test Details'**
-  String get testDetails;
-
-  /// No description provided for @testName.
-  ///
-  /// In en, this message translates to:
-  /// **'Test Name'**
-  String get testName;
-
-  /// No description provided for @pleaseEnterTestName.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter test name'**
-  String get pleaseEnterTestName;
-
-  /// No description provided for @testValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Test Value'**
-  String get testValue;
-
-  /// No description provided for @pleaseEnterTestValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter test value'**
-  String get pleaseEnterTestValue;
-
-  /// No description provided for @normalRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Normal Range'**
-  String get normalRange;
-
-  /// No description provided for @testDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Test Date'**
-  String get testDate;
-
-  /// No description provided for @noImage.
-  ///
-  /// In en, this message translates to:
-  /// **'No image'**
-  String get noImage;
-
-  /// No description provided for @labResultsUploadedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Lab results uploaded successfully!'**
-  String get labResultsUploadedSuccessfully;
-
-  /// No description provided for @recentLabResults.
-  ///
-  /// In en, this message translates to:
-  /// **'Recent Lab Results'**
-  String get recentLabResults;
-
-  /// No description provided for @hemoglobin.
-  ///
-  /// In en, this message translates to:
-  /// **'Hemoglobin'**
-  String get hemoglobin;
-
-  /// No description provided for @glucose.
-  ///
-  /// In en, this message translates to:
-  /// **'Glucose'**
-  String get glucose;
-
-  /// No description provided for @proteinUrine.
-  ///
-  /// In en, this message translates to:
-  /// **'Protein (Urine)'**
-  String get proteinUrine;
-
-  /// No description provided for @negative.
-  ///
-  /// In en, this message translates to:
-  /// **'Negative'**
-  String get negative;
-
-  /// No description provided for @normalRangeLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Normal range'**
-  String get normalRangeLabel;
-
-  /// No description provided for @nextLabAppointment.
-  ///
-  /// In en, this message translates to:
-  /// **'Next Lab Appointment'**
-  String get nextLabAppointment;
-
-  /// No description provided for @keepLabResultsOrganized.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep all lab results organized.  Share them with your healthcare provider during checkups.'**
-  String get keepLabResultsOrganized;
-
-  /// No description provided for @howAreYouFeelingToday.
-  ///
-  /// In en, this message translates to:
-  /// **'How are you feeling today?'**
-  String get howAreYouFeelingToday;
-
-  /// No description provided for @great.
-  ///
-  /// In en, this message translates to:
-  /// **'Great'**
-  String get great;
-
-  /// No description provided for @good.
-  ///
-  /// In en, this message translates to:
-  /// **'Good'**
-  String get good;
-
-  /// No description provided for @okay.
-  ///
-  /// In en, this message translates to:
-  /// **'Okay'**
-  String get okay;
-
-  /// No description provided for @recentEntries.
-  ///
-  /// In en, this message translates to:
-  /// **'Recent Entries'**
-  String get recentEntries;
-
-  /// No description provided for @feltEnergeticToday.
-  ///
-  /// In en, this message translates to:
-  /// **'Felt energetic today'**
-  String get feltEnergeticToday;
-
-  /// No description provided for @relaxingEvening.
-  ///
-  /// In en, this message translates to:
-  /// **'Relaxing evening'**
-  String get relaxingEvening;
-
-  /// No description provided for @calm.
-  ///
-  /// In en, this message translates to:
-  /// **'Calm'**
-  String get calm;
-
-  /// No description provided for @tired.
-  ///
-  /// In en, this message translates to:
-  /// **'Tired'**
-  String get tired;
-
-  /// No description provided for @needMoreSleep.
-  ///
-  /// In en, this message translates to:
-  /// **'Need more sleep'**
-  String get needMoreSleep;
-
-  /// No description provided for @moodTrendsLast7Days.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood Trends (Last 7 Days)'**
-  String get moodTrendsLast7Days;
-
-  /// No description provided for @mostlyPositiveMoods.
-  ///
-  /// In en, this message translates to:
-  /// **'Mostly positive moods this week!  🌟'**
-  String get mostlyPositiveMoods;
-
-  /// No description provided for @selfCareSuggestions.
-  ///
-  /// In en, this message translates to:
-  /// **'Self-Care Suggestions'**
-  String get selfCareSuggestions;
-
-  /// No description provided for @takeShortWalk.
-  ///
-  /// In en, this message translates to:
-  /// **'Take a short walk'**
-  String get takeShortWalk;
-
-  /// No description provided for @practiceDeepBreathing.
-  ///
-  /// In en, this message translates to:
-  /// **'Practice deep breathing'**
-  String get practiceDeepBreathing;
-
-  /// No description provided for @listenToCalmingMusic.
-  ///
-  /// In en, this message translates to:
-  /// **'Listen to calming music'**
-  String get listenToCalmingMusic;
-
-  /// No description provided for @connectWithLovedOnes.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect with loved ones'**
-  String get connectWithLovedOnes;
-
-  /// No description provided for @trackingMoodHelps.
-  ///
-  /// In en, this message translates to:
-  /// **'Tracking your mood helps identify patterns and manage emotional wellbeing during pregnancy.'**
-  String get trackingMoodHelps;
-
-  /// No description provided for @overallRiskLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Overall Risk Level'**
-  String get overallRiskLevel;
-
-  /// No description provided for @lowRisk.
-  ///
-  /// In en, this message translates to:
-  /// **'Low Risk'**
-  String get lowRisk;
-
-  /// No description provided for @allIndicatorsNormal.
-  ///
-  /// In en, this message translates to:
-  /// **'All indicators within normal range'**
-  String get allIndicatorsNormal;
-
-  /// No description provided for @riskFactorsToMonitor.
-  ///
-  /// In en, this message translates to:
-  /// **'Risk Factors to Monitor'**
-  String get riskFactorsToMonitor;
-
-  /// No description provided for @withinNormalRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Within normal range'**
-  String get withinNormalRange;
-
-  /// No description provided for @gestationalDiabetes.
-  ///
-  /// In en, this message translates to:
-  /// **'Gestational Diabetes'**
-  String get gestationalDiabetes;
-
-  /// No description provided for @glucoseLevelsNormal.
-  ///
-  /// In en, this message translates to:
-  /// **'Glucose levels normal'**
-  String get glucoseLevelsNormal;
-
-  /// No description provided for @preeclampsia.
-  ///
-  /// In en, this message translates to:
-  /// **'Preeclampsia'**
-  String get preeclampsia;
-
-  /// No description provided for @noProteinInUrine.
-  ///
-  /// In en, this message translates to:
-  /// **'No protein in urine'**
-  String get noProteinInUrine;
-
-  /// No description provided for @warningSignsToWatch.
-  ///
-  /// In en, this message translates to:
-  /// **'Warning Signs to Watch'**
-  String get warningSignsToWatch;
-
-  /// No description provided for @severeHeadache.
-  ///
-  /// In en, this message translates to:
-  /// **'Severe headache'**
-  String get severeHeadache;
-
-  /// No description provided for @blurredVision.
-  ///
-  /// In en, this message translates to:
-  /// **'Blurred vision'**
-  String get blurredVision;
-
-  /// No description provided for @severeAbdominalPain.
-  ///
-  /// In en, this message translates to:
-  /// **'Severe abdominal pain'**
-  String get severeAbdominalPain;
-
-  /// No description provided for @decreasedFetalMovement.
-  ///
-  /// In en, this message translates to:
-  /// **'Decreased fetal movement'**
-  String get decreasedFetalMovement;
-
-  /// No description provided for @vaginalBleeding.
-  ///
-  /// In en, this message translates to:
-  /// **'Vaginal bleeding'**
-  String get vaginalBleeding;
-
-  /// No description provided for @emergencyContact.
-  ///
-  /// In en, this message translates to:
-  /// **'Emergency Contact'**
-  String get emergencyContact;
-
-  /// No description provided for @call911OrProvider.
-  ///
-  /// In en, this message translates to:
-  /// **'Call 911 or your provider'**
-  String get call911OrProvider;
-
-  /// No description provided for @emergencyCall.
-  ///
-  /// In en, this message translates to:
-  /// **'Emergency Call'**
-  String get emergencyCall;
-
-  /// No description provided for @areYouSureCall911.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to call 911?\n\nThis will dial emergency services.'**
-  String get areYouSureCall911;
-
-  /// No description provided for @couldNotMakeEmergencyCall.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not make emergency call'**
-  String get couldNotMakeEmergencyCall;
-
-  /// No description provided for @ifYouExperienceWarnings.
-  ///
-  /// In en, this message translates to:
-  /// **'If you experience any warning signs, contact your healthcare provider immediately.'**
-  String get ifYouExperienceWarnings;
-
-  /// No description provided for @prePregnancyBMI.
-  ///
-  /// In en, this message translates to:
-  /// **'Pre-pregnancy BMI'**
-  String get prePregnancyBMI;
-
-  /// No description provided for @normalBMI.
-  ///
-  /// In en, this message translates to:
-  /// **'Normal'**
-  String get normalBMI;
-
-  /// No description provided for @currentGain.
-  ///
-  /// In en, this message translates to:
-  /// **'Current Gain'**
-  String get currentGain;
-
-  /// No description provided for @targetRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Target Range'**
-  String get targetRange;
-
-  /// No description provided for @expected.
-  ///
-  /// In en, this message translates to:
-  /// **'Expected'**
-  String get expected;
-
-  /// No description provided for @weightProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Weight Progress'**
-  String get weightProgress;
+  /// **'Open Now'**
+  String get openNow;
 }
 
 class _AppLocalizationsDelegate

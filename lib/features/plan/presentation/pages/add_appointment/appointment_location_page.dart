@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gestanea/l10n/app_localizations.dart';
+
 // Page 2: Appointment Location
 class AppointmentLocationPage extends StatefulWidget {
   final String initialLocation;
@@ -50,10 +52,13 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Appointment location',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.appointmentLocation,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -100,9 +105,12 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

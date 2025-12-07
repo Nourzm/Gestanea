@@ -7,6 +7,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class AddMedicineFlow extends StatefulWidget {
   final String userId;
@@ -70,7 +71,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
     }
 
     if (scheduledTimes.isEmpty) {
-      _showError('Please add at least one scheduled time');
+      _showError(AppLocalizations.of(context)!.pleaseAddScheduledTime);
       return;
     }
 
@@ -166,6 +167,10 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
 
                   UploadPicturePage(
                     onBack: _previousPage,
+                    initialImagePath: medicationImage,
+                    onImageSelected: (imagePath) {
+                      setState(() => medicationImage = imagePath);
+                    },
                     onDone: () async {
                       await _saveMedicine();
                     },

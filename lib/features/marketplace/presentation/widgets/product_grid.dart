@@ -38,7 +38,7 @@ class ProductGrid extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final discount = product.discountPercentage != null
-              ? '${product.discountPercentage}% OFF'
+              ? '-${product.discountPercentage}%'
               : null;
           return ProductCard(
             imageAsset: product.imageUrls.isNotEmpty

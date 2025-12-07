@@ -3,6 +3,7 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'neumorphic_section.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DeliveryForm extends StatelessWidget {
   final TextEditingController fullNameController;
@@ -26,9 +27,9 @@ class DeliveryForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Delivery Information',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.deliveryInformation,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -36,29 +37,33 @@ class DeliveryForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            'Full Name',
+            AppLocalizations.of(context)!.fullName,
             fullNameController,
-            'Enter your full name',
+            AppLocalizations.of(context)!.enterYourFullName,
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            'Phone Number',
+            AppLocalizations.of(context)!.phoneNumber,
             phoneController,
-            'Enter your phone number',
+            AppLocalizations.of(context)!.enterYourPhoneNumber,
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            'Delivery Address',
+            AppLocalizations.of(context)!.deliveryAddress,
             addressController,
-            'Street address, apartment, etc.',
+            AppLocalizations.of(context)!.streetAddressApartment,
           ),
           const SizedBox(height: 16),
-          _buildFormField('City', cityController, 'Enter your city'),
+          _buildFormField(
+            AppLocalizations.of(context)!.city,
+            cityController,
+            AppLocalizations.of(context)!.enterYourCity,
+          ),
           const SizedBox(height: 16),
           _buildFormField(
-            'Special Instructions (Optional)',
+            AppLocalizations.of(context)!.specialInstructions,
             instructionsController,
-            'Add delivery notes, special requests...',
+            AppLocalizations.of(context)!.addDeliveryNotes,
             maxLines: 3,
           ),
         ],

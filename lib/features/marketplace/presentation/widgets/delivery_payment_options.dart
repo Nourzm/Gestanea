@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'neumorphic_section.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class PaymentMethodSection extends StatelessWidget {
   final String selectedPaymentMethod;
@@ -18,9 +19,9 @@ class PaymentMethodSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Payment Method',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.paymentMethod,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -28,21 +29,21 @@ class PaymentMethodSection extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           PaymentOption(
-            label: 'Cash on Delivery',
+            label: AppLocalizations.of(context)!.cashOnDelivery,
             value: 'cash',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('cash'),
           ),
           const SizedBox(height: 12),
           PaymentOption(
-            label: 'Credit / Debit Card',
+            label: AppLocalizations.of(context)!.creditDebitCard,
             value: 'card',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('card'),
           ),
           const SizedBox(height: 12),
           PaymentOption(
-            label: 'Digital Wallet',
+            label: AppLocalizations.of(context)!.digitalWallet,
             value: 'wallet',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('wallet'),

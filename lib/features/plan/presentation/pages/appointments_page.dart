@@ -97,7 +97,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                               child: Padding(
                                 padding: EdgeInsets.all(screenHeight * 0.05),
                                 child: Text(
-                                  'Error: ${state.message}',
+                                  '${localizations.error}: ${state.message}',
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.04,
                                     color: Colors.red,
@@ -119,7 +119,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                               child: Padding(
                                 padding: EdgeInsets.all(screenHeight * 0.05),
                                 child: Text(
-                                  'No appointments found',
+                                  localizations.noAppointmentsFound,
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.04,
                                     color: Colors.grey.shade600,
@@ -158,19 +158,6 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     );
   }
 
-  IconData _getIconForAppointmentType(String? type) {
-    switch (type) {
-      case 'Checkup':
-        return Icons.favorite_border;
-      case 'Imaging':
-        return Icons.camera_alt_outlined;
-      case 'Lab Test':
-        return Icons.science_outlined;
-      default:
-        return Icons.access_time;
-    }
-  }
-
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final tomorrow = now.add(Duration(days: 1));
@@ -178,25 +165,26 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {
-      return 'Today';
+      return AppLocalizations.of(context)!.today;
     } else if (date.year == tomorrow.year &&
         date.month == tomorrow.month &&
         date.day == tomorrow.day) {
-      return 'Tomorrow';
+      return AppLocalizations.of(context)!.tomorrow;
     } else {
+      final localizations = AppLocalizations.of(context)!;
       final months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        localizations.jan,
+        localizations.feb,
+        localizations.mar,
+        localizations.apr,
+        localizations.may,
+        localizations.jun,
+        localizations.jul,
+        localizations.aug,
+        localizations.sep,
+        localizations.oct,
+        localizations.nov,
+        localizations.dec,
       ];
       return '${months[date.month - 1]} ${date.day}, ${date.year}';
     }
@@ -216,7 +204,8 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     double screenWidth,
     double screenHeight,
   ) {
-    final icon = _getIconForAppointmentType(appointment.appointmentType);
+    final localizations = AppLocalizations.of(context)!;
+    final icon = Icons.access_time;
     final dateStr = _formatDate(appointment.appointmentDate);
     final timeStr = _formatTime(appointment.appointmentDate);
 
@@ -275,7 +264,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                         Text(
                           appointment.doctorName ??
                               appointment.location ??
-                              'Appointment',
+                              localizations.appointment,
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: Colors.grey.shade600,
