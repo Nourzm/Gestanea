@@ -7,6 +7,7 @@ import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.d
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
 import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/baby/presentation/pages/baby_settings_page.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' show DoctorsScreen;
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
@@ -148,43 +149,68 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   Widget _buildHeader() {
+    String userName = 'User';
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      userName = authState.user.name;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Profile + Greeting
-        Row(
-          children: [
-            // Profile Avatar
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                shape: BoxShape.circle,
+        // Profile + Greeting (Clickable)
+        GestureDetector(
+          onTap: () {
+            final userId = _getUserId();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider(
+                  create: (_) => BabyCubit(
+                    repository: BabyRepository(
+                      BabyLocalDataSource(DatabaseHelper.instance),
+                    ),
+                    userId: userId,
+                  )..loadBabyProfile(),
+                  child: const BabySettingsPage(),
+                ),
               ),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/profile.png',
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Icon(
-                    Icons.person,
-                    color: Colors.grey.shade600,
-                    size: 24,
+            );
+          },
+          child: Row(
+            children: [
+              // Profile Avatar
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  shape: BoxShape.circle,
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/profile.png',
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.person,
+                      color: Colors.grey.shade600,
+                      size: 24,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            // Greeting Text
-            const Text(
-              'Hello Sara !',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+              const SizedBox(width: 12),
+              // Greeting Text
+              Text(
+                'Hello $userName !',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         // Notification Bell
         GestureDetector(
