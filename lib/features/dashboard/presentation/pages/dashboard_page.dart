@@ -92,6 +92,14 @@ class _DashboardPageState extends State<DashboardPage>
     return '0'; // Default if not authenticated
   }
 
+  Color _getNavBarColor(String babyGender) {
+    final isGirl = babyGender.toLowerCase() == 'girl' || 
+                   babyGender.toLowerCase() == 'female';
+    return isGirl 
+      ? const Color(0xFFFF9EC9)  // Pink for girls
+      : const Color(0xFF87CEEB); // Blue for boys
+  }
+
   @override
   Widget build(BuildContext context) {
     _userId = _getUserId(context);
@@ -185,6 +193,7 @@ class _DashboardPageState extends State<DashboardPage>
                     barHeight: 80,
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
+                    primaryColor: showPregnancyMode ? null : _getNavBarColor(currentBabyGender),
                     items: [
                       NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
                       NavBarItem(
