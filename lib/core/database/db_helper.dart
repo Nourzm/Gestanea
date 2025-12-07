@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -34,6 +34,14 @@ class DatabaseHelper {
     if (oldVersion < 2) {
       // Add wilaya column to doctors table
       await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
+    }
+    if (oldVersion < 4) {
+      // Add height column to baby_growth table if it doesn't exist
+      try {
+        await db.execute('ALTER TABLE baby_growth ADD COLUMN height REAL');
+      } catch (e) {
+        // Column might already exist, ignore error
+      }
     }
   }
 
@@ -110,6 +118,7 @@ class DatabaseHelper {
         baby_id TEXT NOT NULL,
         recorded_date TEXT NOT NULL,
         weight REAL,
+        height REAL,
         weight_percentile INTEGER,
         height_percentile INTEGER,
         growth_status TEXT,

@@ -27,7 +27,7 @@ class BabyGrowthModel {
     return {
       'id': id,
       'baby_id': babyId,
-      'recorded_date': recordedDate.toIso8601String(). split('T')[0],
+      'recorded_date': recordedDate.toIso8601String().split('T')[0],
       'weight': weight,
       'height': height,
       'weight_percentile': weightPercentile,
