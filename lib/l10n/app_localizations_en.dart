@@ -464,7 +464,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'About';
 
   @override
-  String get welcome_back => 'Welcome Back!';
+  String get welcome_back => 'Welcome Back! ';
 
   @override
   String get or => '— OR —';
@@ -541,10 +541,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backSupportBelt => 'Back Support Belt';
 
   @override
-  String get searchHint => 'Find what you need...';
+  String get searchHint => 'Find what you need.. .';
 
   @override
-  String get dontMissOut => 'Don\'t miss out!';
+  String get dontMissOut => 'Don\'t miss out! ';
 
   @override
   String get discountUpTo => 'Discount up to 50%';
@@ -593,7 +593,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthTipMessage =>
-      'Great job! You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.';
+      'Great job!  You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.';
 
   @override
   String get onTrack => 'On Track';

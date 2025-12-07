@@ -99,7 +99,8 @@ class _MyAppState extends State<MyApp> {
             return supportedLocales.first;
           },
 
-          initialRoute: AppRoutes.splash,
+          //routing - proper flow with splash → onboarding → login → dashboard
+          initialRoute: AppRoutes.dashboard, // ✅ Start with splash screen
           routes: appRoutes,
         ),
       ),

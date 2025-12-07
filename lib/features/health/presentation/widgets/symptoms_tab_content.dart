@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import '../../logic/bloc/symptoms_bloc.dart';
+import '../../logic/bloc/symptoms_state.dart';
+import '../pages/symptoms_list_page.dart';
+import 'dialogs/add_symptom_dialog.dart';
 
 class SymptomsTabContent extends StatelessWidget {
   const SymptomsTabContent({super.key});
@@ -24,7 +30,7 @@ class SymptomsTabContent extends StatelessWidget {
               children: [
                 // Recent Symptoms
                 Text(
-                  'Recent Symptoms',
+                  localizations.recentSymptoms,
                   style: AppTextStyles.headline2.copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
@@ -32,55 +38,92 @@ class SymptomsTabContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                // Symptom Cards - realistic for week 24
-                _buildSymptomCard(
-                  icon: Icons.airline_seat_flat,
-                  symptom: 'Back Pain',
-                  severity: 'Mild',
-                  severityColor: const Color(0xFFFFF3CD),
-                  time: '3 hours ago',
-                ),
-                const SizedBox(height: 12),
-                _buildSymptomCard(
-                  icon: Icons.nights_stay,
-                  symptom: 'Trouble Sleeping',
-                  severity: 'Moderate',
-                  severityColor: const Color(0xFFFFE0B2),
-                  time: 'Today, 2:00 AM',
-                ),
-                const SizedBox(height: 12),
-                _buildSymptomCard(
-                  icon: Icons.water_drop,
-                  symptom: 'Swollen Feet',
-                  severity: 'Mild',
-                  severityColor: const Color(0xFFFFF3CD),
-                  time: 'Yesterday',
-                ),
-                const SizedBox(height: 12),
-                _buildSymptomCard(
-                  icon: Icons.food_bank,
-                  symptom: 'Heartburn',
-                  severity: 'Mild',
-                  severityColor: const Color(0xFFFFF3CD),
-                  time: '2 days ago',
+                // Dynamic Symptom Cards from Database
+                BlocBuilder<SymptomsBloc, SymptomsState>(
+                  builder: (context, state) {
+                    if (state is SymptomsLoaded) {
+                      if (state.symptoms.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Center(
+                            child: Text(
+                              'No symptoms logged yet',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        );
+                      }
+                      
+                      // Show only the 4 most recent symptoms
+                      final recentSymptoms = state.symptoms.take(4).toList();
+                      return Column(
+                        children: recentSymptoms.map((symptom) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildSymptomCard(
+                              context,
+                              icon: _getSymptomIcon(symptom. symptomName),
+                              symptom: symptom. symptomName,
+                              severity: symptom.severity ??  'N/A',
+                              severityColor: _getSeverityColor(symptom. severity),
+                              time: _formatTime(symptom.recordedAt),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
 
                 const SizedBox(height: 20),
 
                 // Add Symptom Button
-                _buildAddSymptomButton(),
+                _buildAddSymptomButton(context),
 
                 const SizedBox(height: 20),
 
-                // Symptom Frequency Chart - updated for week 24
-                _buildFrequencyChart(),
+                // View All Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton. icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<SymptomsBloc>(),
+                                child: const SymptomsListPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.list),
+                        label: const Text('View All Symptoms'),
+                        style: ElevatedButton. styleFrom(
+                          backgroundColor: AppColors.main500,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+
+                const SizedBox(height: 20),
+
+                // Symptom Frequency Chart
+                _buildFrequencyChart(context),
 
                 const SizedBox(height: 16),
 
                 // Tip Card
-                _buildTipCard(
-                  'Common symptoms at 24 weeks include back pain, swelling, and sleep difficulties. Stay hydrated and rest when possible.',
-                ),
+                _buildTipCard(localizations. commonSymptomsWeek24),
               ],
             ),
           ),
@@ -135,7 +178,56 @@ class SymptomsTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildSymptomCard({
+  IconData _getSymptomIcon(String symptom) {
+    final lowerSymptom = symptom.toLowerCase();
+    if (lowerSymptom.contains('pain') || lowerSymptom.contains('back')) {
+      return Icons.airline_seat_flat;
+    } else if (lowerSymptom.contains('sleep')) {
+      return Icons.nights_stay;
+    } else if (lowerSymptom.contains('swell') || lowerSymptom.contains('feet')) {
+      return Icons.water_drop;
+    } else if (lowerSymptom.contains('heart')) {
+      return Icons.food_bank;
+    } else if (lowerSymptom.contains('head')) {
+      return Icons.psychology;
+    } else if (lowerSymptom.contains('nausea')) {
+      return Icons.sick;
+    }
+    return Icons.health_and_safety;
+  }
+
+  Color _getSeverityColor(String?  severity) {
+    switch (severity?. toLowerCase()) {
+      case 'mild':
+        return const Color(0xFFFFF3CD);
+      case 'moderate':
+        return const Color(0xFFFFE0B2);
+      case 'severe':
+        return const Color(0xFFFFB8B8);
+      default:
+        return const Color(0xFFFFF3CD);
+    }
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+    
+    if (difference.inHours < 1) {
+      return '${difference.inMinutes} min ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return DateFormat('MMM dd'). format(dateTime);
+    }
+  }
+
+  Widget _buildSymptomCard(
+    BuildContext context, {
     required IconData icon,
     required String symptom,
     required String severity,
@@ -167,10 +259,10 @@ class SymptomsTabContent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.main300,
+              color: AppColors. main300,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColors.main500, size: 24),
+            child: Icon(icon, color: AppColors. main500, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -214,52 +306,71 @@ class SymptomsTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildAddSymptomButton() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.pink600, AppColors.pink500],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.add, color: AppColors.white, size: 24),
-          const SizedBox(width: 8),
-          Text(
-            'Log New Symptom',
-            style: AppTextStyles.subtitle1.copyWith(
-              color: AppColors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+  Widget _buildAddSymptomButton(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
+    return Builder(
+      builder: (ctx) {
+        return GestureDetector(
+          onTap: () {
+            final bloc = ctx.read<SymptomsBloc>();
+            showModalBottomSheet(
+              context: ctx,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (dialogContext) => AddSymptomDialog(bloc: bloc),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets. all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.pink600, AppColors.pink500],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x3F000000),
+                  blurRadius: 4,
+                  offset: Offset(2, 2),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: AppColors.white,
+                  blurRadius: 6,
+                  offset: Offset(-3, -3),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add, color: AppColors.white, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  localizations.logNewSymptom,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    color: AppColors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 
-  Widget _buildFrequencyChart() {
+  Widget _buildFrequencyChart(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors. white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -280,26 +391,28 @@ class SymptomsTabContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Symptom Frequency (Last 7 Days)',
+            localizations.symptomFrequency,
             style: AppTextStyles.subtitle1.copyWith(
               fontSize: 14,
-              color: AppColors.textDark,
+              color: AppColors. textDark,
             ),
           ),
           const SizedBox(height: 16),
-          _buildFrequencyBar('Back Pain', 0.85),
+          _buildFrequencyBar(context, localizations. backPain, 0.85),
           const SizedBox(height: 10),
-          _buildFrequencyBar('Swollen Feet', 0.6),
+          _buildFrequencyBar(context, localizations.swollenFeet, 0.6),
           const SizedBox(height: 10),
-          _buildFrequencyBar('Heartburn', 0.5),
+          _buildFrequencyBar(context, localizations.heartburn, 0.5),
           const SizedBox(height: 10),
-          _buildFrequencyBar('Sleep Issues', 0.7),
+          _buildFrequencyBar(context, localizations.sleepIssues, 0.7),
         ],
       ),
     );
   }
 
-  Widget _buildFrequencyBar(String label, double value) {
+  Widget _buildFrequencyBar(BuildContext context, String label, double value) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -314,10 +427,10 @@ class SymptomsTabContent extends StatelessWidget {
               ),
             ),
             Text(
-              '${(value * 7).toInt()} times',
+              '${(value * 7).toInt()} ${localizations.times}',
               style: AppTextStyles.smallLabel.copyWith(
                 fontSize: 11,
-                color: AppColors.textDark,
+                color: AppColors. textDark,
               ),
             ),
           ],

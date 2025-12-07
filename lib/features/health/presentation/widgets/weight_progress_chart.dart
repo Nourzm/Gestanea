@@ -9,12 +9,12 @@ class WeightProgressChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.main300,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -24,7 +24,7 @@ class WeightProgressChart extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors.white,
+            color: AppColors. white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -38,7 +38,7 @@ class WeightProgressChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Weight Progress',
+                l10n.weightProgress,
                 style: AppTextStyles.subtitle1.copyWith(
                   color: AppColors.textDark,
                   fontSize: 14,
@@ -52,7 +52,7 @@ class WeightProgressChart extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  localizations.onTrack,
+                  l10n.onTrack,
                   style: AppTextStyles.smallLabel.copyWith(
                     color: const Color(0xFF2D5F2D),
                     fontSize: 11,

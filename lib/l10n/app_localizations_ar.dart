@@ -12,7 +12,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get security => 'الأمان';
 
   @override
-  String get i_gave_birth => 'لقد ولدت';
+  String get i_gave_birth => 'لقد ولدتُ';
 
   @override
   String get no_longer_pregnant => 'لم أعد حاملاً';
@@ -21,7 +21,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get help_support => 'المساعدة والدعم';
 
   @override
-  String get contact_us => 'اتصل بنا';
+  String get contact_us => 'اتصلي بنا';
 
   @override
   String get privacy_policy => 'سياسة الخصوصية';
@@ -39,7 +39,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get save_changes => 'حفظ التغييرات';
 
   @override
-  String get logout_confirmation => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+  String get logout_confirmation => 'هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟';
 
   @override
   String get cancel => 'إلغاء';
@@ -463,7 +463,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get about => 'حول';
 
   @override
-  String get welcome_back => 'مرحباً بعودتك!';
+  String get welcome_back => 'مرحباً بعودتكِ! ';
 
   @override
   String get or => '— أو —';
@@ -472,34 +472,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get register => 'تسجيل';
 
   @override
-  String get auth => 'رفيقك الموثوق في كل مرحلة من مراحل الأمومة';
+  String get auth => 'رفيقكِ الموثوق في كل مرحلة من مراحل الأمومة';
 
   @override
-  String get auth2 => 'دع Gestanéa ترشدك خلال الحمل، ورعاية الطفل، وما بعده.';
+  String get auth2 => 'دعي Gestanéa ترشدكِ خلال الحمل، ورعاية الطفل، وما بعده.';
 
   @override
-  String get forgot => 'نسيت كلمة المرور؟';
+  String get forgot => 'نسيتِ كلمة المرور؟';
 
   @override
-  String get notRegistered => 'لم تقم بالتسجيل بعد؟';
+  String get notRegistered => 'لم تقومي بالتسجيل بعد؟';
 
   @override
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get your_name => 'اسمك';
+  String get your_name => 'اسمكِ';
 
   @override
   String get email => 'البريد الإلكتروني';
 
   @override
-  String get enter_email => 'أدخل بريدك الإلكتروني';
+  String get enter_email => 'أدخلي بريدكِ الإلكتروني';
 
   @override
-  String get enter_name => 'أدخل اسمك';
+  String get enter_name => 'أدخلي اسمكِ';
 
   @override
-  String get rememberMe => 'تذكرني';
+  String get rememberMe => 'تذكريني';
 
   @override
   String get version => 'الإصدار';
@@ -539,22 +539,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backSupportBelt => 'حزام دعم الظهر';
 
   @override
-  String get searchHint => 'ابحث عما تحتاجه...';
+  String get searchHint => 'ابحثي عما تحتاجينه.. .';
 
   @override
-  String get dontMissOut => 'لا تفوت الفرصة!';
+  String get dontMissOut => 'لا تفوتي الفرصة! ';
 
   @override
   String get discountUpTo => 'خصم يصل إلى 50%';
 
   @override
-  String get upgradeNow => 'قم بالترقية الآن';
+  String get upgradeNow => 'قومي بالترقية الآن';
 
   @override
   String get healthLog => 'سجل الصحة';
 
   @override
-  String get trackYourWellness => 'تابع صحتك';
+  String get trackYourWellness => 'تابعي صحتكِ';
 
   @override
   String get vitals => 'المؤشرات الحيوية';
@@ -591,7 +591,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get healthTipMessage =>
-      'عمل رائع! أنت تحافظ على وتيرة زيادة وزن صحية. استمر في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.';
+      'عمل رائع! أنتِ تحافظين على وتيرة زيادة وزن صحية. استمري في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.';
 
   @override
   String get onTrack => 'على المسار الصحيح';
@@ -600,10 +600,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get doctors => 'الأطباء';
 
   @override
-  String get findDoctors => 'ابحث عن الأطباء بالاسم أو التخصص';
+  String get findDoctors => 'ابحثي عن الأطباء بالاسم أو التخصص';
 
   @override
-  String get useCurrentLocation => 'استخدام موقعي الحالي';
+  String get useCurrentLocation => 'استخدمي موقعي الحالي';
 
   @override
   String get algiers => 'الجزائر';
@@ -693,7 +693,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get tryAdjustingFilters => 'حاول تعديل التصفية';
+  String get tryAdjustingFilters => 'حاولي تعديل التصفية';
 
   @override
   String get doctorDetails => 'تفاصيل الطبيب';
@@ -720,7 +720,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get generalPractitioner => 'طبيب عام';
 
   @override
-  String get getDirections => 'احصل على الاتجاهات';
+  String get getDirections => 'احصلي على الاتجاهات';
 
   @override
   String get contactInformation => 'معلومات الاتصال';

@@ -1,6 +1,3 @@
-
-
-
 {
   "full_name": "Nom complet",
   "enable_notifications": "Activer les notifications",
@@ -15,7 +12,7 @@
   "about_app": "À propos de l'application",
   "change": "Modifier",
   "logout": "Se déconnecter",
-  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ?",
+  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ? ",
   "cancel": "Annuler",
   "unknown": "Inconnu",
   "profile": "Profil",
@@ -36,7 +33,7 @@
   "todaysMedicine": "Médicaments du jour",
   "upcomingAppointments": "Rendez-vous à venir",
   "scheduled": "Prévu",
-    "addNewMedicine": "Ajouter un médicament",
+  "addNewMedicine": "Ajouter un médicament",
   "addNewAppointment": "Ajouter un rendez-vous",
   "medicine": "Médicaments",
   "appointments": "Rendez-vous",
@@ -173,7 +170,7 @@
   "notifications": "Notifications",
   "help": "Aide",
   "about": "À propos",
-  "welcome_back": "Bon retour !",
+  "welcome_back": "Bon retour ! ",
   "or": "— OU —",
   "register": "S'inscrire",
   "auth": "Votre compagnon de confiance à chaque étape de la maternité",
@@ -208,8 +205,8 @@
   "skinCare": "Soins de la peau",
   "pregnancyPillow": "Coussin de grossesse",
   "backSupportBelt": "Ceinture de soutien dorsal",
-  "searchHint": "Trouvez ce dont vous avez besoin...",
-  "dontMissOut": "Ne ratez pas !",
+  "searchHint": "Trouvez ce dont vous avez besoin.. .",
+  "dontMissOut": "Ne ratez pas ! ",
   "discountUpTo": "Remise jusqu'à 50%",
   "upgradeNow": "Améliorez maintenant",
   "healthLog": "Journal de santé",

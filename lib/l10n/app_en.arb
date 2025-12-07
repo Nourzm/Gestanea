@@ -32,7 +32,7 @@
   "todaysMedicine": "Today's Medicine",
   "upcomingAppointments": "Upcoming Appointments",
   "scheduled": "Scheduled",
-    "addNewMedicine": "Add New Medicine",
+  "addNewMedicine": "Add New Medicine",
   "addNewAppointment": "Add New Appointment",
   "medicine": "Medicine",
   "appointments": "Appointments",
@@ -164,7 +164,7 @@
   "notifications": "Notifications",
   "help": "Help",
   "about": "About",
-   "welcome_back": "Welcome Back!",
+  "welcome_back": "Welcome Back! ",
   "or": "— OR —",
   "register": "Register",
   "auth": "Your trusted companion for every stage of motherhood",
@@ -172,7 +172,6 @@
   "forgot": "Forgot Password?",
   "notRegistered": "Not registered yet?",
   "createAccount": "Create an Account",
-  "signup": "Sign Up",
   "your_name": "Your Name",
   "email": "Email",
   "enter_email": "Enter your email",
@@ -218,11 +217,11 @@
   "@backSupportBelt": {
     "description": "Back support belt product"
   },
-  "searchHint": "Find what you need...",
+  "searchHint": "Find what you need.. .",
   "@searchHint": {
     "description": "Search bar hint text"
   },
-  "dontMissOut": "Don't miss out!",
+  "dontMissOut": "Don't miss out! ",
   "@dontMissOut": {
     "description": "Promotional banner title"
   },
@@ -248,7 +247,7 @@
   "normal": "Normal",
   "add": "Add",
   "measurement": "Measurement",
-  "healthTipMessage": "Great job! You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
+  "healthTipMessage": "Great job!  You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
   "onTrack": "On Track",
 
   "doctors": "Doctors",

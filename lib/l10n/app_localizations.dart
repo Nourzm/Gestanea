@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcome_back.
   ///
   /// In en, this message translates to:
-  /// **'Welcome Back!'**
+  /// **'Welcome Back! '**
   String get welcome_back;
 
   /// No description provided for @or.
@@ -1147,13 +1147,13 @@ abstract class AppLocalizations {
   /// Search bar hint text
   ///
   /// In en, this message translates to:
-  /// **'Find what you need...'**
+  /// **'Find what you need.. .'**
   String get searchHint;
 
   /// Promotional banner title
   ///
   /// In en, this message translates to:
-  /// **'Don\'t miss out!'**
+  /// **'Don\'t miss out! '**
   String get dontMissOut;
 
   /// Promotional discount text
@@ -1249,7 +1249,7 @@ abstract class AppLocalizations {
   /// No description provided for @healthTipMessage.
   ///
   /// In en, this message translates to:
-  /// **'Great job! You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.'**
+  /// **'Great job!  You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.'**
   String get healthTipMessage;
 
   /// No description provided for @onTrack.

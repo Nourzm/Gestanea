@@ -39,7 +39,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get save_changes => 'Enregistrer les modifications';
 
   @override
-  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ?';
+  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ? ';
 
   @override
   String get cancel => 'Annuler';
@@ -465,7 +465,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
-  String get welcome_back => 'Bon retour !';
+  String get welcome_back => 'Bon retour ! ';
 
   @override
   String get or => '— OU —';
@@ -543,10 +543,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backSupportBelt => 'Ceinture de soutien dorsal';
 
   @override
-  String get searchHint => 'Trouvez ce dont vous avez besoin...';
+  String get searchHint => 'Trouvez ce dont vous avez besoin.. .';
 
   @override
-  String get dontMissOut => 'Ne ratez pas !';
+  String get dontMissOut => 'Ne ratez pas ! ';
 
   @override
   String get discountUpTo => 'Remise jusqu\'à 50%';
