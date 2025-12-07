@@ -66,7 +66,6 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
   }
 
   void _refreshDashboard() {
-    debugPrint('🔄 _refreshDashboard called - userId: $_userId');
     final userIdInt = int.tryParse(_userId ?? '0') ?? 0;
     if (userIdInt > 0 && _dashboardCubit != null) {
       _dashboardCubit!.loadDashboard(userIdInt);
@@ -75,7 +74,6 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
       _dashboardCubit!.loadDashboardByStringId(_userId!);
     }
     // Also refresh baby profile to get updated gender
-    debugPrint('🔄 Refreshing baby profile');
     _babyCubit?.loadBabyProfile();
   }
 
@@ -128,9 +126,6 @@ class _DashboardPageState extends State<DashboardPage> with WidgetsBindingObserv
           if (babyState is BabyLoaded) {
             final gender = babyState.baby.gender?.toLowerCase() ?? '';
             currentBabyGender = (gender == 'female' || gender == 'girl') ? 'girl' : 'boy';
-            debugPrint('🍼 BabyLoaded - gender from DB: ${babyState.baby.gender}, currentBabyGender: $currentBabyGender');
-          } else {
-            debugPrint('🍼 BabyState is: ${babyState.runtimeType}');
           }
 
           return BlocBuilder<DashboardCubit, DashboardState>(

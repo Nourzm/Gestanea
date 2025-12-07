@@ -54,7 +54,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
             null,
           );
         } catch (e) {
-          debugPrint('Error saving kick session: $e');
+          // Error handled silently
         }
       }
     }

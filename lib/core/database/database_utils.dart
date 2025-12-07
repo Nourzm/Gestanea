@@ -26,7 +26,6 @@ class DatabaseUtils {
         updatedAt: DateTime.now(),
       );
       await db.insert('users', user.toMap());
-      print('Created mock user: $userId');
     }
   }
 
