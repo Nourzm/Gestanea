@@ -7,26 +7,20 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
 import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
-import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
-import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
+import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' show DoctorsScreen;
+import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart'
-    show DoctorsScreen;
-import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
-    as tips;
-import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
-import 'package:intl/intl.dart';
 import 'postpartum_track_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
   final String babyGender;
-  final PostpartumDashboard? dashboard;
 
   const PostpartumDashboardPage({
     super.key,
     required this.babyGender,
-    this.dashboard,
   });
 
   @override
@@ -35,17 +29,22 @@ class PostpartumDashboardPage extends StatefulWidget {
 }
 
 class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
-  Color get primaryColor => widget.babyGender == 'girl'
-      ? const Color(0xFFFF9EC9)
-      : const Color(0xFF87CEEB);
-
-  Color get lightColor => widget.babyGender == 'girl'
-      ? const Color(0xFFFFC6E0)
-      : const Color(0xFFB0E0E6);
-
-  Color get accentColor => widget.babyGender == 'girl'
-      ? const Color(0xFFFFA6D3)
-      : const Color(0xFF9BD3F9);
+  // Gender-based theme colors
+  bool get isGirl => widget.babyGender.toLowerCase() == 'girl' || 
+                     widget.babyGender.toLowerCase() == 'female';
+  
+  Color get primaryColor => isGirl 
+      ? const Color(0xFFFF9EC9)  // Pink for girls
+      : const Color(0xFF87CEEB); // Blue for boys
+  Color get lightBlue => isGirl 
+      ? const Color(0xFFFFC6E0)  // Light pink for girls
+      : const Color(0xFFD6E9F8); // Light blue for boys
+  Color get cardBlue => isGirl 
+      ? const Color(0xFFFFE4F0)  // Card pink for girls
+      : const Color(0xFFE8F4FC); // Card blue for boys
+  Color get accentBlue => isGirl 
+      ? const Color(0xFFFF85B3)  // Accent pink for girls
+      : const Color(0xFF4A90D9); // Accent blue for boys
 
   String _getUserId() {
     final authState = context.read<AuthBloc>().state;
@@ -55,48 +54,27 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     return '';
   }
 
-  String _formatAgeText(int months) {
+  String _formatAgeText(DateTime dateOfBirth) {
+    final now = DateTime.now();
+    final months = (now.year - dateOfBirth.year) * 12 + (now.month - dateOfBirth.month);
+    
     if (months == 0) {
       return 'Newborn';
     } else if (months == 1) {
       return '1 month old';
     } else if (months < 12) {
       return '$months months old';
-    } else if (months == 12) {
-      return '1 year old';
     } else {
       final years = months ~/ 12;
       final remainingMonths = months % 12;
       if (remainingMonths == 0) {
         return '$years ${years == 1 ? 'year' : 'years'} old';
       }
-      return '$years ${years == 1 ? 'year' : 'years'} and $remainingMonths ${remainingMonths == 1 ? 'month' : 'months'} old';
-    }
-  }
-
-  String _formatNextVaccine() {
-    final dashboard = widget.dashboard;
-    if (dashboard == null || dashboard.nextVaccines.isEmpty) {
-      return 'All caught up!';
-    }
-    final nextVaccine = dashboard.nextVaccines.first;
-    final dueDate = nextVaccine.dueDate;
-    final now = DateTime.now();
-    final difference = dueDate.difference(now).inDays;
-
-    if (difference < 0) {
-      return '${nextVaccine.vaccineName}: Overdue';
-    } else if (difference == 0) {
-      return '${nextVaccine.vaccineName}: Today';
-    } else if (difference <= 7) {
-      return '${nextVaccine.vaccineName}: ${DateFormat('MMM d').format(dueDate)}';
-    } else {
-      return 'Next: ${DateFormat('MMM d').format(dueDate)}';
+      return '$years years, $remainingMonths months old';
     }
   }
 
   void _navigateToTrackPage() {
-    // Navigate to Track tab (index 1 in bottom nav)
     final userId = _getUserId();
     Navigator.push(
       context,
@@ -114,443 +92,544 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     );
   }
 
-  void _navigateToPlanPage() {
-    // Navigate to Plan tab (index 3 in bottom nav) - this will be handled by parent
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Go to Plan tab to see all appointments and medicines'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final dashboard = widget.dashboard;
-    final babyName = dashboard?.babyName ?? 'Baby';
-    final babyAge = dashboard?.babyAgeInMonths ?? 0;
-    final babyWeight = dashboard?.babyWeight ?? 0.0;
-    final babyHeight = dashboard?.babyHeight ?? 0.0;
-    final growthStatus = dashboard?.growthStatus ?? 'On Track';
-    final userName = dashboard?.userName ?? 'Mama';
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8FF),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  // 👤 Profile section (tap -> Profile page)
-                  GestureDetector(
-                    onTap: () async {
-                      // Capture cubit before navigation
-                      final dashboardCubit = context.read<DashboardCubit>();
-                      final authState = context.read<AuthBloc>().state;
-              
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileSettingsScreen(),
-                        ),
-                      );
-              
-                      // Refresh dashboard when returning from profile page
-                      // This handles the case where user triggered "I Gave Birth"
-                      if (authState is AuthAuthenticated) {
-                        final userId = authState.user.id;
-                        if (userId.isNotEmpty) {
-                          dashboardCubit.loadDashboardByStringId(userId);
-                        }
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundColor: Colors.grey.shade300,
-                          child: Image.asset("assets/images/profile.png"),
-                        ),
-                        SizedBox(width: screenWidth * 0.03),
-                        BlocBuilder<AuthBloc, AuthState>(
-                          builder: (context, state) {
-                            String greeting = 'Hello!';
-                            String nameText = '';
-                            if (state is AuthAuthenticated) {
-                              nameText = state.user.name;
-                              greeting = 'Hello';
-                            }
-                            return Text(
-                              '$greeting ${nameText.isNotEmpty ? nameText : ''}',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.05,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-              
-                  // 🔔 Notification icon (tap -> Notifications page)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationsPage(),
-                        ),
-                      );
-                    },
-                    child: NotificationIcon(
-                      icon: Icon(
-                        Icons.notifications,
-                        color: AppColors.main500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
+      backgroundColor: const Color(0xFFF8FAFC),
+      body: BlocBuilder<BabyCubit, BabyState>(
+        builder: (context, state) {
+          // Extract data from state
+          String babyName = 'Baby';
+          DateTime babyDateOfBirth = DateTime.now();
+          String nextVaccineDate = 'Dec 15';
+          int upcomingVaccines = 3;
+          String growthStatus = 'On track';
 
-              // Baby Info Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [primaryColor, lightColor],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+          if (state is BabyLoaded) {
+            babyName = state.baby.name;
+            babyDateOfBirth = state.baby.dateOfBirth;
+          }
+
+          return SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor: Colors.white.withValues(alpha: 0.3),
-                          child: const Icon(
-                            Icons.child_care,
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                babyName,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                _formatAgeText(babyAge),
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.25),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.vaccines,
-                                      color: Colors.white,
-                                      size: 14,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Flexible(
-                                      child: Text(
-                                        _formatNextVaccine(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    // ==================== HEADER ====================
+                    _buildHeader(),
+                    const SizedBox(height: 24),
+
+                    // ==================== BABY CARD ====================
+                    _buildBabyCard(
+                      babyName: babyName,
+                      ageText: _formatAgeText(babyDateOfBirth),
+                      nextVaccineDate: nextVaccineDate,
+                      upcomingVaccines: upcomingVaccines,
+                      growthStatus: growthStatus,
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatColumn(
-                          'Weight',
-                          babyWeight > 0
-                              ? '${babyWeight.toStringAsFixed(1)} kg'
-                              : '--',
-                        ),
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                        _buildStatColumn(
-                          'Height',
-                          babyHeight > 0
-                              ? '${babyHeight.toStringAsFixed(0)} cm'
-                              : '--',
-                        ),
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                        _buildStatColumn('Growth', growthStatus),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 6,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: _navigateToTrackPage,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('More', style: TextStyle(color: primaryColor)),
-                          const Icon(
-                            Icons.arrow_right_alt,
-                            color: Colors.black54,
-                          ),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 20),
+
+                    // ==================== TIPS & DOCTORS ====================
+                    _buildQuickActions(),
+                    const SizedBox(height: 24),
+
+                    // ==================== UPCOMING SECTION ====================
+                    _buildUpcomingSection(),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 20),
-
-              // Tips and Doctors Cards (Clickable)
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const tips.Tips()),
-                        );
-                      },
-                      child: _buildInfoCard(
-                        color: primaryColor,
-                        icon: Icons.lightbulb_outline,
-                        title: "Our Tips",
-                        subtitle: "follow best practices",
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const DoctorsScreen(),
-                          ),
-                        );
-                      },
-                      child: _buildInfoCard(
-                        color: lightColor,
-                        icon: Icons.medical_services_outlined,
-                        title: "Our Doctors",
-                        subtitle: "find the best doctor",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              // Upcoming Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Up coming",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  GestureDetector(
-                    onTap: _navigateToPlanPage,
-                    child: const Text(
-                      "see all",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Reminder Cards from dashboard data
-              if (dashboard != null && dashboard.nextVaccines.isNotEmpty)
-                ...dashboard.nextVaccines
-                    .take(2)
-                    .map(
-                      (vaccine) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildReminderCard(
-                          vaccine.vaccineName,
-                          DateFormat('MMM d, yyyy').format(vaccine.dueDate),
-                          primaryColor,
-                          Icons.vaccines,
-                        ),
-                      ),
-                    )
-              else
-                _buildReminderCard(
-                  "No upcoming vaccines",
-                  "All caught up!",
-                  lightColor,
-                  Icons.check_circle,
-                ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildStatColumn(String label, String value) {
-    return Column(
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        // Profile + Greeting
+        Row(
+          children: [
+            // Profile Avatar
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                shape: BoxShape.circle,
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/profile.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Icon(
+                    Icons.person,
+                    color: Colors.grey.shade600,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Greeting Text
+            const Text(
+              'Hello Sara !',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
+        // Notification Bell
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationsPage()),
+            );
+          },
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.notifications_outlined,
+              color: primaryColor,
+              size: 22,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildInfoCard({
-    required Color color,
-    required IconData icon,
-    required String title,
-    required String subtitle,
+  Widget _buildBabyCard({
+    required String babyName,
+    required String ageText,
+    required String nextVaccineDate,
+    required int upcomingVaccines,
+    required String growthStatus,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            primaryColor.withValues(alpha: 0.7),
+            lightBlue,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.4),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: primaryColor.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.white),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+          // Baby Avatar + Name + Age
+          Row(
+            children: [
+              // Baby Avatar
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.child_care,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 14),
+              // Name and Age
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      babyName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      ageText,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+
+          // Next Vaccine Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  color: Colors.white.withValues(alpha: 0.9),
+                  size: 14,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Next vaccine: $nextVaccineDate',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          const SizedBox(height: 18),
+
+          // Vaccines and Growth Stats
+          Row(
+            children: [
+              // Vaccines Column
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Vaccines',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$upcomingVaccines upcoming',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Growth Column
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Growth',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      growthStatus,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // More Button
+          Center(
+            child: GestureDetector(
+              onTap: _navigateToTrackPage,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'More',
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: primaryColor,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildReminderCard(
-    String title,
-    String time,
-    Color color,
-    IconData icon,
-  ) {
+  Widget _buildQuickActions() {
+    return Row(
+      children: [
+        // Our Tips Card
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const tips.Tips()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Lightbulb icon
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.lightbulb_outline,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Our Tips',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'follow best practices',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Our Doctors Card
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BlocProvider(
+                    create: (context) => DoctorsBloc(),
+                    child: const DoctorsScreen(),
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: lightBlue,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Stethoscope icon
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: primaryColor.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.medical_services_outlined,
+                      color: primaryColor,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Our Doctors',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'find the best doctor',
+                    style: TextStyle(
+                      color: primaryColor.withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpcomingSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Up coming',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                // Navigate to see all
+              },
+              child: Text(
+                'see all',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Doctor Checkup Card
+        _buildUpcomingCard(
+          icon: Icons.favorite,
+          iconBgColor: primaryColor,
+          title: 'Doctor Checkup',
+          subtitle: 'Today at 2:00PM',
+        ),
+        const SizedBox(height: 12),
+
+        // Vitamin D Card
+        _buildUpcomingCard(
+          icon: Icons.medication,
+          iconBgColor: primaryColor,
+          title: 'Vitamin D',
+          subtitle: 'In 2 hours',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpcomingCard({
+    required IconData icon,
+    required Color iconBgColor,
+    required String title,
+    required String subtitle,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
+        color: cardBlue,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
-        ],
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: color.withValues(alpha: 0.7),
-            radius: 20,
-            child: Icon(icon, color: Colors.white),
+          // Icon
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: iconBgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 22,
+            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
+          // Text
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -558,19 +637,28 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
-                  time,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
               ],
             ),
           ),
-          Icon(Icons.calendar_month, color: color),
+          // Calendar icon
+          Icon(
+            Icons.calendar_today_outlined,
+            color: primaryColor.withValues(alpha: 0.5),
+            size: 20,
+          ),
         ],
       ),
     );

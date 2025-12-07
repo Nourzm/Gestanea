@@ -2,7 +2,8 @@ class BabyGrowthModel {
   final String id;
   final String babyId;
   final DateTime recordedDate;
-  final double?  weight;
+  final double? weight;
+  final double? height;
   final int? weightPercentile;
   final int? heightPercentile;
   final String? growthStatus;
@@ -14,6 +15,7 @@ class BabyGrowthModel {
     required this.babyId,
     required this.recordedDate,
     this.weight,
+    this.height,
     this.weightPercentile,
     this.heightPercentile,
     this.growthStatus,
@@ -27,6 +29,7 @@ class BabyGrowthModel {
       'baby_id': babyId,
       'recorded_date': recordedDate.toIso8601String(). split('T')[0],
       'weight': weight,
+      'height': height,
       'weight_percentile': weightPercentile,
       'height_percentile': heightPercentile,
       'growth_status': growthStatus,
@@ -41,6 +44,7 @@ class BabyGrowthModel {
       babyId: map['baby_id'] as String,
       recordedDate: DateTime.parse(map['recorded_date'] as String),
       weight: map['weight'] as double?,
+      height: map['height'] as double?,
       weightPercentile: map['weight_percentile'] as int?,
       heightPercentile: map['height_percentile'] as int?,
       growthStatus: map['growth_status'] as String?,
@@ -54,6 +58,7 @@ class BabyGrowthModel {
     String? babyId,
     DateTime? recordedDate,
     double? weight,
+    double? height,
     int? weightPercentile,
     int? heightPercentile,
     String? growthStatus,
@@ -65,6 +70,7 @@ class BabyGrowthModel {
       babyId: babyId ?? this.babyId,
       recordedDate: recordedDate ?? this.recordedDate,
       weight: weight ?? this.weight,
+      height: height ?? this.height,
       weightPercentile: weightPercentile ?? this.weightPercentile,
       heightPercentile: heightPercentile ?? this.heightPercentile,
       growthStatus: growthStatus ?? this.growthStatus,

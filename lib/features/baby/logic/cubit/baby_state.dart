@@ -65,16 +65,18 @@ class BabyError extends BabyState {
 class GrowthLoading extends BabyState {}
 
 class GrowthLoaded extends BabyState {
+  final BabyModel baby;
   final List<BabyGrowthModel> growthRecords;
   final BabyGrowthModel? latestGrowth;
 
   const GrowthLoaded({
+    required this.baby,
     required this.growthRecords,
     this.latestGrowth,
   });
 
   @override
-  List<Object?> get props => [growthRecords, latestGrowth];
+  List<Object?> get props => [baby, growthRecords, latestGrowth];
 }
 
 // Milestone specific states

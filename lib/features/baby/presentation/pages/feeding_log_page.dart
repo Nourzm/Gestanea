@@ -13,16 +13,20 @@ import 'package:intl/intl.dart';
 
 class FeedingLogPage extends StatefulWidget {
   final String? babyId;
+  final bool isGirl;
   
-  const FeedingLogPage({super.key, this.babyId});
+  const FeedingLogPage({super.key, this.babyId, this.isGirl = false});
 
   @override
   State<FeedingLogPage> createState() => _FeedingLogPageState();
 }
 
 class _FeedingLogPageState extends State<FeedingLogPage> {
-  String selectedType = 'Breastfeed';
+  String selectedType = 'All';
   bool _hasLoadedData = false;
+  
+  Color get primaryColor => widget.isGirl ? const Color(0xFFFF9EC9) : const Color(0xFF87CEEB);
+  Color get secondaryColor => widget.isGirl ? const Color(0xFFFFC6E0) : const Color(0xFFB0E0E6);
 
   @override
   void initState() {
@@ -105,14 +109,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(Icons.arrow_back_ios, color: primaryColor, size: 24),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Feeding Log',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            style: AppTextStyles.headline1.copyWith(color: primaryColor),
                           ),
                         ),
                       ),
@@ -131,8 +135,8 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.pink500, AppColors.pink300],
+                              gradient: LinearGradient(
+                                colors: [primaryColor, secondaryColor],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -184,48 +188,52 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildTypeButton('Breastfeed', Icons.child_care),
+                                child: _buildTypeButton('All', Icons.list_alt, context.read<BabyCubit>()),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
-                                child: _buildTypeButton('Bottle', Icons.baby_changing_station),
+                                child: _buildTypeButton('Breastfeed', Icons.child_care, context.read<BabyCubit>()),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: _buildTypeButton('Bottle', Icons.baby_changing_station, context.read<BabyCubit>()),
                               ),
                             ],
                           ),
                           const SizedBox(height: 24),
 
-                          // Recent Logs
+                          // Recent Logs (Today only)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Recent Feedings',
+                                'Today\'s Feedings',
                                 style: AppTextStyles.headline2,
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // TODO: Navigate to all feeding logs page
+                                  _showAllFeedingsDialog(context, feedingLogs);
                                 },
                                 child: Text(
-                                  'View All',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.main500),
+                                  'See All',
+                                  style: AppTextStyles.body1.copyWith(color: primaryColor),
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          if (feedingLogs.isEmpty)
+                          if (todayLogs.isEmpty)
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'No feeding logs yet',
+                                  'No feedings today',
                                   style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
                                 ),
                               ),
                             )
                           else
-                            ...feedingLogs.take(10).map((log) => _buildFeedingLogItem(log)),
+                            ...todayLogs.map((log) => _buildFeedingLogItem(log)),
                         ],
                       ),
                     ),
@@ -240,25 +248,27 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
         onPressed: () {
           _showAddFeedingDialog(context);
         },
-        backgroundColor: AppColors.main500,
+        backgroundColor: primaryColor,
         icon: const Icon(Icons.add, color: AppColors.white),
         label: Text('Add Feeding', style: AppTextStyles.bodyWhite),
       ),
     );
   }
 
-  Widget _buildTypeButton(String type, IconData icon) {
+  Widget _buildTypeButton(String type, IconData icon, BabyCubit babyCubit) {
     bool isSelected = selectedType == type;
     return GestureDetector(
       onTap: () {
         setState(() {
           selectedType = type;
         });
+        // Load feeding logs filtered by type
+        babyCubit.loadFeedingLogs(filterType: type);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.main500 : AppColors.white,
+          color: isSelected ? primaryColor : AppColors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: AppColors.shadow1,
         ),
@@ -301,14 +311,14 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.pink500.withValues(alpha: 0.2),
+              color: primaryColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               log.feedingType == 'Breastfeed'
                   ? Icons.child_care
                   : Icons.baby_changing_station,
-              color: AppColors.pink500,
+              color: primaryColor,
               size: 24,
             ),
           ),
@@ -328,7 +338,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 Text(
                   log.feedingType == 'Breastfeed'
                       ? '${log.durationMinutes ?? 0} min${log.breastSide != null ? ' - ${log.breastSide} side' : ''}'
-                      : '${log.amountMl ?? 0} ml',
+                      : '${log.durationMinutes ?? 0} min - ${log.amountMl?.toInt() ?? 0} ml',
                   style: AppTextStyles.body1,
                 ),
               ],
@@ -344,16 +354,22 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
   }
 
   void _showAddFeedingDialog(BuildContext context) {
+    // Capture the BabyCubit before showing dialog to avoid context issues
+    final babyCubit = context.read<BabyCubit>();
+    
     String feedingType = 'Breastfeed';
     String? selectedSide;
     final durationController = TextEditingController();
+    final amountController = TextEditingController();
     TimeOfDay selectedTime = TimeOfDay.now();
+    String? durationError;
+    String? amountError;
 
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (builderContext, setDialogState) {
             return AlertDialog(
               backgroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
@@ -370,7 +386,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      value: feedingType,
+                      initialValue: feedingType,
                       decoration: InputDecoration(
                         labelText: 'Feeding Type',
                         labelStyle: AppTextStyles.body1.copyWith(
@@ -382,7 +398,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.main500),
+                          borderSide: BorderSide(color: primaryColor),
                         ),
                       ),
                       items: ['Breastfeed', 'Bottle'].map((String value) {
@@ -394,35 +410,78 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       onChanged: (value) {
                         setDialogState(() {
                           feedingType = value!;
+                          durationError = null;
+                          amountError = null;
                         });
                       },
                     ),
                     const SizedBox(height: 16),
+                    // Duration field (for both types)
                     TextField(
                       controller: durationController,
                       keyboardType: TextInputType.number,
                       style: AppTextStyles.body1,
                       decoration: InputDecoration(
-                        labelText: feedingType == 'Breastfeed'
-                            ? 'Duration (minutes)'
-                            : 'Amount (ml)',
+                        labelText: 'Duration (minutes) *',
                         labelStyle: AppTextStyles.body1.copyWith(
                           color: AppColors.textSecondary,
                         ),
+                        errorText: durationError,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(color: AppColors.purpleGrey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.main500),
+                          borderSide: BorderSide(color: primaryColor),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.red),
                         ),
                       ),
+                      onChanged: (_) {
+                        if (durationError != null) {
+                          setDialogState(() => durationError = null);
+                        }
+                      },
                     ),
+                    // Amount field (only for Bottle)
+                    if (feedingType == 'Bottle') ...[                    const SizedBox(height: 16),
+                    TextField(
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
+                      style: AppTextStyles.body1,
+                      decoration: InputDecoration(
+                        labelText: 'Amount (ml) *',
+                        labelStyle: AppTextStyles.body1.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        errorText: amountError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.purpleGrey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: primaryColor),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                      ),
+                      onChanged: (_) {
+                        if (amountError != null) {
+                          setDialogState(() => amountError = null);
+                        }
+                      },
+                    ),
+                    ],
                     if (feedingType == 'Breastfeed') ...[
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        value: selectedSide,
+                        initialValue: selectedSide,
                         decoration: InputDecoration(
                           labelText: 'Side (optional)',
                           labelStyle: AppTextStyles.body1.copyWith(
@@ -434,7 +493,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColors.main500),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                         ),
                         items: [null, 'Left', 'Right', 'Both'].map((String? value) {
@@ -454,7 +513,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     GestureDetector(
                       onTap: () async {
                         final picked = await showTimePicker(
-                          context: context,
+                          context: builderContext,
                           initialTime: selectedTime,
                         );
                         if (picked != null) {
@@ -477,12 +536,12 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.main500),
+                              borderSide: BorderSide(color: primaryColor),
                             ),
-                            suffixIcon: Icon(Icons.access_time, color: AppColors.main500),
+                            suffixIcon: Icon(Icons.access_time, color: primaryColor),
                           ),
                           controller: TextEditingController(
-                            text: selectedTime.format(context),
+                            text: selectedTime.format(builderContext),
                           ),
                         ),
                       ),
@@ -502,25 +561,42 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    final duration = int.tryParse(durationController.text);
+                    final amount = int.tryParse(amountController.text);
+                    
+                    // Validate duration is required for all types
+                    if (duration == null || duration <= 0) {
+                      setDialogState(() {
+                        durationError = 'Duration is required';
+                      });
+                      return;
+                    }
+                    
+                    // Validate amount is required for Bottle
+                    if (feedingType == 'Bottle' && (amount == null || amount <= 0)) {
+                      setDialogState(() {
+                        amountError = 'Amount is required';
+                      });
+                      return;
+                    }
+                    
                     final now = DateTime.now();
                     final loggedAt = DateTime(
                       now.year, now.month, now.day,
                       selectedTime.hour, selectedTime.minute,
                     );
                     
-                    final value = int.tryParse(durationController.text) ?? 0;
-                    
-                    context.read<BabyCubit>().addFeedingLog(
+                    babyCubit.addFeedingLog(
                       feedingType: feedingType,
-                      durationMinutes: feedingType == 'Breastfeed' ? value : null,
-                      amountMl: feedingType == 'Bottle' ? value.toDouble() : null,
+                      durationMinutes: duration,
+                      amountMl: feedingType == 'Bottle' ? amount?.toDouble() : null,
                       breastSide: selectedSide,
                       loggedAt: loggedAt,
                     );
                     Navigator.pop(dialogContext);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.main500,
+                    backgroundColor: primaryColor,
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -533,6 +609,146 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
           },
         );
       },
+    );
+  }
+
+  void _showAllFeedingsDialog(BuildContext context, List<FeedingLogModel> allLogs) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext sheetContext) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.purpleGrey,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'All Feeding History',
+                      style: AppTextStyles.headline2,
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(sheetContext),
+                      icon: Icon(Icons.close, color: AppColors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: allLogs.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No feeding logs yet',
+                          style: AppTextStyles.body1.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: allLogs.length,
+                        itemBuilder: (context, index) {
+                          final log = allLogs[index];
+                          return _buildFeedingHistoryItem(log);
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFeedingHistoryItem(FeedingLogModel log) {
+    final timeStr = DateFormat('h:mm a').format(log.loggedAt);
+    final dateStr = DateFormat('MMM d, yyyy').format(log.loggedAt);
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.shadow1,
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              log.feedingType == 'Breastfeed'
+                  ? Icons.child_care
+                  : Icons.baby_changing_station,
+              color: primaryColor,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  log.feedingType,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  log.feedingType == 'Breastfeed'
+                      ? '${log.durationMinutes ?? 0} min${log.breastSide != null ? ' - ${log.breastSide} side' : ''}'
+                      : '${log.durationMinutes ?? 0} min - ${log.amountMl?.toInt() ?? 0} ml',
+                  style: AppTextStyles.body1,
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                timeStr,
+                style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                dateStr,
+                style: AppTextStyles.smallLabel.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

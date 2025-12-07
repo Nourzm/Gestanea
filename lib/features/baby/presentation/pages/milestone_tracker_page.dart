@@ -13,8 +13,9 @@ import 'package:intl/intl.dart';
 
 class MilestoneTrackerPage extends StatefulWidget {
   final String? babyId;
+  final bool isGirl;
   
-  const MilestoneTrackerPage({super.key, this.babyId});
+  const MilestoneTrackerPage({super.key, this.babyId, this.isGirl = false});
 
   @override
   State<MilestoneTrackerPage> createState() => _MilestoneTrackerPageState();
@@ -32,6 +33,10 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
   ];
 
   bool _hasLoadedData = false;
+  bool _hasInitializedDefaults = false;
+  
+  Color get primaryColor => widget.isGirl ? const Color(0xFFFF9EC9) : const Color(0xFF87CEEB);
+  Color get secondaryColor => widget.isGirl ? const Color(0xFFFFC6E0) : const Color(0xFFB0E0E6);
 
   @override
   void initState() {
@@ -41,6 +46,19 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
     if (cubit.currentBabyId != null) {
       cubit.loadMilestones();
       _hasLoadedData = true;
+    }
+  }
+
+  Future<void> _initializeDefaultMilestones(BuildContext context) async {
+    if (_hasInitializedDefaults) return;
+    _hasInitializedDefaults = true;
+    
+    final cubit = context.read<BabyCubit>();
+    for (final milestone in defaultMilestones) {
+      await cubit.addMilestone(
+        milestoneName: milestone['title'] as String,
+        expectedAgeMonths: milestone['age'] as int,
+      );
     }
   }
 
@@ -88,6 +106,13 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
             List<MilestoneModel> milestones = [];
             if (state is MilestoneLoaded) {
               milestones = state.allMilestones;
+              
+              // Initialize default milestones if database is empty
+              if (milestones.isEmpty && !_hasInitializedDefaults) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _initializeDefaultMilestones(context);
+                });
+              }
             }
             
             // Calculate progress
@@ -104,19 +129,19 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(Icons.arrow_back_ios, color: primaryColor, size: 24),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Milestones',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            style: AppTextStyles.headline1.copyWith(color: primaryColor),
                           ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add, color: AppColors.main500, size: 24),
+                        icon: Icon(Icons.add, color: primaryColor, size: 24),
                         onPressed: () => _showAddMilestoneDialog(context),
                       ),
                     ],
@@ -133,8 +158,8 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.main500, AppColors.main300],
+                              gradient: LinearGradient(
+                                colors: [primaryColor, secondaryColor],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -257,7 +282,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               );
             },
             icon: const Icon(Icons.check_circle_outline),
-            color: AppColors.main500,
+            color: primaryColor,
           ),
         ],
       ),
@@ -273,7 +298,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isCompleted ? AppColors.main500 : Colors.transparent,
+          color: isCompleted ? primaryColor : Colors.transparent,
           width: 2,
         ),
         boxShadow: AppColors.shadow1,
@@ -284,7 +309,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: isCompleted ? AppColors.main500 : AppColors.purpleGrey,
+              color: isCompleted ? primaryColor : AppColors.purpleGrey,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -322,7 +347,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                 context.read<BabyCubit>().markMilestoneAchieved(milestone.id);
               },
               icon: const Icon(Icons.check_circle_outline),
-              color: AppColors.main500,
+              color: primaryColor,
             ),
         ],
       ),
@@ -330,6 +355,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
   }
 
   void _showAddMilestoneDialog(BuildContext context) {
+    final babyCubit = context.read<BabyCubit>();
     final titleController = TextEditingController();
     final ageController = TextEditingController();
     
@@ -351,7 +377,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                    borderSide: BorderSide(color: primaryColor, width: 2),
                   ),
                 ),
               ),
@@ -365,7 +391,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                    borderSide: BorderSide(color: primaryColor, width: 2),
                   ),
                 ),
               ),
@@ -379,7 +405,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
             ElevatedButton(
               onPressed: () {
                 if (titleController.text.isNotEmpty) {
-                  context.read<BabyCubit>().addMilestone(
+                  babyCubit.addMilestone(
                     milestoneName: titleController.text,
                     expectedAgeMonths: int.tryParse(ageController.text),
                   );
@@ -387,7 +413,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.main500,
+                backgroundColor: primaryColor,
                 foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -399,4 +425,3 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
     );
   }
 }
-

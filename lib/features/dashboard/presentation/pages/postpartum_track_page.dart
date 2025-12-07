@@ -53,19 +53,19 @@ class PostpartumTrackPage extends StatelessWidget {
         'title': 'Feeding Log',
         'icon': Icons.local_drink,
         'color': isGirl ? Colors.pink[100] : Colors.blue[100],
-        'pageBuilder': () => const FeedingLogPage(),
+        'pageBuilder': () => FeedingLogPage(isGirl: isGirl),
       },
       {
         'title': 'Growth Tracker',
         'icon': Icons.monitor_weight,
         'color': isGirl ? Colors.pink[200] : Colors.blue[200],
-        'pageBuilder': () => const GrowthTrackerPage(),
+        'pageBuilder': () => GrowthTrackerPage(babyGender: isGirl ? 'girl' : 'boy'),
       },
       {
         'title': 'Milestone',
         'icon': Icons.flag,
         'color': isGirl ? Colors.pink[50] : Colors.blue[50],
-        'pageBuilder': () => const MilestoneTrackerPage(),
+        'pageBuilder': () => MilestoneTrackerPage(isGirl: isGirl),
       },
       {
         'title': 'Vaccine',

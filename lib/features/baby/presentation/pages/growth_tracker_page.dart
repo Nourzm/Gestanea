@@ -1,17 +1,21 @@
 // lib/features/baby/presentation/pages/growth_tracker_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/baby_growth_model.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class GrowthTrackerPage extends StatefulWidget {
   final String? babyId;
+  final String? babyGender;
   
-  const GrowthTrackerPage({super.key, this.babyId});
+  const GrowthTrackerPage({
+    super.key,
+    this.babyId,
+    this.babyGender,
+  });
 
   @override
   State<GrowthTrackerPage> createState() => _GrowthTrackerPageState();
@@ -19,14 +23,14 @@ class GrowthTrackerPage extends StatefulWidget {
 
 class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
   bool showWeight = true;
-  final _valueController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   bool _hasLoadedData = false;
 
   @override
   void initState() {
     super.initState();
-    // Check if baby profile is already loaded
     final cubit = context.read<BabyCubit>();
     if (cubit.currentBabyId != null) {
       cubit.loadGrowthRecords();
@@ -36,26 +40,64 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
 
   @override
   void dispose() {
-    _valueController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
     super.dispose();
+  }
+
+  Color get primaryColor =>
+      widget.babyGender == 'girl' ? const Color(0xFFFF9EC9) : const Color(0xFF87CEEB);
+
+  Color get lightColor =>
+      widget.babyGender == 'girl' ? const Color(0xFFFFC6E0) : const Color(0xFFB0E0E6);
+
+  List<FlSpot> _getChartSpots(
+    List<BabyGrowthModel> records, 
+    bool isWeight, {
+    double? birthWeight,
+    double? birthHeight,
+    DateTime? birthDate,
+  }) {
+    final sortedRecords = records
+        .where((r) => isWeight ? r.weight != null : r.height != null)
+        .toList()
+      ..sort((a, b) => a.recordedDate.compareTo(b.recordedDate));
+
+    final List<FlSpot> spots = [];
+    
+    // Add birth data as the first point (index 0) if available
+    final birthValue = isWeight ? birthWeight : birthHeight;
+    if (birthValue != null && birthDate != null) {
+      spots.add(FlSpot(0, birthValue));
+    }
+    
+    // Add growth records with offset if birth data exists
+    final offset = spots.isNotEmpty ? 1 : 0;
+    for (int i = 0; i < sortedRecords.length; i++) {
+      final value = isWeight 
+          ? sortedRecords[i].weight 
+          : sortedRecords[i].height;
+      if (value != null) {
+        spots.add(FlSpot((i + offset).toDouble(), value));
+      }
+    }
+    
+    return spots;
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      backgroundColor: AppColors.bg_1,
+      backgroundColor: const Color(0xFFFDF8FF),
       body: SafeArea(
         child: BlocConsumer<BabyCubit, BabyState>(
           listener: (context, state) {
-            // When baby profile is loaded, load growth records
             if (state is BabyLoaded && !_hasLoadedData) {
               _hasLoadedData = true;
               context.read<BabyCubit>().loadGrowthRecords();
             }
           },
           builder: (context, state) {
-            // Handle loading and error states
             if (state is BabyLoading || state is GrowthLoading) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -82,40 +124,64 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
               );
             }
             
+            // Handle both BabyLoaded and GrowthLoaded states
             List<BabyGrowthModel> growthRecords = [];
-            if (state is GrowthLoaded) {
-              growthRecords = state.growthRecords;
-            }
+            double? birthWeight;
+            double? birthHeight;
+            DateTime? birthDate;
             
-            // Filter records based on current view (weight only - model has no height)
-            final filteredRecords = growthRecords
+            if (state is BabyLoaded) {
+              growthRecords = state.growthRecords;
+              birthWeight = state.baby.birthWeight;
+              birthHeight = state.baby.birthHeight;
+              birthDate = state.baby.dateOfBirth;
+            } else if (state is GrowthLoaded) {
+              growthRecords = state.growthRecords;
+              birthWeight = state.baby.birthWeight;
+              birthHeight = state.baby.birthHeight;
+              birthDate = state.baby.dateOfBirth;
+            }
+
+            final weightRecords = growthRecords
                 .where((r) => r.weight != null)
                 .toList()
               ..sort((a, b) => b.recordedDate.compareTo(a.recordedDate));
             
-            // Get latest record
-            final latestValue = filteredRecords.isNotEmpty
-                ? filteredRecords.first.weight
-                : null;
-            final latestDate = filteredRecords.isNotEmpty ? filteredRecords.first.recordedDate : null;
+            final heightRecords = growthRecords
+                .where((r) => r.height != null)
+                .toList()
+              ..sort((a, b) => b.recordedDate.compareTo(a.recordedDate));
+            
+            final filteredRecords = showWeight ? weightRecords : heightRecords;
+            final chartSpots = _getChartSpots(growthRecords, showWeight, birthWeight: birthWeight, birthHeight: birthHeight, birthDate: birthDate);
+            
+            // Latest values: from records or birth values if no records
+            final latestWeight = weightRecords.isNotEmpty ? weightRecords.first.weight : birthWeight;
+            final latestHeight = heightRecords.isNotEmpty ? heightRecords.first.height : birthHeight;
+            final latestDate = (showWeight ? weightRecords : heightRecords).isNotEmpty 
+                ? (showWeight ? weightRecords.first : heightRecords.first).recordedDate 
+                : birthDate;
 
             return Column(
               children: [
-                // Header
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(Icons.arrow_back_ios, color: primaryColor, size: 24),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Growth Tracker',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: primaryColor,
+                            ),
                           ),
                         ),
                       ),
@@ -130,70 +196,322 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Current Stats
+                          // Segmented Toggle for Weight/Height
                           Container(
-                            padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.pink500, AppColors.pink300],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
+                              color: primaryColor.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(16),
-                              boxShadow: AppColors.shadow1,
+                              border: Border.all(color: primaryColor.withValues(alpha: 0.3), width: 1),
                             ),
-                            child: Column(
+                            padding: const EdgeInsets.all(4),
+                            child: Row(
                               children: [
-                                Text(
-                                  'Current Weight',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () => setState(() => showWeight = true),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      decoration: BoxDecoration(
+                                        color: showWeight ? primaryColor : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.scale,
+                                              color: showWeight ? Colors.white : primaryColor,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Weight',
+                                              style: TextStyle(
+                                                color: showWeight ? Colors.white : primaryColor,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  latestValue != null 
-                                      ? '$latestValue kg'
-                                      : 'No data',
-                                  style: AppTextStyles.numberHighlight.copyWith(fontSize: 36),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  latestDate != null 
-                                      ? 'Last updated: ${DateFormat('MMM d, yyyy').format(latestDate)}'
-                                      : 'No records yet',
-                                  style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () => setState(() => showWeight = false),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      decoration: BoxDecoration(
+                                        color: !showWeight ? primaryColor : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.straighten,
+                                              color: !showWeight ? Colors.white : primaryColor,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Height',
+                                              style: TextStyle(
+                                                color: !showWeight ? Colors.white : primaryColor,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 32),
 
-                          // Chart Placeholder
+                          // Current Weight and Height Cards - Centered
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 140,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [primaryColor, lightColor],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: primaryColor.withValues(alpha: 0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const Icon(
+                                          Icons.scale,
+                                          color: Colors.white,
+                                          size: 28,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Weight',
+                                          style: TextStyle(
+                                            color: Colors.white.withValues(alpha: 0.8),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          latestWeight != null
+                                              ? '${latestWeight.toStringAsFixed(1)}\nkg'
+                                              : '-- kg',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                SizedBox(
+                                  width: 140,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [primaryColor, lightColor],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: primaryColor.withValues(alpha: 0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const Icon(
+                                          Icons.straighten,
+                                          color: Colors.white,
+                                          size: 28,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Height',
+                                          style: TextStyle(
+                                            color: Colors.white.withValues(alpha: 0.8),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          latestHeight != null
+                                              ? '${latestHeight.toStringAsFixed(1)}\ncm'
+                                              : '-- cm',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // Chart Section
                           Container(
-                            height: 250,
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: AppColors.white,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
-                              boxShadow: AppColors.shadow1,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Weight Progress Chart',
-                                  style: AppTextStyles.subtitle1.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      showWeight ? 'Weight Progress' : 'Height Progress',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: primaryColor,
+                                      ),
+                                    ),
+                                    if (latestDate != null)
+                                      Text(
+                                        'Last: ${DateFormat('MMM d').format(latestDate)}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 const SizedBox(height: 20),
-                                Expanded(
-                                  child: Center(
-                                    child: Icon(Icons.show_chart, size: 80, color: AppColors.textSecondary),
-                                  ),
-                                ),
-                                Text(
-                                  'Chart visualization would go here',
-                                  style: AppTextStyles.smallLabel,
+                                SizedBox(
+                                  height: 200,
+                                  child: chartSpots.length >= 2
+                                      ? LineChart(
+                                          LineChartData(
+                                            gridData: FlGridData(
+                                              show: true,
+                                              drawVerticalLine: false,
+                                              horizontalInterval: 1,
+                                              getDrawingHorizontalLine: (value) => FlLine(
+                                                color: Colors.grey[200]!,
+                                                strokeWidth: 1,
+                                              ),
+                                            ),
+                                            titlesData: FlTitlesData(
+                                              leftTitles: AxisTitles(
+                                                sideTitles: SideTitles(
+                                                  showTitles: true,
+                                                  reservedSize: 40,
+                                                  getTitlesWidget: (value, meta) => Text(
+                                                    '${value.toInt()} ${showWeight ? 'kg' : 'cm'}',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              bottomTitles: const AxisTitles(
+                                                sideTitles: SideTitles(showTitles: false),
+                                              ),
+                                              topTitles: const AxisTitles(
+                                                sideTitles: SideTitles(showTitles: false),
+                                              ),
+                                              rightTitles: const AxisTitles(
+                                                sideTitles: SideTitles(showTitles: false),
+                                              ),
+                                            ),
+                                            borderData: FlBorderData(show: false),
+                                            lineBarsData: [
+                                              LineChartBarData(
+                                                spots: chartSpots,
+                                                isCurved: true,
+                                                color: primaryColor,
+                                                barWidth: 3,
+                                                isStrokeCapRound: true,
+                                                dotData: FlDotData(
+                                                  show: true,
+                                                  getDotPainter: (spot, percent, barData, index) =>
+                                                      FlDotCirclePainter(
+                                                    radius: 4,
+                                                    color: Colors.white,
+                                                    strokeWidth: 2,
+                                                    strokeColor: primaryColor,
+                                                  ),
+                                                ),
+                                                belowBarData: BarAreaData(
+                                                  show: true,
+                                                  color: primaryColor.withValues(alpha: 0.1),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.show_chart,
+                                                size: 48,
+                                                color: Colors.grey[300],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Add at least 2 records\nto see the chart',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.grey[500],
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                 ),
                               ],
                             ),
@@ -203,42 +521,45 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                           // Recent Logs
                           Text(
                             'Recent Logs',
-                            style: AppTextStyles.headline2,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
                           const SizedBox(height: 12),
-                          if (filteredRecords.isEmpty)
+                          // Show birth entry if no records but we have birth data
+                          if (filteredRecords.isEmpty && ((showWeight && birthWeight != null) || (!showWeight && birthHeight != null)))
+                            _buildLogItem(
+                              '${(showWeight ? birthWeight : birthHeight)?.toStringAsFixed(1)} ${showWeight ? 'kg' : 'cm'}',
+                              birthDate != null ? 'Birth - ${DateFormat('MMM d, yyyy').format(birthDate)}' : 'At Birth',
+                              true,
+                            )
+                          else if (filteredRecords.isEmpty)
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'No weight records yet',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
+                                  showWeight ? 'No weight records yet' : 'No height records yet',
+                                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
                                 ),
                               ),
                             )
-                          else
-                            ...filteredRecords.take(5).map((record) => _buildLogItem(
-                              '${record.weight} kg',
+                          else ...[
+                            ...filteredRecords.take(10).map((record) => _buildLogItem(
+                              '${(showWeight ? record.weight : record.height)?.toStringAsFixed(1)} ${showWeight ? 'kg' : 'cm'}',
                               DateFormat('MMM d, yyyy').format(record.recordedDate),
                               record == filteredRecords.first,
                             )),
-                          const SizedBox(height: 24),
-
-                          // Add Log Button
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: () => _showAddLogDialog(context),
-                              icon: const Icon(Icons.add),
-                              label: const Text('Add Weight Log'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.main500,
-                                foregroundColor: AppColors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            // Add birth data as the last entry in the log if available
+                            if ((showWeight && birthWeight != null) || (!showWeight && birthHeight != null))
+                              _buildLogItem(
+                                '${(showWeight ? birthWeight : birthHeight)?.toStringAsFixed(1)} ${showWeight ? 'kg' : 'cm'}',
+                                birthDate != null ? 'Birth - ${DateFormat('MMM d, yyyy').format(birthDate)}' : 'At Birth',
+                                false,
                               ),
-                            ),
-                          ),
+                          ],
+                          const SizedBox(height: 100),
                         ],
                       ),
                     ),
@@ -249,21 +570,25 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddRecordDialog(context),
+        backgroundColor: primaryColor,
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
+      ),
     );
   }
 
   Widget _buildLogItem(String value, String date, bool isLatest) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isLatest ? AppColors.pink300.withValues(alpha: 0.3) : AppColors.white,
+        color: isLatest ? primaryColor.withValues(alpha: 0.1) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isLatest ? AppColors.pink500 : Colors.transparent,
-          width: 2,
+          color: isLatest ? primaryColor : Colors.grey[300]!,
+          width: isLatest ? 2 : 1,
         ),
-        boxShadow: AppColors.shadow1,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -273,61 +598,91 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
               Icon(
                 Icons.circle,
                 size: 8,
-                color: isLatest ? AppColors.pink500 : AppColors.textSecondary,
+                color: isLatest ? primaryColor : Colors.grey[400],
               ),
               const SizedBox(width: 12),
               Text(
                 value,
-                style: AppTextStyles.subtitle1.copyWith(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  fontSize: 15,
                   fontWeight: isLatest ? FontWeight.w600 : FontWeight.normal,
+                  color: Colors.black87,
                 ),
               ),
             ],
           ),
-          Text(date, style: AppTextStyles.body1),
+          Text(
+            date,
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+          ),
         ],
       ),
     );
   }
 
-  void _showAddLogDialog(BuildContext context) {
-    _valueController.clear();
+  void _showAddRecordDialog(BuildContext context) {
+    _weightController.clear();
+    _heightController.clear();
     _selectedDate = DateTime.now();
+    
+    // Capture the cubit reference BEFORE showing the dialog
+    final babyCubit = context.read<BabyCubit>();
     
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (builderContext, setDialogState) {
             return AlertDialog(
-              backgroundColor: AppColors.bg_1,
+              backgroundColor: const Color(0xFFFDF8FF),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: Text(
-                'Add Weight Log',
-                style: AppTextStyles.headline2,
+                'Add Growth Record',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: primaryColor,
+                ),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    controller: _valueController,
-                    keyboardType: TextInputType.number,
+                    controller: _weightController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       labelText: 'Weight (kg)',
-                      labelStyle: AppTextStyles.body1,
+                      labelStyle: TextStyle(color: primaryColor),
+                      hintText: 'e.g., 5.5',
+                      prefixIcon: Icon(Icons.scale, color: primaryColor),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                        borderSide: BorderSide(color: primaryColor, width: 2),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _heightController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: 'Height (cm)',
+                      labelStyle: TextStyle(color: primaryColor),
+                      hintText: 'e.g., 65',
+                      prefixIcon: Icon(Icons.straighten, color: primaryColor),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: primaryColor, width: 2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   GestureDetector(
                     onTap: () async {
                       final picked = await showDatePicker(
-                        context: context,
+                        context: builderContext,
                         initialDate: _selectedDate,
                         firstDate: DateTime(2020),
                         lastDate: DateTime.now(),
@@ -340,10 +695,14 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'Date',
-                          labelStyle: AppTextStyles.body1,
+                          labelStyle: TextStyle(color: primaryColor),
                           hintText: DateFormat('MMM d, yyyy').format(_selectedDate),
+                          prefixIcon: Icon(Icons.calendar_today, color: primaryColor),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                          suffixIcon: const Icon(Icons.calendar_today, color: AppColors.main500),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: primaryColor, width: 2),
+                          ),
                         ),
                         controller: TextEditingController(
                           text: DateFormat('MMM d, yyyy').format(_selectedDate),
@@ -356,22 +715,30 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                  child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final value = double.tryParse(_valueController.text);
-                    if (value != null) {
-                      context.read<BabyCubit>().addGrowthRecord(
+                    final weight = double.tryParse(_weightController.text);
+                    final height = double.tryParse(_heightController.text);
+                    
+                    if (weight != null || height != null) {
+                      // Use the captured babyCubit reference
+                      babyCubit.addGrowthRecord(
                         recordedDate: _selectedDate,
-                        weight: value,
+                        weight: weight,
+                        height: height,
                       );
                       Navigator.pop(dialogContext);
+                    } else {
+                      ScaffoldMessenger.of(dialogContext).showSnackBar(
+                        const SnackBar(content: Text('Please enter at least one measurement')),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.main500,
-                    foregroundColor: AppColors.white,
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Save'),
