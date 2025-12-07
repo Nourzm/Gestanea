@@ -550,8 +550,13 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     final userId = _getUserId();
     final cubit = UpcomingAppointmentsCubit.getInstance();
     
+    // Load appointments initially if not already loaded
+    if (cubit.state is UpcomingAppointmentsInitial) {
+      cubit.loadUpcomingAppointments(userId);
+    }
+    
     return BlocProvider<UpcomingAppointmentsCubit>.value(
-      value: cubit..loadUpcomingAppointments(userId),
+      value: cubit,
       child: BlocBuilder<UpcomingAppointmentsCubit, UpcomingAppointmentsState>(
         builder: (context, state) {
           return Column(

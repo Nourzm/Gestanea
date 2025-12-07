@@ -109,6 +109,8 @@ class UpcomingAppointmentsCubit extends Cubit<UpcomingAppointmentsState> {
   }
 
   Future<void> refreshUpcomingAppointments(String userId) async {
+    // Small delay to ensure database is updated
+    await Future.delayed(const Duration(milliseconds: 500));
     await loadUpcomingAppointments(userId);
   }
 }
