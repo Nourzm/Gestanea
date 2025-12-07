@@ -11,6 +11,7 @@ import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart' 
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' as tips;
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/upcoming_appointments_cubit.dart';
 import 'postpartum_track_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
@@ -546,56 +547,153 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   Widget _buildUpcomingSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Up coming',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+    final userId = _getUserId();
+    
+    return BlocProvider(
+      create: (context) => UpcomingAppointmentsCubit()
+        ..loadUpcomingAppointments(userId),
+      child: BlocBuilder<UpcomingAppointmentsCubit, UpcomingAppointmentsState>(
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Upcoming',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Navigate to see all appointments
+                    },
+                    child: Text(
+                      'see all',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: primaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // Navigate to see all
-              },
-              child: Text(
-                'see all',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: primaryColor,
-                  fontWeight: FontWeight.w500,
+              const SizedBox(height: 16),
+
+              // Display appointments or empty state
+              if (state is UpcomingAppointmentsLoading)
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
+              else if (state is UpcomingAppointmentsLoaded)
+                Column(
+                  children: state.appointments
+                      .map((appointment) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildUpcomingCard(
+                              icon: _getAppointmentIcon(
+                                  appointment.appointmentType ?? ''),
+                              iconBgColor: primaryColor,
+                              title: appointment.title,
+                              subtitle:
+                                  _formatAppointmentDateTime(appointment),
+                            ),
+                          ))
+                      .toList(),
+                )
+              else if (state is UpcomingAppointmentsError)
+                Center(
+                  child: Text(
+                    'Error loading appointments',
+                    style: TextStyle(color: Colors.red.shade400),
+                  ),
+                )
+              else
+                Center(
+                  child: Text(
+                    'No upcoming appointments',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-
-        // Doctor Checkup Card
-        _buildUpcomingCard(
-          icon: Icons.favorite,
-          iconBgColor: primaryColor,
-          title: 'Doctor Checkup',
-          subtitle: 'Today at 2:00PM',
-        ),
-        const SizedBox(height: 12),
-
-        // Vitamin D Card
-        _buildUpcomingCard(
-          icon: Icons.medication,
-          iconBgColor: primaryColor,
-          title: 'Vitamin D',
-          subtitle: 'In 2 hours',
-        ),
-      ],
+            ],
+          );
+        },
+      ),
     );
+  }
+
+  String _getUserId() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '';
+  }
+
+  IconData _getAppointmentIcon(String appointmentType) {
+    switch (appointmentType.toLowerCase()) {
+      case 'vaccination':
+      case 'vaccine':
+        return Icons.medical_services;
+      case 'checkup':
+      case 'check-up':
+      case 'medical':
+        return Icons.favorite;
+      case 'appointment':
+        return Icons.calendar_today;
+      default:
+        return Icons.event;
+    }
+  }
+
+  String _formatAppointmentDateTime(appointment) {
+    final appointmentDate = appointment.appointmentDate;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final appointmentDay =
+        DateTime(appointmentDate.year, appointmentDate.month, appointmentDate.day);
+
+    String dayText = '';
+    if (appointmentDay == today) {
+      dayText = 'Today';
+    } else if (appointmentDay ==
+        today.add(const Duration(days: 1))) {
+      dayText = 'Tomorrow';
+    } else {
+      dayText =
+          '${appointmentDay.day} ${_getMonthName(appointmentDay.month)}';
+    }
+
+    final time =
+        '${appointmentDate.hour.toString().padLeft(2, '0')}:${appointmentDate.minute.toString().padLeft(2, '0')}';
+    return '$dayText at $time';
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
   }
 
   Widget _buildUpcomingCard({
