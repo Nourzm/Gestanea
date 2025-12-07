@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/models/baby_model.dart';
 import 'package:gestanea/core/database/models/baby_growth_model.dart';
@@ -26,6 +27,7 @@ class BabyCubit extends Cubit<BabyState> {
     emit(BabyLoading());
     try {
       final baby = await _repository.getBabyByUserId(userId);
+      debugPrint('🍼 BabyCubit.loadBabyProfile() - userId: $userId, baby: ${baby?.name}, gender: ${baby?.gender}');
       if (baby == null) {
         emit(NoBabyProfile());
         return;

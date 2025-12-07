@@ -16,6 +16,7 @@ import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -62,7 +63,15 @@ class HomeScreen extends StatelessWidget {
                         if (authState is AuthAuthenticated) {
                           final userId = authState.user.id;
                           if (userId.isNotEmpty) {
+                            // Refresh dashboard to reflect postpartum mode
                             dashboardCubit.loadDashboardByStringId(userId);
+                            // Also refresh BabyCubit to load newly created baby profile and gender
+                            try {
+                              final babyCubit = context.read<BabyCubit>();
+                              babyCubit.loadBabyProfile();
+                            } catch (_) {
+                              // BabyCubit may not be in this subtree; ignore if unavailable
+                            }
                           }
                         }
                       },
