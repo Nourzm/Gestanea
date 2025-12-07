@@ -13,7 +13,7 @@ class DashboardProvider extends ChangeNotifier {
   PostpartumDashboard? _postpartumDashboard;
   bool _isLoading = false;
   String? _error;
-  int _userId = 0;
+  String _userId = ''; // Use String instead of int for consistency with database
 
   // Singleton pattern
   static final DashboardProvider _instance = DashboardProvider._internal();
@@ -43,16 +43,22 @@ class DashboardProvider extends ChangeNotifier {
   String? get error => _error;
 
   void setUserId(int userId) {
+    _userId = userId.toString();
+  }
+
+  void setUserIdString(String userId) {
     _userId = userId;
   }
 
   Future<void> loadPregnancyDashboard() async {
+    if (_userId.isEmpty) return;
+    
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _pregnancyDashboard = await _getPregnancyDashboardUseCase.call(_userId);
+      _pregnancyDashboard = await _getPregnancyDashboardUseCase.callByStringId(_userId);
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -63,12 +69,14 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   Future<void> loadPostpartumDashboard() async {
+    if (_userId.isEmpty) return;
+    
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _postpartumDashboard = await _getPostpartumDashboardUseCase.call(_userId);
+      _postpartumDashboard = await _getPostpartumDashboardUseCase.callByStringId(_userId);
       _isLoading = false;
       notifyListeners();
     } catch (e) {

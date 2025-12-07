@@ -88,17 +88,26 @@ class UpcomingAppointmentsCubit extends Cubit<UpcomingAppointmentsState> {
       if (appointments.isEmpty) {
         emit(UpcomingAppointmentsEmpty());
       } else {
-        // Filter to only show appointments within next 7 days
+        // Filter to only show appointments within next 30 days
         final now = DateTime.now();
-        final sevenDaysLater =
-            now.add(const Duration(days: 7));
+        final windowEnd = now.add(const Duration(days: 30));
         final filteredAppointments = appointments.where((apt) {
           return apt.appointmentDate.isAfter(now) &&
-              apt.appointmentDate.isBefore(sevenDaysLater);
+              apt.appointmentDate.isBefore(windowEnd);
         }).toList();
 
+
         if (filteredAppointments.isEmpty) {
-          emit(UpcomingAppointmentsEmpty());
+          // Fallback: show the next few upcoming regardless of window
+          final fallback = appointments
+              .where((apt) => apt.appointmentDate.isAfter(now))
+              .take(5)
+              .toList();
+          if (fallback.isEmpty) {
+            emit(UpcomingAppointmentsEmpty());
+          } else {
+            emit(UpcomingAppointmentsLoaded(appointments: fallback));
+          }
         } else {
           emit(UpcomingAppointmentsLoaded(appointments: filteredAppointments));
         }
