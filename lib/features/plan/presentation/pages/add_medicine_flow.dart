@@ -4,9 +4,14 @@ import 'add_medicine/form_dose_page.dart';
 import 'add_medicine/frequency_page.dart';
 import 'add_medicine/upload_picture_page.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/database/models/medicine_model.dart';
+import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class AddMedicineFlow extends StatefulWidget {
-  const AddMedicineFlow({super.key});
+  final String userId;
+
+  const AddMedicineFlow({super.key, required this.userId});
 
   @override
   State<AddMedicineFlow> createState() => _AddMedicineFlowState();
@@ -15,13 +20,17 @@ class AddMedicineFlow extends StatefulWidget {
 class _AddMedicineFlowState extends State<AddMedicineFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  final _medicineRepository = MedicineRepository.getInstance();
 
   String? selectedMedication;
   String? selectedForm;
   double selectedDose = 0.5;
   int frequencyNumber = 1;
+  String frequencyType = 'daily';
+  List<String> scheduledTimes = [];
 
   DateTime? startingDate;
+  DateTime? endingDate;
   String? medicationImage;
 
   void _nextPage() {
@@ -41,6 +50,69 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
       );
     } else {
       Navigator.pop(context);
+    }
+  }
+
+  Future<void> _saveMedicine() async {
+    if (selectedMedication == null || selectedMedication!.isEmpty) {
+      _showError('Please enter a medication name');
+      return;
+    }
+
+    if (selectedForm == null || selectedForm!.isEmpty) {
+      _showError('Please select a form');
+      return;
+    }
+
+    if (startingDate == null) {
+      _showError('Please select a starting date');
+      return;
+    }
+
+    if (scheduledTimes.isEmpty) {
+      _showError('Please add at least one scheduled time');
+      return;
+    }
+
+    try {
+      final uuid = Uuid();
+      final medicine = MedicineModel(
+        id: uuid.v4(),
+        userId: widget.userId,
+        babyId: null,
+        medicineName: selectedMedication!,
+        dosage: '$selectedDose $selectedForm',
+        type: selectedForm,
+        frequencyType: frequencyType,
+        frequencyValue: frequencyNumber,
+        scheduledTimes: scheduledTimes,
+        startDate: startingDate!,
+        endDate: endingDate,
+        maxDoses: null,
+        medicineImageUrl: medicationImage,
+        isActive: true,
+        createdAt: DateTime.now(),
+      );
+
+      final result = await _medicineRepository.insertMedicine(medicine);
+
+      if (result.state) {
+        if (mounted) {
+          Navigator.pop(context, true); // Return true to indicate success
+        }
+      } else {
+        _showError(result.message);
+      }
+    } catch (e) {
+      _showError('Failed to save medicine: $e');
+    }
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
+      );
     }
   }
 
@@ -77,12 +149,25 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                     onNext: _nextPage,
                     onBack: _previousPage,
                   ),
-                  FrequencyPage(onNext: _nextPage, onBack: _previousPage),
+                  FrequencyPage(
+                    onNext: _nextPage,
+                    onBack: _previousPage,
+                    onFrequencyChanged: (freq) =>
+                        setState(() => frequencyNumber = freq),
+                    onFrequencyTypeChanged: (type) =>
+                        setState(() => frequencyType = type),
+                    onScheduledTimesChanged: (times) =>
+                        setState(() => scheduledTimes = times),
+                    onDateSelected: (date) =>
+                        setState(() => startingDate = date),
+                    onEndDateSelected: (date) =>
+                        setState(() => endingDate = date),
+                  ),
 
                   UploadPicturePage(
                     onBack: _previousPage,
-                    onDone: () {
-                      Navigator.pop(context);
+                    onDone: () async {
+                      await _saveMedicine();
                     },
                   ),
                 ],
