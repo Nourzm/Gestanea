@@ -2,6 +2,17 @@ import 'package:sqflite/sqflite.dart';
 import 'package:gestanea/core/database/db_helper.dart';
 
 class VaccineLocalDataSource {
+  /// Returns the next user-scheduled (not completed) vaccines for a baby, ordered by scheduled_date.
+  Future<List<Map<String, dynamic>>> getUpcomingVaccinesForBaby(String babyId, {int limit = 10}) async {
+    final db = await _dbHelper.database;
+    return await db.query(
+      'vaccines',
+      where: 'baby_id = ? AND is_completed = 0 AND scheduled_date IS NOT NULL AND scheduled_date != ""',
+      whereArgs: [babyId],
+      orderBy: 'scheduled_date ASC',
+      limit: limit,
+    );
+  }
 
     /// Seeds the national vaccine schedule for a given babyId
     Future<void> seedNationalVaccinesForBaby(String babyId) async {

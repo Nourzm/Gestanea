@@ -4,6 +4,7 @@ import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/features/baby/data/datasources/vaccine_local_data_source.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
 import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
@@ -29,6 +30,7 @@ class PostpartumDashboardPage extends StatefulWidget {
 }
 
 class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
+    final VaccineLocalDataSource _vaccineLocalDataSource = VaccineLocalDataSource();
   // Gender-based theme colors
   late String currentBabyGender;
 
@@ -116,11 +118,10 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: BlocBuilder<BabyCubit, BabyState>(
         builder: (context, state) {
-          // Extract data from state
           String babyName = 'Baby';
           DateTime babyDateOfBirth = DateTime.now();
-          String nextVaccineDate = 'Dec 15';
-          int upcomingVaccines = 3;
+          String nextVaccineDate = '-';
+          int upcomingVaccines = 0;
           String growthStatus = 'On track';
 
           if (state is BabyLoaded) {
@@ -136,38 +137,57 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
             }
           }
 
-          return SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ==================== HEADER ====================
-                    _buildHeader(),
-                    const SizedBox(height: 24),
+          // Fetch next vaccines asynchronously
+          return FutureBuilder<List<Map<String, dynamic>>>(
+            future: (state is BabyLoaded)
+                ? _vaccineLocalDataSource.getUpcomingVaccinesForBaby(state.baby.id, limit: 3)
+                : Future.value([]),
+            builder: (context, snapshot) {
+              final vaccines = snapshot.data ?? [];
+              upcomingVaccines = vaccines.length;
+              if (vaccines.isNotEmpty) {
+                // Find the soonest scheduled_date (if set), else use scheduled_age
+                final first = vaccines.first;
+                if (first['scheduled_date'] != null && first['scheduled_date'] != '') {
+                  nextVaccineDate = first['scheduled_date'];
+                } else {
+                  nextVaccineDate = first['scheduled_age'] ?? '-';
+                }
+              }
+              return SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ==================== HEADER ====================
+                        _buildHeader(),
+                        const SizedBox(height: 24),
 
-                    // ==================== BABY CARD ====================
-                    _buildBabyCard(
-                      babyName: babyName,
-                      ageText: _formatAgeText(babyDateOfBirth),
-                      nextVaccineDate: nextVaccineDate,
-                      upcomingVaccines: upcomingVaccines,
-                      growthStatus: growthStatus,
+                        // ==================== BABY CARD ====================
+                        _buildBabyCard(
+                          babyName: babyName,
+                          ageText: _formatAgeText(babyDateOfBirth),
+                          nextVaccineDate: nextVaccineDate,
+                          upcomingVaccines: upcomingVaccines,
+                          growthStatus: growthStatus,
+                        ),
+                        const SizedBox(height: 20),
+
+                        // ==================== TIPS & DOCTORS ====================
+                        _buildQuickActions(),
+                        const SizedBox(height: 24),
+
+                        // ==================== UPCOMING SECTION ====================
+                        _buildUpcomingSection(),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-
-                    // ==================== TIPS & DOCTORS ====================
-                    _buildQuickActions(),
-                    const SizedBox(height: 24),
-
-                    // ==================== UPCOMING SECTION ====================
-                    _buildUpcomingSection(),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
@@ -602,92 +622,63 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   Widget _buildUpcomingSection() {
-    final userId = _getUserId();
-    final cubit = UpcomingAppointmentsCubit.getInstance();
-    
-    // Load appointments initially if not already loaded
-    if (cubit.state is UpcomingAppointmentsInitial) {
-      cubit.loadUpcomingAppointments(userId);
+    // Only show scheduled (not completed) vaccines as upcoming events
+    final babyState = context.read<BabyCubit>().state;
+    String? babyId;
+    if (babyState is BabyLoaded) {
+      babyId = babyState.baby.id;
     }
-    
-    return BlocProvider<UpcomingAppointmentsCubit>.value(
-      value: cubit,
-      child: BlocBuilder<UpcomingAppointmentsCubit, UpcomingAppointmentsState>(
-        builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Upcoming',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // Navigate to see all appointments
-                    },
-                    child: Text(
-                      'see all',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: primaryColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Display appointments or empty state
-              if (state is UpcomingAppointmentsLoading)
-                const Center(
-                  child: CircularProgressIndicator(),
-                )
-              else if (state is UpcomingAppointmentsLoaded)
-                Column(
-                  children: state.appointments
-                      .map((appointment) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _buildUpcomingCard(
-                              icon: _getAppointmentIcon(
-                                  appointment.appointmentType ?? ''),
-                              iconBgColor: primaryColor,
-                              title: appointment.title,
-                              subtitle:
-                                  _formatAppointmentDateTime(appointment),
-                            ),
-                          ))
-                      .toList(),
-                )
-              else if (state is UpcomingAppointmentsError)
-                Center(
-                  child: Text(
-                    'Error loading appointments',
-                    style: TextStyle(color: Colors.red.shade400),
-                  ),
-                )
-              else
-                Center(
-                  child: Text(
-                    'No upcoming appointments',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: babyId != null ? _vaccineLocalDataSource.getUpcomingVaccinesForBaby(babyId, limit: 10) : Future.value([]),
+      builder: (context, vaccineSnapshot) {
+        final vaccines = vaccineSnapshot.data ?? [];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Upcoming',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
                 ),
-            ],
-          );
-        },
-      ),
+                // Optionally add a 'see all' button for vaccines
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (vaccines.isNotEmpty)
+              Column(
+                children: vaccines
+                    .map((vaccine) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildUpcomingCard(
+                            icon: Icons.medical_services,
+                            iconBgColor: Colors.green.shade300,
+                            title: vaccine['vaccine_name'] ?? 'Vaccine',
+                            subtitle: vaccine['scheduled_date'] != null && vaccine['scheduled_date'] != ''
+                                ? vaccine['scheduled_date']
+                                : (vaccine['scheduled_age'] ?? ''),
+                          ),
+                        ))
+                    .toList(),
+              )
+            else
+              Center(
+                child: Text(
+                  'No upcoming scheduled vaccines',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
