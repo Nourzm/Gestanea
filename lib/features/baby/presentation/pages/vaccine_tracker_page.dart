@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../data/datasources/vaccine_local_data_source.dart';
 import '../../logic/cubit/baby_cubit.dart';
+import '../../logic/cubit/baby_state.dart';
 
 class VaccineTrackerPage extends StatefulWidget {
   final bool isGirl; // true for girl (pink), false for boy (blue)
@@ -13,40 +14,35 @@ class VaccineTrackerPage extends StatefulWidget {
   State<VaccineTrackerPage> createState() => _VaccineTrackerPageState();
 }
 
+
 class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
   late final VaccineLocalDataSource _vaccineDataSource;
   List<Map<String, dynamic>> _vaccines = [];
-  bool _loading = true;
-  String? _error;
+  bool _loadingVaccines = false;
+  String? _vaccineError;
   String? _actionLoadingId;
 
   @override
   void initState() {
     super.initState();
     _vaccineDataSource = VaccineLocalDataSource();
-    _loadVaccines();
   }
 
-  Future<void> _loadVaccines() async {
+  Future<void> _loadVaccines(String babyId) async {
+    setState(() {
+      _loadingVaccines = true;
+      _vaccineError = null;
+    });
     try {
-      final cubit = context.read<BabyCubit>();
-      final babyId = cubit.currentBabyId;
-      if (babyId == null) {
-        setState(() {
-          _error = 'No baby profile found.';
-          _loading = false;
-        });
-        return;
-      }
       final vaccines = await _vaccineDataSource.getVaccinesForBaby(babyId);
       setState(() {
         _vaccines = vaccines;
-        _loading = false;
+        _loadingVaccines = false;
       });
     } catch (e) {
       setState(() {
-        _error = 'Failed to load vaccines.';
-        _loading = false;
+        _vaccineError = 'Failed to load vaccines.';
+        _loadingVaccines = false;
       });
     }
   }
@@ -64,161 +60,182 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [primaryColor, secondaryColor],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: Column(
+        child: BlocBuilder<BabyCubit, BabyState>(
+          builder: (context, state) {
+            if (state is BabyLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is NoBabyProfile) {
+              return const Center(child: Text('No baby profile found.'));
+            } else if (state is BabyError) {
+              return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+            } else if (state is BabyLoaded) {
+              // Only load vaccines if not already loaded for this baby
+              if (_vaccines.isEmpty && !_loadingVaccines) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted && _vaccines.isEmpty && !_loadingVaccines) {
+                    _loadVaccines(state.baby.id);
+                  }
+                });
+              }
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
+                  // Header
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [primaryColor, secondaryColor],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: AppColors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'Vaccine Tracker',
+                              style: AppTextStyles.headline2.copyWith(
+                                color: AppColors.white,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none,
+                                color: AppColors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        // Month Selector
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: AppColors.white,
-                            size: 20,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.chevron_left, color: AppColors.white),
+                              const SizedBox(width: 16),
+                              Text(
+                                'March 2024',
+                                style: AppTextStyles.subtitle1.copyWith(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              const Icon(Icons.chevron_right, color: AppColors.white),
+                            ],
                           ),
                         ),
-                      ),
-                      Text(
-                        'Vaccine Tracker',
-                        style: AppTextStyles.headline2.copyWith(
-                          color: AppColors.white,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.notifications_none,
-                          color: AppColors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  // Month Selector
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.chevron_left, color: AppColors.white),
-                        const SizedBox(width: 16),
-                        Text(
-                          'March 2024',
-                          style: AppTextStyles.subtitle1.copyWith(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        const Icon(Icons.chevron_right, color: AppColors.white),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
 
-            // Vaccine List
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: _loading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _error != null
-                    ? Center(
-                        child: Text(
-                          _error!,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      )
-                    : _vaccines.isEmpty
-                    ? Center(child: Text('No vaccines scheduled.'))
-                    : ListView.builder(
-                        itemCount: _vaccines.length,
-                        itemBuilder: (context, index) {
-                          final v = _vaccines[index];
-                          final completed = v['is_completed'] == 1;
-                          final title = v['vaccine_name'] ?? '';
-                          final scheduledAge = v['scheduled_age'] ?? '';
-                          final scheduledDate = v['scheduled_date'];
-                          final completedDate = v['completed_date'];
-                          String subtitle;
-                          if (completed) {
-                            subtitle = 'Completed: $scheduledAge';
-                            if (completedDate != null) {
-                              subtitle += ' ($completedDate)';
-                            }
-                          } else {
-                            subtitle = 'Upcoming: $scheduledAge';
-                            if (scheduledDate != null) {
-                              subtitle += ' ($scheduledDate)';
-                            }
-                          }
-                          return GestureDetector(
-                            onTap: () async {
-                              await _showVaccineActionsDialog(context, v);
-                            },
-                            child: Stack(
-                              children: [
-                                _buildVaccineCard(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  completed: completed,
-                                  primaryColor: primaryColor,
-                                ),
-                                if (_actionLoadingId == v['id'])
-                                  Positioned.fill(
-                                    child: Container(
-                                      color: Colors.white.withOpacity(0.6),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
+                  // Vaccine List
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: _loadingVaccines
+                          ? const Center(child: CircularProgressIndicator())
+                          : _vaccineError != null
+                              ? Center(child: Text(_vaccineError!, style: const TextStyle(color: Colors.red)))
+                              : _vaccines.isEmpty
+                                  ? const Center(child: Text('No vaccines scheduled.'))
+                                  : ListView.builder(
+                                      itemCount: _vaccines.length,
+                                      itemBuilder: (context, index) {
+                                        final v = _vaccines[index];
+                                        final completed = v['is_completed'] == 1;
+                                        final title = v['vaccine_name'] ?? '';
+                                        final scheduledAge = v['scheduled_age'] ?? '';
+                                        final scheduledDate = v['scheduled_date'];
+                                        final completedDate = v['completed_date'];
+                                        String subtitle;
+                                        if (completed) {
+                                          subtitle = 'Completed: $scheduledAge';
+                                          if (completedDate != null) {
+                                            subtitle += ' ($completedDate)';
+                                          }
+                                        } else {
+                                          subtitle = 'Upcoming: $scheduledAge';
+                                          if (scheduledDate != null) {
+                                            subtitle += ' ($scheduledDate)';
+                                          }
+                                        }
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final state = context.read<BabyCubit>().state;
+                                            if (state is BabyLoaded) {
+                                              await _showVaccineActionsDialog(context, v, state.baby.id);
+                                            }
+                                          },
+                                          child: Stack(
+                                            children: [
+                                              _buildVaccineCard(
+                                                title: title,
+                                                subtitle: subtitle,
+                                                completed: completed,
+                                                primaryColor: primaryColor,
+                                              ),
+                                              if (_actionLoadingId == v['id'])
+                                                Positioned.fill(
+                                                  child: Container(
+                                                    color: Colors.white.withOpacity(0.6),
+                                                    child: const Center(
+                                                      child: CircularProgressIndicator(),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ),
-          ],
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              // Initial or unknown state
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
     );
@@ -282,7 +299,7 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
     );
   }
 
-  Future<void> _showVaccineActionsDialog(BuildContext context, Map<String, dynamic> vaccine) async {
+  Future<void> _showVaccineActionsDialog(BuildContext context, Map<String, dynamic> vaccine, String babyId) async {
     final completed = vaccine['is_completed'] == 1;
     final List<Widget> actions = [];
     if (!completed) {
@@ -291,7 +308,7 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
         title: const Text('Schedule'),
         onTap: () async {
           Navigator.pop(context);
-          await _pickAndScheduleVaccine(vaccine);
+          await _pickAndScheduleVaccine(vaccine, babyId);
         },
       ));
       actions.add(ListTile(
@@ -299,7 +316,7 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
         title: const Text('Mark as Done'),
         onTap: () async {
           Navigator.pop(context);
-          await _pickAndMarkVaccineDone(vaccine);
+          await _pickAndMarkVaccineDone(vaccine, babyId);
         },
       ));
       actions.add(ListTile(
@@ -307,7 +324,7 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
         title: const Text('Reschedule'),
         onTap: () async {
           Navigator.pop(context);
-          await _pickAndRescheduleVaccine(vaccine);
+          await _pickAndRescheduleVaccine(vaccine, babyId);
         },
       ));
     } else {
@@ -330,32 +347,32 @@ class _VaccineTrackerPageState extends State<VaccineTrackerPage> {
     );
   }
 
-  Future<void> _pickAndScheduleVaccine(Map<String, dynamic> vaccine) async {
+  Future<void> _pickAndScheduleVaccine(Map<String, dynamic> vaccine, String babyId) async {
     final picked = await _pickDateDialog(context, initial: vaccine['scheduled_date']);
     if (picked != null) {
       setState(() => _actionLoadingId = vaccine['id']);
       await _vaccineDataSource.scheduleVaccine(vaccine['id'], picked);
-      await _loadVaccines();
+      await _loadVaccines(babyId);
       setState(() => _actionLoadingId = null);
     }
   }
 
-  Future<void> _pickAndMarkVaccineDone(Map<String, dynamic> vaccine) async {
+  Future<void> _pickAndMarkVaccineDone(Map<String, dynamic> vaccine, String babyId) async {
     final picked = await _pickDateDialog(context, initial: vaccine['completed_date']);
     if (picked != null) {
       setState(() => _actionLoadingId = vaccine['id']);
       await _vaccineDataSource.markVaccineAsDone(vaccine['id'], picked);
-      await _loadVaccines();
+      await _loadVaccines(babyId);
       setState(() => _actionLoadingId = null);
     }
   }
 
-  Future<void> _pickAndRescheduleVaccine(Map<String, dynamic> vaccine) async {
+  Future<void> _pickAndRescheduleVaccine(Map<String, dynamic> vaccine, String babyId) async {
     final picked = await _pickDateDialog(context, initial: vaccine['scheduled_date']);
     if (picked != null) {
       setState(() => _actionLoadingId = vaccine['id']);
       await _vaccineDataSource.rescheduleVaccine(vaccine['id'], picked);
-      await _loadVaccines();
+      await _loadVaccines(babyId);
       setState(() => _actionLoadingId = null);
     }
   }

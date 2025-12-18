@@ -1,5 +1,6 @@
 // lib/features/profile/data/services/birth_transition_service.dart
 import '../../../../core/database/db_helper.dart';
+import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
 import '../../../../core/database/models/baby_model.dart';
 
 class BirthTransitionService {
@@ -46,7 +47,7 @@ class BirthTransitionService {
       updatedAt: now,
     );
 
-    await db.insert('babies', baby.toMap());
+    await BabyLocalDataSource(DatabaseHelper.instance).createBaby(baby);
 
     return baby;
   }
@@ -86,7 +87,7 @@ class BirthTransitionService {
       updatedAt: now,
     );
 
-    await db.insert('babies', baby.toMap());
+    await BabyLocalDataSource(DatabaseHelper.instance).createBaby(baby);
 
     return baby;
   }

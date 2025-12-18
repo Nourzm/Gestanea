@@ -1,4 +1,5 @@
 import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/features/baby/data/datasources/vaccine_local_data_source.dart';
 import 'package:gestanea/core/database/models/baby_model.dart';
 import 'package:gestanea/core/database/models/baby_growth_model.dart';
 import 'package:gestanea/core/database/models/milestone_model.dart';
@@ -47,8 +48,11 @@ class BabyLocalDataSource {
   }
 
   Future<void> createBaby(BabyModel baby) async {
+    print('createBaby called for baby: \\${baby.id}');
     final db = await _dbHelper.database;
     await db.insert('babies', baby.toMap());
+    // Seed national vaccines for this baby
+    await VaccineLocalDataSource().seedNationalVaccinesForBaby(baby.id);
   }
 
   Future<void> updateBaby(BabyModel baby) async {

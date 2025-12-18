@@ -296,7 +296,7 @@ class DatabaseHelper {
 
     // Vaccines table for national vaccination schedule
     await db.execute('''
-      CREATE TABLE vaccines (
+      CREATE TABLE IF NOT EXISTS vaccines (
         id TEXT PRIMARY KEY,
         baby_id TEXT NOT NULL,
         vaccine_name TEXT NOT NULL,
