@@ -294,6 +294,23 @@ class DatabaseHelper {
       )
     ''');
 
+    // Vaccines table for national vaccination schedule
+    await db.execute('''
+      CREATE TABLE vaccines (
+        id TEXT PRIMARY KEY,
+        baby_id TEXT NOT NULL,
+        vaccine_name TEXT NOT NULL,
+        scheduled_age TEXT NOT NULL,
+        scheduled_months INTEGER NOT NULL,
+        scheduled_date TEXT,
+        is_completed INTEGER DEFAULT 0,
+        completed_date TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (baby_id) REFERENCES babies (id) ON DELETE CASCADE
+      )
+    ''');
+
     // Reminders table
     await db.execute('''
       CREATE TABLE reminders (
