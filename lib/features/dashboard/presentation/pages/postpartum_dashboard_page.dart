@@ -15,6 +15,7 @@ import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart' a
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/upcoming_appointments_cubit.dart';
 import 'postpartum_track_page.dart';
+import 'package:gestanea/features/baby/presentation/pages/vaccine_tracker_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
   final String babyGender;
@@ -655,13 +656,29 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                 children: vaccines
                     .map((vaccine) => Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: _buildUpcomingCard(
-                            icon: Icons.medical_services,
-                            iconBgColor: Colors.green.shade300,
-                            title: vaccine['vaccine_name'] ?? 'Vaccine',
-                            subtitle: vaccine['scheduled_date'] != null && vaccine['scheduled_date'] != ''
-                                ? vaccine['scheduled_date']
-                                : (vaccine['scheduled_age'] ?? ''),
+                          child: GestureDetector(
+                            onTap: () {
+                              final userId = _getUserId();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider<BabyCubit>.value(
+                                    value: context.read<BabyCubit>(),
+                                    child: VaccineTrackerPage(
+                                      isGirl: currentBabyGender.toLowerCase() == 'girl' || currentBabyGender.toLowerCase() == 'female',
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildUpcomingCard(
+                              icon: Icons.medical_services,
+                              iconBgColor: Colors.green.shade300,
+                              title: vaccine['vaccine_name'] ?? 'Vaccine',
+                              subtitle: vaccine['scheduled_date'] != null && vaccine['scheduled_date'] != ''
+                                  ? vaccine['scheduled_date']
+                                  : (vaccine['scheduled_age'] ?? ''),
+                            ),
                           ),
                         ))
                     .toList(),
