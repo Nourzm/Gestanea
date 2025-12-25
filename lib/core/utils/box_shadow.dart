@@ -2,6 +2,7 @@ import 'dart:ui' as ui show lerpDouble;
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart' hide BoxShadow;
 import 'package:flutter/painting.dart' as painting;
 
@@ -14,12 +15,12 @@ class BoxShadow extends painting.BoxShadow {
     BlurStyle blurStyle = BlurStyle.normal,
     this.inset = false,
   }) : super(
-          color: color,
-          offset: offset,
-          blurRadius: blurRadius,
-          spreadRadius: spreadRadius,
-          blurStyle: blurStyle,
-        );
+         color: color,
+         offset: offset,
+         blurRadius: blurRadius,
+         spreadRadius: spreadRadius,
+         blurStyle: blurStyle,
+       );
 
   /// Wether this shadow should be inset or not.
   final bool inset;
@@ -55,8 +56,9 @@ class BoxShadow extends painting.BoxShadow {
       return a.scale(1.0 - t);
     }
 
-    final blurStyle =
-        a.blurStyle == BlurStyle.normal ? b.blurStyle : a.blurStyle;
+    final blurStyle = a.blurStyle == BlurStyle.normal
+        ? b.blurStyle
+        : a.blurStyle;
 
     if (a.inset != b.inset) {
       return BoxShadow(
@@ -120,7 +122,8 @@ class BoxShadow extends painting.BoxShadow {
   }
 
   @override
-int get hashCode => Object.hash(color, offset, blurRadius, spreadRadius, blurStyle, inset);
+  int get hashCode =>
+      Object.hash(color, offset, blurRadius, spreadRadius, blurStyle, inset);
   @override
   String toString() =>
       'BoxShadow($color, $offset, ${debugFormatDouble(blurRadius)}, ${debugFormatDouble(spreadRadius)}), $blurStyle, $inset)';
@@ -144,8 +147,8 @@ Offset lerpOffsetWithPivot(Offset? a, Offset? b, double t) {
 
 Color lerpColorWithPivot(Color? a, Color? b, double t) {
   if (t < 0.5) {
-    return Color.lerp(a, a?.withOpacity(0), t * 2)!;
+    return Color.lerp(a, Colors.transparent, t * 2)!;
   }
 
-  return Color.lerp(b?.withOpacity(0), b, (t - 0.5) * 2)!;
+  return Color.lerp(Colors.transparent, b, (t - 0.5) * 2)!;
 }

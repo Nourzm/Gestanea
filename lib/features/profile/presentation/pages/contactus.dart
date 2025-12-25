@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart' hide BoxShadow, BoxDecoration;
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 
 class NeumorphicContainer extends StatelessWidget {
@@ -214,7 +215,11 @@ class ContactUsScreen extends StatelessWidget {
             NeumorphicButton(
               text: "Send Message",
               onPressed: () {},
-              prefixIcon: const Icon(Icons.send, color: AppColors.white, size: 24),
+              prefixIcon: const Icon(
+                Icons.send,
+                color: AppColors.white,
+                size: 24,
+              ),
               color: AppColors.main500,
             ),
             const SizedBox(height: 30),

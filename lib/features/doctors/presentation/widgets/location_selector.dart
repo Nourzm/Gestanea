@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class LocationSelector extends StatelessWidget {

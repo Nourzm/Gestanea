@@ -181,7 +181,7 @@ class _DashboardPageState extends State<DashboardPage>
                   right: 0,
                   bottom: 0,
                   child: FancyNavBar(
-                    barHeight: 80,
+                    barHeight: h,
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
                     items: [
