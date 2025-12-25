@@ -266,7 +266,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n. overallRiskLevel,
+                  l10n.overallRiskLevel,
                   style: AppTextStyles.body1.copyWith(
                     color: AppColors.white,
                     fontSize: 13,
@@ -498,7 +498,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    l10n. call911OrProvider,
+                    l10n.call911OrProvider,
                     style: AppTextStyles.subtitle1.copyWith(
                       color: AppColors.white,
                       fontSize: 16,

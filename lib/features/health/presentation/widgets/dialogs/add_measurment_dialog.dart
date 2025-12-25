@@ -130,7 +130,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                 const SizedBox(height: 20),
                 
                 Text(
-                  l10n. addMeasurement,
+                  l10n.addMeasurement,
                   style: AppTextStyles.headline2.copyWith(
                     fontSize: 20,
                     color: AppColors.textDark,
@@ -147,7 +147,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   validator: (value) {
                     if (value == null || value.isEmpty) return l10n.pleaseEnterWeight;
                     final weight = double.tryParse(value);
-                    if (weight == null) return l10n. pleaseEnterValidNumber;
+                    if (weight == null) return l10n.pleaseEnterValidNumber;
                     if (weight < 30 || weight > 200) return l10n.weightRange;
                     return null;
                   },
@@ -161,7 +161,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   icon: Icons.favorite,
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return l10n. pleaseEnterHeartRate;
+                    if (value == null || value.isEmpty) return l10n.pleaseEnterHeartRate;
                     final hr = int.tryParse(value);
                     if (hr == null) return l10n.pleaseEnterValidNumber;
                     if (hr < 40 || hr > 200) return l10n.heartRateRange;

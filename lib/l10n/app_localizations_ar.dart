@@ -597,6 +597,77 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onTrack => 'على المسار الصحيح';
 
   @override
+  String get moodTab => 'Mood Tab';
+
+  @override
+  String get recentEntries => 'Recent entries';
+
+  @override
+  String get howAreYouFeelingToday => 'How are you feeling today?';
+
+  @override
+  String get feltEnergeticToday => 'Felt energetic today';
+
+  @override
+  String hoursAgo(Object hours) {
+    return '$hours hours ago';
+  }
+
+  @override
+  String get calm => 'Calm';
+
+  @override
+  String get relaxingEvening => 'Relaxing evening';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get tired => 'Tired';
+
+  @override
+  String get needMoreSleep => 'Need more sleep';
+
+  @override
+  String daysAgo(Object days) {
+    return '$days days ago';
+  }
+
+  @override
+  String get trackingMoodHelps =>
+      'Tracking your mood helps you understand your well-being.';
+
+  @override
+  String get great => 'Great';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get okay => 'Okay';
+
+  @override
+  String get moodTrendsLast7Days => 'Mood trends (last 7 days)';
+
+  @override
+  String get mostlyPositiveMoods => 'Mostly positive moods';
+
+  @override
+  String get selfCareSuggestions => 'Self-care suggestions';
+
+  @override
+  String get takeShortWalk => 'Take a short walk';
+
+  @override
+  String get practiceDeepBreathing => 'Practice deep breathing';
+
+  @override
+  String get listenToCalmingMusic => 'Listen to calming music';
+
+  @override
+  String get connectWithLovedOnes => 'Connect with loved ones';
+
+  @override
   String get doctors => 'الأطباء';
 
   @override
@@ -858,4 +929,286 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openNow => 'مفتوح الآن';
+
+  @override
+  String get nausea => 'Nausea';
+
+  @override
+  String get headache => 'Headache';
+
+  @override
+  String get backPain => 'Back pain';
+
+  @override
+  String get swelling => 'Swelling';
+
+  @override
+  String get fatigue => 'Fatigue';
+
+  @override
+  String get dizziness => 'Dizziness';
+
+  @override
+  String get heartburn => 'Heartburn';
+
+  @override
+  String get legCramps => 'Leg cramps';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get pleaseSelectSymptom => 'Please select a symptom';
+
+  @override
+  String get pleaseSelectSeverity => 'Please select severity';
+
+  @override
+  String get symptomLoggedSuccessfully => 'Symptom logged successfully!';
+
+  @override
+  String get addSymptom => 'Add Symptom';
+
+  @override
+  String get symptomType => 'Symptom type';
+
+  @override
+  String get selectSymptom => 'Select symptom';
+
+  @override
+  String get specifySymptom => 'Specify symptom';
+
+  @override
+  String get pleaseSpecifySymptom => 'Please specify the symptom';
+
+  @override
+  String get severity => 'Severity';
+
+  @override
+  String get mild => 'Mild';
+
+  @override
+  String get moderate => 'Moderate';
+
+  @override
+  String get severe => 'Severe';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get pleaseEnterDuration => 'Please enter duration';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get veryHappy => 'Very happy';
+
+  @override
+  String get happy => 'Happy';
+
+  @override
+  String get neutral => 'Neutral';
+
+  @override
+  String get sad => 'Sad';
+
+  @override
+  String get verySad => 'Very sad';
+
+  @override
+  String get pleaseSelectMood => 'Please select a mood';
+
+  @override
+  String get moodLoggedSuccessfully => 'Mood logged successfully!';
+
+  @override
+  String get howAreYouFeeling => 'How are you feeling?';
+
+  @override
+  String get energyLevel => 'Energy level';
+
+  @override
+  String get low => 'Low';
+
+  @override
+  String get high => 'High';
+
+  @override
+  String get sleepQuality => 'Sleep quality';
+
+  @override
+  String get howWasYourDay => 'How was your day?';
+
+  @override
+  String get prePregnancyBMI => 'Pre-pregnancy BMI';
+
+  @override
+  String get normalBMI => 'Normal';
+
+  @override
+  String get currentGain => 'Current gain';
+
+  @override
+  String get targetRange => 'Target range';
+
+  @override
+  String get expected => 'Expected';
+
+  @override
+  String get recentLabResults => 'Recent Lab Results';
+
+  @override
+  String get keepLabResultsOrganized =>
+      'Keep your lab results organized for better tracking.';
+
+  @override
+  String get viewAllLabResults => 'View All Lab Results';
+
+  @override
+  String get riskFactorsToMonitor => 'Risk factors to monitor';
+
+  @override
+  String get lowRisk => 'Low risk';
+
+  @override
+  String get withinNormalRange => 'Within normal range';
+
+  @override
+  String get gestationalDiabetes => 'Gestational diabetes';
+
+  @override
+  String get glucoseLevelsNormal => 'Glucose levels are normal';
+
+  @override
+  String get preeclampsia => 'Preeclampsia';
+
+  @override
+  String get noProteinInUrine => 'No protein in urine';
+
+  @override
+  String get warningSignsToWatch => 'Warning signs to watch';
+
+  @override
+  String get severeHeadache => 'Severe headache';
+
+  @override
+  String get blurredVision => 'Blurred vision';
+
+  @override
+  String get severeAbdominalPain => 'Severe abdominal pain';
+
+  @override
+  String get decreasedFetalMovement => 'Decreased fetal movement';
+
+  @override
+  String get vaginalBleeding => 'Vaginal bleeding';
+
+  @override
+  String get emergencyCall => 'Emergency Call';
+
+  @override
+  String get areYouSureCall911 => 'Are you sure you want to call 911?';
+
+  @override
+  String get couldNotMakeEmergencyCall => 'Could not make emergency call.';
+
+  @override
+  String get ifYouExperienceWarnings =>
+      'If you experience any warning signs, contact your healthcare provider immediately.';
+
+  @override
+  String get allIndicatorsNormal => 'All indicators are normal';
+
+  @override
+  String get emergencyContact => 'Emergency Contact';
+
+  @override
+  String get overallRiskLevel => 'Overall risk level';
+
+  @override
+  String get call911OrProvider => 'Call 911 or your healthcare provider';
+
+  @override
+  String get recentSymptoms => 'Recent Symptoms';
+
+  @override
+  String get logNewSymptom => 'Log new symptom';
+
+  @override
+  String get symptomFrequency => 'Symptom frequency';
+
+  @override
+  String get swollenFeet => 'Swollen feet';
+
+  @override
+  String get sleepIssues => 'Sleep issues';
+
+  @override
+  String get times => 'times';
+
+  @override
+  String get commonSymptomsWeek24 =>
+      'Common symptoms at week 24 include back pain and swelling.';
+
+  @override
+  String get viewAllSymptoms => 'View All Symptoms';
+
+  @override
+  String get weightProgress => 'Weight Progress';
+
+  @override
+  String get measurementSavedSuccessfully => 'Measurement saved successfully!';
+
+  @override
+  String get addMeasurement => 'Add Measurement';
+
+  @override
+  String get weightKg => 'Weight (kg)';
+
+  @override
+  String get pleaseEnterWeight => 'Please enter your weight';
+
+  @override
+  String get pleaseEnterValidNumber => 'Please enter a valid number';
+
+  @override
+  String get weightRange => 'Weight must be between 30 and 200 kg';
+
+  @override
+  String get heartRateBpm => 'Heart Rate (bpm)';
+
+  @override
+  String get pleaseEnterHeartRate => 'Please enter your heart rate';
+
+  @override
+  String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
+
+  @override
+  String get systolic => 'Systolic';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get invalid => 'Invalid';
+
+  @override
+  String get systolicRange => 'Systolic must be between 70 and 190';
+
+  @override
+  String get diastolic => 'Diastolic';
+
+  @override
+  String get diastolicRange => 'Diastolic must be between 40 and 130';
+
+  @override
+  String get normalRangeLabel => 'Normal range';
+
+  @override
+  String get uploadLabResults => 'Upload Lab Results';
+
+  @override
+  String get nextLabAppointment => 'Next Lab Appointment';
 }

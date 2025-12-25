@@ -183,7 +183,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 const SizedBox(height: 24),
                 
                 Text(
-                  l10n. energyLevel,
+                  l10n.energyLevel,
                   style: AppTextStyles.subtitle1. copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,

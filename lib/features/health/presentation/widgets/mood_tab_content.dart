@@ -404,9 +404,9 @@ class MoodTabContent extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _buildSelfCareItem(l10n.takeShortWalk),
-          _buildSelfCareItem(l10n. practiceDeepBreathing),
-          _buildSelfCareItem(l10n. listenToCalmingMusic),
-          _buildSelfCareItem(l10n. connectWithLovedOnes),
+          _buildSelfCareItem(l10n.practiceDeepBreathing),
+          _buildSelfCareItem(l10n.listenToCalmingMusic),
+          _buildSelfCareItem(l10n.connectWithLovedOnes),
         ],
       ),
     );

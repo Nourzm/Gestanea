@@ -38,13 +38,13 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
     final l10n = AppLocalizations.of(context)!;
     return [
       l10n.nausea,
-      l10n. headache,
-      l10n. backPain,
-      l10n. swelling,
-      l10n. fatigue,
-      l10n. dizziness,
+      l10n.headache,
+      l10n.backPain,
+      l10n.swelling,
+      l10n.fatigue,
+      l10n.dizziness,
       l10n.heartburn,
-      l10n. legCramps,
+      l10n.legCramps,
       l10n.other,
     ];
   }

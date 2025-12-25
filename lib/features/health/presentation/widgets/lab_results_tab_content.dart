@@ -386,7 +386,7 @@ class LabResultsTabContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n. nextLabAppointment,
+                  l10n.nextLabAppointment,
                   style: AppTextStyles.body1.copyWith(
                     color: AppColors.white,
                     fontSize: 13,
