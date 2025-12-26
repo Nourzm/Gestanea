@@ -25,8 +25,8 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
 
   String? selectedMedication;
   String? selectedForm;
-  double selectedDose = 0.5;
-  int frequencyNumber = 1;
+  double? selectedDose;
+  int? frequencyNumber;
   String frequencyType = 'daily';
   List<String> scheduledTimes = [];
 
@@ -55,26 +55,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Future<void> _saveMedicine() async {
-    if (selectedMedication == null || selectedMedication!.isEmpty) {
-      _showError('Please enter a medication name');
-      return;
-    }
-
-    if (selectedForm == null || selectedForm!.isEmpty) {
-      _showError('Please select a form');
-      return;
-    }
-
-    if (startingDate == null) {
-      _showError('Please select a starting date');
-      return;
-    }
-
-    if (scheduledTimes.isEmpty) {
-      _showError(AppLocalizations.of(context)!.pleaseAddScheduledTime);
-      return;
-    }
-
     try {
       final uuid = Uuid();
       final medicine = MedicineModel(
@@ -82,6 +62,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
         userId: widget.userId,
         babyId: null,
         medicineName: selectedMedication!,
+
         dosage: '$selectedDose $selectedForm',
         type: selectedForm,
         frequencyType: frequencyType,
@@ -89,7 +70,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
         scheduledTimes: scheduledTimes,
         startDate: startingDate!,
         endDate: endingDate,
-        maxDoses: null,
         medicineImageUrl: medicationImage,
         isActive: true,
         createdAt: DateTime.now(),
@@ -99,7 +79,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
 
       if (result.state) {
         if (mounted) {
-          Navigator.pop(context, true); // Return true to indicate success
+          Navigator.pop(context, true);
         }
       } else {
         _showError(result.message);
@@ -135,6 +115,12 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                 children: [
                   MedicationNamePage(
                     onMedicationSelected: (med) {
+                      if (med.length <= 2) {
+                        _showError(
+                          'Medicine name must be greater than 2 characters',
+                        );
+                        return;
+                      }
                       setState(() => selectedMedication = med);
                       _nextPage();
                     },
@@ -142,16 +128,43 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                   ),
                   FormDosePage(
                     selectedForm: selectedForm,
-                    selectedDose: selectedDose,
+                    selectedDose: selectedDose ?? 0,
                     onFormSelected: (form) =>
                         setState(() => selectedForm = form),
                     onDoseChanged: (dose) =>
                         setState(() => selectedDose = dose),
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (selectedForm == null || selectedForm!.isEmpty) {
+                        _showError('Please select a form');
+                        return;
+                      }
+                      if (selectedDose == null || selectedDose! <= 0) {
+                        _showError('Please enter a valid dose');
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                   ),
                   FrequencyPage(
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (frequencyNumber == null || frequencyNumber! <= 0) {
+                        _showError('Please enter a valid frequency value');
+                        return;
+                      }
+
+                      if (startingDate == null) {
+                        _showError('Please select a starting date');
+                        return;
+                      }
+                      if (scheduledTimes.isEmpty) {
+                        _showError(
+                          AppLocalizations.of(context)!.pleaseAddScheduledTime,
+                        );
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                     onFrequencyChanged: (freq) =>
                         setState(() => frequencyNumber = freq),

@@ -94,25 +94,6 @@ class MedicineDB extends MedicineRepository {
 
   @override
   Future<ReturnResult> insertMedicine(MedicineModel medicine) async {
-    if (medicine.medicineName.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Medicine name is required');
-    }
-
-    if (medicine.medicineName.trim().length <= 2) {
-      return ReturnResult(
-        state: false,
-        message: 'Medicine name length should be > 2',
-      );
-    }
-
-    if (medicine.dosage.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Dosage is required');
-    }
-
-    if (medicine.frequencyType.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Frequency type is required');
-    }
-
     try {
       final dbHelper = DatabaseHelper.instance;
       final db = await dbHelper.database;
@@ -126,25 +107,6 @@ class MedicineDB extends MedicineRepository {
 
   @override
   Future<ReturnResult> updateMedicine(MedicineModel medicine) async {
-    if (medicine.id.isEmpty) {
-      return ReturnResult(state: false, message: 'ID is required for update');
-    }
-
-    if (medicine.medicineName.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Medicine name is required');
-    }
-
-    if (medicine.medicineName.trim().length <= 2) {
-      return ReturnResult(
-        state: false,
-        message: 'Medicine name length should be > 2',
-      );
-    }
-
-    if (medicine.dosage.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Dosage is required');
-    }
-
     try {
       final db = await DatabaseHelper.instance.database;
       final count = await db.update(
@@ -169,10 +131,6 @@ class MedicineDB extends MedicineRepository {
 
   @override
   Future<ReturnResult> deleteMedicine(String id) async {
-    if (id.isEmpty) {
-      return ReturnResult(state: false, message: 'ID is required for delete');
-    }
-
     try {
       final db = await DatabaseHelper.instance.database;
 
@@ -199,18 +157,6 @@ class MedicineDB extends MedicineRepository {
 
   @override
   Future<ReturnResult> logMedicine(MedicineLoggedModel log) async {
-    if (log.medicineId.isEmpty) {
-      return ReturnResult(state: false, message: 'Medicine ID is required');
-    }
-
-    if (log.userId.isEmpty) {
-      return ReturnResult(state: false, message: 'User ID is required');
-    }
-
-    if (log.status.trim().isEmpty) {
-      return ReturnResult(state: false, message: 'Status is required');
-    }
-
     try {
       final db = await DatabaseHelper.instance.database;
       await db.insert('medicine_logged', log.toMap());

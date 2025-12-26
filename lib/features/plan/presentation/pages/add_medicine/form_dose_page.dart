@@ -98,6 +98,10 @@ class _FormDosePageState extends State<FormDosePage> {
               prefixIcon: const Icon(Icons.medical_services),
             ),
             onChanged: (value) {
+              final dose = double.tryParse(value);
+              if (dose != null) {
+                widget.onDoseChanged(dose);
+              }
               setState(() {}); // Rebuild to update button color
             },
           ),
