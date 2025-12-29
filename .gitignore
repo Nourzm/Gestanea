@@ -1,4 +1,4 @@
-notepad analysis_options.yaml# Miscellaneous
+# Miscellaneous
 *.class
 *.log
 *.pyc
@@ -26,6 +26,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+analysis_options.yaml
 
 # Symbolication related
 app.*.symbols
@@ -72,7 +73,6 @@ dist/
 .DS_Store
 Thumbs.db
 
-
 # Flutter generated files
 **/GeneratedPluginRegistrant.swift
 **/generated_plugin_registrant.cc
@@ -87,5 +87,29 @@ windows/flutter/generated_plugin*
 **/Flutter-Release.xcconfig
 linux/flutter/CMakeLists.txt
 windows/flutter/CMakeLists.txt
-
 .flutter-plugins-dependencies
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv

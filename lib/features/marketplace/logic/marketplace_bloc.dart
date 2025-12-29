@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_category_model.dart';
-import '../data/datasources/mock_marketplace_data.dart';
+import 'package:gestanea/core/services/product_api_service.dart';
 
 // Events
 abstract class MarketplaceEvent extends Equatable {
@@ -110,8 +110,9 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
   ) async {
     emit(MarketplaceLoading());
     try {
-      final categories = MockMarketplaceData.getCategories();
-      final products = MockMarketplaceData.getProducts();
+      // Fetch categories and products from the backend API
+      final categories = await ProductApiService.getCategories();
+      final products = await ProductApiService.getProducts(isAvailable: true);
 
       emit(
         MarketplaceLoaded(
@@ -127,75 +128,80 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
     }
   }
 
-  void _onSearchProducts(SearchProducts event, Emitter<MarketplaceState> emit) {
+  Future<void> _onSearchProducts(
+    SearchProducts event,
+    Emitter<MarketplaceState> emit,
+  ) async {
     if (state is MarketplaceLoaded) {
       final currentState = state as MarketplaceLoaded;
-      final query = event.query.toLowerCase();
+      final query = event.query.trim();
 
-      if (query.isEmpty) {
+      emit(MarketplaceLoading());
+
+      try {
+        List<ProductModel> searchResults;
+
+        if (query.isEmpty) {
+          // If search is empty, fetch all available products
+          searchResults = await ProductApiService.getProducts(
+            isAvailable: true,
+            categoryId: currentState.selectedCategoryId,
+          );
+        } else {
+          // Use backend search API
+          searchResults = await ProductApiService.getProducts(
+            search: query,
+            isAvailable: true,
+            categoryId: currentState.selectedCategoryId,
+          );
+        }
+
         emit(
           currentState.copyWith(
-            filteredProducts: _filterByCategory(
-              currentState.products,
-              currentState.selectedCategoryId,
-            ),
+            products: searchResults,
+            filteredProducts: searchResults,
             searchQuery: query,
           ),
         );
-        return;
+      } catch (e) {
+        emit(
+          MarketplaceError('Failed to search products: ${e.toString()}'),
+        );
       }
-
-      final searchResults = currentState.products.where((product) {
-        return product.productName.toLowerCase().contains(query) ||
-            (product.description?.toLowerCase().contains(query) ?? false);
-      }).toList();
-
-      final filtered = _filterByCategory(
-        searchResults,
-        currentState.selectedCategoryId,
-      );
-
-      emit(
-        currentState.copyWith(filteredProducts: filtered, searchQuery: query),
-      );
     }
   }
 
-  void _onFilterByCategory(
+  Future<void> _onFilterByCategory(
     FilterByCategory event,
     Emitter<MarketplaceState> emit,
-  ) {
+  ) async {
     if (state is MarketplaceLoaded) {
       final currentState = state as MarketplaceLoaded;
 
-      List<ProductModel> baseProducts = currentState.products;
+      emit(MarketplaceLoading());
 
-      if (currentState.searchQuery.isNotEmpty) {
-        final query = currentState.searchQuery.toLowerCase();
-        baseProducts = baseProducts.where((product) {
-          return product.productName.toLowerCase().contains(query) ||
-              (product.description?.toLowerCase().contains(query) ?? false);
-        }).toList();
+      try {
+        // Fetch products with category filter from backend
+        final products = await ProductApiService.getProducts(
+          isAvailable: true,
+          categoryId: event.categoryId,
+          search: currentState.searchQuery.isNotEmpty
+              ? currentState.searchQuery
+              : null,
+        );
+
+        emit(
+          currentState.copyWith(
+            products: products,
+            filteredProducts: products,
+            selectedCategoryId: event.categoryId,
+          ),
+        );
+      } catch (e) {
+        emit(
+          MarketplaceError('Failed to filter products: ${e.toString()}'),
+        );
       }
-
-      final filtered = _filterByCategory(baseProducts, event.categoryId);
-
-      emit(
-        currentState.copyWith(
-          filteredProducts: filtered,
-          selectedCategoryId: event.categoryId,
-        ),
-      );
     }
-  }
-
-  List<ProductModel> _filterByCategory(
-    List<ProductModel> products,
-    String? categoryId,
-  ) {
-    if (categoryId == null || categoryId.isEmpty) {
-      return products;
-    }
-    return products.where((p) => p.categoryId == categoryId).toList();
   }
 }
