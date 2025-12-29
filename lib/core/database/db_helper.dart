@@ -9,7 +9,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('gestanea. db');
+    _database = await _initDB('gestanea.db');
     return _database!;
   }
 
@@ -30,17 +30,17 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-  if (oldVersion < 2) {
-    await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
-  }
-  if (oldVersion < 3) {
-    // Old version - skip
-  }
-  if (oldVersion < 4) {
-    // Drop and recreate measurements table without foreign key
-    await db.execute('DROP TABLE IF EXISTS measurements');
-    await db.execute('''
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
+    }
+    if (oldVersion < 3) {
+      // Old version - skip
+    }
+    if (oldVersion < 4) {
+      // Drop and recreate measurements table without foreign key
+      await db.execute('DROP TABLE IF EXISTS measurements');
+      await db.execute('''
       CREATE TABLE measurements (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -53,11 +53,11 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
         created_at TEXT NOT NULL
       )
     ''');
-  }
-  if (oldVersion < 5) {
-    // Drop and recreate symptoms table without foreign key
-    await db.execute('DROP TABLE IF EXISTS symptoms');
-    await db.execute('''
+    }
+    if (oldVersion < 5) {
+      // Drop and recreate symptoms table without foreign key
+      await db.execute('DROP TABLE IF EXISTS symptoms');
+      await db.execute('''
       CREATE TABLE symptoms (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -68,11 +68,11 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
         created_at TEXT NOT NULL
       )
     ''');
-  }
-  if (oldVersion < 6) {
-  // Drop and recreate lab_results table
-  await db. execute('DROP TABLE IF EXISTS lab_results');
-  await db.execute('''
+    }
+    if (oldVersion < 6) {
+      // Drop and recreate lab_results table
+      await db.execute('DROP TABLE IF EXISTS lab_results');
+      await db.execute('''
     CREATE TABLE lab_results (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -88,8 +88,9 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
       created_at TEXT NOT NULL
     )
   ''');
-}
-}
+    }
+  }
+
   Future<void> _createDB(Database db, int version) async {
     // Users table
     await db.execute('''
@@ -217,8 +218,6 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
       )
     ''');
 
-  
-
     // Moods table
     await db.execute('''
       CREATE TABLE moods (
@@ -233,8 +232,8 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
       )
     ''');
 
-  // Lab Results table
-await db.execute('''
+    // Lab Results table
+    await db.execute('''
   CREATE TABLE lab_results (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -533,7 +532,7 @@ await db.execute('''
       )
     ''');
     // Measurements table (combined vitals)
-await db.execute('''
+    await db.execute('''
   CREATE TABLE measurements (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -546,8 +545,8 @@ await db.execute('''
     created_at TEXT NOT NULL
   )
 ''');
-// Symptoms table
-await db.execute('''
+    // Symptoms table
+    await db.execute('''
   CREATE TABLE symptoms (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
