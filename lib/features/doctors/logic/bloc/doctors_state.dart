@@ -1,5 +1,5 @@
 import 'package:gestanea/core/database/models/doctor_model.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 
 abstract class DoctorsState {}
 

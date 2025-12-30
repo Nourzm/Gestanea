@@ -16,6 +16,7 @@ import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/core/services/doctor_api_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -43,20 +44,20 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // 👤 Profile section (tap -> Profile page)
+                    // Profile section (tap -> Profile page)
                     GestureDetector(
                       onTap: () async {
                         // Capture cubit before navigation
                         final dashboardCubit = context.read<DashboardCubit>();
                         final authState = context.read<AuthBloc>().state;
-                        
+
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ProfileSettingsScreen(),
                           ),
                         );
-                        
+
                         // Refresh dashboard when returning from profile page
                         // This handles the case where user triggered "I Gave Birth"
                         if (authState is AuthAuthenticated) {
@@ -96,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // 🔔 Notification icon (tap -> Notifications page)
+                    //Notification icon (tap -> Notifications page)
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -107,7 +108,10 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       child: NotificationIcon(
-                        icon: Icon(Icons.notifications, color: AppColors.main500),
+                        icon: Icon(
+                          Icons.notifications,
+                          color: AppColors.main500,
+                        ),
                       ),
                     ),
                   ],
@@ -186,7 +190,9 @@ class HomeScreen extends StatelessWidget {
                                 'find the best doctor',
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
-                                  color: AppColors.main500.withValues(alpha: 0.7),
+                                  color: AppColors.main500.withValues(
+                                    alpha: 0.7,
+                                  ),
                                 ),
                               ),
                             ],
@@ -215,7 +221,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => onNavigate(3), // Navigate to Plan page (index 3)
+                      onTap: () =>
+                          onNavigate(3), // Navigate to Plan page (index 3)
                       child: Text(
                         'see all',
                         style: TextStyle(
@@ -238,50 +245,62 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, state) {
                     List<AppointmentReminder> appointments = [];
                     List<MedicineReminder> medicines = [];
-                    
+
                     if (state is PregnancyDashboardLoaded) {
                       appointments = state.dashboard.upcomingAppointments;
                       medicines = state.dashboard.medicineReminders;
                     }
-                    
+
                     // Combine and limit to 3 items
                     final List<Widget> upcomingItems = [];
-                    
+
                     // Add appointments
-                    for (var i = 0; i < appointments.length && upcomingItems.length < 3; i++) {
+                    for (
+                      var i = 0;
+                      i < appointments.length && upcomingItems.length < 3;
+                      i++
+                    ) {
                       upcomingItems.add(
                         _buildUpcomingItem(
                           context,
                           screenWidth,
                           screenHeight,
                           title: appointments[i].title,
-                          subtitle: _formatAppointmentTime(appointments[i].dateTime),
+                          subtitle: _formatAppointmentTime(
+                            appointments[i].dateTime,
+                          ),
                           icon: "assets/icons/heartplus.svg",
                           isAppointment: true,
                         ),
                       );
                     }
-                    
+
                     // Add medicines
-                    for (var i = 0; i < medicines.length && upcomingItems.length < 3; i++) {
+                    for (
+                      var i = 0;
+                      i < medicines.length && upcomingItems.length < 3;
+                      i++
+                    ) {
                       upcomingItems.add(
                         _buildUpcomingItem(
                           context,
                           screenWidth,
                           screenHeight,
                           title: medicines[i].medicineName,
-                          subtitle: _formatMedicineTime(medicines[i].nextDoseTime),
+                          subtitle: _formatMedicineTime(
+                            medicines[i].nextDoseTime,
+                          ),
                           icon: "assets/icons/pills.svg",
                           isAppointment: false,
                         ),
                       );
                     }
-                    
+
                     // Show placeholder if no upcoming events
                     if (upcomingItems.isEmpty) {
                       return _buildNoUpcomingItems(screenWidth, screenHeight);
                     }
-                    
+
                     return Column(children: upcomingItems);
                   },
                 ),
@@ -294,13 +313,17 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   String _formatAppointmentTime(DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final appointmentDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    final appointmentDate = DateTime(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+    );
     final tomorrow = today.add(const Duration(days: 1));
-    
+
     String dayText;
     if (appointmentDate == today) {
       dayText = 'Today';
@@ -309,15 +332,15 @@ class HomeScreen extends StatelessWidget {
     } else {
       dayText = DateFormat('MMM d').format(dateTime);
     }
-    
+
     final timeText = DateFormat('h:mm a').format(dateTime);
     return '$dayText at $timeText';
   }
-  
+
   String _formatMedicineTime(DateTime dateTime) {
     final now = DateTime.now();
     final diff = dateTime.difference(now);
-    
+
     if (diff.isNegative) {
       return 'Overdue';
     } else if (diff.inMinutes < 60) {
@@ -328,7 +351,7 @@ class HomeScreen extends StatelessWidget {
       return DateFormat('MMM d, h:mm a').format(dateTime);
     }
   }
-  
+
   Widget _buildUpcomingItem(
     BuildContext context,
     double screenWidth,
@@ -346,10 +369,7 @@ class HomeScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.homeCards,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.main500,
-            width: 1,
-          ),
+          border: Border.all(color: AppColors.main500, width: 1),
           boxShadow: [
             BoxShadow(
               color: const Color(0xFF000000).withValues(alpha: 0.25),
@@ -368,7 +388,10 @@ class HomeScreen extends StatelessWidget {
               ),
               child: SvgPicture.asset(
                 icon,
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
                 width: isAppointment ? 30 : 28,
               ),
             ),
@@ -400,7 +423,10 @@ class HomeScreen extends StatelessWidget {
             ),
             SvgPicture.asset(
               "assets/icons/Calendar_1.svg",
-              colorFilter: const ColorFilter.mode(AppColors.main500, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.main500,
+                BlendMode.srcIn,
+              ),
               width: 28,
             ),
           ],
@@ -408,7 +434,7 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildNoUpcomingItems(double screenWidth, double screenHeight) {
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.06),

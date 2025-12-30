@@ -9,7 +9,7 @@ import 'package:gestanea/features/doctors/presentation/widgets/filter_bar.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/doctor_card.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_event.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_state.dart';

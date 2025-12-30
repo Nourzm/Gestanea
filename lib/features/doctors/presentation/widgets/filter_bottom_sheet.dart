@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class FilterBottomSheet extends StatefulWidget {

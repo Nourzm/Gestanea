@@ -1,8 +1,13 @@
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 
 abstract class DoctorsEvent {}
 
-class LoadDoctors extends DoctorsEvent {}
+class LoadDoctors extends DoctorsEvent {
+  final double? userLat;
+  final double? userLon;
+
+  LoadDoctors({this.userLat, this.userLon});
+}
 
 class SearchDoctors extends DoctorsEvent {
   final String query;
@@ -17,7 +22,7 @@ class FilterDoctors extends DoctorsEvent {
 }
 
 class SortDoctors extends DoctorsEvent {
-  final String sortBy; // 'distance', 'rating', 'reviews', 'none'
+  final String sortBy; // 'distance', 'rating', 'reviews'
 
   SortDoctors(this.sortBy);
 }
