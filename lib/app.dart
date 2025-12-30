@@ -100,7 +100,11 @@ class _MyAppState extends State<MyApp> {
           },
 
           //routing - proper flow with splash → onboarding → login → dashboard
+<<<<<<< Updated upstream
           initialRoute: AppRoutes.dashboard, // Start with splash screen
+=======
+          initialRoute: AppRoutes.dashboard, // Start with dashboard, skip login
+>>>>>>> Stashed changes
           routes: appRoutes,
         ),
       ),
