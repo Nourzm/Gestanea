@@ -1,4 +1,13 @@
 {
+  "locationPermissionRequired": "مطلوب إذن الموقع",
+  "locationPermissionMessage": "نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.",
+  "gettingLocation": "جارٍ تحديد موقعك...",
+  "locationPermissionDenied": "تم رفض إذن الموقع",
+  "locationUpdated": "تم تحديث الموقع",
+  "retry": "إعادة المحاولة",
+  "showingDoctorsNearYou": "عرض الأطباء القريبين منك",
+  "selectLocation": "اختر الموقع",
+  "searchWilaya": "ابحث عن ولاية...",
   "full_name": "الاسم الكامل",
   "enable_notifications": "تفعيل الإشعارات",
   "phone": "الهاتف",

@@ -9,6 +9,34 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get locationPermissionRequired => 'Location Permission Required';
+
+  @override
+  String get locationPermissionMessage =>
+      'We need access to your location to show nearby doctors.';
+
+  @override
+  String get gettingLocation => 'Getting your location...';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get locationUpdated => 'Location updated';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get showingDoctorsNearYou => 'Showing doctors near you';
+
+  @override
+  String get selectLocation => 'Select Location';
+
+  @override
+  String get searchWilaya => 'Search for a wilaya...';
+
+  @override
   String get security => 'Security';
 
   @override

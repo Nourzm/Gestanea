@@ -1,4 +1,13 @@
 {
+  "locationPermissionRequired": "Autorisation de localisation requise",
+  "locationPermissionMessage": "Nous avons besoin d'accéder à votre localisation pour afficher les médecins à proximité.",
+  "gettingLocation": "Obtention de votre position...",
+  "locationPermissionDenied": "Autorisation de localisation refusée",
+  "locationUpdated": "Localisation mise à jour",
+  "retry": "Réessayer",
+  "showingDoctorsNearYou": "Affichage des médecins près de chez vous",
+  "selectLocation": "Sélectionner l'emplacement",
+  "searchWilaya": "Rechercher une wilaya...",
   "full_name": "Nom complet",
   "enable_notifications": "Activer les notifications",
   "phone": "Téléphone",

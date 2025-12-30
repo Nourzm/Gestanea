@@ -1,4 +1,13 @@
 {
+  "locationPermissionRequired": "Location Permission Required",
+  "locationPermissionMessage": "We need access to your location to show nearby doctors.",
+  "gettingLocation": "Getting your location...",
+  "locationPermissionDenied": "Location permission denied",
+  "locationUpdated": "Location updated",
+  "retry": "Retry",
+  "showingDoctorsNearYou": "Showing doctors near you",
+  "selectLocation": "Select Location",
+  "searchWilaya": "Search for a wilaya...",
   "security": "Security",
   "i_gave_birth": "I gave birth",
   "no_longer_pregnant": "No longer pregnant",

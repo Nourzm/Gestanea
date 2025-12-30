@@ -100,6 +100,60 @@ abstract class AppLocalizations {
     Locale('fr'),
   ];
 
+  /// No description provided for @locationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get locationPermissionRequired;
+
+  /// No description provided for @locationPermissionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We need access to your location to show nearby doctors.'**
+  String get locationPermissionMessage;
+
+  /// No description provided for @gettingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting your location...'**
+  String get gettingLocation;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @locationUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated'**
+  String get locationUpdated;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @showingDoctorsNearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing doctors near you'**
+  String get showingDoctorsNearYou;
+
+  /// No description provided for @selectLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location'**
+  String get selectLocation;
+
+  /// No description provided for @searchWilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a wilaya...'**
+  String get searchWilaya;
+
   /// No description provided for @security.
   ///
   /// In en, this message translates to:

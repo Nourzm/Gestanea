@@ -9,6 +9,34 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get locationPermissionRequired => 'مطلوب إذن الموقع';
+
+  @override
+  String get locationPermissionMessage =>
+      'نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.';
+
+  @override
+  String get gettingLocation => 'جارٍ تحديد موقعك...';
+
+  @override
+  String get locationPermissionDenied => 'تم رفض إذن الموقع';
+
+  @override
+  String get locationUpdated => 'تم تحديث الموقع';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get showingDoctorsNearYou => 'عرض الأطباء القريبين منك';
+
+  @override
+  String get selectLocation => 'اختر الموقع';
+
+  @override
+  String get searchWilaya => 'ابحث عن ولاية...';
+
+  @override
   String get security => 'الأمان';
 
   @override

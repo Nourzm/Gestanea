@@ -6,7 +6,6 @@ import 'doctors_event.dart';
 import 'doctors_state.dart';
 
 class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
-  // Remove the repository dependency since we're using static methods
   DoctorsBloc() : super(DoctorsInitial()) {
     on<LoadDoctors>(_onLoadDoctors);
     on<SearchDoctors>(_onSearchDoctors);
@@ -14,6 +13,7 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
     on<SortDoctors>(_onSortDoctors);
     on<ClearFilters>(_onClearFilters);
     on<SelectLocation>(_onSelectLocation);
+    on<RefreshLocation>(_onRefreshLocation);
   }
 
   // State variables
@@ -40,6 +40,14 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
     } catch (e) {
       emit(DoctorsError(e.toString()));
     }
+  }
+
+  Future<void> _onRefreshLocation(
+    RefreshLocation event,
+    Emitter<DoctorsState> emit,
+  ) async {
+    // Reload doctors with current location
+    add(LoadDoctors(userLat: _userLat, userLon: _userLon));
   }
 
   Future<void> _onSearchDoctors(
@@ -132,6 +140,8 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
           currentFilter: _currentFilter,
           searchQuery: _currentQuery,
           selectedLocation: _selectedLocation,
+          userLatitude: _userLat,
+          userLongitude: _userLon,
         ),
       );
     } catch (e) {

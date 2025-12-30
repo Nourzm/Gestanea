@@ -14,6 +14,8 @@ class DoctorsLoaded extends DoctorsState {
   final DoctorFilter currentFilter;
   final String searchQuery;
   final String selectedLocation;
+  final double? userLatitude;
+  final double? userLongitude;
 
   DoctorsLoaded({
     required this.doctors,
@@ -22,6 +24,8 @@ class DoctorsLoaded extends DoctorsState {
     required this.currentFilter,
     required this.searchQuery,
     required this.selectedLocation,
+    this.userLatitude,
+    this.userLongitude,
   });
 }
 

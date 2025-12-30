@@ -9,6 +9,36 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get locationPermissionRequired =>
+      'Autorisation de localisation requise';
+
+  @override
+  String get locationPermissionMessage =>
+      'Nous avons besoin d\'accéder à votre localisation pour afficher les médecins à proximité.';
+
+  @override
+  String get gettingLocation => 'Obtention de votre position...';
+
+  @override
+  String get locationPermissionDenied => 'Autorisation de localisation refusée';
+
+  @override
+  String get locationUpdated => 'Localisation mise à jour';
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
+  String get showingDoctorsNearYou =>
+      'Affichage des médecins près de chez vous';
+
+  @override
+  String get selectLocation => 'Sélectionner l\'emplacement';
+
+  @override
+  String get searchWilaya => 'Rechercher une wilaya...';
+
+  @override
   String get security => 'Sécurité';
 
   @override
