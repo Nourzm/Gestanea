@@ -232,12 +232,7 @@
   "doctors": "الأطباء",
   "findDoctors": "ابحثي عن الأطباء بالاسم أو التخصص",
   "useCurrentLocation": "استخدمي موقعي الحالي",
-  "algiers": "الجزائر",
-  "oran": "وهران",
-  "constantine": "قسنطينة",
-  "annaba": "عنابة",
-  "blida": "البليدة",
-  "bouira": "البويرة",
+ 
   "doctorsFoundSingle": "تم العثور على طبيب واحد",
   "doctorsFoundPlural": "تم العثور على {count} أطباء",
   "@doctorsFoundPlural": {

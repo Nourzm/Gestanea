@@ -292,12 +292,7 @@
   "doctors": "Médecins",
   "findDoctors": "trouver des médecins par nom ou spécialité",
   "useCurrentLocation": "Utiliser ma position actuelle",
-  "algiers": "Alger",
-  "oran": "Oran",
-  "constantine": "Constantine",
-  "annaba": "Annaba",
-  "blida": "Blida",
-  "bouira": "Bouira",
+ 
   "doctorsFoundSingle": "1 Médecin Trouvé",
   "doctorsFoundPlural": "{count} Médecins Trouvés",
   "@doctorsFoundPlural": {

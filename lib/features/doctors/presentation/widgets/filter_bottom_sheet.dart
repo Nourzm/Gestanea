@@ -27,7 +27,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    _maxDistance = widget.currentFilter.maxDistance ?? 10.0;
+    _maxDistance = widget.currentFilter.maxDistance ?? 0.0;
     _minRating = widget.currentFilter.minRating ?? 0.0;
     _selectedGender = widget.currentFilter.gender;
     _minReviews = (widget.currentFilter.minReviews ?? 0).toDouble();
@@ -148,9 +148,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           ),
           child: Slider(
             value: _maxDistance,
-            min: 0.5,
-            max: 20.0,
-            divisions: 39,
+            min: 0.0,
+            max: 35.0,
+            divisions: 35,
             onChanged: (value) {
               setState(() {
                 _maxDistance = value;
@@ -338,7 +338,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              // Reset all filters and reload initial doctors list
+              widget.onApplyFilter(DoctorFilter());
+              Navigator.pop(context);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.background,
               foregroundColor: AppColors.textPrimary,
@@ -389,7 +393,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   void _clearFilters() {
     setState(() {
-      _maxDistance = 10.0;
+      _maxDistance = 0.0;
       _minRating = 0.0;
       _selectedGender = null;
       _minReviews = 0.0;

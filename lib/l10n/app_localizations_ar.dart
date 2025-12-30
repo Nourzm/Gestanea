@@ -705,24 +705,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get useCurrentLocation => 'استخدمي موقعي الحالي';
 
   @override
-  String get algiers => 'الجزائر';
-
-  @override
-  String get oran => 'وهران';
-
-  @override
-  String get constantine => 'قسنطينة';
-
-  @override
-  String get annaba => 'عنابة';
-
-  @override
-  String get blida => 'البليدة';
-
-  @override
-  String get bouira => 'البويرة';
-
-  @override
   String get doctorsFoundSingle => 'تم العثور على طبيب واحد';
 
   @override

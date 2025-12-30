@@ -19,7 +19,6 @@ import 'package:gestanea/core/services/openstreet_service.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
-// Wrapper widget that provides the BlocProvider
 class DoctorsScreen extends StatelessWidget {
   const DoctorsScreen({Key? key}) : super(key: key);
 
@@ -32,7 +31,6 @@ class DoctorsScreen extends StatelessWidget {
   }
 }
 
-// Main content widget
 class DoctorsScreenContent extends StatefulWidget {
   const DoctorsScreenContent({Key? key}) : super(key: key);
 
@@ -43,48 +41,77 @@ class DoctorsScreenContent extends StatefulWidget {
 class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
   final TextEditingController _searchController = TextEditingController();
   final LocationService _locationService = LocationService();
-  final OpenStreetMapService _openStreetMapService = OpenStreetMapService(
-    client: http.Client(),
-  );
+  late final OpenStreetMapService _openStreetMapService;
+  bool _locationInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeLocation();
+    _openStreetMapService = OpenStreetMapService(client: http.Client());
     _searchController.addListener(_onSearchChanged);
+
+    // Initialize location immediately
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeLocation();
+    });
   }
 
   Future<void> _initializeLocation() async {
-    final hasPermission = await _locationService.checkAndRequestPermissions();
+    if (_locationInitialized) return;
+    _locationInitialized = true;
 
-    if (hasPermission) {
-      final position = await _locationService.getCurrentLocation();
-      if (position != null && mounted) {
-        context.read<DoctorsBloc>().add(
-          LoadDoctors(userLat: position.latitude, userLon: position.longitude),
-        );
-      } else {
-        context.read<DoctorsBloc>().add(LoadDoctors());
-      }
-    } else {
-      context.read<DoctorsBloc>().add(LoadDoctors());
-      if (mounted) {
-        _showLocationPermissionDialog();
-      }
+    final permissionResult = await _locationService
+        .checkAndRequestPermissions();
+
+    switch (permissionResult) {
+      case LocationPermissionResult.granted:
+        final position = await _locationService.getCurrentLocation();
+        if (position != null && mounted) {
+          context.read<DoctorsBloc>().add(
+            LoadDoctors(
+              userLat: position.latitude,
+              userLon: position.longitude,
+            ),
+          );
+        } else {
+          context.read<DoctorsBloc>().add(LoadDoctors());
+        }
+        break;
+
+      case LocationPermissionResult.serviceDisabled:
+        if (mounted) {
+          _showLocationServiceDialog();
+          context.read<DoctorsBloc>().add(LoadDoctors());
+        }
+        break;
+
+      case LocationPermissionResult.deniedForever:
+        if (mounted) {
+          _showLocationPermissionDialog(permanently: true);
+          context.read<DoctorsBloc>().add(LoadDoctors());
+        }
+        break;
+
+      case LocationPermissionResult.denied:
+        if (mounted) {
+          _showLocationPermissionDialog(permanently: false);
+          context.read<DoctorsBloc>().add(LoadDoctors());
+        }
+        break;
     }
   }
 
-  void _showLocationPermissionDialog() {
+  void _showLocationServiceDialog() {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          l10n.locationPermissionRequired ?? 'Location Permission Required',
+          l10n.locationPermissionRequired ?? 'Location Service Disabled',
         ),
         content: Text(
           l10n.locationPermissionMessage ??
-              'We need access to your location to show nearby doctors.',
+              'Please enable location services to see nearby doctors.',
         ),
         actions: [
           TextButton(
@@ -94,10 +121,43 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _locationService.openAppSettings();
+              _locationService.openLocationSettings();
             },
-            child: Text(l10n.settings ?? 'Settings'),
+            child: Text(l10n.settings ?? 'Open Settings'),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationPermissionDialog({required bool permanently}) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          l10n.locationPermissionRequired ?? 'Location Permission Required',
+        ),
+        content: Text(
+          permanently
+              ? (l10n.locationPermissionMessage ??
+                    'Location permission is permanently denied. Please enable it in app settings to see nearby doctors.')
+              : (l10n.locationPermissionMessage ??
+                    'We need location access to show nearby doctors. You can still browse all doctors without it.'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel ?? 'Cancel'),
+          ),
+          if (permanently)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _locationService.openAppSettings();
+              },
+              child: Text(l10n.settings ?? 'Settings'),
+            ),
         ],
       ),
     );
@@ -106,7 +166,6 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
   Future<void> _refreshLocation() async {
     final l10n = AppLocalizations.of(context)!;
 
-    // Show loading indicator
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -127,18 +186,22 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
       ),
     );
 
-    final hasPermission = await _locationService.checkAndRequestPermissions();
-    if (!hasPermission) {
+    final permissionResult = await _locationService
+        .checkAndRequestPermissions();
+
+    if (permissionResult != LocationPermissionResult.granted) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               l10n.locationPermissionDenied ?? 'Location permission denied',
             ),
-            action: SnackBarAction(
-              label: l10n.settings ?? 'Settings',
-              onPressed: () => _locationService.openAppSettings(),
-            ),
+            action: permissionResult == LocationPermissionResult.deniedForever
+                ? SnackBarAction(
+                    label: l10n.settings ?? 'Settings',
+                    onPressed: () => _locationService.openAppSettings(),
+                  )
+                : null,
           ),
         );
       }
@@ -175,8 +238,6 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
   }
 
   Future<void> _showLocationPicker(String currentLocation) async {
-    final l10n = AppLocalizations.of(context)!;
-
     await showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.bg_1,
@@ -185,11 +246,11 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
       ),
       builder: (modalContext) => LocationPickerBottomSheet(
         currentLocation: currentLocation,
-        locationService: _locationService,
         openStreetMapService: _openStreetMapService,
         onLocationSelected: (location) {
           context.read<DoctorsBloc>().add(SelectLocation(location));
         },
+        onRefreshLocation: _refreshLocation,
       ),
     );
   }
@@ -265,10 +326,13 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
                             color: Colors.red,
                           ),
                           const SizedBox(height: 16),
-                          Text(
-                            state.message,
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.body1,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
@@ -286,53 +350,58 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
                   if (state is DoctorsLoaded) {
                     final displayDoctors = state.doctors;
 
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
+                    return RefreshIndicator(
+                      onRefresh: _refreshLocation,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                              ),
+                              child: searchBar(
+                                controller: _searchController,
+                                hintText: l10n.findDoctors ?? 'Find doctors',
+                              ),
                             ),
-                            child: searchBar(
-                              controller: _searchController,
-                              hintText: l10n.findDoctors ?? 'Find doctors',
+                            const SizedBox(height: 16),
+                            LocationSelector(
+                              selectedLocation: state.selectedLocation,
+                              onTap: () =>
+                                  _showLocationPicker(state.selectedLocation),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          LocationSelector(
-                            selectedLocation: state.selectedLocation,
-                            onTap: () =>
-                                _showLocationPicker(state.selectedLocation),
-                          ),
-                          const SizedBox(height: 20),
-                          DoctorsFilterBar(
-                            doctorCount: displayDoctors.length,
-                            onFilterTap: () =>
-                                _showFilterBottomSheet(state.currentFilter),
-                            hasActiveFilters: state.hasActiveFilters,
-                          ),
-                          const SizedBox(height: 16),
-                          displayDoctors.isEmpty
-                              ? _buildEmptyState(state.searchQuery)
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0,
+                            const SizedBox(height: 20),
+                            DoctorsFilterBar(
+                              doctorCount: displayDoctors.length,
+                              onFilterTap: () =>
+                                  _showFilterBottomSheet(state.currentFilter),
+                              hasActiveFilters: state.hasActiveFilters,
+                            ),
+                            const SizedBox(height: 16),
+                            displayDoctors.isEmpty
+                                ? _buildEmptyState(state.searchQuery)
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                    ),
+                                    itemCount: displayDoctors.length,
+                                    itemBuilder: (context, index) {
+                                      final doctor = displayDoctors[index];
+                                      return DoctorCard(
+                                        doctor: doctor,
+                                        onTap: () =>
+                                            _navigateToDoctorDetail(doctor),
+                                      );
+                                    },
                                   ),
-                                  itemCount: displayDoctors.length,
-                                  itemBuilder: (context, index) {
-                                    final doctor = displayDoctors[index];
-                                    return DoctorCard(
-                                      doctor: doctor,
-                                      onTap: () =>
-                                          _navigateToDoctorDetail(doctor),
-                                    );
-                                  },
-                                ),
-                        ],
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     );
                   }
@@ -400,19 +469,18 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
   }
 }
 
-// Location Picker Bottom Sheet Widget
 class LocationPickerBottomSheet extends StatefulWidget {
   final String currentLocation;
-  final LocationService locationService;
   final OpenStreetMapService openStreetMapService;
   final Function(String) onLocationSelected;
+  final VoidCallback onRefreshLocation;
 
   const LocationPickerBottomSheet({
     Key? key,
     required this.currentLocation,
-    required this.locationService,
     required this.openStreetMapService,
     required this.onLocationSelected,
+    required this.onRefreshLocation,
   }) : super(key: key);
 
   @override
@@ -439,16 +507,18 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
 
     try {
       final results = await widget.openStreetMapService.searchLocation(query);
-      setState(() {
-        _searchResults = results;
-        _isSearching = false;
-      });
-    } catch (e) {
-      setState(() => _isSearching = false);
       if (mounted) {
+        setState(() {
+          _searchResults = results;
+          _isSearching = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSearching = false);
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ).showSnackBar(SnackBar(content: Text('Error searching location: $e')));
       }
     }
   }
@@ -459,12 +529,6 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
 
     final defaultLocations = [
       l10n.useCurrentLocation ?? 'Use current location',
-      l10n.algiers ?? 'Algiers',
-      l10n.oran ?? 'Oran',
-      l10n.constantine ?? 'Constantine',
-      l10n.annaba ?? 'Annaba',
-      l10n.blida ?? 'Blida',
-      l10n.bouira ?? 'Bouira',
     ];
 
     return Container(
@@ -475,7 +539,6 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Handle bar
           Container(
             width: 40,
             height: 4,
@@ -485,8 +548,6 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Title and search toggle
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -512,8 +573,6 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             ],
           ),
           const SizedBox(height: 16),
-
-          // Search bar (if enabled)
           if (_showSearch) ...[
             TextField(
               controller: _searchController,
@@ -544,8 +603,6 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             ),
             const SizedBox(height: 16),
           ],
-
-          // Results
           Expanded(
             child: _showSearch && _searchResults.isNotEmpty
                 ? ListView.builder(
@@ -599,10 +656,23 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                         ),
                         trailing: isSelected
                             ? Icon(Icons.check, color: AppColors.main500)
-                            : null,
+                            : (isCurrentLocation
+                                  ? IconButton(
+                                      icon: const Icon(Icons.refresh),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        widget.onRefreshLocation();
+                                      },
+                                    )
+                                  : null),
                         onTap: () {
-                          widget.onLocationSelected(location);
-                          Navigator.pop(context);
+                          if (isCurrentLocation) {
+                            Navigator.pop(context);
+                            widget.onRefreshLocation();
+                          } else {
+                            widget.onLocationSelected(location);
+                            Navigator.pop(context);
+                          }
                         },
                       );
                     },

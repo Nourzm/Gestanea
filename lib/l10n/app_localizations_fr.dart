@@ -711,24 +711,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get useCurrentLocation => 'Utiliser ma position actuelle';
 
   @override
-  String get algiers => 'Alger';
-
-  @override
-  String get oran => 'Oran';
-
-  @override
-  String get constantine => 'Constantine';
-
-  @override
-  String get annaba => 'Annaba';
-
-  @override
-  String get blida => 'Blida';
-
-  @override
-  String get bouira => 'Bouira';
-
-  @override
   String get doctorsFoundSingle => '1 Médecin Trouvé';
 
   @override

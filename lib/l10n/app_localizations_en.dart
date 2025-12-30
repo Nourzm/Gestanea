@@ -707,24 +707,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useCurrentLocation => 'Use current location';
 
   @override
-  String get algiers => 'Algiers';
-
-  @override
-  String get oran => 'Oran';
-
-  @override
-  String get constantine => 'Constantine';
-
-  @override
-  String get annaba => 'Annaba';
-
-  @override
-  String get blida => 'Blida';
-
-  @override
-  String get bouira => 'Bouira';
-
-  @override
   String get doctorsFoundSingle => '1 Doctor Found';
 
   @override

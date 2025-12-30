@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
+import 'dart:math';
 
 class LocationService {
   /// Check if location services are enabled
@@ -7,42 +7,47 @@ class LocationService {
     return await Geolocator.isLocationServiceEnabled();
   }
 
-  /// Check and request location permissions
-  Future<bool> checkAndRequestPermissions() async {
+  /// Check and request location permissions with proper flow
+  Future<LocationPermissionResult> checkAndRequestPermissions() async {
+    // First check if location service is enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return LocationPermissionResult.serviceDisabled;
+    }
+
+    // Check current permission status
     LocationPermission permission = await Geolocator.checkPermission();
 
+    // Handle denied permission - request it
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return false;
+        return LocationPermissionResult.denied;
       }
     }
 
+    // Handle permanently denied permission
     if (permission == LocationPermission.deniedForever) {
-      return false;
+      return LocationPermissionResult.deniedForever;
     }
 
-    return true;
+    return LocationPermissionResult.granted;
   }
 
   /// Get current user location
   Future<Position?> getCurrentLocation() async {
     try {
-      // Check if location service is enabled
-      final serviceEnabled = await isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        throw Exception('Location services are disabled');
+      final permissionResult = await checkAndRequestPermissions();
+
+      if (permissionResult != LocationPermissionResult.granted) {
+        print('Location permission not granted: $permissionResult');
+        return null;
       }
 
-      // Check permissions
-      final hasPermission = await checkAndRequestPermissions();
-      if (!hasPermission) {
-        throw Exception('Location permissions are denied');
-      }
-
-      // Get current position
+      // Get current position with high accuracy
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
       );
 
       return position;
@@ -52,40 +57,35 @@ class LocationService {
     }
   }
 
-  /// Get address from coordinates using geocoding
-  Future<String?> getAddressFromCoordinates(
-    double latitude,
-    double longitude,
-  ) async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        latitude,
-        longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
-        return '${place.locality}, ${place.administrativeArea}, ${place.country}';
-      }
-      return null;
-    } catch (e) {
-      print('Error getting address: $e');
-      return null;
-    }
-  }
-
-  /// Calculate distance between two points (in kilometers)
+  /// Calculate distance between two points using Haversine formula (in kilometers)
   double calculateDistance(
     double startLat,
     double startLon,
     double endLat,
     double endLon,
   ) {
-    return Geolocator.distanceBetween(startLat, startLon, endLat, endLon) /
-        1000; // Convert meters to kilometers
+    const double earthRadius = 6371; // km
+
+    final dLat = _toRadians(endLat - startLat);
+    final dLon = _toRadians(endLon - startLon);
+
+    final a =
+        (sin(dLat / 2) * sin(dLat / 2)) +
+        cos(_toRadians(startLat)) *
+            cos(_toRadians(endLat)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return earthRadius * c;
   }
 
-  /// Open device settings for location
+  double _toRadians(double degrees) {
+    return degrees * pi / 180;
+  }
+
+  /// Open device location settings
   Future<void> openLocationSettings() async {
     await Geolocator.openLocationSettings();
   }
@@ -94,4 +94,11 @@ class LocationService {
   Future<void> openAppSettings() async {
     await Geolocator.openAppSettings();
   }
+}
+
+enum LocationPermissionResult {
+  granted,
+  denied,
+  deniedForever,
+  serviceDisabled,
 }

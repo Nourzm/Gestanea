@@ -1,7 +1,5 @@
 import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 
-class RefreshLocation extends DoctorsEvent {}
-
 abstract class DoctorsEvent {}
 
 class LoadDoctors extends DoctorsEvent {
@@ -10,6 +8,8 @@ class LoadDoctors extends DoctorsEvent {
 
   LoadDoctors({this.userLat, this.userLon});
 }
+
+class RefreshLocation extends DoctorsEvent {}
 
 class SearchDoctors extends DoctorsEvent {
   final String query;

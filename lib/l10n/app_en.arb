@@ -284,12 +284,7 @@
   "doctors": "Doctors",
   "findDoctors": "find doctors by name or speciality",
   "useCurrentLocation": "Use current location",
-  "algiers": "Algiers",
-  "oran": "Oran",
-  "constantine": "Constantine",
-  "annaba": "Annaba",
-  "blida": "Blida",
-  "bouira": "Bouira",
+  
   "doctorsFoundSingle": "1 Doctor Found",
   "doctorsFoundPlural": "{count} Doctors Found",
   "@doctorsFoundPlural": {

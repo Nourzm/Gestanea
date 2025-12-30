@@ -1462,42 +1462,6 @@ abstract class AppLocalizations {
   /// **'Use current location'**
   String get useCurrentLocation;
 
-  /// No description provided for @algiers.
-  ///
-  /// In en, this message translates to:
-  /// **'Algiers'**
-  String get algiers;
-
-  /// No description provided for @oran.
-  ///
-  /// In en, this message translates to:
-  /// **'Oran'**
-  String get oran;
-
-  /// No description provided for @constantine.
-  ///
-  /// In en, this message translates to:
-  /// **'Constantine'**
-  String get constantine;
-
-  /// No description provided for @annaba.
-  ///
-  /// In en, this message translates to:
-  /// **'Annaba'**
-  String get annaba;
-
-  /// No description provided for @blida.
-  ///
-  /// In en, this message translates to:
-  /// **'Blida'**
-  String get blida;
-
-  /// No description provided for @bouira.
-  ///
-  /// In en, this message translates to:
-  /// **'Bouira'**
-  String get bouira;
-
   /// No description provided for @doctorsFoundSingle.
   ///
   /// In en, this message translates to:
