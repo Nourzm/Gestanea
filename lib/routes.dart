@@ -13,7 +13,7 @@ import 'package:gestanea/features/marketplace/presentation/pages/marketplace_pag
 import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
-import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
+import 'package:gestanea/features/pregnancyTracking/presentation/pages/week_tracker_page.dart';
 import 'core/constants/app_routes.dart';
 
 Map<String, WidgetBuilder> appRoutes = {

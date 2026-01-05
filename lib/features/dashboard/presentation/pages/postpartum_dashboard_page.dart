@@ -5,9 +5,9 @@ import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
-import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
-import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/babyTracking/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/features/babyTracking/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/babyTracking/logic/repositories/baby_repository.dart';
 import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
@@ -17,7 +17,7 @@ import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
     as tips;
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:intl/intl.dart';
-import 'postpartum_track_page.dart';
+import 'package:gestanea/features/babyTracking/presentation/pages/postpartum_track_page.dart';
 
 class PostpartumDashboardPage extends StatefulWidget {
   final String babyGender;
@@ -148,21 +148,20 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  
                   // 👤 Profile section (tap -> Profile page)
                   GestureDetector(
                     onTap: () async {
                       // Capture cubit before navigation
                       final dashboardCubit = context.read<DashboardCubit>();
                       final authState = context.read<AuthBloc>().state;
-              
+
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const ProfileSettingsScreen(),
                         ),
                       );
-              
+
                       // Refresh dashboard when returning from profile page
                       // This handles the case where user triggered "I Gave Birth"
                       if (authState is AuthAuthenticated) {
@@ -201,7 +200,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       ],
                     ),
                   ),
-              
+
                   // 🔔 Notification icon (tap -> Notifications page)
                   GestureDetector(
                     onTap: () {
@@ -213,10 +212,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       );
                     },
                     child: NotificationIcon(
-                      icon: Icon(
-                        Icons.notifications,
-                        color: AppColors.main500,
-                      ),
+                      icon: Icon(Icons.notifications, color: AppColors.main500),
                     ),
                   ),
                 ],
