@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/header.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/session/session_manager.dart';
 import '../widgets/week_calendar.dart';
@@ -43,10 +44,16 @@ class _PlanMainPageState extends State<PlanMainPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: AppColors.bg_1,
         body: Center(
-          child: CircularProgressIndicator(color: AppColors.main500),
+          child: BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, themeState) {
+              return CircularProgressIndicator(
+                color: themeState.themeData.primaryColor,
+              );
+            },
+          ),
         ),
       );
     }

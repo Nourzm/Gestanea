@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class DoctorsFilterBar extends StatelessWidget {
   final int doctorCount;
@@ -18,6 +20,7 @@ class DoctorsFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final displayText = doctorCount == 1
         ? l10n.doctorsFoundSingle
         : l10n.doctorsFoundPlural(doctorCount);
@@ -42,7 +45,7 @@ class DoctorsFilterBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: hasActiveFilters
-                    ? AppColors.main500
+                    ? themeData.primaryColor
                     : AppColors.background,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
@@ -53,7 +56,7 @@ class DoctorsFilterBar extends StatelessWidget {
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: AppColors.main400.withOpacity(0.3),
+                    color: themeData.lightColor.withOpacity(0.3),
                     offset: const Offset(3, 3),
                     blurRadius: 6,
                     spreadRadius: 0,
@@ -66,7 +69,7 @@ class DoctorsFilterBar extends StatelessWidget {
                     Icons.tune,
                     color: hasActiveFilters
                         ? AppColors.white
-                        : AppColors.main500,
+                        : themeData.primaryColor,
                     size: 18,
                   ),
                   const SizedBox(width: 6),
@@ -77,7 +80,7 @@ class DoctorsFilterBar extends StatelessWidget {
                       fontSize: 14,
                       color: hasActiveFilters
                           ? AppColors.white
-                          : AppColors.main500,
+                          : themeData.primaryColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

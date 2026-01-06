@@ -8,110 +8,116 @@ import '../../pages/ocr_extraction_page.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../pages/pdf_extraction_page.dart';
 import '../../pages/manual_lab_entry_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class UploadLabResultsDialog extends StatelessWidget {
   const UploadLabResultsDialog({super.key});
 
-Future<void> _pickImage(BuildContext context, ImageSource source) async {
-  try {
-    // Request permissions based on source
-    if (source == ImageSource.camera) {
-      final status = await Permission.camera.request();
-      if (! status.isGranted) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Camera permission denied')),
-          );
-        }
-        return;
-      }
-    } else {
-      // For gallery - try photos first, then storage
-      PermissionStatus status;
-      if (Platform.isAndroid) {
-        // Android 13+ uses different permissions
-        if (await Permission.photos.isGranted || 
-            await Permission.storage.isGranted) {
-          status = PermissionStatus.granted;
-        } else {
-          status = await Permission.photos.request();
-          if (!status.isGranted) {
-            status = await Permission.storage.request();
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+    try {
+      // Request permissions based on source
+      if (source == ImageSource.camera) {
+        final status = await Permission.camera.request();
+        if (!status.isGranted) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Camera permission denied')),
+            );
           }
+          return;
         }
       } else {
-        // iOS
-        status = await Permission.photos.request();
-      }
-      
-      if (!status.isGranted) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Photos permission denied')),
-          );
+        // For gallery - try photos first, then storage
+        PermissionStatus status;
+        if (Platform.isAndroid) {
+          // Android 13+ uses different permissions
+          if (await Permission.photos.isGranted ||
+              await Permission.storage.isGranted) {
+            status = PermissionStatus.granted;
+          } else {
+            status = await Permission.photos.request();
+            if (!status.isGranted) {
+              status = await Permission.storage.request();
+            }
+          }
+        } else {
+          // iOS
+          status = await Permission.photos.request();
         }
-        return;
+
+        if (!status.isGranted) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Photos permission denied')),
+            );
+          }
+          return;
+        }
+      }
+
+      // Pick image
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+
+      if (pickedFile != null && context.mounted) {
+        final imageFile = File(pickedFile.path);
+
+        // Close dialog
+        Navigator.pop(context);
+
+        // Navigate to OCR extraction page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OcrExtractionPage(imageFile: imageFile),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
       }
     }
-
-    // Pick image
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: source,
-      imageQuality: 85,
-    );
-
-    if (pickedFile != null && context.mounted) {
-      final imageFile = File(pickedFile.path);
-      
-      // Close dialog
-      Navigator.pop(context);
-      
-      // Navigate to OCR extraction page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => OcrExtractionPage(imageFile: imageFile),
-        ),
-      );
-    }
-  } catch (e) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick image: $e')),
-      );
-    }
   }
-}
+
   Future<void> _pickPDF(BuildContext context) async {
-  try {
-    final result = await FilePicker.platform. pickFiles(
-      type: FileType. custom,
-      allowedExtensions: ['pdf'],
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
 
-    if (result != null && result.files.single. path != null && context.mounted) {
-      final pdfPath = result.files.single.path! ;
-      
-      // Close dialog
-      Navigator.pop(context);
-      
-      // Navigate to PDF viewer/extraction page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PdfExtractionPage(pdfPath: pdfPath),
-        ),
-      );
-    }
-  } catch (e) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick PDF: $e')),
-      );
+      if (result != null &&
+          result.files.single.path != null &&
+          context.mounted) {
+        final pdfPath = result.files.single.path!;
+
+        // Close dialog
+        Navigator.pop(context);
+
+        // Navigate to PDF viewer/extraction page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PdfExtractionPage(pdfPath: pdfPath),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to pick PDF: $e')));
+      }
     }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -132,16 +138,16 @@ Future<void> _pickImage(BuildContext context, ImageSource source) async {
             ),
           ),
           const SizedBox(height: 20),
-          
+
           Text(
             'Upload Lab Results',
-            style: AppTextStyles. headline2.copyWith(
+            style: AppTextStyles.headline2.copyWith(
               fontSize: 20,
               color: AppColors.textDark,
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // Camera option
           _buildOptionButton(
             context,
@@ -150,9 +156,9 @@ Future<void> _pickImage(BuildContext context, ImageSource source) async {
             subtitle: 'Use camera to capture lab result',
             onTap: () => _pickImage(context, ImageSource.camera),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Gallery option
           _buildOptionButton(
             context,
@@ -163,37 +169,35 @@ Future<void> _pickImage(BuildContext context, ImageSource source) async {
           ),
           const SizedBox(height: 16),
 
-// PDF option
-_buildOptionButton(
-  context,
-  icon: Icons.picture_as_pdf,
-  title: 'Upload PDF',
-  subtitle: 'Select PDF lab report',
-  onTap: () => _pickPDF(context),
-),
+          // PDF option
+          _buildOptionButton(
+            context,
+            icon: Icons.picture_as_pdf,
+            title: 'Upload PDF',
+            subtitle: 'Select PDF lab report',
+            onTap: () => _pickPDF(context),
+          ),
 
-
-// Manual entry option
-          
+          // Manual entry option
           const SizedBox(height: 16),
-          
+
           // Manual entry option (future feature)
           // Manual entry option
-_buildOptionButton(
-  context,
-  icon: Icons.edit,
-  title: 'Manual Entry',
-  subtitle: 'Enter results manually',
-  onTap: () {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ManualLabEntryPage(),
-      ),
-    );
-  },
-),
+          _buildOptionButton(
+            context,
+            icon: Icons.edit,
+            title: 'Manual Entry',
+            subtitle: 'Enter results manually',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ManualLabEntryPage(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -206,22 +210,23 @@ _buildOptionButton(
     required String subtitle,
     required VoidCallback onTap,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors. main300,
+          color: themeData.lightColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.main500. withOpacity(0.3)),
+          border: Border.all(color: themeData.primaryColor.withOpacity(0.3)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors. main500,
+                color: themeData.primaryColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: Colors.white, size: 28),
@@ -244,13 +249,17 @@ _buildOptionButton(
                     subtitle,
                     style: AppTextStyles.body1.copyWith(
                       fontSize: 12,
-                      color: Colors.grey. shade600,
+                      color: Colors.grey.shade600,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey.shade400),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey.shade400,
+            ),
           ],
         ),
       ),

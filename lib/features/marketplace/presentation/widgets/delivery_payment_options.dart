@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'neumorphic_section.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -71,6 +73,7 @@ class PaymentOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = value == selectedValue;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return GestureDetector(
       onTap: onTap,
@@ -78,11 +81,13 @@ class PaymentOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.main500
+              ? themeData.primaryColor
               : AppColors.bg_1.withOpacity(0.5),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.main500 : const Color(0xFFD0C0E0),
+            color: isSelected
+                ? themeData.primaryColor
+                : const Color(0xFFD0C0E0),
             width: 1,
           ),
         ),

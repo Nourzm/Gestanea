@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/features/plan/presentation/widgets/medicine_card.dart';
@@ -157,9 +158,12 @@ class _MedicinesPageState extends State<MedicinesPage> {
                         child: BlocBuilder<PlanBloc, PlanState>(
                           builder: (context, planState) {
                             if (planState is PlanLoading) {
+                              final themeData = context
+                                  .watch<ThemeCubit>()
+                                  .currentTheme;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  color: AppColors.main500,
+                                  color: themeData.primaryColor,
                                 ),
                               );
                             }
@@ -260,6 +264,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
   }
 
   Widget _buildFilterPill(String label, int count, bool isSelected) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: () {
         context.read<MedicinesBloc>().add(SelectFilter(label));
@@ -267,10 +272,10 @@ class _MedicinesPageState extends State<MedicinesPage> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.main300 : AppColors.bg_1,
+          color: isSelected ? themeData.cardColor : AppColors.bg_1,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? AppColors.main500 : Colors.transparent,
+            color: isSelected ? themeData.primaryColor : Colors.transparent,
             width: 1,
           ),
           // Neumorphism shadows
@@ -303,7 +308,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.main600 : Colors.black87,
+                color: isSelected ? themeData.secondaryColor : Colors.black87,
               ),
             ),
             SizedBox(width: 8),
@@ -312,7 +317,9 @@ class _MedicinesPageState extends State<MedicinesPage> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.main600 : Colors.grey.shade600,
+                color: isSelected
+                    ? themeData.secondaryColor
+                    : Colors.grey.shade600,
               ),
             ),
           ],

@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import 'manual_lab_entry_page.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class PdfExtractionPage extends StatelessWidget {
   final String pdfPath;
@@ -14,17 +14,17 @@ class PdfExtractionPage extends StatelessWidget {
 
   void _saveJustPdf(BuildContext context) {
     final labResult = LabResultModel(
-      id: DateTime.now(). millisecondsSinceEpoch.toString(),
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       userId: 'current_user',
       testName: 'PDF Lab Report',
       labDate: DateTime.now(),
       reportImageUrl: pdfPath,
       extractedByOcr: false,
-      createdAt: DateTime. now(),
+      createdAt: DateTime.now(),
     );
-    
+
     context.read<LabResultsBloc>().add(AddLabResult(labResult));
-    
+
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -36,10 +36,11 @@ class PdfExtractionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('PDF Lab Report'),
-        backgroundColor: AppColors.main500,
+        backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Center(
@@ -56,24 +57,27 @@ class PdfExtractionPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'File: ${pdfPath. split('/').last}',
+                'File: ${pdfPath.split('/').last}',
                 style: const TextStyle(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
-              
-              ElevatedButton. icon(
+
+              ElevatedButton.icon(
                 onPressed: () => _saveJustPdf(context),
                 icon: const Icon(Icons.save),
                 label: const Text('Save PDF Reference'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.main500,
+                  backgroundColor: themeData.primaryColor,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 14,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
-              
+
               OutlinedButton.icon(
                 onPressed: () {
                   Navigator.pop(context);
@@ -87,8 +91,11 @@ class PdfExtractionPage extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 label: const Text('Enter Data Manually'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.main500,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  foregroundColor: themeData.primaryColor,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 14,
+                  ),
                 ),
               ),
             ],

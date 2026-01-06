@@ -3,6 +3,8 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/utils/box_shadow.dart';
 import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class LocationSelector extends StatelessWidget {
   final String selectedLocation;
@@ -17,6 +19,7 @@ class LocationSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: GestureDetector(
@@ -45,11 +48,11 @@ class LocationSelector extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: Icon(
                   Icons.location_on,
-                  color: AppColors.main500,
+                  color: themeData.primaryColor,
                   size: 20,
                 ),
               ),
@@ -59,19 +62,19 @@ class LocationSelector extends StatelessWidget {
                   selectedLocation == l10n.useCurrentLocation
                       ? l10n.useCurrentLocation
                       : selectedLocation,
-                  style: const TextStyle(
-                    color: AppColors.main500,
+                  style: TextStyle(
+                    color: themeData.primaryColor,
                     fontSize: 16,
                     fontFamily: 'Lato',
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Icon(
                   Icons.keyboard_arrow_down,
-                  color: AppColors.main500,
+                  color: themeData.primaryColor,
                   size: 24,
                 ),
               ),
