@@ -18,6 +18,7 @@ import 'package:gestanea/core/services/location_service.dart';
 import 'package:gestanea/core/services/openstreet_service.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class DoctorsScreen extends StatelessWidget {
   const DoctorsScreen({Key? key}) : super(key: key);
@@ -526,6 +527,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     final defaultLocations = [
       l10n.useCurrentLocation ?? 'Use current location',
@@ -558,7 +560,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
               IconButton(
                 icon: Icon(
                   _showSearch ? Icons.close : Icons.search,
-                  color: AppColors.main500,
+                  color: themeData.primaryColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -613,7 +615,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                       return ListTile(
                         leading: Icon(
                           Icons.location_on,
-                          color: AppColors.main500,
+                          color: themeData.primaryColor,
                         ),
                         title: Text(result.displayName),
                         subtitle: Text(result.wilaya ?? ''),
@@ -640,7 +642,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                               ? Icons.my_location
                               : Icons.location_on_outlined,
                           color: isSelected
-                              ? AppColors.main500
+                              ? themeData.primaryColor
                               : AppColors.textSecondary,
                         ),
                         title: Text(
@@ -650,12 +652,12 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                             color: isSelected
-                                ? AppColors.main500
+                                ? themeData.primaryColor
                                 : AppColors.textPrimary,
                           ),
                         ),
                         trailing: isSelected
-                            ? Icon(Icons.check, color: AppColors.main500)
+                            ? Icon(Icons.check, color: themeData.primaryColor)
                             : (isCurrentLocation
                                   ? IconButton(
                                       icon: const Icon(Icons.refresh),

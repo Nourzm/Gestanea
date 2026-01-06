@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FrequencyPage extends StatefulWidget {
   final VoidCallback onNext;
@@ -107,6 +109,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -156,8 +159,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFA67FF5),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
                         width: 2,
                       ),
                     ),
@@ -216,8 +219,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFA67FF5),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
                         width: 2,
                       ),
                     ),
@@ -266,8 +269,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         label: Text(time),
                         deleteIcon: const Icon(Icons.close, size: 18),
                         onDeleted: () => _removeTime(time),
-                        backgroundColor: const Color(0xFFE8D5F5),
-                        deleteIconColor: const Color(0xFFA67FF5),
+                        backgroundColor: themeData.lightColor.withOpacity(0.3),
+                        deleteIconColor: themeData.primaryColor,
                       );
                     }).toList(),
                   ),
@@ -277,8 +280,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                   icon: const Icon(Icons.access_time),
                   label: Text(AppLocalizations.of(context)!.addTime),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFA67FF5),
-                    side: const BorderSide(color: Color(0xFFA67FF5)),
+                    foregroundColor: themeData.primaryColor,
+                    side: BorderSide(color: themeData.primaryColor),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -303,7 +306,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: _selectedStartDate != null
-                          ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                          ? Border.all(color: themeData.primaryColor, width: 2)
                           : Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
@@ -311,7 +314,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         Icon(
                           Icons.calendar_today,
                           color: _selectedStartDate != null
-                              ? const Color(0xFFA67FF5)
+                              ? themeData.primaryColor
                               : Colors.black87,
                         ),
                         const SizedBox(width: 16),
@@ -361,7 +364,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: _selectedEndDate != null
-                          ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                          ? Border.all(color: themeData.primaryColor, width: 2)
                           : Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
@@ -369,7 +372,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         Icon(
                           Icons.calendar_today,
                           color: _selectedEndDate != null
-                              ? const Color(0xFFA67FF5)
+                              ? themeData.primaryColor
                               : Colors.black87,
                         ),
                         const SizedBox(width: 16),
@@ -415,7 +418,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -473,6 +476,8 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -549,7 +554,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          ..._buildCalendarDays(),
+          ..._buildCalendarDays(themeData),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -560,7 +565,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -582,7 +587,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
     );
   }
 
-  List<Widget> _buildCalendarDays() {
+  List<Widget> _buildCalendarDays(themeData) {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(
       currentMonth.year,
@@ -614,7 +619,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFA67FF5) : Colors.transparent,
+              color: isSelected ? themeData.primaryColor : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -729,6 +734,8 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -842,7 +849,7 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(

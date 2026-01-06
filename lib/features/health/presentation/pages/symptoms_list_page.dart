@@ -5,16 +5,18 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/symptom_model.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_state.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class SymptomsListPage extends StatelessWidget {
   const SymptomsListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Symptoms'),
-        backgroundColor: AppColors.main500,
+        backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
       ),
       body: BlocBuilder<SymptomsBloc, SymptomsState>(
@@ -22,7 +24,7 @@ class SymptomsListPage extends StatelessWidget {
           if (state is SymptomsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (state is SymptomsError) {
             return Center(
               child: Column(
@@ -35,18 +37,21 @@ class SymptomsListPage extends StatelessWidget {
               ),
             );
           }
-          
+
           if (state is SymptomsLoaded) {
             if (state.symptoms.isEmpty) {
               return const Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment. center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.inbox, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text(
                       'No symptoms logged yet! ',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text('Tap "Log New Symptom" to start. '),
@@ -54,7 +59,7 @@ class SymptomsListPage extends StatelessWidget {
                 ),
               );
             }
-            
+
             return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: state.symptoms.length,
@@ -64,7 +69,7 @@ class SymptomsListPage extends StatelessWidget {
               },
             );
           }
-          
+
           return const Center(child: Text('No data'));
         },
       ),
@@ -74,8 +79,8 @@ class SymptomsListPage extends StatelessWidget {
   Widget _buildSymptomCard(SymptomModel symptom) {
     Color severityColor;
     Color textColor;
-    
-    switch (symptom.severity?. toLowerCase() ?? '') {
+
+    switch (symptom.severity?.toLowerCase() ?? '') {
       case 'mild':
         severityColor = const Color(0xFFB8E6B8);
         textColor = const Color(0xFF2D5F2D);
@@ -90,15 +95,13 @@ class SymptomsListPage extends StatelessWidget {
         break;
       default:
         severityColor = Colors.grey.shade300;
-        textColor = Colors. grey.shade700;
+        textColor = Colors.grey.shade700;
     }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -117,7 +120,10 @@ class SymptomsListPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: severityColor,
                     borderRadius: BorderRadius.circular(8),
@@ -139,22 +145,16 @@ class SymptomsListPage extends StatelessWidget {
                 const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
                 const SizedBox(width: 6),
                 Text(
-                  DateFormat('MMM dd, yyyy - HH:mm'). format(symptom.recordedAt),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors. grey,
-                  ),
+                  DateFormat('MMM dd, yyyy - HH:mm').format(symptom.recordedAt),
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
             ),
-            if (symptom.notes != null && symptom.notes!. isNotEmpty) ...[
+            if (symptom.notes != null && symptom.notes!.isNotEmpty) ...[
               const Divider(height: 20),
               Text(
                 symptom.notes!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textDark,
-                ),
+                style: const TextStyle(fontSize: 14, color: AppColors.textDark),
               ),
             ],
           ],

@@ -5,6 +5,8 @@ import 'add_appointment/appointment_date_time.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
 import 'package:gestanea/features/plan/data/repositories/appointment_repository.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 // Main Add Appointment Flow
 class AddAppointmentFlow extends StatefulWidget {
@@ -163,6 +165,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   }
 
   Widget _buildProgressIndicator() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -173,7 +176,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
               margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

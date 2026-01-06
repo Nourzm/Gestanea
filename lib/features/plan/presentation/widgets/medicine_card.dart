@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
@@ -33,10 +35,11 @@ class MedicineCard extends StatelessWidget {
     return l10n.take;
   }
 
-  Color get buttonColor {
+  Color buttonColor(BuildContext context) {
     if (isTaken) return Colors.green;
     if (isMissed) return Colors.red.shade300;
-    return AppColors.main500;
+    final themeData = context.read<ThemeCubit>().currentTheme;
+    return themeData.primaryColor;
   }
 
   @override
@@ -146,11 +149,11 @@ class MedicineCard extends StatelessWidget {
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
-                          color: buttonColor,
+                          color: buttonColor(context),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: buttonColor.withOpacity(0.3),
+                              color: buttonColor(context).withOpacity(0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),

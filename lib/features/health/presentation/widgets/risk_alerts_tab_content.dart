@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RiskAlertsTabContent extends StatefulWidget {
   const RiskAlertsTabContent({super.key});
-  
+
   @override
   State<RiskAlertsTabContent> createState() => _RiskAlertsTabContentState();
 }
 
 class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
-
   Future<void> _makeEmergencyCall(BuildContext context) async {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     // Show confirmation dialog first
     final confirmed = await showDialog<bool>(
       context: context,
@@ -38,7 +39,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
         content: Text(
           l10n.areYouSureCall911,
           style: AppTextStyles.body1.copyWith(
-            color: Colors.grey. shade600,
+            color: Colors.grey.shade600,
             fontSize: 14,
           ),
         ),
@@ -47,7 +48,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               l10n.cancel,
-              style: TextStyle(color: Colors.grey. shade600),
+              style: TextStyle(color: Colors.grey.shade600),
             ),
           ),
           ElevatedButton(
@@ -60,7 +61,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
             child: Text(
-              l10n. callNow,
+              l10n.callNow,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -89,10 +90,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: $e'),
-              backgroundColor: Colors. red,
-            ),
+            SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
           );
         }
       }
@@ -101,7 +99,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations. of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Stack(
       children: [
@@ -122,7 +120,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
                 // Risk Factors
                 Text(
-                  l10n. riskFactorsToMonitor,
+                  l10n.riskFactorsToMonitor,
                   style: AppTextStyles.headline2.copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
@@ -185,7 +183,9 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -208,12 +208,14 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
-                  begin: Alignment. centerLeft,
+                  begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors. black.withValues(alpha: 0.12),
+                    Colors.black.withValues(alpha: 0.12),
                     Colors.transparent,
                   ],
                 ),
@@ -226,8 +228,8 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
   }
 
   Widget _buildOverallRiskCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context)! ;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -258,7 +260,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
               color: Colors.white.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.check_circle, color: AppColors.white, size: 32),
+            child: const Icon(
+              Icons.check_circle,
+              color: AppColors.white,
+              size: 32,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -284,7 +290,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                 Text(
                   l10n.allIndicatorsNormal,
                   style: AppTextStyles.smallLabel.copyWith(
-                    color: Colors.white. withValues(alpha: 0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,
                   ),
                 ),
@@ -304,11 +310,12 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
     required Color levelColor,
     required String description,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius. circular(16),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Color(0x3F000000),
@@ -329,10 +336,10 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.main300,
+              color: themeData.cardColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColors.main500, size: 24),
+            child: Icon(icon, color: themeData.primaryColor, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -379,7 +386,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildWarningSignsCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -393,7 +400,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -405,7 +412,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
         children: [
           Row(
             children: [
-              const Icon(Icons.warning_amber, color: Color(0xFF856404), size: 24),
+              const Icon(
+                Icons.warning_amber,
+                color: Color(0xFF856404),
+                size: 24,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.warningSignsToWatch,
@@ -449,7 +460,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildEmergencyContactCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return GestureDetector(
       onTap: () => _makeEmergencyCall(context),
       child: Container(
@@ -467,7 +478,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: AppColors. white,
+              color: AppColors.white,
               blurRadius: 6,
               offset: Offset(-3, -3),
               spreadRadius: 0,
