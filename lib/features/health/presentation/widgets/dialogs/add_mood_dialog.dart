@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -14,7 +16,7 @@ class AddMoodDialog extends StatefulWidget {
 class _AddMoodDialogState extends State<AddMoodDialog> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
-  
+
   String? _selectedMood;
   double _energyLevel = 3;
   int _sleepQuality = 3;
@@ -38,12 +40,12 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
   }
 
   void _handleSave() {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     if (_selectedMood == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseSelectMood)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectMood)));
       return;
     }
 
@@ -52,9 +54,9 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
     print('Sleep Quality: $_sleepQuality');
     print('Notes: ${_notesController.text}');
     print('Date: $_selectedDate');
-    
+
     Navigator.pop(context);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n.moodLoggedSuccessfully),
@@ -70,13 +72,13 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay. fromDateTime(_selectedDate),
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
       );
-      
+
       if (time != null) {
         setState(() {
           _selectedDate = DateTime(
@@ -94,11 +96,12 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final moods = _getMoods(context);
 
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context). viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
@@ -124,7 +127,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Center(
                   child: Text(
                     l10n.howAreYouFeeling,
@@ -135,7 +138,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: moods.map((mood) {
@@ -146,7 +149,9 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.main300 : Colors.white,
+                          color: isSelected
+                              ? themeData.cardColor
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: isSelected
                               ? [
@@ -181,17 +186,20 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   }).toList(),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Text(
                   l10n.energyLevel,
-                  style: AppTextStyles.subtitle1. copyWith(
+                  style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -224,7 +232,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                             _energyLevel.toInt().toString(),
                             style: AppTextStyles.subtitle1.copyWith(
                               fontSize: 18,
-                              color: AppColors.main500,
+                              color: themeData.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -239,10 +247,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                       ),
                       SliderTheme(
                         data: SliderThemeData(
-                          activeTrackColor: AppColors.main500,
-                          inactiveTrackColor: AppColors.main300,
-                          thumbColor: AppColors.main600,
-                          overlayColor: AppColors.main500. withOpacity(0.2),
+                          activeTrackColor: themeData.primaryColor,
+                          inactiveTrackColor: themeData.cardColor,
+                          thumbColor: themeData.secondaryColor,
+                          overlayColor: themeData.primaryColor.withOpacity(0.2),
                         ),
                         child: Slider(
                           value: _energyLevel,
@@ -258,7 +266,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Text(
                   l10n.sleepQuality,
                   style: AppTextStyles.subtitle1.copyWith(
@@ -291,8 +299,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                       return GestureDetector(
                         onTap: () => setState(() => _sleepQuality = index + 1),
                         child: Icon(
-                          index < _sleepQuality ? Icons. star : Icons.star_border,
-                          color: AppColors.main500,
+                          index < _sleepQuality
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: themeData.primaryColor,
                           size: 32,
                         ),
                       );
@@ -300,7 +310,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Text(
                   l10n.notes,
                   style: AppTextStyles.subtitle1.copyWith(
@@ -310,7 +320,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -345,7 +358,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
@@ -368,12 +381,16 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.main500, size: 20),
+                        Icon(
+                          Icons.calendar_today,
+                          color: themeData.primaryColor,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
-                          '${_selectedDate. day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
+                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
                           style: AppTextStyles.body1.copyWith(
-                            color: AppColors.textDark,
+                            color: themeData.primaryColor,
                           ),
                         ),
                       ],
@@ -381,7 +398,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Row(
                   children: [
                     Expanded(

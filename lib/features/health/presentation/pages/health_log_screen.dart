@@ -16,6 +16,7 @@ import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_event.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class HealthLogScreen extends StatefulWidget {
   const HealthLogScreen({super.key});
@@ -59,11 +60,9 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => MeasurementsBloc().. add(LoadMeasurements()),
+          create: (context) => MeasurementsBloc()..add(LoadMeasurements()),
         ),
-        BlocProvider(
-          create: (context) => SymptomsBloc()..add(LoadSymptoms()),
-        ),
+        BlocProvider(create: (context) => SymptomsBloc()..add(LoadSymptoms())),
         BlocProvider(
           create: (context) => LabResultsBloc()..add(LoadLabResults()),
         ),
@@ -77,7 +76,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
               Header(
                 title: localizations.healthLog,
                 onNotificationTapped: () {
-                  Navigator. push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const NotificationsPage(),
@@ -91,8 +90,11 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
                 offset: const Offset(0, -8),
                 child: Text(
                   localizations.trackYourWellness,
-                  style: const TextStyle(
-                    color: AppColors.main500,
+                  style: TextStyle(
+                    color: context
+                        .watch<ThemeCubit>()
+                        .currentTheme
+                        .primaryColor,
                     fontSize: 14,
                     fontFamily: 'Lato',
                   ),
@@ -117,9 +119,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
                     ),
 
                     // Tab Content Area
-                    Expanded(
-                      child: _getTabContent(),
-                    ),
+                    Expanded(child: _getTabContent()),
                   ],
                 ),
               ),

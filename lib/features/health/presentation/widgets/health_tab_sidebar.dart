@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class HealthTabSidebar extends StatelessWidget {
@@ -15,7 +17,7 @@ class HealthTabSidebar extends StatelessWidget {
   });
 
   String _getLocalizedLabel(BuildContext context, String labelKey) {
-    final localizations = AppLocalizations. of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     switch (labelKey) {
       case 'vitals':
         return localizations.vitals;
@@ -42,20 +44,17 @@ class HealthTabSidebar extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          tabs.length,
-          (index) {
-            final tab = tabs[index];
-            final isSelected = selectedIndex == index;
-            return _buildTabItem(
-              context: context,
-              icon: tab['icon'],
-              labelKey: tab['labelKey'],
-              isSelected: isSelected,
-              onTap: () => onTabSelected(index),
-            );
-          },
-        ),
+        children: List.generate(tabs.length, (index) {
+          final tab = tabs[index];
+          final isSelected = selectedIndex == index;
+          return _buildTabItem(
+            context: context,
+            icon: tab['icon'],
+            labelKey: tab['labelKey'],
+            isSelected: isSelected,
+            onTap: () => onTabSelected(index),
+          );
+        }),
       ),
     );
   }
@@ -67,35 +66,36 @@ class HealthTabSidebar extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 50,
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize. min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isSelected ?  AppColors.main500 : Colors.transparent,
+                color: isSelected ? themeData.primaryColor : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? AppColors.white : AppColors.main500,
+                color: isSelected ? AppColors.white : themeData.primaryColor,
                 size: 24,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               _getLocalizedLabel(context, labelKey),
-              textAlign: TextAlign. center,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: isSelected ?  AppColors.main500 : AppColors.textDark,
+                color: isSelected ? themeData.primaryColor : AppColors.textDark,
                 fontSize: 8,
-                fontWeight: isSelected ? FontWeight. w600 : FontWeight.w400,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 height: 1.2,
               ),
             ),

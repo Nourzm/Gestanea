@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
@@ -85,9 +86,12 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       child: BlocBuilder<PlanBloc, PlanState>(
                         builder: (context, state) {
                           if (state is PlanLoading) {
+                            final themeData = context
+                                .watch<ThemeCubit>()
+                                .currentTheme;
                             return Center(
                               child: CircularProgressIndicator(
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                               ),
                             );
                           }
@@ -205,6 +209,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     double screenHeight,
   ) {
     final localizations = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final icon = Icons.access_time;
     final dateStr = _formatDate(appointment.appointmentDate);
     final timeStr = _formatTime(appointment.appointmentDate);
@@ -241,7 +246,10 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: [AppColors.main500, AppColors.main600],
+                        colors: [
+                          themeData.primaryColor,
+                          themeData.secondaryColor,
+                        ],
                       ),
                     ),
                     child: Icon(icon, color: Colors.white, size: 24),

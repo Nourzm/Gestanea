@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../widgets/medicine_progress_card.dart';
 import '../widgets/upcoming_appointments_card.dart';
@@ -49,12 +49,13 @@ class _MainContentState extends State<MainContent> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return BlocBuilder<PlanBloc, PlanState>(
       builder: (context, state) {
         if (state is PlanLoading) {
           return Center(
-            child: CircularProgressIndicator(color: AppColors.main500),
+            child: CircularProgressIndicator(color: themeData.primaryColor),
           );
         }
 
@@ -113,7 +114,7 @@ class _MainContentState extends State<MainContent> {
                   }
                 },
                 prefixIcon: Icons.add,
-                color: AppColors.main500,
+                color: themeData.primaryColor,
               ),
             ),
             SizedBox(height: widget.screenHeight * 0.025),
@@ -149,7 +150,7 @@ class _MainContentState extends State<MainContent> {
                   }
                 },
                 prefixIcon: Icons.add,
-                color: AppColors.main500,
+                color: themeData.primaryColor,
               ),
             ),
           ],

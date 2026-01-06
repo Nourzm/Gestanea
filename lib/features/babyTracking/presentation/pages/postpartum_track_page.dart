@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
@@ -48,37 +49,37 @@ class PostpartumTrackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final bool isGirl = babyGender.toLowerCase() == 'girl';
-    final Color primaryColor = isGirl ? AppColors.pink500 : AppColors.blue500;
-    final Color secondaryColor = isGirl ? AppColors.pink300 : AppColors.blue300;
+
+    final Color secondaryColor = themeData.lightColor;
 
     final List<Map<String, dynamic>> trackItems = [
       {
         'title': 'Feeding Log',
         'image': 'assets/images/feeding.png',
-        'color': AppColors.homeCards,
+        'color': secondaryColor,
 
         'pageBuilder': () => const FeedingLogPage(),
       },
       {
         'title': 'Growth Tracker',
         'image': 'assets/images/weight-tracker.png',
-        'color': AppColors.homeCards,
+        'color': secondaryColor,
 
         'pageBuilder': () => const GrowthTrackerPage(),
       },
       {
         'title': 'Milestone',
         'image': 'assets/images/milestones2.png',
-        'color': AppColors.homeCards,
+        'color': secondaryColor,
 
         'pageBuilder': () => const MilestoneTrackerPage(),
       },
       {
         'title': 'Vaccine',
         'image': 'assets/images/vaccine.png',
-        'color': AppColors.homeCards,
-
+        'color': secondaryColor,
         'pageBuilder': () => VaccineTrackerPage(isGirl: isGirl),
       },
     ];
@@ -107,7 +108,7 @@ class PostpartumTrackPage extends StatelessWidget {
               child: Text(
                 'Monitor your baby\'s development journey',
                 style: AppTextStyles.body1.copyWith(
-                  color: AppColors.main600,
+                  color: themeData.secondaryColor,
                   fontSize: 14,
                 ),
               ),

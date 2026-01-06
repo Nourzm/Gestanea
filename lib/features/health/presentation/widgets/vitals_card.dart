@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class VitalsCard extends StatelessWidget {
   final IconData icon;
@@ -22,10 +24,11 @@ class VitalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.main300, // ✅ Purple background
+        color: themeData.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -35,7 +38,7 @@ class VitalsCard extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -47,7 +50,7 @@ class VitalsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.main500, size: 20),
+              Icon(icon, color: themeData.primaryColor, size: 20),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -89,7 +92,7 @@ class VitalsCard extends StatelessWidget {
                 ),
                 child: Text(
                   status,
-                  style: AppTextStyles. smallLabel.copyWith(
+                  style: AppTextStyles.smallLabel.copyWith(
                     color: textColor,
                     fontSize: 10,
                   ),

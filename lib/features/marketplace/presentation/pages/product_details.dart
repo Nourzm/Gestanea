@@ -3,9 +3,10 @@ import 'package:gestanea/core/utils/box_shadow.dart';
 import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/product_details_bloc.dart';
 import '../../logic/order_bloc.dart';
@@ -29,9 +30,10 @@ class ProductDetailPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
           builder: (context, state) {
+            final themeData = context.watch<ThemeCubit>().currentTheme;
             if (state is ProductDetailsLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.main500),
+              return Center(
+                child: CircularProgressIndicator(color: themeData.primaryColor),
               );
             }
 
@@ -62,6 +64,7 @@ class ProductDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _buildNeumorphicIconButton(
+                          context: context,
                           icon: Icons.arrow_back_ios_new,
                           onTap: () => Navigator.pop(context),
                         ),
@@ -102,11 +105,11 @@ class ProductDetailPage extends StatelessWidget {
                               state.product.imageUrls[state.currentImageIndex],
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
-                                return const Center(
+                                return Center(
                                   child: Icon(
                                     Icons.image_not_supported,
                                     size: 50,
-                                    color: AppColors.main300,
+                                    color: themeData.cardColor,
                                   ),
                                 );
                               },
@@ -136,7 +139,7 @@ class ProductDetailPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: state.currentImageIndex == index
-                                        ? AppColors.main500
+                                        ? themeData.primaryColor
                                         : Colors.transparent,
                                     width: 2,
                                   ),
@@ -175,7 +178,7 @@ class ProductDetailPage extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.main500,
+                          color: themeData.primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -220,7 +223,7 @@ class ProductDetailPage extends StatelessWidget {
                             Text(
                               '${state.product.rating} (${AppLocalizations.of(context)!.reviewsCount(state.product.reviewsCount)})',
                               style: AppTextStyles.body1.copyWith(
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                                 fontSize: 13,
                               ),
                             ),
@@ -242,7 +245,7 @@ class ProductDetailPage extends StatelessWidget {
                           style: AppTextStyles.headline1.copyWith(
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.main500,
+                            color: themeData.primaryColor,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -252,7 +255,7 @@ class ProductDetailPage extends StatelessWidget {
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 18,
                               decoration: TextDecoration.lineThrough,
-                              color: AppColors.main400,
+                              color: themeData.accentColor,
                             ),
                           ),
                       ],
@@ -304,11 +307,11 @@ class ProductDetailPage extends StatelessWidget {
                                                     .replaceFirst('#', '0xFF'),
                                               ),
                                             )
-                                          : AppColors.main300,
+                                          : themeData.cardColor,
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: state.selectedColorIndex == index
-                                            ? AppColors.main700
+                                            ? themeData.darkColor
                                             : Colors.transparent,
                                         width: 3,
                                       ),
@@ -366,7 +369,7 @@ class ProductDetailPage extends StatelessWidget {
                                     margin: const EdgeInsets.only(right: 12),
                                     decoration: BoxDecoration(
                                       color: state.selectedSizeIndex == index
-                                          ? AppColors.main500
+                                          ? themeData.primaryColor
                                           : AppColors.bg_1,
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
@@ -389,7 +392,7 @@ class ProductDetailPage extends StatelessWidget {
                                       style: AppTextStyles.body1.copyWith(
                                         color: state.selectedSizeIndex == index
                                             ? AppColors.white
-                                            : AppColors.main500,
+                                            : themeData.primaryColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                       ),
@@ -420,7 +423,7 @@ class ProductDetailPage extends StatelessWidget {
                                   const DecrementQuantity(),
                                 );
                               },
-                              color: AppColors.main500,
+                              color: themeData.primaryColor,
                             ),
                             const SizedBox(width: 16),
                             Text(
@@ -428,7 +431,7 @@ class ProductDetailPage extends StatelessWidget {
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -439,7 +442,7 @@ class ProductDetailPage extends StatelessWidget {
                                   const IncrementQuantity(),
                                 );
                               },
-                              color: AppColors.main500,
+                              color: themeData.primaryColor,
                             ),
                           ],
                         ),
@@ -456,10 +459,10 @@ class ProductDetailPage extends StatelessWidget {
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
+                                gradient: LinearGradient(
                                   colors: [
-                                    AppColors.main500,
-                                    AppColors.main600,
+                                    themeData.primaryColor,
+                                    themeData.secondaryColor,
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(25),
@@ -545,7 +548,7 @@ class ProductDetailPage extends StatelessWidget {
                       },
                       text: AppLocalizations.of(context)!.buyNow,
                       prefixIcon: Icons.shopping_bag_outlined,
-                      color: AppColors.main600,
+                      color: themeData.secondaryColor,
                     ),
                   ),
 
@@ -605,7 +608,11 @@ class ProductDetailPage extends StatelessWidget {
                             ...state.specs.map(
                               (spec) => Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                child: _buildSpecRow(spec.name, spec.value),
+                                child: _buildSpecRow(
+                                  context,
+                                  spec.name,
+                                  spec.value,
+                                ),
                               ),
                             ),
                           ],
@@ -636,7 +643,7 @@ class ProductDetailPage extends StatelessWidget {
                                 AppLocalizations.of(context)!.seeAll,
                                 style: AppTextStyles.body1.copyWith(
                                   fontSize: 13,
-                                  color: AppColors.main500,
+                                  color: themeData.primaryColor,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -679,9 +686,11 @@ class ProductDetailPage extends StatelessWidget {
   }
 
   Widget _buildNeumorphicIconButton({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -705,12 +714,13 @@ class ProductDetailPage extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.main500, size: 20),
+        child: Icon(icon, color: themeData.primaryColor, size: 20),
       ),
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
+  Widget _buildSpecRow(BuildContext context, String label, String value) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -718,7 +728,7 @@ class ProductDetailPage extends StatelessWidget {
           label,
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
-            color: AppColors.main500,
+            color: themeData.primaryColor,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/services/ocr_service.dart';
 import 'package:gestanea/core/services/image_storage_service.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import '../pages/manual_lab_entry_page.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class OcrExtractionPage extends StatefulWidget {
   final File imageFile;
@@ -22,7 +22,7 @@ class OcrExtractionPage extends StatefulWidget {
 class _OcrExtractionPageState extends State<OcrExtractionPage> {
   final OcrService _ocrService = OcrService();
   final ImageStorageService _imageStorage = ImageStorageService();
-  
+
   bool _isExtracting = true;
   String _extractedText = '';
   Map<String, dynamic> _parsedData = {};
@@ -38,13 +38,13 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
     try {
       // Save image first
       _savedImagePath = await _imageStorage.saveImage(widget.imageFile);
-      
+
       // Extract text
       final text = await _ocrService.extractText(widget.imageFile);
-      
+
       // Parse lab results
       final parsed = _ocrService.parseLabResults(text);
-      
+
       setState(() {
         _extractedText = text;
         _parsedData = parsed;
@@ -54,123 +54,127 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
       setState(() {
         _isExtracting = false;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('OCR failed: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('OCR failed: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
   }
 
-void _saveResults() {
-  // Allow saving even if no data was auto-extracted
-  if (_savedImagePath == null) {
-    ScaffoldMessenger.of(context). showSnackBar(
-      const SnackBar(content: Text('No image saved.  Please try again.')),
-    );
-    return;
-  }
+  void _saveResults() {
+    // Allow saving even if no data was auto-extracted
+    if (_savedImagePath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No image saved.  Please try again.')),
+      );
+      return;
+    }
 
-  if (_parsedData. isEmpty) {
-    // No OCR data - show dialog to enter manually or just save image
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('No Data Extracted'),
-        content: const Text('OCR could not extract lab results. Would you like to:\n\n1. Save just the image for reference\n2. Enter data manually'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              // Save image-only record
-              final labResult = LabResultModel(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                userId: 'current_user',
-                testName: 'Lab Report',
-                labDate: DateTime.now(),
-                reportImageUrl: _savedImagePath,
-                extractedByOcr: false,
-                createdAt: DateTime.now(),
-              );
-              
-              context.read<LabResultsBloc>().add(AddLabResult(labResult));
-              
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Image saved!  You can add details later.'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            },
-            child: const Text('Save Image Only'),
+    if (_parsedData.isEmpty) {
+      // No OCR data - show dialog to enter manually or just save image
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('No Data Extracted'),
+          content: const Text(
+            'OCR could not extract lab results. Would you like to:\n\n1. Save just the image for reference\n2. Enter data manually',
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              Navigator.pop(context); // Close OCR page
-              // Navigate to manual entry
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ManualLabEntryPage(),
-                ),
-              );
-            },
-            child: const Text('Enter Manually'),
-          ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                // Save image-only record
+                final labResult = LabResultModel(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  userId: 'current_user',
+                  testName: 'Lab Report',
+                  labDate: DateTime.now(),
+                  reportImageUrl: _savedImagePath,
+                  extractedByOcr: false,
+                  createdAt: DateTime.now(),
+                );
+
+                context.read<LabResultsBloc>().add(AddLabResult(labResult));
+
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Image saved!  You can add details later.'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              },
+              child: const Text('Save Image Only'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                Navigator.pop(context); // Close OCR page
+                // Navigate to manual entry
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ManualLabEntryPage(),
+                  ),
+                );
+              },
+              child: const Text('Enter Manually'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Save extracted results
+    for (final entry in _parsedData.entries) {
+      final data = entry.value as Map<String, dynamic>;
+      final labResult = LabResultModel(
+        id: '${DateTime.now().millisecondsSinceEpoch}_${entry.key}',
+        userId: 'current_user',
+        testName: entry.key.toUpperCase(),
+        value: data['value'],
+        unit: data['unit'],
+        labDate: DateTime.now(),
+        reportImageUrl: _savedImagePath,
+        extractedByOcr: true,
+        createdAt: DateTime.now(),
+      );
+
+      context.read<LabResultsBloc>().add(AddLabResult(labResult));
+    }
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Lab results saved successfully!'),
+        backgroundColor: Colors.green,
       ),
     );
-    return;
   }
 
-  // Save extracted results
-  for (final entry in _parsedData. entries) {
-    final data = entry.value as Map<String, dynamic>;
-    final labResult = LabResultModel(
-      id: '${DateTime.now().millisecondsSinceEpoch}_${entry.key}',
-      userId: 'current_user',
-      testName: entry.key. toUpperCase(),
-      value: data['value'],
-      unit: data['unit'],
-      labDate: DateTime.now(),
-      reportImageUrl: _savedImagePath,
-      extractedByOcr: true,
-      createdAt: DateTime.now(),
-    );
-
-    context.read<LabResultsBloc>().add(AddLabResult(labResult));
-  }
-
-  Navigator.pop(context);
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Lab results saved successfully!'),
-      backgroundColor: Colors.green,
-    ),
-  );
-}
   @override
   void dispose() {
     _ocrService.dispose();
-    super. dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Extract Lab Results'),
-        backgroundColor: AppColors.main500,
+        backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         actions: [
-          if (! _isExtracting)
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: _saveResults,
-            ),
+          if (!_isExtracting)
+            IconButton(icon: const Icon(Icons.save), onPressed: _saveResults),
         ],
       ),
       body: _isExtracting
@@ -193,7 +197,7 @@ void _saveResults() {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.file(
-                      widget. imageFile,
+                      widget.imageFile,
                       width: double.infinity,
                       height: 250,
                       fit: BoxFit.cover,
@@ -204,7 +208,7 @@ void _saveResults() {
                   // Extracted Results
                   Text(
                     'Extracted Results',
-                    style: AppTextStyles.headline2. copyWith(fontSize: 18),
+                    style: AppTextStyles.headline2.copyWith(fontSize: 18),
                   ),
                   const SizedBox(height: 12),
 
@@ -212,13 +216,13 @@ void _saveResults() {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.orange. shade50,
+                        color: Colors.orange.shade50,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.orange),
                       ),
                       child: const Text(
                         'No lab results detected.  You can add them manually.',
-                        style: TextStyle(color: Colors. orange),
+                        style: TextStyle(color: Colors.orange),
                       ),
                     )
                   else
@@ -230,13 +234,13 @@ void _saveResults() {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.main300),
+                          border: Border.all(color: themeData.lightColor),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              entry.key. toUpperCase(),
+                              entry.key.toUpperCase(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -244,9 +248,9 @@ void _saveResults() {
                             ),
                             Text(
                               '${data['value']} ${data['unit'] ?? ''}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                               ),
                             ),
                           ],
@@ -263,11 +267,11 @@ void _saveResults() {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.grey. shade100,
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _extractedText. isEmpty
+                          _extractedText.isEmpty
                               ? 'No text extracted'
                               : _extractedText,
                           style: const TextStyle(fontSize: 12),
@@ -284,7 +288,7 @@ void _saveResults() {
                     child: ElevatedButton(
                       onPressed: _saveResults,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.main500,
+                        backgroundColor: themeData.primaryColor,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -293,7 +297,10 @@ void _saveResults() {
                       ),
                       child: const Text(
                         'Save Results',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

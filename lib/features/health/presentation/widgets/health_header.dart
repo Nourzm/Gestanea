@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class HealthHeader extends StatelessWidget {
   final String title;
@@ -16,6 +18,7 @@ class HealthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       color: const Color.fromARGB(255, 247, 240, 254), // Slightly whiter purple
@@ -28,7 +31,7 @@ class HealthHeader extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppTextStyles.headline1.copyWith(
-                    color: AppColors.main500,
+                    color: themeData.primaryColor,
                     fontSize: 40,
                     letterSpacing: -0.40,
                   ),
@@ -62,9 +65,9 @@ class HealthHeader extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: onNotificationTapped,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.notifications_outlined,
-                      color: AppColors.main500,
+                      color: themeData.primaryColor,
                       size: 24,
                     ),
                     padding: EdgeInsets.zero,
@@ -77,7 +80,7 @@ class HealthHeader extends StatelessWidget {
           Text(
             subtitle,
             style: AppTextStyles.body1.copyWith(
-              color: AppColors.main500, // Changed to purple
+              color: themeData.primaryColor, // Changed to purple
               fontSize: 14,
             ),
             textAlign: TextAlign.center,
