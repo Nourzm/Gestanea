@@ -3,7 +3,6 @@
 from fastapi import FastAPI
 
 from app.core.config import settings
-from app.core.database import init_db
 from app.routers import api_router
 from app.routers.health.lab_results import router as lab_router
 app.include_router(lab_router)
@@ -37,10 +36,6 @@ async def startup_event():
     Startup event handler.
     This runs when the FastAPI application starts.
     """
-    # Initialize local database 
-  
-    init_db()
-    print(f"Local database initialized: {settings.DATABASE_URL}")
     
     # Verify Supabase connection 
     if settings.SUPABASE_URL and settings.SUPABASE_ANON_KEY:

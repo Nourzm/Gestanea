@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
@@ -37,6 +38,9 @@ class _MarketplacePageState extends State<MarketplacePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // Get current theme colors
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -61,7 +65,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
             const SizedBox(height: 20),
 
-            // Promotional Banner
+            // Promotional Banner - Now uses dynamic theme colors
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -69,6 +73,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                 height: 120,
                 clipBehavior: Clip.antiAlias,
                 decoration: ShapeDecoration(
+                  // Use theme primary color for banner background
                   color: AppColors.pink500,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.27),
@@ -200,9 +205,10 @@ class _MarketplacePageState extends State<MarketplacePage> {
               child: BlocBuilder<MarketplaceBloc, MarketplaceState>(
                 builder: (context, state) {
                   if (state is MarketplaceLoading) {
-                    return const Center(
+                    return Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.main500,
+                        // Use theme primary color
+                        color: themeData.primaryColor,
                       ),
                     );
                   }

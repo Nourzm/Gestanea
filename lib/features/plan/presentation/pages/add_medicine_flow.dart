@@ -8,6 +8,8 @@ import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class AddMedicineFlow extends StatefulWidget {
   final String userId;
@@ -198,6 +200,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Widget _buildProgressIndicator() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -208,7 +211,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
               margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

@@ -3,6 +3,8 @@ import 'package:gestanea/core/utils/box_shadow.dart';
 import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'neumorphic_section.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -114,6 +116,7 @@ class NeumorphicTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.bg_1,
@@ -138,8 +141,8 @@ class NeumorphicTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         maxLines: maxLines,
-        style: const TextStyle(
-          color: AppColors.main500,
+        style: TextStyle(
+          color: themeData.primaryColor,
           fontSize: 14,
           fontFamily: 'Lato',
           fontWeight: FontWeight.w400,
@@ -147,7 +150,7 @@ class NeumorphicTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: AppColors.main500.withOpacity(0.4),
+            color: themeData.primaryColor.withOpacity(0.4),
             fontSize: 14,
             fontFamily: 'Lato',
             fontWeight: FontWeight.w400,

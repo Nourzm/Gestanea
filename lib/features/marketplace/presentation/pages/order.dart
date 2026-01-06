@@ -4,6 +4,7 @@ import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
@@ -127,6 +128,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -141,9 +143,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.chevron_left,
-                      color: AppColors.main500,
+                      color: themeData.primaryColor,
                       size: 24,
                     ),
                   ),
@@ -275,7 +277,8 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                                                   ),
                                                             ),
                                                           )
-                                                        : AppColors.main500,
+                                                        : themeData
+                                                              .primaryColor,
                                                   ),
                                                 ),
                                                 const SizedBox(width: 8),
@@ -460,7 +463,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                     );
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.main500,
+                              backgroundColor: themeData.primaryColor,
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -523,13 +526,13 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: AppColors.main500.withOpacity(0.2),
+                            color: themeData.primaryColor.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.check,
                             size: 14,
-                            color: AppColors.main500,
+                            color: themeData.primaryColor,
                           ),
                         ),
                         const SizedBox(width: 8),

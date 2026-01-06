@@ -56,10 +56,6 @@ flutter:
     - .env
     - assets/images/
     - assets/icons/
-    - assets/images/onboarding1.png
-    - assets/images/onboarding2.png
-    - assets/images/onboarding3.png
-    - assets/images/onboarding4.png
     - assets/images/kickcounter.png
     - assets/images/fetus.png
   generate: true

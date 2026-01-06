@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class AppointmentDateTimePage extends StatefulWidget {
   final DateTime? selectedDate;
@@ -74,6 +76,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -111,7 +114,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: widget.selectedDate != null
-                    ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                    ? Border.all(color: themeData.primaryColor, width: 2)
                     : null,
               ),
               child: Row(
@@ -119,7 +122,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                   Icon(
                     Icons.calendar_today,
                     color: widget.selectedDate != null
-                        ? const Color(0xFFA67FF5)
+                        ? themeData.primaryColor
                         : Colors.black87,
                   ),
                   const SizedBox(width: 16),
@@ -164,7 +167,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: widget.selectedTime != null
-                    ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                    ? Border.all(color: themeData.primaryColor, width: 2)
                     : null,
               ),
               child: Row(
@@ -172,7 +175,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                   Icon(
                     Icons.access_time,
                     color: widget.selectedTime != null
-                        ? const Color(0xFFA67FF5)
+                        ? themeData.primaryColor
                         : Colors.black87,
                   ),
                   const SizedBox(width: 16),
@@ -213,7 +216,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -271,6 +274,8 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -347,7 +352,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          ..._buildCalendarDays(),
+          ..._buildCalendarDays(themeData),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -358,7 +363,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -380,7 +385,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
     );
   }
 
-  List<Widget> _buildCalendarDays() {
+  List<Widget> _buildCalendarDays(themeData) {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(
       currentMonth.year,
@@ -412,7 +417,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFA67FF5) : Colors.transparent,
+              color: isSelected ? themeData.primaryColor : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -521,6 +526,8 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -634,7 +641,7 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(

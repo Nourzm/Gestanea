@@ -10,6 +10,7 @@ import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/routes.dart';
 import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
   late final SessionManager _sessionManager;
   late final AuthRepositoryImpl _authRepository;
   late final AuthBloc _authBloc;
+  late final ThemeCubit _themeCubit;
 
   @override
   void initState() {
@@ -49,10 +51,13 @@ class _MyAppState extends State<MyApp> {
       sessionManager: _sessionManager,
     );
     _authBloc = AuthBloc(repository: _authRepository)..add(AppStarted());
+    _themeCubit =
+        ThemeCubit(); // Initialize theme cubit with default purple theme
   }
 
   @override
   void dispose() {
+    _themeCubit.close();
     _authBloc.close();
     super.dispose();
   }
@@ -68,44 +73,44 @@ class _MyAppState extends State<MyApp> {
     // Wrap MaterialApp with repository & bloc providers so all routes can access them.
     return RepositoryProvider<AuthRepositoryImpl>.value(
       value: _authRepository,
-      child: BlocProvider<AuthBloc>.value(
-        value: _authBloc,
-        child: MaterialApp(
-          title: 'Gestanéa',
-          debugShowCheckedModeBanner: false,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>.value(value: _authBloc),
+          BlocProvider<ThemeCubit>.value(value: _themeCubit),
+        ],
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, themeState) {
+            return MaterialApp(
+              title: 'Gestanéa',
+              debugShowCheckedModeBanner: false,
 
-          theme: ThemeData(
-            fontFamily: 'Lato',
-            primarySwatch: Colors.purple,
-            useMaterial3: true,
-          ),
+              // Use dynamic theme from ThemeCubit
+              theme: themeState.themeData.toThemeData(),
 
-          // app language
-          locale: _locale,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          //phone default language
-          localeResolutionCallback: (locale, supportedLocales) {
-            for (var supported in supportedLocales) {
-              if (supported.languageCode == locale?.languageCode) {
-                return supported;
-              }
-            }
-            return supportedLocales.first;
+              // app language
+              locale: _locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              //phone default language
+              localeResolutionCallback: (locale, supportedLocales) {
+                for (var supported in supportedLocales) {
+                  if (supported.languageCode == locale?.languageCode) {
+                    return supported;
+                  }
+                }
+                return supportedLocales.first;
+              },
+
+              //routing - proper flow with splash → onboarding → login → dashboard
+              initialRoute: AppRoutes.dashboard, // Start with splash screen
+              routes: appRoutes,
+            );
           },
-
-          //routing - proper flow with splash → onboarding → login → dashboard
-<<<<<<< Updated upstream
-          initialRoute: AppRoutes.dashboard, // Start with splash screen
-=======
-          initialRoute: AppRoutes.dashboard, // Start with dashboard, skip login
->>>>>>> Stashed changes
-          routes: appRoutes,
         ),
       ),
     );

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class UploadPicturePage extends StatefulWidget {
   final VoidCallback onBack;
@@ -59,6 +61,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
   }
 
   void _showImageSourceDialog() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -71,9 +74,9 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.photo_camera,
-                  color: Color(0xFFA67FF5),
+                  color: themeData.primaryColor,
                 ),
                 title: Text(AppLocalizations.of(context)!.camera ?? 'Camera'),
                 onTap: () {
@@ -82,9 +85,9 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                 },
               ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.photo_library,
-                  color: Color(0xFFA67FF5),
+                  color: themeData.primaryColor,
                 ),
                 title: Text(AppLocalizations.of(context)!.gallery ?? 'Gallery'),
                 onTap: () {
@@ -115,6 +118,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -224,7 +228,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                 child: ElevatedButton(
                   onPressed: widget.onDone,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFA67FF5),
+                    backgroundColor: themeData.primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(

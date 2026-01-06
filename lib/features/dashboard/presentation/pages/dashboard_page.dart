@@ -4,17 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
-import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
-import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/babyTracking/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/features/babyTracking/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/babyTracking/logic/repositories/baby_repository.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/navbar.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'postpartum_dashboard_page.dart';
-import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
-import 'postpartum_track_page.dart';
+import 'package:gestanea/features/pregnancyTracking/presentation/pages/week_tracker_page.dart';
+import 'package:gestanea/features/babyTracking/presentation/pages/postpartum_track_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
@@ -128,12 +129,21 @@ class _DashboardPageState extends State<DashboardPage>
 
           // Get postpartum dashboard data if available
           PostpartumDashboard? postpartumDashboard;
-          String currentBabyGender = babyGender;
+          String? currentBabyGender;
           if (isPostpartum) {
             postpartumDashboard =
                 (dashboardState as PostpartumDashboardLoaded).dashboard;
-            // TODO: Extract baby gender from dashboard if available
+            // Extract baby gender from dashboard
+            currentBabyGender = postpartumDashboard.babyGender;
           }
+
+          // Update theme based on pregnancy state and baby gender
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<ThemeCubit>().updateTheme(
+              isPregnant: isPregnant || dashboardState is DashboardInitial,
+              babyGender: currentBabyGender,
+            );
+          });
 
           // Show loading indicator only during actual loading
           // For initial state or error, show pregnancy dashboard as default
@@ -154,12 +164,12 @@ class _DashboardPageState extends State<DashboardPage>
             showPregnancyMode
                 ? HomeScreen(onNavigate: _setPageIndex)
                 : PostpartumDashboardPage(
-                    babyGender: currentBabyGender,
+                    babyGender: currentBabyGender ?? 'girl',
                     dashboard: postpartumDashboard,
                   ),
             showPregnancyMode
                 ? const WeekTrackerPage()
-                : PostpartumTrackPage(babyGender: currentBabyGender),
+                : PostpartumTrackPage(babyGender: currentBabyGender ?? 'girl'),
             const HealthLogScreen(),
             const PlanMainPage(),
             BlocProvider(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'dialogs/add_mood_dialog.dart';
 
@@ -10,6 +12,7 @@ class MoodTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return Stack(
       children: [
@@ -25,7 +28,7 @@ class MoodTabContent extends StatelessWidget {
               children: [
                 // Current Mood
                 Text(
-                  l10n. howAreYouFeelingToday,
+                  l10n.howAreYouFeelingToday,
                   style: AppTextStyles.headline2.copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
@@ -39,7 +42,7 @@ class MoodTabContent extends StatelessWidget {
 
                 // Recent Mood Entries
                 Text(
-                  l10n. recentEntries,
+                  l10n.recentEntries,
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 16,
                     color: AppColors.textDark,
@@ -70,7 +73,7 @@ class MoodTabContent extends StatelessWidget {
                   emoji: '😴',
                   mood: l10n.tired,
                   note: l10n.needMoreSleep,
-                  time: l10n. daysAgo(2),
+                  time: l10n.daysAgo(2),
                   color: const Color(0xFFE8EAF6),
                 ),
 
@@ -102,7 +105,9 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -125,12 +130,14 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors. black.withValues(alpha: 0.12),
+                    Colors.black.withValues(alpha: 0.12),
                     Colors.transparent,
                   ],
                 ),
@@ -143,8 +150,8 @@ class MoodTabContent extends StatelessWidget {
   }
 
   Widget _buildMoodSelector(BuildContext context) {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     final moods = [
       {'emoji': '😄', 'label': l10n.great},
       {'emoji': '😊', 'label': l10n.good},
@@ -187,10 +194,7 @@ class MoodTabContent extends StatelessWidget {
           children: moods.map((mood) {
             return Column(
               children: [
-                Text(
-                  mood['emoji']!,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                Text(mood['emoji']!, style: const TextStyle(fontSize: 32)),
                 const SizedBox(height: 4),
                 Text(
                   mood['label']!,
@@ -219,7 +223,7 @@ class MoodTabContent extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius. circular(16),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Color(0x3F000000),
@@ -237,10 +241,7 @@ class MoodTabContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 40),
-          ),
+          Text(emoji, style: const TextStyle(fontSize: 40)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -248,7 +249,7 @@ class MoodTabContent extends StatelessWidget {
               children: [
                 Text(
                   mood,
-                  style: AppTextStyles.subtitle1. copyWith(
+                  style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
@@ -279,12 +280,13 @@ class MoodTabContent extends StatelessWidget {
 
   Widget _buildMoodTrendsCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.main500, Color(0xFFB388CC)],
+        gradient: LinearGradient(
+          colors: [themeData.primaryColor, themeData.lightColor],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
@@ -295,7 +297,7 @@ class MoodTabContent extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -303,7 +305,7 @@ class MoodTabContent extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment. start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.moodTrendsLast7Days,
@@ -327,7 +329,7 @@ class MoodTabContent extends StatelessWidget {
           Text(
             l10n.mostlyPositiveMoods,
             style: AppTextStyles.smallLabel.copyWith(
-              color: Colors.white. withValues(alpha: 0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontSize: 12,
             ),
           ),
@@ -339,15 +341,12 @@ class MoodTabContent extends StatelessWidget {
   Widget _buildMoodTrendItem(String emoji, String count) {
     return Column(
       children: [
-        Text(
-          emoji,
-          style: const TextStyle(fontSize: 24),
-        ),
+        Text(emoji, style: const TextStyle(fontSize: 24)),
         const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: Colors.white. withValues(alpha: 0.3),
+            color: Colors.white.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -364,7 +363,7 @@ class MoodTabContent extends StatelessWidget {
 
   Widget _buildSelfCareCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -394,7 +393,7 @@ class MoodTabContent extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 l10n.selfCareSuggestions,
-                style: AppTextStyles.subtitle1. copyWith(
+                style: AppTextStyles.subtitle1.copyWith(
                   fontSize: 14,
                   color: const Color(0xFF2E7D32),
                   fontWeight: FontWeight.w600,
@@ -454,7 +453,7 @@ class MoodTabContent extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: AppTextStyles.body1. copyWith(
+        style: AppTextStyles.body1.copyWith(
           color: const Color(0xFF7B4BA6),
           fontSize: 12,
         ),

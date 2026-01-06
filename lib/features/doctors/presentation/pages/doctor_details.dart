@@ -12,6 +12,7 @@ import 'package:gestanea/features/doctors/presentation/widgets/doctor_info_map_s
 import 'package:gestanea/features/doctors/presentation/widgets/contact_info.dart';
 import 'package:gestanea/features/doctors/presentation/widgets/call_now.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
   final DoctorModel doctor;
@@ -53,6 +54,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return BlocListener<DoctorDetailBloc, DoctorDetailState>(
       listener: (context, state) {
         if (state is DoctorDetailActionFailure) {
@@ -71,7 +73,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: AppColors.main500,
+              color: themeData.primaryColor,
               size: 24,
             ),
             onPressed: () => Navigator.pop(context),
@@ -79,7 +81,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
           title: Text(
             l10n.doctorDetails,
             style: AppTextStyles.headline1.copyWith(
-              color: AppColors.main500,
+              color: themeData.primaryColor,
               fontSize: 32,
               fontFamily: 'Lato',
               letterSpacing: -0.40,

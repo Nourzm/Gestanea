@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FormDosePage extends StatefulWidget {
   final String? selectedForm;
@@ -41,6 +43,7 @@ class _FormDosePageState extends State<FormDosePage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final forms = [
       {'name': localizations.formPill, 'icon': '💊'},
       {'name': localizations.formInjection, 'icon': '💉'},
@@ -90,10 +93,7 @@ class _FormDosePageState extends State<FormDosePage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Color(0xFFA67FF5),
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: themeData.primaryColor, width: 2),
               ),
               prefixIcon: const Icon(Icons.medical_services),
             ),
@@ -131,7 +131,7 @@ class _FormDosePageState extends State<FormDosePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: isSelected
-                        ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                        ? Border.all(color: themeData.primaryColor, width: 2)
                         : null,
                   ),
                   child: Column(
@@ -161,7 +161,7 @@ class _FormDosePageState extends State<FormDosePage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
