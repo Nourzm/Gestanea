@@ -262,6 +262,18 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
             event.log.loggedDate,
           );
           emit(currentState.copyWith(medicineLogs: logs));
+        } else if (state is MedicinesLoaded) {
+          final currentState = state as MedicinesLoaded;
+          final logs = await medicineRepository.getMedicineLogs(
+            event.log.userId,
+            event.log.loggedDate,
+          );
+          emit(
+            MedicinesLoaded(
+              medicines: currentState.medicines,
+              medicineLogs: logs,
+            ),
+          );
         }
       } else {
         emit(PlanError(message: result.message));

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/core/database/models/doctor_filter_model.dart';
-import 'package:gestanea/core/services/doctor_api_service.dart';
+import 'package:gestanea/features/doctors/doctor_api_service.dart';
 import 'package:gestanea/core/services/location_service.dart';
 import 'doctors_event.dart';
 import 'doctors_state.dart';
