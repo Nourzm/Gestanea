@@ -133,7 +133,15 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
                     initialName: appointmentName,
                     onNameChanged: (name) =>
                         setState(() => appointmentName = name),
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (appointmentName.length <= 2) {
+                        _showError(
+                          'Appointment name must be greater than 2 characters',
+                        );
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                   ),
                   AppointmentLocationPage(

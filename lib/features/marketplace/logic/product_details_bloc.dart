@@ -4,7 +4,7 @@ import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_variant_model.dart';
 import 'package:gestanea/core/database/models/product_spec_model.dart';
 import 'package:gestanea/core/database/models/product_review_model.dart';
-import 'package:gestanea/core/services/product_api_service.dart';
+import 'package:gestanea/features/marketplace/product_api_service.dart';
 
 // Events
 abstract class ProductDetailsEvent extends Equatable {

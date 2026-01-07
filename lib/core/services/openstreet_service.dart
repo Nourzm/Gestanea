@@ -1,10 +1,20 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:flutter/material.dart';
 
 class OpenStreetMapService {
   final http.Client _client;
   static const String _baseUrl = 'https://nominatim.openstreetmap.org';
+
+  // Map configuration constants
+  static const String tileUrlTemplate =
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  static const String userAgentPackageName = 'com.gestanea.app';
+  static const String userAgentHeader = 'Gestanea/1.0 (com.gestanea.app)';
+  static const double defaultZoom = 15.0;
 
   OpenStreetMapService({required http.Client client}) : _client = client;
 
@@ -24,7 +34,7 @@ class OpenStreetMapService {
       final response = await _client.get(
         uri,
         headers: {
-          'User-Agent': 'GestaneaApp/1.0', // Required by Nominatim
+          'User-Agent': userAgentHeader, // Required by Nominatim
         },
       );
 
@@ -56,9 +66,7 @@ class OpenStreetMapService {
 
       final response = await _client.get(
         uri,
-        headers: {
-          'User-Agent': 'GestaneaApp/1.0',
-        },
+        headers: {'User-Agent': userAgentHeader},
       );
 
       if (response.statusCode == 200) {
@@ -84,6 +92,37 @@ class OpenStreetMapService {
       print('Error getting wilaya: $e');
       return null;
     }
+  }
+
+  /// Create map options for flutter_map
+  static MapOptions createMapOptions(double latitude, double longitude) {
+    return MapOptions(
+      initialCenter: LatLng(latitude, longitude),
+      initialZoom: defaultZoom,
+    );
+  }
+
+  /// Create tile layer for flutter_map
+  static TileLayer createTileLayer() {
+    return TileLayer(
+      urlTemplate: tileUrlTemplate,
+      userAgentPackageName: userAgentPackageName,
+    );
+  }
+
+  /// Create marker for flutter_map
+  static Marker createMarker({
+    required double latitude,
+    required double longitude,
+    required Color color,
+    double size = 50,
+  }) {
+    return Marker(
+      point: LatLng(latitude, longitude),
+      width: size,
+      height: size,
+      child: Icon(Icons.location_on, color: color, size: size),
+    );
   }
 }
 
@@ -116,7 +155,8 @@ class LocationResult {
       displayName: json['display_name'] as String,
       latitude: double.parse(json['lat'].toString()),
       longitude: double.parse(json['lon'].toString()),
-      city: address?['city'] as String? ??
+      city:
+          address?['city'] as String? ??
           address?['town'] as String? ??
           address?['village'] as String?,
       state: address?['state'] as String?,
@@ -142,18 +182,19 @@ class LocationResult {
   /// Calculate distance to a doctor using Haversine formula
   double distanceTo(double doctorLat, double doctorLon) {
     const double earthRadius = 6371; // km
-    
+
     final dLat = _toRadians(doctorLat - latitude);
     final dLon = _toRadians(doctorLon - longitude);
-    
-    final a = (sin(dLat / 2) * sin(dLat / 2)) +
+
+    final a =
+        (sin(dLat / 2) * sin(dLat / 2)) +
         cos(_toRadians(latitude)) *
             cos(_toRadians(doctorLat)) *
             sin(dLon / 2) *
             sin(dLon / 2);
-    
+
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    
+
     return earthRadius * c;
   }
 
