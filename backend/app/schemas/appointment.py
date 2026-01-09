@@ -20,7 +20,7 @@ class AppointmentBase(BaseModel):
     location: Optional[str] = None
     notes: Optional[str] = None
     reminder_time: Optional[str] = None  # ISO datetime format
-    is_completed: bool = False
+    is_completed: int = 0
 
 
 class AppointmentCreate(AppointmentBase):
@@ -37,7 +37,7 @@ class AppointmentUpdate(BaseModel):
     location: Optional[str] = None
     notes: Optional[str] = None
     reminder_time: Optional[str] = None
-    is_completed: Optional[bool] = None
+    is_completed: Optional[int] = None
 
 
 class AppointmentResponse(AppointmentBase):
