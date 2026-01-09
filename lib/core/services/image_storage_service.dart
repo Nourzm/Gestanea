@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive/archive.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ImageStorageService {
   static const String _folderName = 'lab_results';
+  static const String _supabaseBucket = 'lab-results';
 
   // Get the directory where lab result images are stored
   Future<Directory> get _labResultsDirectory async {
@@ -19,22 +21,159 @@ class ImageStorageService {
   }
 
   // Save image to storage
-  Future<String> saveImage(File imageFile) async {
+  Future<String> saveImage(File imageFile, String userId) async {
     try {
+      // First, save locally as backup
       final directory = await _labResultsDirectory;
       final fileName = 'lab_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final savedPath = '${directory.path}/$fileName';
+      final localPath = '${directory.path}/$fileName';
       
-      await imageFile.copy(savedPath);
-      return savedPath;
+      await imageFile.copy(localPath);
+      
+      // Then upload to Supabase Storage in user-specific folder
+      try {
+        print('Attempting to upload image to Supabase...');
+        final supabase = Supabase.instance.client;
+        final bytes = await imageFile.readAsBytes();
+        print('Image size: ${bytes.length} bytes');
+        
+        // Upload to user-specific folder: userId/fileName
+        final storagePath = '$userId/$fileName';
+        print('Uploading to path: $storagePath');
+        
+        final uploadResponse = await supabase.storage
+            .from(_supabaseBucket)
+            .uploadBinary(
+              storagePath,
+              bytes,
+              fileOptions: const FileOptions(
+                contentType: 'image/jpeg',
+                upsert: false,
+              ),
+            );
+        
+        print('Upload response: $uploadResponse');
+        
+        // Get public URL
+        final publicUrl = supabase.storage
+            .from(_supabaseBucket)
+            .getPublicUrl(storagePath);
+        
+        print('✅ Image uploaded successfully to Supabase: $publicUrl');
+        return publicUrl;
+      } catch (storageError) {
+        print('❌ Supabase storage upload failed: $storageError');
+        print('Error type: ${storageError.runtimeType}');
+        print('Using local path instead: $localPath');
+        // If Supabase upload fails, return local path
+        return localPath;
+      }
     } catch (e) {
       throw Exception('Failed to save image: $e');
     }
   }
 
-  // Get image file from path
+  // Save PDF to storage
+  Future<String> savePdf(File pdfFile, String userId) async {
+    try {
+      // First, save locally as backup
+      final directory = await _labResultsDirectory;
+      final fileName = 'lab_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final localPath = '${directory.path}/$fileName';
+      
+      await pdfFile.copy(localPath);
+      
+      // Then upload to Supabase Storage in user-specific folder
+      try {
+        print('Attempting to upload PDF to Supabase...');
+        final supabase = Supabase.instance.client;
+        final bytes = await pdfFile.readAsBytes();
+        print('PDF size: ${bytes.length} bytes');
+        
+        // Upload to user-specific folder: userId/fileName
+        final storagePath = '$userId/$fileName';
+        print('Uploading to path: $storagePath');
+        
+        final uploadResponse = await supabase.storage
+            .from(_supabaseBucket)
+            .uploadBinary(
+              storagePath,
+              bytes,
+              fileOptions: const FileOptions(
+                contentType: 'application/pdf',
+                upsert: false,
+              ),
+            );
+        
+        print('Upload response: $uploadResponse');
+        
+        // Get public URL
+        final publicUrl = supabase.storage
+            .from(_supabaseBucket)
+            .getPublicUrl(storagePath);
+        
+        print('✅ PDF uploaded successfully to Supabase: $publicUrl');
+        return publicUrl;
+      } catch (storageError) {
+        print('❌ Supabase storage upload failed: $storageError');
+        print('Error type: ${storageError.runtimeType}');
+        print('Using local path instead: $localPath');
+        // If Supabase upload fails, return local path
+        return localPath;
+      }
+    } catch (e) {
+      throw Exception('Failed to save PDF: $e');
+    }
+  }
+
+  // Get image file from path (handles both local paths and remote URLs)
+  Future<File?> getImageAsync(String? path) async {
+    if (path == null || path.isEmpty) return null;
+    
+    // If it's a remote URL, extract filename and find in local storage
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      try {
+        final uri = Uri.parse(path);
+        final segments = uri.pathSegments;
+        
+        // The filename is always the last segment, regardless of folder structure
+        // Old format: .../lab-results/filename.jpg
+        // New format: .../lab-results/userId/filename.jpg
+        final filename = segments.isNotEmpty ? segments.last : null;
+        
+        if (filename != null && filename.isNotEmpty) {
+          // Look for the file in local storage
+          final directory = await _labResultsDirectory;
+          final file = File('${directory.path}/$filename');
+          
+          if (await file.exists()) {
+            print('Found local file: ${file.path}');
+            return file;
+          } else {
+            print('Local file not found: ${file.path}');
+          }
+        }
+      } catch (e) {
+        print('Error parsing URL: $e');
+      }
+      return null;
+    }
+    
+    // Local path - check if exists
+    final file = File(path);
+    return await file.exists() ? file : null;
+  }
+  
+  // Get image file from path (synchronous - for existing code compatibility)
   File? getImage(String? path) {
     if (path == null || path.isEmpty) return null;
+    
+    // For remote URLs, we can't do synchronous lookup, return null
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return null;
+    }
+    
+    // Local path
     final file = File(path);
     return file.existsSync() ? file : null;
   }

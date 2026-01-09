@@ -9,6 +9,7 @@ import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import '../../logic/bloc/lab_results_state.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'edit_lab_result_page.dart';
 
 class LabResultsListPage extends StatelessWidget {
   const LabResultsListPage({super.key});
@@ -145,7 +146,8 @@ class LabResultsListPage extends StatelessWidget {
   Widget _buildLabResultCard(BuildContext context, LabResultModel result) {
     final imageStorage = ImageStorageService();
     final themeData = context.watch<ThemeCubit>().currentTheme;
-    final imageFile = imageStorage.getImage(result.reportImageUrl);
+    final imagePath = result.reportImageUrl;
+    final isRemoteUrl = imagePath != null && (imagePath.startsWith('http://') || imagePath.startsWith('https://'));
 
     Color statusColor = const Color(0xFFB8E6B8);
     String status = 'Normal';
@@ -168,9 +170,24 @@ class LabResultsListPage extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () {
-          if (imageFile != null) {
-            _showImageDialog(context, imageFile);
+        onTap: () async {
+          // Navigate to edit page with the existing bloc
+          final bloc = context.read<LabResultsBloc>();
+          final updated = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: bloc,
+                child: EditLabResultPage(result: result),
+              ),
+            ),
+          );
+          
+          // Refresh if updated
+          if (updated == true) {
+            if (context.mounted) {
+              context.read<LabResultsBloc>().add(LoadLabResults());
+            }
           }
         },
         borderRadius: BorderRadius.circular(12),
@@ -179,15 +196,43 @@ class LabResultsListPage extends StatelessWidget {
           child: Row(
             children: [
               // Thumbnail if image exists
-              if (imageFile != null) ...[
+              if (imagePath != null && imagePath.isNotEmpty) ...[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    imageFile,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                  ),
+                  child: isRemoteUrl
+                      ? Image.network(
+                          imagePath,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 60,
+                              height: 60,
+                              color: Colors.grey.shade300,
+                              child: const Icon(Icons.broken_image, color: Colors.grey),
+                            );
+                          },
+                        )
+                      : FutureBuilder<File?>(
+                          future: imageStorage.getImageAsync(imagePath),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              return Image.file(
+                                snapshot.data!,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              );
+                            }
+                            return Container(
+                              width: 60,
+                              height: 60,
+                              color: Colors.grey.shade300,
+                              child: const Icon(Icons.image, color: Colors.grey),
+                            );
+                          },
+                        ),
                 ),
                 const SizedBox(width: 12),
               ],
@@ -200,14 +245,19 @@ class LabResultsListPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          result.testName,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textDark,
+                        Expanded(
+                          child: Text(
+                            result.testName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textDark,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -237,6 +287,7 @@ class LabResultsListPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: themeData.primaryColor,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     if (result.normalRangeMin != null &&
                         result.normalRangeMax != null) ...[
@@ -247,6 +298,7 @@ class LabResultsListPage extends StatelessWidget {
                           fontSize: 11,
                           color: Colors.grey,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                     if (result.extractedByOcr) ...[

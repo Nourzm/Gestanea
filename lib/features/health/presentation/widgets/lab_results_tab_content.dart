@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_state.dart';
 import '../pages/lab_results_list_page.dart';
+import '../pages/lab_papers_gallery_page.dart';
 import 'dialogs/upload_lab_results_dialog.dart';
 
 class LabResultsTabContent extends StatelessWidget {
@@ -131,6 +132,43 @@ class LabResultsTabContent extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 12),
+
+                // View Lab Papers Gallery Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<LabResultsBloc>(),
+                                child: const LabPapersGalleryPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.photo_library),
+                        label: const Text('View All Lab Papers'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: themeData.primaryColor,
+                          side: BorderSide(color: themeData.primaryColor, width: 2),
                           padding: const EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: 24,
@@ -313,11 +351,12 @@ class LabResultsTabContent extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        final bloc = context.read<LabResultsBloc>();
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const UploadLabResultsDialog(),
+          builder: (dialogContext) => UploadLabResultsDialog(bloc: bloc),
         );
       },
       child: Container(
