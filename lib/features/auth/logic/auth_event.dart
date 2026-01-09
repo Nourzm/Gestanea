@@ -36,6 +36,25 @@ class LoginRequested extends AuthEvent {
 
 class LogoutRequested extends AuthEvent {}
 
+class SendOtpRequested extends AuthEvent {
+  final String email;
+
+  SendOtpRequested({required this.email});
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class VerifyOtpRequested extends AuthEvent {
+  final String email;
+  final String otpCode;
+
+  VerifyOtpRequested({required this.email, required this.otpCode});
+
+  @override
+  List<Object?> get props => [email, otpCode];
+}
+
 class UpdateProfileRequested extends AuthEvent {
   final String id;
   final String name;

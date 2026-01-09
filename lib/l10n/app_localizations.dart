@@ -1132,6 +1132,48 @@ abstract class AppLocalizations {
   /// **'Remember me'**
   String get rememberMe;
 
+  /// No description provided for @sendOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get sendOtp;
+
+  /// No description provided for @verifyOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get verifyOtp;
+
+  /// No description provided for @enterOtpCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter verification code'**
+  String get enterOtpCode;
+
+  /// No description provided for @otpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent to your email'**
+  String get otpSent;
+
+  /// No description provided for @otpCodePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit code'**
+  String get otpCodePlaceholder;
+
+  /// No description provided for @resendOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendOtp;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please check your network and try again.'**
+  String get noInternetConnection;
+
   /// No description provided for @version.
   ///
   /// In en, this message translates to:

@@ -12,6 +12,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpRequested>(_onSignUp);
     on<LoginRequested>(_onLogin);
     on<LogoutRequested>(_onLogout);
+    on<SendOtpRequested>(_onSendOtp);
+    on<VerifyOtpRequested>(_onVerifyOtp);
     on<UpdateProfileRequested>(_onUpdateProfile);
   }
 
@@ -66,6 +68,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthUnauthenticated());
     } catch (e) {
       emit(AuthFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onSendOtp(
+    SendOtpRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await repository.sendOtp(event.email);
+      emit(OtpSent(event.email));
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+      emit(AuthUnauthenticated());
+    }
+  }
+
+  Future<void> _onVerifyOtp(
+    VerifyOtpRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      final user = await repository.verifyOtp(
+        email: event.email,
+        otpCode: event.otpCode,
+      );
+      emit(AuthAuthenticated(user));
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+      // Return to OtpSent state so user can try again
+      emit(OtpSent(event.email));
     }
   }
 

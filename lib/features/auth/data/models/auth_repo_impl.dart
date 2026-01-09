@@ -1,18 +1,24 @@
 import 'package:gestanea/core/database/models/user_model.dart';
+import 'package:gestanea/core/services/connectivity_service.dart';
 import 'package:gestanea/core/session/session_manager.dart';
 import 'package:gestanea/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:gestanea/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:gestanea/features/auth/data/models/auth_repo.dart';
 import 'package:gestanea/features/auth/data/models/user_entity.dart';
 import 'package:uuid/uuid.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
+  final AuthRemoteDataSource remoteDataSource;
   final SessionManager sessionManager;
+  final ConnectivityService connectivityService;
   final Uuid _uuid = const Uuid();
 
   AuthRepositoryImpl({
     required this.localDataSource,
+    required this.remoteDataSource,
     required this.sessionManager,
+    required this.connectivityService,
   });
 
   @override
@@ -80,7 +86,69 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    await remoteDataSource.signOut();
     await sessionManager.clearSession();
+  }
+
+  @override
+  Future<void> sendOtp(String email) async {
+    // Check connectivity before attempting remote operation
+    if (!connectivityService.isOnline) {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
+    }
+
+    await remoteDataSource.sendOtp(email);
+  }
+
+  @override
+  Future<UserEntity> verifyOtp({
+    required String email,
+    required String otpCode,
+  }) async {
+    // Check connectivity before attempting remote operation
+    if (!connectivityService.isOnline) {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
+    }
+
+    // Verify OTP with Supabase
+    final supabaseUser = await remoteDataSource.verifyOtp(
+      email: email,
+      token: otpCode,
+    );
+
+    // Check if user already exists locally
+    UserModel? existingUser = await localDataSource.getUserByEmail(email);
+
+    if (existingUser != null) {
+      // User exists - just log them in
+      await sessionManager.saveCurrentUserId(existingUser.id);
+      return UserEntity.fromModel(existingUser);
+    }
+
+    // New user - create local record using Supabase UUID
+    final now = DateTime.now();
+    final userModel = UserModel(
+      id: supabaseUser.id, // Use Supabase UUID
+      email: email,
+      name: email.split('@').first, // Default name from email
+      phone: null,
+      country: null,
+      language: null,
+      theme: null,
+      notificationsEnabled: true,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    // Insert user into local database (no password needed for OTP users)
+    await localDataSource.createUser(userModel);
+    await sessionManager.saveCurrentUserId(userModel.id);
+
+    return UserEntity.fromModel(userModel);
   }
 
   @override

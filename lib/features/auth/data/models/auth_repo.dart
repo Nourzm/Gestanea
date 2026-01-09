@@ -15,7 +15,14 @@ abstract class AuthRepository {
 
   /// Get currently logged in user (or null).
   Future<UserEntity?> getCurrentUser();
-   Future<UserEntity> updateUser(UserEntity user);
+  
+  Future<UserEntity> updateUser(UserEntity user);
+
+  /// Send OTP code to email using Supabase
+  Future<void> sendOtp(String email);
+
+  /// Verify OTP code and create/authenticate user
+  Future<UserEntity> verifyOtp({required String email, required String otpCode});
 
   /// Logout current user.
   Future<void> logout();
