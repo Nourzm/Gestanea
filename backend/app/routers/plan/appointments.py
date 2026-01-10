@@ -62,11 +62,13 @@ async def create_appointment(appointment: AppointmentCreate):
         
         appointment_data = appointment.model_dump()
         
-        # Generate UUID for the appointment
-        appointment_data["id"] = str(uuid.uuid4())
+        # Use client-provided ID if available, otherwise generate UUID
+        if not appointment_data.get("id"):
+            appointment_data["id"] = str(uuid.uuid4())
         
-        # Add created_at timestamp
-        appointment_data["created_at"] = datetime.utcnow().isoformat()
+        # Use client-provided created_at if available, otherwise use current time
+        if not appointment_data.get("created_at"):
+            appointment_data["created_at"] = datetime.utcnow().isoformat()
         
         response = supabase.table("appointments").insert(appointment_data).execute()
         
