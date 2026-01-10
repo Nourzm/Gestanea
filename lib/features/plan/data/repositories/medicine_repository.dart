@@ -3,6 +3,7 @@ import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:gestanea/features/plan/data/datasources/medicine_local_data_source.dart';
 import 'package:gestanea/features/plan/data/datasources/medicine_remote_data_source.dart';
 import 'package:gestanea/core/services/connectivity_service.dart';
+import 'dart:async';
 
 class ReturnResult {
   final bool state;
@@ -16,6 +17,7 @@ class MedicineRepository {
   final MedicineLocalDataSource _localDataSource;
   final MedicineRemoteDataSource _remoteDataSource;
   final ConnectivityService _connectivityService;
+  StreamSubscription<bool>? _connectivitySubscription;
 
   MedicineRepository({
     MedicineLocalDataSource? localDataSource,
@@ -23,7 +25,18 @@ class MedicineRepository {
     ConnectivityService? connectivityService,
   }) : _localDataSource = localDataSource ?? MedicineLocalDataSource(),
        _remoteDataSource = remoteDataSource ?? MedicineRemoteDataSource(),
-       _connectivityService = connectivityService ?? ConnectivityService();
+       _connectivityService = connectivityService ?? ConnectivityService() {
+    // Listen for connectivity changes and sync when coming online
+    _connectivitySubscription = _connectivityService.connectivityStream.listen((
+      isOnline,
+    ) {
+      if (isOnline) {
+        print(
+          '📶 Connectivity restored - will sync pending medicines on next fetch',
+        );
+      }
+    });
+  }
 
   // Singleton instance
   static MedicineRepository? _instance;
@@ -61,7 +74,35 @@ class MedicineRepository {
           }
         }
 
-        return remoteMedicines;
+        // Merge with local medicines that don't exist in remote
+        // (these are medicines created offline that haven't synced yet)
+        final localMedicines = await _localDataSource.getMedicines(userId);
+        final remoteIds = remoteMedicines.map((m) => m.id).toSet();
+        final localOnlyMedicines = localMedicines
+            .where((m) => !remoteIds.contains(m.id))
+            .toList();
+
+        if (localOnlyMedicines.isNotEmpty) {
+          print(
+            'Found ${localOnlyMedicines.length} local medicines not in remote - syncing now...',
+          );
+
+          // Try to sync these local-only medicines to remote
+          for (final medicine in localOnlyMedicines) {
+            try {
+              final success = await _remoteDataSource.insertMedicine(medicine);
+              if (success) {
+                print('✅ Synced medicine: ${medicine.medicineName}');
+              } else {
+                print('⚠️ Failed to sync medicine: ${medicine.medicineName}');
+              }
+            } catch (e) {
+              print('⚠️ Error syncing medicine ${medicine.medicineName}: $e');
+            }
+          }
+        }
+
+        return [...remoteMedicines, ...localOnlyMedicines];
       } catch (e) {
         print('Failed to fetch from remote, using local: $e');
         // Fallback to local on error
@@ -109,7 +150,35 @@ class MedicineRepository {
           }
         }
 
-        return remoteMedicines;
+        // Merge with local medicines that don't exist in remote
+        final localMedicines = await _localDataSource.getMedicinesByDate(
+          userId,
+          date,
+        );
+        final remoteIds = remoteMedicines.map((m) => m.id).toSet();
+        final localOnlyMedicines = localMedicines
+            .where((m) => !remoteIds.contains(m.id))
+            .toList();
+
+        if (localOnlyMedicines.isNotEmpty) {
+          print(
+            'Found ${localOnlyMedicines.length} local medicines not in remote (by date) - syncing now...',
+          );
+
+          // Try to sync these local-only medicines to remote
+          for (final medicine in localOnlyMedicines) {
+            try {
+              final success = await _remoteDataSource.insertMedicine(medicine);
+              if (success) {
+                print('✅ Synced medicine: ${medicine.medicineName}');
+              }
+            } catch (e) {
+              print('⚠️ Error syncing medicine ${medicine.medicineName}: $e');
+            }
+          }
+        }
+
+        return [...remoteMedicines, ...localOnlyMedicines];
       } catch (e) {
         print('Failed to fetch from remote, using local: $e');
         return _localDataSource.getMedicinesByDate(userId, date);

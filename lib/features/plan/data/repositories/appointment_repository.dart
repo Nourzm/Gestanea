@@ -2,6 +2,7 @@ import 'package:gestanea/core/database/models/appointment_model.dart';
 import 'package:gestanea/features/plan/data/datasources/appointment_local_data_source.dart';
 import 'package:gestanea/features/plan/data/datasources/appointment_remote_data_source.dart';
 import 'package:gestanea/core/services/connectivity_service.dart';
+import 'dart:async';
 
 class ReturnResult {
   final bool state;
@@ -15,6 +16,7 @@ class AppointmentRepository {
   final AppointmentLocalDataSource _localDataSource;
   final AppointmentRemoteDataSource _remoteDataSource;
   final ConnectivityService _connectivityService;
+  StreamSubscription<bool>? _connectivitySubscription;
 
   AppointmentRepository({
     AppointmentLocalDataSource? localDataSource,
@@ -22,7 +24,18 @@ class AppointmentRepository {
     ConnectivityService? connectivityService,
   }) : _localDataSource = localDataSource ?? AppointmentLocalDataSource(),
        _remoteDataSource = remoteDataSource ?? AppointmentRemoteDataSource(),
-       _connectivityService = connectivityService ?? ConnectivityService();
+       _connectivityService = connectivityService ?? ConnectivityService() {
+    // Listen for connectivity changes and sync when coming online
+    _connectivitySubscription = _connectivityService.connectivityStream.listen((
+      isOnline,
+    ) {
+      if (isOnline) {
+        print(
+          '📶 Connectivity restored - will sync pending appointments on next fetch',
+        );
+      }
+    });
+  }
 
   // Singleton instance
   static AppointmentRepository? _instance;
@@ -64,7 +77,39 @@ class AppointmentRepository {
           }
         }
 
-        return remoteAppointments;
+        // Merge with local appointments that don't exist in remote
+        // (these are appointments created offline that haven't synced yet)
+        final localAppointments = await _localDataSource.getAppointments(
+          userId,
+        );
+        final remoteIds = remoteAppointments.map((a) => a.id).toSet();
+        final localOnlyAppointments = localAppointments
+            .where((a) => !remoteIds.contains(a.id))
+            .toList();
+
+        if (localOnlyAppointments.isNotEmpty) {
+          print(
+            'Found ${localOnlyAppointments.length} local appointments not in remote - syncing now...',
+          );
+
+          // Try to sync these local-only appointments to remote
+          for (final appointment in localOnlyAppointments) {
+            try {
+              final success = await _remoteDataSource.insertAppointment(
+                appointment,
+              );
+              if (success) {
+                print('✅ Synced appointment: ${appointment.title}');
+              } else {
+                print('⚠️ Failed to sync appointment: ${appointment.title}');
+              }
+            } catch (e) {
+              print('⚠️ Error syncing appointment ${appointment.title}: $e');
+            }
+          }
+        }
+
+        return [...remoteAppointments, ...localOnlyAppointments];
       } catch (e) {
         print('Failed to fetch from remote, using local: $e');
         // Fallback to local on error
@@ -108,7 +153,37 @@ class AppointmentRepository {
           }
         }
 
-        return remoteAppointments;
+        // Merge with local appointments that don't exist in remote
+        final localAppointments = await _localDataSource.getAppointmentsByDate(
+          userId,
+          date,
+        );
+        final remoteIds = remoteAppointments.map((a) => a.id).toSet();
+        final localOnlyAppointments = localAppointments
+            .where((a) => !remoteIds.contains(a.id))
+            .toList();
+
+        if (localOnlyAppointments.isNotEmpty) {
+          print(
+            'Found ${localOnlyAppointments.length} local appointments not in remote (by date) - syncing now...',
+          );
+
+          // Try to sync these local-only appointments to remote
+          for (final appointment in localOnlyAppointments) {
+            try {
+              final success = await _remoteDataSource.insertAppointment(
+                appointment,
+              );
+              if (success) {
+                print('✅ Synced appointment: ${appointment.title}');
+              }
+            } catch (e) {
+              print('⚠️ Error syncing appointment ${appointment.title}: $e');
+            }
+          }
+        }
+
+        return [...remoteAppointments, ...localOnlyAppointments];
       } catch (e) {
         print('Failed to fetch from remote, using local: $e');
         return _localDataSource.getAppointmentsByDate(userId, date);
@@ -137,7 +212,35 @@ class AppointmentRepository {
           }
         }
 
-        return remoteAppointments;
+        // Merge with local appointments that don't exist in remote
+        final localAppointments = await _localDataSource
+            .getUpcomingAppointments(userId);
+        final remoteIds = remoteAppointments.map((a) => a.id).toSet();
+        final localOnlyAppointments = localAppointments
+            .where((a) => !remoteIds.contains(a.id))
+            .toList();
+
+        if (localOnlyAppointments.isNotEmpty) {
+          print(
+            'Found ${localOnlyAppointments.length} local appointments not in remote (upcoming) - syncing now...',
+          );
+
+          // Try to sync these local-only appointments to remote
+          for (final appointment in localOnlyAppointments) {
+            try {
+              final success = await _remoteDataSource.insertAppointment(
+                appointment,
+              );
+              if (success) {
+                print('✅ Synced appointment: ${appointment.title}');
+              }
+            } catch (e) {
+              print('⚠️ Error syncing appointment ${appointment.title}: $e');
+            }
+          }
+        }
+
+        return [...remoteAppointments, ...localOnlyAppointments];
       } catch (e) {
         print(
           'Failed to fetch upcoming appointments from remote, using local: $e',

@@ -25,7 +25,8 @@ class AppointmentBase(BaseModel):
 
 class AppointmentCreate(AppointmentBase):
     """Schema for creating a new appointment."""
-    pass
+    id: Optional[str] = None  # Allow client to provide ID
+    created_at: Optional[str] = None  # Allow client to provide timestamp
 
 
 class AppointmentUpdate(BaseModel):

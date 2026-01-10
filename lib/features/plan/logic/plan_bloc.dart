@@ -4,9 +4,11 @@ import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
 import 'package:gestanea/core/services/alarm_scheduler.dart';
+import 'package:gestanea/core/services/connectivity_service.dart';
 import '../data/repositories/medicine_repository.dart';
 import '../data/repositories/appointment_repository.dart';
 import 'dart:developer' as developer;
+import 'dart:async';
 
 // Events
 abstract class PlanEvent extends Equatable {
@@ -153,12 +155,16 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   final MedicineRepository medicineRepository;
   final AppointmentRepository appointmentRepository;
   final AlarmScheduler alarmScheduler;
+  final ConnectivityService _connectivityService;
+  StreamSubscription<bool>? _connectivitySubscription;
 
   PlanBloc({
     required this.medicineRepository,
     required this.appointmentRepository,
     required this.alarmScheduler,
-  }) : super(PlanInitial()) {
+    ConnectivityService? connectivityService,
+  }) : _connectivityService = connectivityService ?? ConnectivityService(),
+       super(PlanInitial()) {
     on<LoadPlanData>(_onLoadPlanData);
     on<RefreshPlanData>(_onRefreshPlanData);
     on<AddMedicineEvent>(_onAddMedicine);
@@ -166,6 +172,33 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
     on<AddAppointmentEvent>(_onAddAppointment);
     on<LoadAppointments>(_onLoadAppointments);
     on<LoadMedicines>(_onLoadMedicines);
+
+    // Listen for connectivity changes and trigger sync when coming online
+    _connectivitySubscription = _connectivityService.connectivityStream.listen((
+      isOnline,
+    ) {
+      if (isOnline) {
+        print('📶 Connection restored - syncing pending data...');
+        // Trigger a refresh to sync pending items
+        if (state is PlanLoaded) {
+          final currentState = state as PlanLoaded;
+          // Get user ID from current medicines or appointments
+          if (currentState.medicines.isNotEmpty) {
+            final userId = currentState.medicines.first.userId;
+            add(RefreshPlanData(userId: userId!, date: DateTime.now()));
+          } else if (currentState.appointments.isNotEmpty) {
+            final userId = currentState.appointments.first.userId;
+            add(LoadAppointments(userId: userId));
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _connectivitySubscription?.cancel();
+    return super.close();
   }
 
   Future<void> _onLoadPlanData(
