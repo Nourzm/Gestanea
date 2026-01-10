@@ -1,13 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
-import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
-import 'package:gestanea/features/auth/presentation/widgets/input_fields.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 /// OTP Verification Page
@@ -19,55 +19,93 @@ import 'package:gestanea/l10n/app_localizations.dart';
 /// 4. Taps "Verify Code" to authenticate
 ///
 /// Usage:
-/// - To request OTP: context.read<AuthBloc>().add(SendOtpRequested(email: email))
-/// - To verify OTP: context.read<AuthBloc>().add(VerifyOtpRequested(email: email, otpCode: code))
-class OtpVerificationPage extends StatefulWidget {
-  const OtpVerificationPage({super.key});
+class OTPVerificationPage extends StatefulWidget {
+  final String email;
+
+  const OTPVerificationPage({super.key, required this.email});
 
   @override
-  State<OtpVerificationPage> createState() => _OtpVerificationPageState();
+  State<OTPVerificationPage> createState() => _OTPVerificationPageState();
 }
 
-class _OtpVerificationPageState extends State<OtpVerificationPage> {
-  final _emailController = TextEditingController();
-  final _otpController = TextEditingController();
-  bool _otpSent = false;
+class _OTPVerificationPageState extends State<OTPVerificationPage> {
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
-  void _onSendOtpPressed() {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter your email')));
-      return;
+  int _resendTimer = 60;
+  Timer? _timer;
+  bool _canResend = false;
+  String? _otpError; // Inline error for OTP validation
+
+  @override
+  void initState() {
+    super.initState();
+    for (final node in _focusNodes) {
+      node.addListener(() => setState(() {}));
     }
-
-    // Send OTP request
-    context.read<AuthBloc>().add(SendOtpRequested(email: email));
+    _startResendTimer();
   }
 
-  void _onVerifyOtpPressed() {
-    final email = _emailController.text.trim();
-    final code = _otpController.text.trim();
+  void _startResendTimer() {
+    _canResend = false;
+    _resendTimer = 60;
 
-    if (code.isEmpty || code.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the 6-digit code')),
-      );
-      return;
-    }
-
-    // Verify OTP
-    context.read<AuthBloc>().add(
-      VerifyOtpRequested(email: email, otpCode: code),
-    );
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_resendTimer > 0) {
+          _resendTimer--;
+        } else {
+          _canResend = true;
+          timer.cancel();
+        }
+      });
+    });
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _otpController.dispose();
+    _timer?.cancel();
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
     super.dispose();
+  }
+
+  String get _otpCode => _controllers.map((c) => c.text).join();
+
+  void _clearError() {
+    if (_otpError != null) {
+      setState(() {
+        _otpError = null;
+      });
+    }
+  }
+
+  void _verifyOTP() {
+    if (_otpCode.length == 6) {
+      _clearError();
+      context.read<AuthBloc>().add(
+        VerifyOtpRequested(email: widget.email, otpCode: _otpCode),
+      );
+    } else {
+      setState(() {
+        _otpError = 'Please enter the complete 6-digit code';
+      });
+    }
+  }
+
+  void _resendOTP() {
+    if (_canResend) {
+      context.read<AuthBloc>().add(ResendOtpRequested(email: widget.email));
+      _startResendTimer();
+    }
   }
 
   @override
@@ -75,7 +113,6 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final labelFontSize = screenWidth * 0.038;
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
@@ -83,23 +120,47 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         top: false,
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is OtpSent) {
-              // OTP sent successfully
-              setState(() {
-                _otpSent = true;
-              });
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(t.otpSent)));
-            } else if (state is AuthAuthenticated) {
-              // Successfully authenticated
+            if (state is AuthAuthenticated) {
               Navigator.pushReplacementNamed(context, AppRoutes.personalize);
             } else if (state is AuthFailure) {
-              // Show error message
               final message = state.message.replaceAll('Exception: ', '');
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(message)));
+              
+              // Map error keys to user-friendly messages
+              String errorMessage;
+              if (message == 'noInternetConnection') {
+                // Network errors: show in SnackBar (global issue)
+                errorMessage = t.noInternetConnection;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(errorMessage),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+                return; // Don't show inline error for network issues
+              } else if (message.toLowerCase().contains('invalid') ||
+                         message.toLowerCase().contains('expired') ||
+                         message.toLowerCase().contains('code') ||
+                         message.toLowerCase().contains('token')) {
+                // OTP validation errors: show inline below OTP fields
+                setState(() {
+                  _otpError = 'Invalid or expired code. Please try again.';
+                });
+              } else {
+                // Other errors: show inline
+                setState(() {
+                  _otpError = 'Verification failed. Please try again.';
+                });
+              }
+            } else if (state is AuthOTPResent) {
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(t.otpSent),
+                  backgroundColor: Colors.green,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
             }
           },
           child: SingleChildScrollView(
@@ -109,126 +170,152 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 child: Column(
                   children: [
                     const HeroSection(
-                      title: "Email Verification",
-                      subtitle: "We'll send you a verification code",
+                      title: "Verify Email",
+                      subtitle: "Enter the code we sent you",
                     ),
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.08,
-                          vertical: screenHeight * 0.02,
+                          vertical: screenHeight * 0.04,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Input fields
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Email label
+                            Column(
+                              children: [
+                                Text(
+                                  'We sent a 6-digit code to',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  widget.email,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.main600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 40),
+
+                                // OTP Input Boxes
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(6, (index) {
+                                    return _OTPBox(
+                                      controller: _controllers[index],
+                                      focusNode: _focusNodes[index],
+                                      onChanged: (value) {
+                                        _clearError(); // Clear error when user types
+                                        
+                                        if (value.isNotEmpty && index < 5) {
+                                          // Auto-advance to next field
+                                          _focusNodes[index + 1].requestFocus();
+                                        } else if (value.isEmpty && index > 0) {
+                                          // Move back on backspace
+                                          _focusNodes[index - 1].requestFocus();
+                                        }
+
+                                        if (_otpCode.length == 6) {
+                                          _verifyOTP();
+                                        }
+                                      },
+                                    );
+                                  }),
+                                ),
+                                // Inline error display below OTP fields
+                                if (_otpError != null) ...[
+                                  const SizedBox(height: 12),
                                   Text(
-                                    t.email,
-                                    style: TextStyle(
-                                      fontSize: labelFontSize.clamp(14.0, 16.0),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                    _otpError!,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: screenHeight * 0.012),
+                                ],
+                                const SizedBox(height: 32),
 
-                                  // Email input
-                                  InputField(
-                                    controller: _emailController,
-                                    hintText: t.enter_email,
-                                    prefixIcon: Icons.email_outlined,
-                                  ),
-
-                                  if (_otpSent) ...[
-                                    SizedBox(height: screenHeight * 0.02),
-
-                                    // OTP Code label
+                                // Resend button
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
                                     Text(
-                                      t.enterOtpCode,
+                                      "Didn't receive the code?  ",
                                       style: TextStyle(
-                                        fontSize: labelFontSize.clamp(
-                                          14.0,
-                                          16.0,
-                                        ),
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
                                       ),
                                     ),
-                                    SizedBox(height: screenHeight * 0.012),
-
-                                    // OTP Code input
-                                    InputField(
-                                      controller: _otpController,
-                                      hintText: t.otpCodePlaceholder,
-                                      prefixIcon: Icons.lock_outlined,
-                                      keyboardType: TextInputType.number,
-                                    ),
-
-                                    // Resend OTP link
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                        onPressed: _onSendOtpPressed,
-                                        child: Text(
-                                          t.resendOtp,
-                                          style: const TextStyle(
-                                            color: AppColors.main600,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                    GestureDetector(
+                                      onTap: _canResend ? _resendOTP : null,
+                                      child: Text(
+                                        _canResend
+                                            ? 'Resend'
+                                            : 'Resend in $_resendTimer s',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: _canResend
+                                              ? AppColors.main600
+                                              : Colors.grey[400],
                                         ),
                                       ),
                                     ),
                                   ],
-                                ],
-                              ),
-                            ),
-
-                            // Action button
-                            Column(
-                              children: [
-                                BlocBuilder<AuthBloc, AuthState>(
-                                  builder: (context, state) {
-                                    final isLoading = state is AuthLoading;
-
-                                    return AppButton(
-                                      onPressed: isLoading
-                                          ? () {}
-                                          : (_otpSent
-                                                ? _onVerifyOtpPressed
-                                                : _onSendOtpPressed),
-                                      text: isLoading
-                                          ? 'Loading...'
-                                          : (_otpSent
-                                                ? t.verifyOtp
-                                                : t.sendOtp),
-                                    );
-                                  },
-                                ),
-                                SizedBox(height: screenHeight * 0.02),
-
-                                // Back to login link
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      AppRoutes.login,
-                                    );
-                                  },
-                                  child: Text(
-                                    'Back to Login',
-                                    style: TextStyle(
-                                      color: AppColors.main600,
-                                      fontSize: labelFontSize.clamp(13.0, 15.0),
-                                    ),
-                                  ),
                                 ),
                               ],
+                            ),
+
+                            // Verify Button
+                            BlocBuilder<AuthBloc, AuthState>(
+                              builder: (context, state) {
+                                final isLoading = state is AuthLoading;
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 56,
+                                  child: ElevatedButton(
+                                    onPressed: isLoading ? null : _verifyOTP,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.main600,
+                                      disabledBackgroundColor: Colors.grey[300],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(28),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                    child: isLoading
+                                        ? const SizedBox(
+                                            height: 24,
+                                            width: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.5,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    Colors.white,
+                                                  ),
+                                            ),
+                                          )
+                                        : const Text(
+                                            'Verify Email',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -239,6 +326,75 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OTPBox extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+
+  const _OTPBox({
+    required this.controller,
+    required this.focusNode,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 45,
+      height: 55,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: focusNode.hasFocus ? AppColors.main600 : Colors.grey[300]!,
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        onChanged: (value) {
+          // Prevent multiple characters
+          if (value.length > 1) {
+            controller.text = value.substring(0, 1);
+            controller.selection = TextSelection.fromPosition(
+              TextPosition(offset: controller.text.length),
+            );
+          }
+          onChanged(controller.text);
+        },
+        onTap: () {
+          // Select all text when tapping on a field
+          controller.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: controller.text.length,
+          );
+        },
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: AppColors.main600,
+        ),
+        decoration: const InputDecoration(
+          counterText: '',
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
         ),
       ),
     );

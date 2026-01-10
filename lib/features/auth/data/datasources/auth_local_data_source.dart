@@ -137,6 +137,24 @@ class AuthLocalDataSource {
     );
   }
 
+  /// Update password for a user
+  Future<void> updatePassword({
+    required String userId,
+    required String newPassword,
+  }) async {
+    final db = await _db;
+    await ensureAuthTableExists();
+
+    final passwordHash = _hashPassword(newPassword);
+
+    await db.update(
+      'auth_credentials',
+      {'password': passwordHash},
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+  }
+
   String _hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha256.convert(bytes);

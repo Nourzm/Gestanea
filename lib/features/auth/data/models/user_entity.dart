@@ -7,6 +7,7 @@ class UserEntity {
   final String? language;
   final String? theme;
   final bool notificationsEnabled;
+  final String? profilePictureUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -19,6 +20,7 @@ class UserEntity {
     this.language,
     this.theme,
     this.notificationsEnabled = true,
+    this.profilePictureUrl,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -34,6 +36,7 @@ class UserEntity {
       language: model.language,
       theme: model.theme,
       notificationsEnabled: model.notificationsEnabled,
+      profilePictureUrl: model.profilePicturePath,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
     );
