@@ -22,7 +22,7 @@ class MedicineBase(BaseModel):
     start_date: str  # ISO date format YYYY-MM-DD
     end_date: Optional[str] = None  # ISO date format YYYY-MM-DD
     medicine_image_url: Optional[str] = None
-    is_active: bool = True
+    is_active: int = 1
 
 
 class MedicineCreate(MedicineBase):
@@ -41,7 +41,7 @@ class MedicineUpdate(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     medicine_image_url: Optional[str] = None
-    is_active: Optional[bool] = None
+    is_active: Optional[int] = None
 
 
 class MedicineResponse(MedicineBase):

@@ -2,48 +2,81 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/database/db_helper.dart';
 import '../../../../core/database/models/lab_result_model.dart';
 import '../../../../core/services/image_storage_service.dart';
+import '../../data/repositories/lab_results_repository.dart';
 import 'lab_results_event.dart';
 import 'lab_results_state.dart';
 
 class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
-  final DatabaseHelper _dbHelper = DatabaseHelper. instance;
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
   final ImageStorageService _imageStorage = ImageStorageService();
+  final LabResultsRepository _repository = LabResultsRepository();
+  String? _currentUserId;
 
   LabResultsBloc() : super(LabResultsInitial()) {
     on<LoadLabResults>(_onLoad);
     on<AddLabResult>(_onAdd);
+    on<UpdateLabResult>(_onUpdate);
     on<DeleteLabResult>(_onDelete);
     on<ExportLabResultsAsZip>(_onExport);
     on<RefreshLabResults>(_onRefresh);
   }
 
+  void setUserId(String userId) {
+    _currentUserId = userId;
+  }
+
   Future<void> _onLoad(LoadLabResults event, Emitter<LabResultsState> emit) async {
     emit(LabResultsLoading());
     try {
-      final labResults = await _getLabResults();
+      print('Loading lab results for user: $_currentUserId');
+      if (_currentUserId == null) {
+        print('Error: User ID is null');
+        emit(LabResultsError('User not logged in'));
+        return;
+      }
+      
+      final labResults = await _repository.getLabResults(_currentUserId!);
+      print('Loaded ${labResults.length} lab results');
       final latest = labResults.isNotEmpty ? labResults.first : null;
       emit(LabResultsLoaded(labResults, latest));
     } catch (e) {
+      print('Error loading lab results: $e');
       emit(LabResultsError(e.toString()));
     }
   }
 
   Future<void> _onAdd(AddLabResult event, Emitter<LabResultsState> emit) async {
     try {
-      await _saveLabResult(event.labResult);
+      print('Adding lab result: ${event.labResult.testName}');
+      print('User ID: ${event.labResult.userId}');
+      await _repository.addLabResult(event.labResult);
+      print('Lab result added successfully');
       add(LoadLabResults());
     } catch (e) {
+      print('Error adding lab result: $e');
+      emit(LabResultsError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdate(UpdateLabResult event, Emitter<LabResultsState> emit) async {
+    try {
+      print('Updating lab result: ${event.labResult.testName}');
+      await _repository.updateLabResult(event.labResult);
+      print('Lab result updated successfully');
+      add(LoadLabResults());
+    } catch (e) {
+      print('Error updating lab result: $e');
       emit(LabResultsError(e.toString()));
     }
   }
 
   Future<void> _onDelete(DeleteLabResult event, Emitter<LabResultsState> emit) async {
     try {
-      await _deleteLabResult(event.id);
+      await _repository.deleteLabResult(event.id);
       
       // Delete associated image
       if (event.imagePath != null) {
-        await _imageStorage. deleteImage(event.imagePath! );
+        await _imageStorage.deleteImage(event.imagePath!);
       }
       
       add(LoadLabResults());
@@ -66,27 +99,10 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     add(LoadLabResults());
   }
 
-  // Database operations
-  Future<List<LabResultModel>> _getLabResults() async {
-    final db = await _dbHelper.database;
-    final maps = await db.query(
-      'lab_results',
-      orderBy: 'lab_date DESC, created_at DESC',
-    );
-    return maps.map((map) => LabResultModel. fromMap(map)).toList();
-  }
-
-  Future<void> _saveLabResult(LabResultModel labResult) async {
-    final db = await _dbHelper.database;
-    await db. insert('lab_results', labResult.toMap());
-  }
-
-  Future<void> _deleteLabResult(String id) async {
-    final db = await _dbHelper.database;
-    await db.delete(
-      'lab_results',
-      where: 'id = ? ',
-      whereArgs: [id],
-    );
+  /// Force sync with Supabase
+  Future<void> forceSync() async {
+    if (_currentUserId != null) {
+      await _repository.forceSync(_currentUserId!);
+    }
   }
 }

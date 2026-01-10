@@ -10,6 +10,11 @@ class AddLabResult extends LabResultsEvent {
   AddLabResult(this.labResult);
 }
 
+class UpdateLabResult extends LabResultsEvent {
+  final LabResultModel labResult;
+  UpdateLabResult(this.labResult);
+}
+
 class DeleteLabResult extends LabResultsEvent {
   final String id;
   final String?  imagePath;

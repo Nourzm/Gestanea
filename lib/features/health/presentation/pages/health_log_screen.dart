@@ -3,6 +3,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/core/session/session_manager.dart';
 import '../widgets/health_tab_sidebar.dart';
 import '../widgets/vitals_tab_content.dart';
 import '../widgets/symptoms_tab_content.dart';
@@ -27,6 +28,28 @@ class HealthLogScreen extends StatefulWidget {
 
 class _HealthLogScreenState extends State<HealthLogScreen> {
   int _selectedTabIndex = 0;
+  String? _userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    final sessionManager = SessionManager();
+    var userId = await sessionManager.getCurrentUserId();
+    
+    // Use a default test user ID if not logged in (for development)
+    if (userId == null || userId.isEmpty) {
+      userId = 'test_user_id';
+      await sessionManager.saveCurrentUserId(userId);
+    }
+    
+    setState(() {
+      _userId = userId;
+    });
+  }
 
   final List<Map<String, dynamic>> _tabs = [
     {'icon': Icons.favorite, 'labelKey': 'vitals'},
@@ -64,7 +87,14 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
         ),
         BlocProvider(create: (context) => SymptomsBloc()..add(LoadSymptoms())),
         BlocProvider(
-          create: (context) => LabResultsBloc()..add(LoadLabResults()),
+          create: (context) {
+            final bloc = LabResultsBloc();
+            if (_userId != null) {
+              bloc.setUserId(_userId!);
+            }
+            bloc.add(LoadLabResults());
+            return bloc;
+          },
         ),
       ],
       child: Scaffold(
