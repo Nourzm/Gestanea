@@ -7,6 +7,7 @@ import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:gestanea/core/services/openstreet_service.dart';
 
 class DoctorInfoMapSection extends StatelessWidget {
   final DoctorModel doctor;
@@ -158,26 +159,15 @@ class DoctorInfoMapSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: FlutterMap(
               mapController: mapController,
-              options: MapOptions(
-                initialCenter: LatLng(lat, lng),
-                initialZoom: 15.0,
-              ),
+              options: OpenStreetMapService.createMapOptions(lat, lng),
               children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.medigo.app',
-                ),
+                OpenStreetMapService.createTileLayer(),
                 MarkerLayer(
                   markers: [
-                    Marker(
-                      point: LatLng(lat, lng),
-                      width: 50,
-                      height: 50,
-                      child: Icon(
-                        Icons.location_on,
-                        color: themeData.secondaryColor,
-                        size: 50,
-                      ),
+                    OpenStreetMapService.createMarker(
+                      latitude: lat,
+                      longitude: lng,
+                      color: themeData.secondaryColor,
                     ),
                   ],
                 ),

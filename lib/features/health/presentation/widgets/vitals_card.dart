@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class VitalsCard extends StatelessWidget {
-  final IconData icon;
+  final String iconPath;
   final String title;
   final String value;
   final String status;
@@ -14,7 +15,7 @@ class VitalsCard extends StatelessWidget {
 
   const VitalsCard({
     super.key,
-    required this.icon,
+    required this.iconPath,
     required this.title,
     required this.value,
     required this.status,
@@ -50,7 +51,15 @@ class VitalsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: themeData.primaryColor, size: 20),
+              SvgPicture.asset(
+                iconPath,
+                width: 20,
+                height: 20,
+                colorFilter: ColorFilter.mode(
+                  themeData.primaryColor,
+                  BlendMode.srcIn,
+                ),
+              ),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(

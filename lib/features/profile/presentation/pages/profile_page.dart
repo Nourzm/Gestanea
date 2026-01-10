@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
@@ -352,50 +353,45 @@ class _ProfileHeaderContent extends StatelessWidget {
 
         return Column(
           children: [
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthAuthenticated) {
+                  return Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: EditableProfileAvatar(
+                      imageUrl: state.user.profilePictureUrl,
+                      userId: state.user.id,
+                      radius: 50,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const EditProfileScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+                return Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
                   ),
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 50,
-                    backgroundImage: const AssetImage("assets/images/pfp.png"),
+                    backgroundImage: AssetImage("assets/images/pfp.png"),
                     backgroundColor: Colors.transparent,
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const EditProfileScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 38,
-                    width: 38,
-                    margin: const EdgeInsets.only(right: 4, bottom: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(Icons.edit, color: AppColors.main500, size: 20),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
             const SizedBox(height: 6),
             Text(

@@ -30,7 +30,6 @@
   "change_profile_photo": "Changer la photo de profil",
   "save_changes": "Enregistrer les modifications",
   "save": "Enregistrer",
-
   "plan": "Plan",
   "sundayShort": "D",
   "mondayShort": "L",
@@ -79,8 +78,12 @@
   "@medicinesTaken": {
     "description": "Medicine taken status",
     "placeholders": {
-      "taken": {"type": "int"},
-      "total": {"type": "int"}
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "daily": "Quotidien",
@@ -103,10 +106,15 @@
   "tomorrow": "Demain",
   "noAppointmentsFound": "Aucun rendez-vous trouvé",
   "appointment": "Rendez-vous",
-
   "pleaseAddScheduledTime": "Veuillez ajouter au moins une heure planifiée",
   "reviewsCount": "{count} avis",
-  "@reviewsCount": {"placeholders": {"count": {"type": "Object"}}},
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "qty": "Qté",
   "all": "Tout",
   "taken": "Pris",
@@ -192,6 +200,13 @@
   "enter_email": "Entrez votre e-mail",
   "enter_name": "Entrez votre nom",
   "rememberMe": "Se souvenir de moi",
+  "sendOtp": "Envoyer le code",
+  "verifyOtp": "Vérifier le code",
+  "enterOtpCode": "Entrez le code de vérification",
+  "otpSent": "Code de vérification envoyé à votre email",
+  "otpCodePlaceholder": "Code à 6 chiffres",
+  "resendOtp": "Renvoyer le code",
+  "noInternetConnection": "Pas de connexion Internet. Veuillez vérifier votre réseau et réessayer.",
   "version": "Version",
   "pregnant": "Enceinte",
   "postpartum": "Postpartum",
@@ -199,13 +214,17 @@
   "@week": {
     "description": "Numéro de la semaine",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "Il reste {days} jours",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "Marché",
@@ -227,19 +246,19 @@
   "mood": "Humeur",
   "weight": "Poids",
   "heartRate": "Fréquence cardiaque",
-    "veryHappy": "Très heureux(se)",
-    "happy": "Heureux(se)",
-    "neutral": "Neutre",
-    "sad": "Triste",
-    "verySad": "Très triste",
-    "pleaseSelectMood": "Veuillez sélectionner une humeur",
-    "moodLoggedSuccessfully": "Humeur enregistrée avec succès !",
-    "howAreYouFeeling": "Comment vous sentez-vous ?",
-    "energyLevel": "Niveau d'énergie",
-    "low": "Faible",
-    "high": "Élevé",
-    "sleepQuality": "Qualité du sommeil",
-    "howWasYourDay": "Comment s'est passée votre journée ?",
+  "veryHappy": "Très heureux(se)",
+  "happy": "Heureux(se)",
+  "neutral": "Neutre",
+  "sad": "Triste",
+  "verySad": "Très triste",
+  "pleaseSelectMood": "Veuillez sélectionner une humeur",
+  "moodLoggedSuccessfully": "Humeur enregistrée avec succès !",
+  "howAreYouFeeling": "Comment vous sentez-vous ?",
+  "energyLevel": "Niveau d'énergie",
+  "low": "Faible",
+  "high": "Élevé",
+  "sleepQuality": "Qualité du sommeil",
+  "howWasYourDay": "Comment s'est passée votre journée ?",
   "bloodPressure": "Tension artérielle",
   "lowRisk": "Faible risque",
   "withinNormalRange": "Dans la plage normale",
@@ -288,16 +307,16 @@
   "practiceDeepBreathing": "Pratiquer la respiration profonde",
   "listenToCalmingMusic": "Écouter de la musique apaisante",
   "connectWithLovedOnes": "Se connecter avec ses proches",
-
   "doctors": "Médecins",
   "findDoctors": "trouver des médecins par nom ou spécialité",
   "useCurrentLocation": "Utiliser ma position actuelle",
- 
   "doctorsFoundSingle": "1 Médecin Trouvé",
   "doctorsFoundPlural": "{count} Médecins Trouvés",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "Filtrer",
@@ -307,14 +326,18 @@
   "upToKm": "Jusqu'à {distance} km",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "Évaluation minimale",
   "ratingAndAbove": "{rating} et plus",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "Genre",
@@ -325,14 +348,18 @@
   "atLeastReviews": "Au moins {count} avis",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applyFilters": "Appliquer les filtres",
   "kmAway": "à {distance} km",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "avis",
@@ -340,7 +367,9 @@
   "noMatchingDoctors": "Aucun médecin ne correspond à \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
@@ -358,11 +387,9 @@
   "phoneNumber": "Numéro de téléphone",
   "openingHours": "Heures d'ouverture",
   "callNow": "Appeler maintenant",
-
   "take": "Prendre",
   "noMedicinesFound": "Aucun médicament trouvé",
   "pleaseLoginToViewPlan": "Veuillez vous connecter pour voir votre plan",
-
   "selectColor": "Sélectionnez la couleur",
   "selectSize": "Sélectionnez la taille",
   "addToCart": "Ajouter au panier",
@@ -372,7 +399,6 @@
   "specifications": "Spécifications",
   "customerReviews": "Avis des clientes",
   "seeAll": "voir tout",
-
   "completeYourOrder": "Complétez votre commande",
   "orderSummary": "Résumé de la commande",
   "product": "Produit",
@@ -400,10 +426,11 @@
   "orderPlacedSuccessfully": "Commande {orderId} passée avec succès !",
   "@orderPlacedSuccessfully": {
     "placeholders": {
-      "orderId": {"type": "String"}
+      "orderId": {
+        "type": "String"
+      }
     }
   },
   "yourInformationIsSecure": "Vos informations sont sécurisées et cryptées",
   "openNow": "Ouvert maintenant"
 }
-

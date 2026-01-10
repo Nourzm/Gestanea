@@ -10,9 +10,12 @@ import '../../pages/pdf_extraction_page.dart';
 import '../../pages/manual_lab_entry_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import '../../../logic/bloc/lab_results_bloc.dart';
 
 class UploadLabResultsDialog extends StatelessWidget {
-  const UploadLabResultsDialog({super.key});
+  final LabResultsBloc bloc;
+  
+  const UploadLabResultsDialog({super.key, required this.bloc});
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
@@ -69,11 +72,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to OCR extraction page
+        // Navigate to OCR extraction page with bloc provider
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OcrExtractionPage(imageFile: imageFile),
+            builder: (newContext) => BlocProvider.value(
+              value: bloc,
+              child: OcrExtractionPage(imageFile: imageFile),
+            ),
           ),
         );
       }
@@ -101,11 +107,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to PDF viewer/extraction page
+        // Navigate to PDF viewer/extraction page with bloc provider
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PdfExtractionPage(pdfPath: pdfPath),
+            builder: (newContext) => BlocProvider.value(
+              value: bloc,
+              child: PdfExtractionPage(pdfPath: pdfPath),
+            ),
           ),
         );
       }

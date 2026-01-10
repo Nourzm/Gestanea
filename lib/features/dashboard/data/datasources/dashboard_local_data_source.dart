@@ -1,4 +1,5 @@
 // lib/features/dashboard/data/datasources/dashboard_local_data_source.dart
+import 'package:sqflite/sqflite.dart';
 import '../../../../core/database/db_helper.dart';
 
 abstract class DashboardLocalDataSource {
@@ -22,6 +23,9 @@ abstract class DashboardLocalDataSource {
   Future<List<Map<String, dynamic>>> getUpcomingRemindersByStringId(String userId, int days);
   Future<List<Map<String, dynamic>>> getUnresolvedHealthAlertsByStringId(String userId);
   Future<List<Map<String, dynamic>>> getMedicineRemindersByStringId(String userId);
+  
+  // Tips sync methods
+  Future<void> saveTips(List<Map<String, dynamic>> tips);
 }
 
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
@@ -329,5 +333,34 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     ''', [userId, today.toIso8601String()]);
     
     return result;
+  }
+
+  @override
+  Future<void> saveTips(List<Map<String, dynamic>> tips) async {
+    final db = await _dbHelper.database;
+    final batch = db.batch();
+    
+    for (final tip in tips) {
+      // Convert to match local schema
+      final tipMap = {
+        'id': tip['id'] ?? tip['id'],
+        'title': tip['title'] ?? '',
+        'content': tip['content'] ?? '',
+        'category': tip['category'],
+        'target_audience': tip['target_audience'],
+        'image_url': tip['image_url'],
+        'source': tip['source'],
+        'is_active': (tip['is_active'] ?? true) ? 1 : 0,
+        'created_at': tip['created_at'] ?? DateTime.now().toIso8601String(),
+      };
+      
+      batch.insert(
+        'tips',
+        tipMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    
+    await batch.commit(noResult: true);
   }
 }

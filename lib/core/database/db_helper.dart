@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 8,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -89,22 +89,42 @@ class DatabaseHelper {
     )
   ''');
     }
+    if (oldVersion < 7) {
+      // Add onboarding_completed column to users table
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN onboarding_completed INTEGER DEFAULT 0');
+      } catch (e) {
+        // Column might already exist, ignore
+        print('Note: onboarding_completed column may already exist: $e');
+      }
+    }
+    if (oldVersion < 8) {
+      // Add profile_picture_path column to users table
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN profile_picture_path TEXT');
+      } catch (e) {
+        // Column might already exist, ignore
+        print('Note: profile_picture_path column may already exist: $e');
+      }
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
-    // Users table
+    // Users table (must be created first as other tables reference it)
     await db.execute('''
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
+        email TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
         phone TEXT,
         country TEXT,
         language TEXT,
         theme TEXT,
         notifications_enabled INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        onboarding_completed INTEGER DEFAULT 0,
+        profile_picture_path TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
       )
     ''');
 
@@ -120,8 +140,7 @@ class DatabaseHelper {
         is_active INTEGER DEFAULT 1,
         medical_conditions TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
 
@@ -134,8 +153,7 @@ class DatabaseHelper {
         duration_minutes INTEGER,
         recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
         notes TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
 
@@ -152,8 +170,7 @@ class DatabaseHelper {
         theme_color TEXT,
         is_active INTEGER DEFAULT 1,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
 

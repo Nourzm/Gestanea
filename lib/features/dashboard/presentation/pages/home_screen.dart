@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
@@ -68,10 +69,38 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Image.asset("assets/images/profile.png"),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              Widget avatar;
+
+                              if (state is AuthAuthenticated) {
+                                avatar = ProfileAvatar(
+                                  imageUrl: state.user.profilePictureUrl,
+                                  userId: state.user.id,
+                                  radius: 24,
+                                );
+                              } else {
+                                avatar = CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.grey.shade300,
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                  ),
+                                );
+                              }
+
+                              return Container(
+                                // border thickness
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.main500, // border color
+                                    width: 3,
+                                  ),
+                                ),
+                                child: avatar,
+                              );
+                            },
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
@@ -300,7 +329,10 @@ class HomeScreen extends StatelessWidget {
                       return _buildNoUpcomingItems(screenWidth, screenHeight);
                     }
 
-                    return Column(children: upcomingItems);
+                    return Container(
+                      width: double.infinity,
+                      child: Column(children: upcomingItems),
+                    );
                   },
                 ),
               ),

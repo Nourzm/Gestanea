@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_category_model.dart';
-import 'package:gestanea/core/services/product_api_service.dart';
+import 'package:gestanea/features/marketplace/product_api_service.dart';
 
 // Events
 abstract class MarketplaceEvent extends Equatable {
@@ -164,9 +164,7 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
           ),
         );
       } catch (e) {
-        emit(
-          MarketplaceError('Failed to search products: ${e.toString()}'),
-        );
+        emit(MarketplaceError('Failed to search products: ${e.toString()}'));
       }
     }
   }
@@ -198,9 +196,7 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
           ),
         );
       } catch (e) {
-        emit(
-          MarketplaceError('Failed to filter products: ${e.toString()}'),
-        );
+        emit(MarketplaceError('Failed to filter products: ${e.toString()}'));
       }
     }
   }

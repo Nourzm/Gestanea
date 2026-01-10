@@ -27,9 +27,8 @@
   "change_profile_photo": "Change profile photo",
   "full_name": "Full name",
   "enable_notifications": "Enable notifications",
-  "phone":"Phone",
-  "country":"Country",
-
+  "phone": "Phone",
+  "country": "Country",
   "plan": "Plan",
   "sundayShort": "S",
   "mondayShort": "M",
@@ -73,8 +72,12 @@
   "@medicinesTaken": {
     "description": "Medicine taken status",
     "placeholders": {
-      "taken": {"type": "int"},
-      "total": {"type": "int"}
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "daily": "Daily",
@@ -83,7 +86,6 @@
   "timesPerDayExample": "e.g., 3 (times per day)",
   "timesPerWeekExample": "e.g., 2 (times per week)",
   "timesPerMonthExample": "e.g., 1 (times per month)",
-
   "appointmentDateTime": "Appointment Date & Time",
   "appointmentLocation": "Appointment location",
   "selectDate": "Select Date",
@@ -98,13 +100,16 @@
   "tomorrow": "Tomorrow",
   "noAppointmentsFound": "No appointments found",
   "appointment": "Appointment",
-  
   "pleaseAddScheduledTime": "Please add at least one scheduled time",
   "reviewsCount": "{count} reviews",
-  "@reviewsCount": {"placeholders": {"count": {"type": "Object"}}},
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "qty": "Qty",
-
-
   "noMedicines": "No medicines",
   "schedule": "Schedule",
   "availability": "Availability",
@@ -186,6 +191,13 @@
   "enter_email": "Enter your email",
   "enter_name": "Enter your Name",
   "rememberMe": "Remember me",
+  "sendOtp": "Send Code",
+  "verifyOtp": "Verify Code",
+  "enterOtpCode": "Enter verification code",
+  "otpSent": "Verification code sent to your email",
+  "otpCodePlaceholder": "6-digit code",
+  "resendOtp": "Resend code",
+  "noInternetConnection": "No internet connection. Please check your network and try again.",
   "version": "Version",
   "pregnant": "Pregnant",
   "postpartum": "Postpartum",
@@ -193,13 +205,17 @@
   "@week": {
     "description": "Week number",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "{days} days left",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "Market",
@@ -242,7 +258,6 @@
   "@upgradeNow": {
     "description": "Upgrade button text"
   },
-
   "healthLog": "Health Log",
   "trackYourWellness": "Track your wellness",
   "vitals": "Vitals",
@@ -280,16 +295,16 @@
   "practiceDeepBreathing": "Practice deep breathing",
   "listenToCalmingMusic": "Listen to calming music",
   "connectWithLovedOnes": "Connect with loved ones",
-
   "doctors": "Doctors",
   "findDoctors": "find doctors by name or speciality",
   "useCurrentLocation": "Use current location",
-  
   "doctorsFoundSingle": "1 Doctor Found",
   "doctorsFoundPlural": "{count} Doctors Found",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "Filter",
@@ -299,32 +314,39 @@
   "upToKm": "Up to {distance} km",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "Minimum Rating",
   "ratingAndAbove": "{rating} and above",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "Gender",
-
   "male": "Male",
   "female": "Female",
   "minimumReviews": "Minimum Reviews",
   "atLeastReviews": "At least {count} reviews",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applyFilters": "Apply Filters",
   "kmAway": "{distance} km away",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "reviews",
@@ -333,7 +355,9 @@
   "noMatchingDoctors": "No doctors match \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "Try adjusting your filters",
@@ -351,14 +375,12 @@
   "phoneNumber": "Phone Number",
   "openingHours": "Opening Hours",
   "callNow": "Call Now",
-
   "all": "All",
   "taken": "Taken",
   "missed": "Missed",
   "take": "Take",
   "noMedicinesFound": "No medicines found",
   "pleaseLoginToViewPlan": "Please log in to view your plan",
-
   "selectColor": "Select Color",
   "selectSize": "Select Size",
   "addToCart": "Add to Cart",
@@ -368,7 +390,6 @@
   "specifications": "Specifications",
   "customerReviews": "Customer Reviews",
   "seeAll": "see all",
-
   "completeYourOrder": "Complete Your Order",
   "orderSummary": "Order Summary",
   "product": "Product",
@@ -396,7 +417,9 @@
   "orderPlacedSuccessfully": "Order {orderId} placed successfully!",
   "@orderPlacedSuccessfully": {
     "placeholders": {
-      "orderId": {"type": "String"}
+      "orderId": {
+        "type": "String"
+      }
     }
   },
   "yourInformationIsSecure": "Your information is secure and encrypted",
@@ -442,8 +465,7 @@
   "normalBMI": "Normal",
   "currentGain": "Current gain",
   "targetRange": "Target range",
-  "expected": "Expected"
-  ,
+  "expected": "Expected",
   "howAreYouFeelingToday": "How are you feeling today?",
   "recentEntries": "Recent entries",
   "feltEnergeticToday": "Felt energetic today",

@@ -536,6 +536,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rememberMe => 'Se souvenir de moi';
 
   @override
+  String get sendOtp => 'Envoyer le code';
+
+  @override
+  String get verifyOtp => 'Vérifier le code';
+
+  @override
+  String get enterOtpCode => 'Entrez le code de vérification';
+
+  @override
+  String get otpSent => 'Code de vérification envoyé à votre email';
+
+  @override
+  String get otpCodePlaceholder => 'Code à 6 chiffres';
+
+  @override
+  String get resendOtp => 'Renvoyer le code';
+
+  @override
+  String get noInternetConnection =>
+      'Pas de connexion Internet. Veuillez vérifier votre réseau et réessayer.';
+
+  @override
   String get version => 'Version';
 
   @override

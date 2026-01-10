@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/features/profile/presentation/pages/change_password_page.dart';
 import 'package:gestanea/features/profile/presentation/widgets/neuo_container.dart';
 
 
@@ -12,9 +13,9 @@ class SecurityPage extends StatefulWidget {
 }
 
 class _SecurityPageState extends State<SecurityPage> {
-  bool _biometricEnabled = true;
+  bool _biometricEnabled = false;
   bool _twoFactorEnabled = false;
-  bool _autoLockEnabled = true;
+  bool _autoLockEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -97,13 +98,20 @@ class _SecurityPageState extends State<SecurityPage> {
             _buildOptionTile(
               icon: Icons.vpn_key_outlined,
               title: 'Change Password',
-              subtitle: 'Last changed 30 days ago',
+              subtitle: 'Update your account password',
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.main600,
                 size: 30,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChangePasswordPage(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 15),
 
