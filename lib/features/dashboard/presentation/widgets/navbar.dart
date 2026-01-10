@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FancyNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final List<NavBarItem> items;
-
+  final double barHeight;
   const FancyNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
     required this.items,
+    required this.barHeight,
   });
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
     // --- RESPONSIVE VALUES ---
-    final barHeight = h * 0.09; // responsive bottom bar height
     final notchSize = w * 0.10; // size of notch curve
     final circleSize = w * 0.18; // floating circle size
     final iconSizeActive = w * 0.09; // active middle icon size
@@ -62,11 +64,11 @@ class FancyNavBar extends StatelessWidget {
               width: circleSize,
               height: circleSize,
               decoration: BoxDecoration(
-                color: AppColors.main500,
+                color: themeData.primaryColor,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.main500.withOpacity(0.25),
+                    color: themeData.primaryColor.withOpacity(0.25),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -126,7 +128,7 @@ class FancyNavBar extends StatelessWidget {
                             fontSize: w * 0.033, // responsive
                             fontWeight: FontWeight.w600,
                             color: active
-                                ? AppColors.main500
+                                ? themeData.primaryColor
                                 : Colors.grey.shade500,
                           ),
                         ),

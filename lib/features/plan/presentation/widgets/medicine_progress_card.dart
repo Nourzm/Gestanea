@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class MedicineProgressCard extends StatelessWidget {
   final double screenWidth;
@@ -19,6 +21,7 @@ class MedicineProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.045),
       decoration: BoxDecoration(
@@ -58,7 +61,7 @@ class MedicineProgressCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: screenWidth * 0.04,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.main600,
+                  color: themeData.secondaryColor,
                 ),
               ),
             ],
@@ -77,7 +80,7 @@ class MedicineProgressCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: AppColors.purpleGrey.withOpacity(0.3),
-              color: AppColors.main600,
+              color: themeData.secondaryColor,
               minHeight: 8,
             ),
           ),

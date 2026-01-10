@@ -3,6 +3,8 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class ContactInfoSection extends StatelessWidget {
   final DoctorModel doctor;
@@ -13,6 +15,7 @@ class ContactInfoSection extends StatelessWidget {
     required IconData icon,
     required String title,
     required String content,
+    required themeData,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +41,7 @@ class ContactInfoSection extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(icon, size: 20, color: AppColors.main600),
+          child: Icon(icon, size: 20, color: themeData.secondaryColor),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -64,11 +67,12 @@ class ContactInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.main300,
+        color: themeData.lightColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -94,18 +98,21 @@ class ContactInfoSection extends StatelessWidget {
             icon: Icons.location_on_outlined,
             title: l10n.address,
             content: doctor.address ?? 'N/A',
+            themeData: themeData,
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.phone_outlined,
             title: l10n.phoneNumber,
             content: doctor.phone ?? 'N/A',
+            themeData: themeData,
           ),
           const SizedBox(height: 16),
           _buildContactItem(
             icon: Icons.access_time_outlined,
             title: l10n.openingHours,
             content: 'Mon-Sat: 8:00 AM - 6:00 PM',
+            themeData: themeData,
           ),
         ],
       ),

@@ -1,4 +1,13 @@
 {
+  "locationPermissionRequired": "Location Permission Required",
+  "locationPermissionMessage": "We need access to your location to show nearby doctors.",
+  "gettingLocation": "Getting your location...",
+  "locationPermissionDenied": "Location permission denied",
+  "locationUpdated": "Location updated",
+  "retry": "Retry",
+  "showingDoctorsNearYou": "Showing doctors near you",
+  "selectLocation": "Select Location",
+  "searchWilaya": "Search for a wilaya...",
   "security": "Security",
   "i_gave_birth": "I gave birth",
   "no_longer_pregnant": "No longer pregnant",
@@ -18,9 +27,8 @@
   "change_profile_photo": "Change profile photo",
   "full_name": "Full name",
   "enable_notifications": "Enable notifications",
-  "phone":"Phone",
-  "country":"Country",
-
+  "phone": "Phone",
+  "country": "Country",
   "plan": "Plan",
   "sundayShort": "S",
   "mondayShort": "M",
@@ -32,10 +40,112 @@
   "todaysMedicine": "Today's Medicine",
   "upcomingAppointments": "Upcoming Appointments",
   "scheduled": "Scheduled",
-    "addNewMedicine": "Add New Medicine",
+  "addNewMedicine": "Add New Medicine",
   "addNewAppointment": "Add New Appointment",
   "medicine": "Medicine",
   "appointments": "Appointments",
+  "appointmentName": "Appointment Name",
+  "medicationName": "Medication Name",
+  "nextLabel": "Next",
+  "doneLabel": "Done",
+  "uploadPicture": "Upload a picture",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "removeImage": "Remove Image",
+  "tapToAddPicture": "Tap to add picture",
+  "optionalImageNote": "Adding a picture is optional. You can skip this step.",
+  "selectFormDose": "Select Form & Dose",
+  "frequencySchedule": "Frequency & Schedule",
+  "frequencyType": "Frequency Type",
+  "frequencyValue": "Frequency Value",
+  "scheduledTimesLabel": "Scheduled Times",
+  "asNeeded": "As Needed",
+  "dosage": "Dosage",
+  "dosageExample": "e.g., 5mg or 10ml",
+  "formPill": "Pill",
+  "formInjection": "Injection",
+  "formSpray": "Spray",
+  "formDrop": "Drop",
+  "formSyrup": "Syrup",
+  "formOthers": "Others",
+  "medicinesTaken": "{taken} of {total} taken",
+  "@medicinesTaken": {
+    "description": "Medicine taken status",
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "timesPerDayExample": "e.g., 3 (times per day)",
+  "timesPerWeekExample": "e.g., 2 (times per week)",
+  "timesPerMonthExample": "e.g., 1 (times per month)",
+  "appointmentDateTime": "Appointment Date & Time",
+  "appointmentLocation": "Appointment location",
+  "selectDate": "Select Date",
+  "selectTime": "Select time",
+  "startDate": "Start Date",
+  "endDate": "End Date (Optional)",
+  "selectStartDate": "Select Start Date",
+  "selectEndDate": "Select End Date",
+  "addTime": "Add Time",
+  "noScheduledTimesAdded": "No scheduled times added yet",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "noAppointmentsFound": "No appointments found",
+  "appointment": "Appointment",
+  "pleaseAddScheduledTime": "Please add at least one scheduled time",
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "qty": "Qty",
+  "noMedicines": "No medicines",
+  "schedule": "Schedule",
+  "availability": "Availability",
+  "specialty": "Specialty",
+  "bookAppointment": "Book Appointment",
+  "price": "Price",
+  "quantity": "Quantity",
+  "checkout": "Checkout",
+  "applyCoupon": "Apply coupon",
+  "popular": "Popular",
+  "offers": "Offers",
+  "newLabel": "New",
+  "contact": "Contact",
+  "message": "Message",
+  "location": "Location",
+  "noResults": "No results",
+  "search": "Search",
+  "sort": "Sort",
+  "marketplace": "Marketplace",
+  "doctorsFeatureTitle": "Doctors",
+  "planFeatureTitle": "Plan",
+  "addMedicine": "Add medicine",
+  "addAppointment": "Add appointment",
+  "error": "Error",
+  "success": "Success",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "remove": "Remove",
+  "apply": "Apply",
+  "reviewsLabel": "Reviews",
+  "rating": "Rating",
+  "recommended": "Recommended",
+  "noReviews": "No reviews",
+  "delivery": "Delivery",
+  "shipping": "Shipping",
+  "taxes": "Taxes",
   "sunday": "Sunday",
   "monday": "Monday",
   "tuesday": "Tuesday",
@@ -68,7 +178,7 @@
   "notifications": "Notifications",
   "help": "Help",
   "about": "About",
-   "welcome_back": "Welcome Back!",
+  "welcome_back": "Welcome Back! ",
   "or": "— OR —",
   "register": "Register",
   "auth": "Your trusted companion for every stage of motherhood",
@@ -76,12 +186,18 @@
   "forgot": "Forgot Password?",
   "notRegistered": "Not registered yet?",
   "createAccount": "Create an Account",
-  "signup": "Sign Up",
   "your_name": "Your Name",
   "email": "Email",
   "enter_email": "Enter your email",
   "enter_name": "Enter your Name",
   "rememberMe": "Remember me",
+  "sendOtp": "Send Code",
+  "verifyOtp": "Verify Code",
+  "enterOtpCode": "Enter verification code",
+  "otpSent": "Verification code sent to your email",
+  "otpCodePlaceholder": "6-digit code",
+  "resendOtp": "Resend code",
+  "noInternetConnection": "No internet connection. Please check your network and try again.",
   "version": "Version",
   "pregnant": "Pregnant",
   "postpartum": "Postpartum",
@@ -89,13 +205,17 @@
   "@week": {
     "description": "Week number",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "{days} days left",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "Market",
@@ -122,11 +242,11 @@
   "@backSupportBelt": {
     "description": "Back support belt product"
   },
-  "searchHint": "Find what you need...",
+  "searchHint": "Find what you need.. .",
   "@searchHint": {
     "description": "Search bar hint text"
   },
-  "dontMissOut": "Don't miss out!",
+  "dontMissOut": "Don't miss out! ",
   "@dontMissOut": {
     "description": "Promotional banner title"
   },
@@ -138,7 +258,6 @@
   "@upgradeNow": {
     "description": "Upgrade button text"
   },
-
   "healthLog": "Health Log",
   "trackYourWellness": "Track your wellness",
   "vitals": "Vitals",
@@ -152,22 +271,40 @@
   "normal": "Normal",
   "add": "Add",
   "measurement": "Measurement",
-  "healthTipMessage": "Great job! You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
+  "healthTipMessage": "Great job!  You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
   "onTrack": "On Track",
-
+  "moodTab": "Mood Tab",
+  "recentEntries": "Recent entries",
+  "howAreYouFeelingToday": "How are you feeling today?",
+  "feltEnergeticToday": "Felt energetic today",
+  "hoursAgo": "{hours} hours ago",
+  "calm": "Calm",
+  "relaxingEvening": "Relaxing evening",
+  "yesterday": "Yesterday",
+  "tired": "Tired",
+  "needMoreSleep": "Need more sleep",
+  "daysAgo": "{days} days ago",
+  "trackingMoodHelps": "Tracking your mood helps you understand your well-being.",
+  "great": "Great",
+  "good": "Good",
+  "okay": "Okay",
+  "moodTrendsLast7Days": "Mood trends (last 7 days)",
+  "mostlyPositiveMoods": "Mostly positive moods",
+  "selfCareSuggestions": "Self-care suggestions",
+  "takeShortWalk": "Take a short walk",
+  "practiceDeepBreathing": "Practice deep breathing",
+  "listenToCalmingMusic": "Listen to calming music",
+  "connectWithLovedOnes": "Connect with loved ones",
   "doctors": "Doctors",
   "findDoctors": "find doctors by name or speciality",
   "useCurrentLocation": "Use current location",
-  "algiers": "Algiers",
-  "oran": "Oran",
-  "constantine": "Constantine",
-  "annaba": "Annaba",
-  "blida": "Blida",
   "doctorsFoundSingle": "1 Doctor Found",
   "doctorsFoundPlural": "{count} Doctors Found",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "Filter",
@@ -177,33 +314,39 @@
   "upToKm": "Up to {distance} km",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "Minimum Rating",
   "ratingAndAbove": "{rating} and above",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "Gender",
-  "all": "All",
   "male": "Male",
   "female": "Female",
   "minimumReviews": "Minimum Reviews",
   "atLeastReviews": "At least {count} reviews",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "cancel": "Cancel",
   "applyFilters": "Apply Filters",
   "kmAway": "{distance} km away",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "reviews",
@@ -212,7 +355,9 @@
   "noMatchingDoctors": "No doctors match \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "Try adjusting your filters",
@@ -229,5 +374,167 @@
   "address": "Address",
   "phoneNumber": "Phone Number",
   "openingHours": "Opening Hours",
-  "callNow": "Call Now"
+  "callNow": "Call Now",
+  "all": "All",
+  "taken": "Taken",
+  "missed": "Missed",
+  "take": "Take",
+  "noMedicinesFound": "No medicines found",
+  "pleaseLoginToViewPlan": "Please log in to view your plan",
+  "selectColor": "Select Color",
+  "selectSize": "Select Size",
+  "addToCart": "Add to Cart",
+  "buyNow": "Buy Now",
+  "description": "Description",
+  "noDescriptionAvailable": "No description available",
+  "specifications": "Specifications",
+  "customerReviews": "Customer Reviews",
+  "seeAll": "see all",
+  "completeYourOrder": "Complete Your Order",
+  "orderSummary": "Order Summary",
+  "product": "Product",
+  "size": "Size",
+  "qty": "Qty",
+  "subtotal": "Subtotal",
+  "deliveryFee": "Delivery Fee",
+  "total": "Total",
+  "deliveryInformation": "Delivery Information",
+  "fullName": "Full Name",
+  "enterYourFullName": "Enter your full name",
+  "phoneNumber": "Phone Number",
+  "enterYourPhoneNumber": "Enter your phone number",
+  "deliveryAddress": "Delivery Address",
+  "streetAddressApartment": "Street address, apartment, etc.",
+  "city": "City",
+  "enterYourCity": "Enter your city",
+  "specialInstructions": "Special Instructions (Optional)",
+  "addDeliveryNotes": "Add delivery notes, special requests...",
+  "paymentMethod": "Payment Method",
+  "cashOnDelivery": "Cash on Delivery",
+  "creditDebitCard": "Credit / Debit Card",
+  "digitalWallet": "Digital Wallet",
+  "placeOrder": "Place Order",
+  "orderPlacedSuccessfully": "Order {orderId} placed successfully!",
+  "@orderPlacedSuccessfully": {
+    "placeholders": {
+      "orderId": {
+        "type": "String"
+      }
+    }
+  },
+  "yourInformationIsSecure": "Your information is secure and encrypted",
+  "openNow": "Open Now",
+  "nausea": "Nausea",
+  "headache": "Headache",
+  "backPain": "Back pain",
+  "swelling": "Swelling",
+  "fatigue": "Fatigue",
+  "dizziness": "Dizziness",
+  "heartburn": "Heartburn",
+  "legCramps": "Leg cramps",
+  "other": "Other",
+  "pleaseSelectSymptom": "Please select a symptom",
+  "pleaseSelectSeverity": "Please select severity",
+  "symptomLoggedSuccessfully": "Symptom logged successfully!",
+  "addSymptom": "Add Symptom",
+  "symptomType": "Symptom type",
+  "selectSymptom": "Select symptom",
+  "specifySymptom": "Specify symptom",
+  "pleaseSpecifySymptom": "Please specify the symptom",
+  "severity": "Severity",
+  "mild": "Mild",
+  "moderate": "Moderate",
+  "severe": "Severe",
+  "duration": "Duration",
+  "pleaseEnterDuration": "Please enter duration",
+  "notes": "Notes",
+  "veryHappy": "Very happy",
+  "happy": "Happy",
+  "neutral": "Neutral",
+  "sad": "Sad",
+  "verySad": "Very sad",
+  "pleaseSelectMood": "Please select a mood",
+  "moodLoggedSuccessfully": "Mood logged successfully!",
+  "howAreYouFeeling": "How are you feeling?",
+  "energyLevel": "Energy level",
+  "low": "Low",
+  "high": "High",
+  "sleepQuality": "Sleep quality",
+  "howWasYourDay": "How was your day?",
+  "prePregnancyBMI": "Pre-pregnancy BMI",
+  "normalBMI": "Normal",
+  "currentGain": "Current gain",
+  "targetRange": "Target range",
+  "expected": "Expected",
+  "howAreYouFeelingToday": "How are you feeling today?",
+  "recentEntries": "Recent entries",
+  "feltEnergeticToday": "Felt energetic today",
+  "hoursAgo": "{hours} hours ago",
+  "calm": "Calm",
+  "relaxingEvening": "Relaxing evening",
+  "yesterday": "Yesterday",
+  "tired": "Tired",
+  "needMoreSleep": "Need more sleep",
+  "daysAgo": "{days} days ago",
+  "trackingMoodHelps": "Tracking your mood helps you understand your well-being.",
+  "great": "Great",
+  "good": "Good",
+  "okay": "Okay",
+  "moodTrendsLast7Days": "Mood trends (last 7 days)",
+  "mostlyPositiveMoods": "Mostly positive moods",
+  "selfCareSuggestions": "Self-care suggestions",
+  "takeShortWalk": "Take a short walk",
+  "recentLabResults": "Recent Lab Results",
+  "keepLabResultsOrganized": "Keep your lab results organized for better tracking.",
+  "viewAllLabResults": "View All Lab Results",
+  "riskFactorsToMonitor": "Risk factors to monitor",
+  "lowRisk": "Low risk",
+  "withinNormalRange": "Within normal range",
+  "gestationalDiabetes": "Gestational diabetes",
+  "glucoseLevelsNormal": "Glucose levels normal",
+  "preeclampsia": "Preeclampsia",
+  "noProteinInUrine": "No protein in urine",
+  "warningSignsToWatch": "Warning signs to watch",
+  "severeHeadache": "Severe headache",
+  "blurredVision": "Blurred vision",
+  "severeAbdominalPain": "Severe abdominal pain",
+  "decreasedFetalMovement": "Decreased fetal movement",
+  "vaginalBleeding": "Vaginal bleeding",
+  "emergencyCall": "Emergency Call",
+  "areYouSureCall911": "Are you sure you want to call 911?",
+  "couldNotMakeEmergencyCall": "Could not make emergency call.",
+  "glucoseLevelsNormal": "Glucose levels are normal",
+  "ifYouExperienceWarnings": "If you experience any warning signs, contact your healthcare provider immediately.",
+  "allIndicatorsNormal": "All indicators are normal",
+  "emergencyContact": "Emergency Contact",
+  "overallRiskLevel": "Overall risk level",
+  "call911OrProvider": "Call 911 or your healthcare provider",
+  "recentSymptoms": "Recent Symptoms",
+  "logNewSymptom": "Log new symptom",
+  "symptomFrequency": "Symptom frequency",
+  "swollenFeet": "Swollen feet",
+  "sleepIssues": "Sleep issues",
+  "times": "times",
+  "commonSymptomsWeek24": "Common symptoms at week 24 include back pain and swelling.",
+  "viewAllSymptoms": "View All Symptoms",
+  "weightProgress": "Weight Progress",
+  "onTrack": "On Track",
+  "measurementSavedSuccessfully": "Measurement saved successfully!",
+  "addMeasurement": "Add Measurement",
+  "weightKg": "Weight (kg)",
+  "pleaseEnterWeight": "Please enter your weight",
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "weightRange": "Weight must be between 30 and 200 kg",
+  "heartRateBpm": "Heart Rate (bpm)",
+  "pleaseEnterHeartRate": "Please enter your heart rate",
+  "heartRateRange": "Heart rate must be between 40 and 200 bpm",
+  "systolic": "Systolic",
+  "required": "Required",
+  "invalid": "Invalid",
+  "systolicRange": "Systolic must be between 70 and 190",
+  "diastolic": "Diastolic",
+  "diastolicRange": "Diastolic must be between 40 and 130",
+  "normalRangeLabel": "Normal range",
+  "uploadLabResults": "Upload Lab Results",
+  "nextLabAppointment": "Next Lab Appointment"
 }

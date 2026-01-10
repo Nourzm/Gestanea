@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class VitalsCard extends StatelessWidget {
   final IconData icon;
@@ -22,10 +24,11 @@ class VitalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.main300,
+        color: themeData.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -44,11 +47,10 @@ class VitalsCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.main500, size: 20),
+              Icon(icon, color: themeData.primaryColor, size: 20),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -58,6 +60,8 @@ class VitalsCard extends StatelessWidget {
                     color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -65,18 +69,23 @@ class VitalsCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                value,
-                style: AppTextStyles.headline2.copyWith(
-                  fontSize: 16,
-                  color: AppColors.textDark,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.headline2.copyWith(
+                    fontSize: 16,
+                    color: AppColors.textDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 4),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: statusColor,
                   borderRadius: BorderRadius.circular(10),
@@ -85,7 +94,7 @@ class VitalsCard extends StatelessWidget {
                   status,
                   style: AppTextStyles.smallLabel.copyWith(
                     color: textColor,
-                    fontSize: 11,
+                    fontSize: 10,
                   ),
                 ),
               ),

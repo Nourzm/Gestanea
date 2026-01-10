@@ -2,17 +2,16 @@ import 'dart:convert';
 
 class MedicineModel {
   final String id;
-  final String?  userId;
-  final String?  babyId;
+  final String? userId;
+  final String? babyId;
   final String medicineName;
   final String dosage;
-  final String?  type;
+  final String? type;
   final String frequencyType;
-  final int?  frequencyValue;
+  final int? frequencyValue;
   final List<String>? scheduledTimes;
   final DateTime startDate;
-  final DateTime?  endDate;
-  final int? maxDoses;
+  final DateTime? endDate;
   final String? medicineImageUrl;
   final bool isActive;
   final DateTime createdAt;
@@ -29,7 +28,6 @@ class MedicineModel {
     this.scheduledTimes,
     required this.startDate,
     this.endDate,
-    this.maxDoses,
     this.medicineImageUrl,
     this.isActive = true,
     required this.createdAt,
@@ -48,16 +46,15 @@ class MedicineModel {
       'scheduled_times': scheduledTimes != null
           ? jsonEncode(scheduledTimes)
           : null,
-      'start_date': startDate.toIso8601String(). split('T')[0],
-      'end_date': endDate?. toIso8601String(). split('T')[0],
-      'max_doses': maxDoses,
+      'start_date': startDate.toIso8601String().split('T')[0],
+      'end_date': endDate?.toIso8601String().split('T')[0],
       'medicine_image_url': medicineImageUrl,
       'is_active': isActive ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
     };
   }
 
-  factory MedicineModel. fromMap(Map<String, dynamic> map) {
+  factory MedicineModel.fromMap(Map<String, dynamic> map) {
     return MedicineModel(
       id: map['id'] as String,
       userId: map['user_id'] as String?,
@@ -68,13 +65,12 @@ class MedicineModel {
       frequencyType: map['frequency_type'] as String,
       frequencyValue: map['frequency_value'] as int?,
       scheduledTimes: map['scheduled_times'] != null
-          ?  List<String>.from(jsonDecode(map['scheduled_times'] as String))
+          ? List<String>.from(jsonDecode(map['scheduled_times'] as String))
           : null,
       startDate: DateTime.parse(map['start_date'] as String),
       endDate: map['end_date'] != null
           ? DateTime.parse(map['end_date'] as String)
           : null,
-      maxDoses: map['max_doses'] as int?,
       medicineImageUrl: map['medicine_image_url'] as String?,
       isActive: (map['is_active'] as int) == 1,
       createdAt: DateTime.parse(map['created_at'] as String),
@@ -87,30 +83,28 @@ class MedicineModel {
     String? babyId,
     String? medicineName,
     String? dosage,
-    String?  type,
+    String? type,
     String? frequencyType,
     int? frequencyValue,
     List<String>? scheduledTimes,
     DateTime? startDate,
     DateTime? endDate,
-    int?  maxDoses,
-    String?  medicineImageUrl,
+    String? medicineImageUrl,
     bool? isActive,
-    DateTime?  createdAt,
+    DateTime? createdAt,
   }) {
     return MedicineModel(
-      id: id ?? this. id,
-      userId: userId ??  this.userId,
-      babyId: babyId ?? this. babyId,
-      medicineName: medicineName ?? this. medicineName,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      babyId: babyId ?? this.babyId,
+      medicineName: medicineName ?? this.medicineName,
       dosage: dosage ?? this.dosage,
       type: type ?? this.type,
       frequencyType: frequencyType ?? this.frequencyType,
       frequencyValue: frequencyValue ?? this.frequencyValue,
       scheduledTimes: scheduledTimes ?? this.scheduledTimes,
-      startDate: startDate ?? this. startDate,
+      startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-      maxDoses: maxDoses ?? this.maxDoses,
       medicineImageUrl: medicineImageUrl ?? this.medicineImageUrl,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,

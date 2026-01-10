@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'add_appointment/appointment_name_page.dart';
 import 'add_appointment/appointment_location_page.dart';
 import 'add_appointment/appointment_date_time.dart';
+import 'package:gestanea/core/database/models/appointment_model.dart';
+import 'package:gestanea/features/plan/data/repositories/appointment_repository.dart';
+import 'package:uuid/uuid.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 // Main Add Appointment Flow
 class AddAppointmentFlow extends StatefulWidget {
-  const AddAppointmentFlow({super.key});
+  final String userId;
+
+  const AddAppointmentFlow({super.key, required this.userId});
 
   @override
   State<AddAppointmentFlow> createState() => _AddAppointmentFlowState();
@@ -14,6 +21,7 @@ class AddAppointmentFlow extends StatefulWidget {
 class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  final _appointmentRepository = AppointmentRepository.getInstance();
 
   String appointmentName = '';
   String appointmentLocation = '';
@@ -40,6 +48,71 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
     }
   }
 
+  Future<void> _saveAppointment() async {
+    if (appointmentName.isEmpty) {
+      _showError('Please enter an appointment name');
+      return;
+    }
+
+    if (appointmentDate == null) {
+      _showError('Please select a date');
+      return;
+    }
+
+    if (appointmentTime == null) {
+      _showError('Please select a time');
+      return;
+    }
+
+    try {
+      final uuid = Uuid();
+      final dateTime = DateTime(
+        appointmentDate!.year,
+        appointmentDate!.month,
+        appointmentDate!.day,
+        appointmentTime!.hour,
+        appointmentTime!.minute,
+      );
+
+      final appointment = AppointmentModel(
+        id: uuid.v4(),
+        userId: widget.userId,
+        babyId: null,
+        title: appointmentName,
+        doctorName: null,
+        appointmentType: null,
+        appointmentDate: dateTime,
+        location: appointmentLocation.isNotEmpty ? appointmentLocation : null,
+        notes: null,
+        reminderTime: null,
+        isCompleted: false,
+        createdAt: DateTime.now(),
+      );
+
+      final result = await _appointmentRepository.insertAppointment(
+        appointment,
+      );
+
+      if (result.state) {
+        if (mounted) {
+          Navigator.pop(context, true); // Return true to indicate success
+        }
+      } else {
+        _showError(result.message);
+      }
+    } catch (e) {
+      _showError('Failed to save appointment: $e');
+    }
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +133,15 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
                     initialName: appointmentName,
                     onNameChanged: (name) =>
                         setState(() => appointmentName = name),
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (appointmentName.length <= 2) {
+                        _showError(
+                          'Appointment name must be greater than 2 characters',
+                        );
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                   ),
                   AppointmentLocationPage(
@@ -77,9 +158,8 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
                         setState(() => appointmentDate = date),
                     onTimeSelected: (time) =>
                         setState(() => appointmentTime = time),
-                    onNext: () {
-                      // Save appointment and close
-                      Navigator.pop(context);
+                    onNext: () async {
+                      await _saveAppointment();
                     },
                     onBack: _previousPage,
                   ),
@@ -93,6 +173,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   }
 
   Widget _buildProgressIndicator() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -103,7 +184,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
               margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

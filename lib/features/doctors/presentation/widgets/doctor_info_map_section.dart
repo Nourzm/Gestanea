@@ -5,6 +5,9 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:gestanea/core/services/openstreet_service.dart';
 
 class DoctorInfoMapSection extends StatelessWidget {
   final DoctorModel doctor;
@@ -21,6 +24,7 @@ class DoctorInfoMapSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final lat = doctor.latitude ?? 36.753769;
     final lng = doctor.longitude ?? 3.058756;
     final distance = doctor.distance ?? 0.0;
@@ -32,7 +36,7 @@ class DoctorInfoMapSection extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.main300,
+            color: themeData.lightColor,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
@@ -72,8 +76,12 @@ class DoctorInfoMapSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Center(
-                  child: Icon(Icons.person, color: AppColors.main600, size: 32),
+                child: Center(
+                  child: Icon(
+                    Icons.person,
+                    color: themeData.secondaryColor,
+                    size: 32,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -151,26 +159,15 @@ class DoctorInfoMapSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: FlutterMap(
               mapController: mapController,
-              options: MapOptions(
-                initialCenter: LatLng(lat, lng),
-                initialZoom: 15.0,
-              ),
+              options: OpenStreetMapService.createMapOptions(lat, lng),
               children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.medigo.app',
-                ),
+                OpenStreetMapService.createTileLayer(),
                 MarkerLayer(
                   markers: [
-                    Marker(
-                      point: LatLng(lat, lng),
-                      width: 50,
-                      height: 50,
-                      child: const Icon(
-                        Icons.location_on,
-                        color: AppColors.main600,
-                        size: 50,
-                      ),
+                    OpenStreetMapService.createMarker(
+                      latitude: lat,
+                      longitude: lng,
+                      color: themeData.secondaryColor,
                     ),
                   ],
                 ),
@@ -191,7 +188,7 @@ class DoctorInfoMapSection extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.main300,
+                  color: themeData.lightColor,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
@@ -211,10 +208,10 @@ class DoctorInfoMapSection extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.navigation_outlined,
                       size: 16,
-                      color: AppColors.main600,
+                      color: themeData.secondaryColor,
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -231,9 +228,7 @@ class DoctorInfoMapSection extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.main600, AppColors.main500],
-                    ),
+                    color: themeData.primaryColor,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
                       BoxShadow(

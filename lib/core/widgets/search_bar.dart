@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class searchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -18,6 +21,7 @@ class searchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       height: 40,
       decoration: BoxDecoration(
@@ -48,8 +52,8 @@ class searchBar extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 onChanged: onChanged,
-                style: const TextStyle(
-                  color: AppColors.main500,
+                style: TextStyle(
+                  color: themeData.primaryColor,
                   fontSize: 16,
                   fontFamily: 'Lato',
                   fontWeight: FontWeight.w400,
@@ -57,7 +61,7 @@ class searchBar extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: TextStyle(
-                    color: const Color(0x99B077E4),
+                    color: themeData.primaryColor.withOpacity(0.6),
                     fontSize: 16,
                     fontFamily: 'Lato',
                     fontWeight: FontWeight.w400,
@@ -77,9 +81,9 @@ class searchBar extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: const Icon(
+                child: Icon(
                   Icons.search,
-                  color: AppColors.main500,
+                  color: themeData.primaryColor,
                   size: 24,
                 ),
               ),

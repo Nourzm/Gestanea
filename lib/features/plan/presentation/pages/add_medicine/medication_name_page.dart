@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class MedicationNamePage extends StatefulWidget {
   final Function(String) onMedicationSelected;
@@ -33,6 +36,7 @@ class _MedicationNamePageState extends State<MedicationNamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -43,10 +47,13 @@ class _MedicationNamePageState extends State<MedicationNamePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Medication Name',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.medicationName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -89,7 +96,7 @@ class _MedicationNamePageState extends State<MedicationNamePage> {
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _searchController.text.isNotEmpty
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -98,9 +105,12 @@ class _MedicationNamePageState extends State<MedicationNamePage> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

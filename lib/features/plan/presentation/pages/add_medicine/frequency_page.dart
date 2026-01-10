@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FrequencyPage extends StatefulWidget {
   final VoidCallback onNext;
   final VoidCallback onBack;
+  final Function(int)? onFrequencyChanged;
+  final Function(DateTime)? onDateSelected;
+  final Function(String)? onFrequencyTypeChanged;
+  final Function(List<String>)? onScheduledTimesChanged;
+  final Function(DateTime)? onEndDateSelected;
 
-  const FrequencyPage({super.key, required this.onNext, required this.onBack});
+  const FrequencyPage({
+    super.key,
+    required this.onNext,
+    required this.onBack,
+    this.onFrequencyChanged,
+    this.onDateSelected,
+    this.onFrequencyTypeChanged,
+    this.onScheduledTimesChanged,
+    this.onEndDateSelected,
+  });
 
   @override
   State<FrequencyPage> createState() => _FrequencyPageState();
@@ -13,7 +30,10 @@ class FrequencyPage extends StatefulWidget {
 
 class _FrequencyPageState extends State<FrequencyPage> {
   final TextEditingController _frequencyController = TextEditingController();
-  DateTime? _selectedDate;
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+  String _frequencyType = 'daily';
+  List<String> _scheduledTimes = [];
 
   @override
   void dispose() {
@@ -22,10 +42,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
   }
 
   bool get _canProceed {
-    return _frequencyController.text.isNotEmpty && _selectedDate != null;
+    return _frequencyController.text.isNotEmpty &&
+        _selectedStartDate != null &&
+        _scheduledTimes.isNotEmpty;
   }
 
-  void _showCalendar() {
+  void _showCalendar({required bool isStartDate}) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -34,10 +56,18 @@ class _FrequencyPageState extends State<FrequencyPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => AppointmentCalendarWidget(
-        selectedDate: _selectedDate ?? DateTime.now(),
+        selectedDate: isStartDate
+            ? (_selectedStartDate ?? DateTime.now())
+            : (_selectedEndDate ?? DateTime.now()),
         onDateSelected: (date) {
           setState(() {
-            _selectedDate = date;
+            if (isStartDate) {
+              _selectedStartDate = date;
+              widget.onDateSelected?.call(date);
+            } else {
+              _selectedEndDate = date;
+              widget.onEndDateSelected?.call(date);
+            }
           });
           Navigator.pop(context);
         },
@@ -45,8 +75,41 @@ class _FrequencyPageState extends State<FrequencyPage> {
     );
   }
 
+  void _showTimePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => MedicineTimeWidget(
+        onTimeSelected: (time) {
+          final timeString =
+              '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+          if (!_scheduledTimes.contains(timeString)) {
+            setState(() {
+              _scheduledTimes.add(timeString);
+              _scheduledTimes.sort();
+            });
+            widget.onScheduledTimesChanged?.call(_scheduledTimes);
+          }
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _removeTime(String time) {
+    setState(() {
+      _scheduledTimes.remove(time);
+    });
+    widget.onScheduledTimesChanged?.call(_scheduledTimes);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -57,10 +120,13 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Frequency',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.frequencySchedule,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -68,87 +134,280 @@ class _FrequencyPageState extends State<FrequencyPage> {
             ],
           ),
         ),
-        const SizedBox(height: 48),
+        const SizedBox(height: 24),
 
-        // Frequency Input Field
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: TextField(
-            controller: _frequencyController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Frequency (times per day)',
-              hintText: 'e.g., 3',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Color(0xFFA67FF5),
-                  width: 2,
-                ),
-              ),
-              prefixIcon: const Icon(Icons.access_time),
-            ),
-            onChanged: (value) {
-              setState(() {}); // Rebuild to update button color
-            },
-          ),
-        ),
-
-        const Spacer(),
-
-        // Date Selector
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: InkWell(
-            onTap: _showCalendar,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: _selectedDate != null
-                    ? Border.all(color: const Color(0xFFA67FF5), width: 2)
-                    : null,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    color: _selectedDate != null
-                        ? const Color(0xFFA67FF5)
-                        : Colors.black87,
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Frequency Type Dropdown
+                Text(
+                  AppLocalizations.of(context)!.frequencyType,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(width: 16),
-                  Text(
-                    _selectedDate != null
-                        ? DateFormat('MMMM dd, yyyy').format(_selectedDate!)
-                        : 'Select Date',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _selectedDate != null
-                          ? Colors.black87
-                          : Colors.black54,
-                      fontWeight: _selectedDate != null
-                          ? FontWeight.w500
-                          : FontWeight.normal,
+                ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  value: _frequencyType,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
                     ),
                   ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.black54,
+                  items: [
+                    DropdownMenuItem(
+                      value: 'daily',
+                      child: Text(AppLocalizations.of(context)!.daily),
+                    ),
+                    DropdownMenuItem(
+                      value: 'weekly',
+                      child: Text(AppLocalizations.of(context)!.weekly),
+                    ),
+                    DropdownMenuItem(
+                      value: 'monthly',
+                      child: Text(AppLocalizations.of(context)!.monthly),
+                    ),
+                    DropdownMenuItem(
+                      value: 'as-needed',
+                      child: Text(AppLocalizations.of(context)!.asNeeded),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _frequencyType = value);
+                      widget.onFrequencyTypeChanged?.call(value);
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // Frequency Value Input
+                Text(
+                  AppLocalizations.of(context)!.frequencyValue,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _frequencyController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: _frequencyType == 'daily'
+                        ? AppLocalizations.of(context)!.timesPerDayExample
+                        : _frequencyType == 'weekly'
+                        ? AppLocalizations.of(context)!.timesPerWeekExample
+                        : AppLocalizations.of(context)!.timesPerMonthExample,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                    prefixIcon: const Icon(Icons.repeat),
+                  ),
+                  onChanged: (value) {
+                    setState(() {}); // Rebuild to update button state
+                    if (value.isNotEmpty) {
+                      final freq = int.tryParse(value);
+                      if (freq != null) {
+                        widget.onFrequencyChanged?.call(freq);
+                      }
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // Scheduled Times
+                Text(
+                  AppLocalizations.of(context)!.scheduledTimesLabel,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                if (_scheduledTimes.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.noScheduledTimesAdded,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  )
+                else
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _scheduledTimes.map((time) {
+                      return Chip(
+                        label: Text(time),
+                        deleteIcon: const Icon(Icons.close, size: 18),
+                        onDeleted: () => _removeTime(time),
+                        backgroundColor: themeData.lightColor.withOpacity(0.3),
+                        deleteIconColor: themeData.primaryColor,
+                      );
+                    }).toList(),
+                  ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: _showTimePicker,
+                  icon: const Icon(Icons.access_time),
+                  label: Text(AppLocalizations.of(context)!.addTime),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: themeData.primaryColor,
+                    side: BorderSide(color: themeData.primaryColor),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Start Date Selector
+                Text(
+                  AppLocalizations.of(context)!.startDate,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                InkWell(
+                  onTap: () => _showCalendar(isStartDate: true),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: _selectedStartDate != null
+                          ? Border.all(color: themeData.primaryColor, width: 2)
+                          : Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          color: _selectedStartDate != null
+                              ? themeData.primaryColor
+                              : Colors.black87,
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          _selectedStartDate != null
+                              ? DateFormat(
+                                  'MMMM dd, yyyy',
+                                  Localizations.localeOf(context).toString(),
+                                ).format(_selectedStartDate!)
+                              : AppLocalizations.of(context)!.selectStartDate,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: _selectedStartDate != null
+                                ? Colors.black87
+                                : Colors.black54,
+                            fontWeight: _selectedStartDate != null
+                                ? FontWeight.w500
+                                : FontWeight.normal,
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.black54,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // End Date Selector
+                Text(
+                  AppLocalizations.of(context)!.endDate,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                InkWell(
+                  onTap: () => _showCalendar(isStartDate: false),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: _selectedEndDate != null
+                          ? Border.all(color: themeData.primaryColor, width: 2)
+                          : Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          color: _selectedEndDate != null
+                              ? themeData.primaryColor
+                              : Colors.black87,
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          _selectedEndDate != null
+                              ? DateFormat(
+                                  'MMMM dd, yyyy',
+                                  Localizations.localeOf(context).toString(),
+                                ).format(_selectedEndDate!)
+                              : AppLocalizations.of(context)!.selectEndDate,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: _selectedEndDate != null
+                                ? Colors.black87
+                                : Colors.black54,
+                            fontWeight: _selectedEndDate != null
+                                ? FontWeight.w500
+                                : FontWeight.normal,
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.black54,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ),
-
-        const SizedBox(height: 16),
 
         // Next Button
         Padding(
@@ -159,7 +418,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -170,9 +429,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
                 disabledForegroundColor: Colors.white,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -214,6 +476,8 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -222,9 +486,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select date',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                AppLocalizations.of(context)!.selectDate,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -287,7 +554,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          ..._buildCalendarDays(),
+          ..._buildCalendarDays(themeData),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -298,7 +565,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -306,9 +573,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -317,7 +587,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
     );
   }
 
-  List<Widget> _buildCalendarDays() {
+  List<Widget> _buildCalendarDays(themeData) {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(
       currentMonth.year,
@@ -349,7 +619,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFA67FF5) : Colors.transparent,
+              color: isSelected ? themeData.primaryColor : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -396,20 +666,208 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[month - 1];
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (month) {
+      case 1:
+        return l10n.jan;
+      case 2:
+        return l10n.feb;
+      case 3:
+        return l10n.mar;
+      case 4:
+        return l10n.apr;
+      case 5:
+        return l10n.may;
+      case 6:
+        return l10n.jun;
+      case 7:
+        return l10n.jul;
+      case 8:
+        return l10n.aug;
+      case 9:
+        return l10n.sep;
+      case 10:
+        return l10n.oct;
+      case 11:
+        return l10n.nov;
+      case 12:
+        return l10n.dec;
+      default:
+        return '';
+    }
+  }
+}
+
+// Time Picker Widget for Medicine
+class MedicineTimeWidget extends StatefulWidget {
+  final Function(TimeOfDay) onTimeSelected;
+
+  const MedicineTimeWidget({super.key, required this.onTimeSelected});
+
+  @override
+  State<MedicineTimeWidget> createState() => _MedicineTimeWidgetState();
+}
+
+class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
+  late FixedExtentScrollController _hourController;
+  late FixedExtentScrollController _minuteController;
+
+  int selectedHour = TimeOfDay.now().hour;
+  int selectedMinute = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _hourController = FixedExtentScrollController(initialItem: selectedHour);
+    _minuteController = FixedExtentScrollController(
+      initialItem: selectedMinute,
+    );
+  }
+
+  @override
+  void dispose() {
+    _hourController.dispose();
+    _minuteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.selectTime,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          const SizedBox(height: 40),
+          SizedBox(
+            height: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Hour picker
+                SizedBox(
+                  width: 80,
+                  child: ListWheelScrollView.useDelegate(
+                    controller: _hourController,
+                    itemExtent: 50,
+                    perspective: 0.005,
+                    diameterRatio: 1.2,
+                    physics: const FixedExtentScrollPhysics(),
+                    onSelectedItemChanged: (index) {
+                      setState(() => selectedHour = index);
+                    },
+                    childDelegate: ListWheelChildBuilderDelegate(
+                      builder: (context, index) {
+                        if (index < 0 || index > 23) return null;
+                        final isSelected = index == selectedHour;
+                        return Center(
+                          child: Text(
+                            index.toString().padLeft(2, '0'),
+                            style: TextStyle(
+                              fontSize: isSelected ? 32 : 20,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                              color: isSelected ? Colors.black : Colors.black26,
+                            ),
+                          ),
+                        );
+                      },
+                      childCount: 24,
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    ':',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                // Minute picker
+                SizedBox(
+                  width: 80,
+                  child: ListWheelScrollView.useDelegate(
+                    controller: _minuteController,
+                    itemExtent: 50,
+                    perspective: 0.005,
+                    diameterRatio: 1.2,
+                    physics: const FixedExtentScrollPhysics(),
+                    onSelectedItemChanged: (index) {
+                      setState(() => selectedMinute = index);
+                    },
+                    childDelegate: ListWheelChildBuilderDelegate(
+                      builder: (context, index) {
+                        if (index < 0 || index > 59) return null;
+                        final isSelected = index == selectedMinute;
+                        return Center(
+                          child: Text(
+                            index.toString().padLeft(2, '0'),
+                            style: TextStyle(
+                              fontSize: isSelected ? 32 : 20,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                              color: isSelected ? Colors.black : Colors.black26,
+                            ),
+                          ),
+                        );
+                      },
+                      childCount: 60,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                widget.onTimeSelected(
+                  TimeOfDay(hour: selectedHour, minute: selectedMinute),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: themeData.primaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

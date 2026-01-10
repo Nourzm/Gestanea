@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+import '../../logic/bloc/measurements_bloc.dart';
+import '../pages/measurements_list_page.dart';
 import 'vitals_card.dart';
 import 'bmi_card.dart';
 import 'weight_progress_chart.dart';
 import 'add_measurement_card.dart';
 import 'health_tip_card.dart';
+import 'dialogs/add_measurment_dialog.dart';
 
 class VitalsTabContent extends StatelessWidget {
   const VitalsTabContent({super.key});
@@ -13,12 +17,13 @@ class VitalsTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return Stack(
       children: [
         Container(
           decoration: const BoxDecoration(
-            color: AppColors.main300,
+            color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
           child: SingleChildScrollView(
@@ -69,9 +74,20 @@ class VitalsTabContent extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: AddMeasurementCard(
-                        onTap: () {
-                          // Handle add measurement
+                      child: Builder(
+                        builder: (ctx) {
+                          return AddMeasurementCard(
+                            onTap: () {
+                              final bloc = ctx.read<MeasurementsBloc>();
+                              showModalBottomSheet(
+                                context: ctx,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (dialogContext) =>
+                                    AddMeasurementDialog(bloc: bloc),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
@@ -86,19 +102,54 @@ class VitalsTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Weight Progress Chart
-                WeightProgressChart(),
+                const WeightProgressChart(),
 
                 const SizedBox(height: 16),
 
                 // Health Tip
-                HealthTipCard(
-                  message: localizations.healthTipMessage,
+                HealthTipCard(message: localizations.healthTipMessage),
+
+                const SizedBox(height: 16),
+
+                // View All Measurements Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<MeasurementsBloc>(),
+                                child: const MeasurementsListPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.list),
+                        label: const Text('View All Measurements'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: themeData.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
           ),
         ),
-        
+
         // TOP inset shadow overlay
         Positioned(
           top: 0,
@@ -108,7 +159,9 @@ class VitalsTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -121,7 +174,7 @@ class VitalsTabContent extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // LEFT inset shadow overlay
         Positioned(
           top: 0,
@@ -131,7 +184,9 @@ class VitalsTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,

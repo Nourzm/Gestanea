@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'product_card.dart';
 
 class ProductGrid extends StatelessWidget {
@@ -11,6 +13,7 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       decoration: const ShapeDecoration(
         color: Color(0xFFFAECFF),
@@ -38,7 +41,7 @@ class ProductGrid extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final discount = product.discountPercentage != null
-              ? '${product.discountPercentage}% OFF'
+              ? '-${product.discountPercentage}%'
               : null;
           return ProductCard(
             imageAsset: product.imageUrls.isNotEmpty
@@ -48,7 +51,7 @@ class ProductGrid extends StatelessWidget {
             price: product.price,
             oldPrice: product.originalPrice,
             discount: discount,
-            discountBgColor: AppColors.main500,
+            discountBgColor: themeData.primaryColor,
             onTap: () => onProductTapped?.call(index),
           );
         },

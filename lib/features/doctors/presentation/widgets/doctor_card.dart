@@ -2,37 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
-import 'package:gestanea/features/doctors/presentation/pages/doctor_details.dart';
 import 'doctor_info.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class DoctorCard extends StatelessWidget {
   final DoctorModel doctor;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
-  const DoctorCard({Key? key, required this.doctor, this.onTap})
+  const DoctorCard({Key? key, required this.doctor, required this.onTap})
     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
-      onTap: () {
-        if (onTap != null) {
-          onTap!();
-        } else {
-          // Navigate to doctor details page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DoctorDetailScreen(doctor: doctor),
-            ),
-          );
-        }
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.main300,
+          color: themeData.lightColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -42,7 +32,7 @@ class DoctorCard extends StatelessWidget {
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: AppColors.main400.withOpacity(0.3),
+              color: themeData.lightColor.withOpacity(0.3),
               offset: const Offset(4, 4),
               blurRadius: 8,
               spreadRadius: 0,
@@ -51,7 +41,7 @@ class DoctorCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _buildDoctorAvatar(),
+            _buildDoctorAvatar(themeData),
             const SizedBox(width: 12),
             Expanded(child: DoctorInfo(doctor: doctor)),
           ],
@@ -60,21 +50,22 @@ class DoctorCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDoctorAvatar() {
+  Widget _buildDoctorAvatar(themeData) {
     const double size = 60;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.main500, AppColors.main600],
+          colors: [themeData.primaryColor, themeData.secondaryColor],
         ),
+
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.main600.withOpacity(0.4),
+            color: themeData.secondaryColor.withOpacity(0.4),
             offset: const Offset(2, 2),
             blurRadius: 6,
             spreadRadius: 0,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/core/database/models/product_model.dart';
-import 'package:gestanea/core/database/models/product_category_model.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
-import 'package:gestanea/features/marketplace/data/datasources/mock_marketplace_data.dart';
+import '../../logic/marketplace_bloc.dart';
+import '../../logic/product_details_bloc.dart';
 import '../widgets/category_sidebar.dart';
 import '../widgets/product_grid.dart';
 import 'product_details.dart';
@@ -20,19 +21,25 @@ class MarketplacePage extends StatefulWidget {
 
 class _MarketplacePageState extends State<MarketplacePage> {
   final TextEditingController _searchController = TextEditingController();
-  late List<ProductCategoryModel> _categories;
-  late List<ProductModel> _products;
 
   @override
   void initState() {
     super.initState();
-    _categories = MockMarketplaceData.getCategories();
-    _products = MockMarketplaceData.getProducts();
+    context.read<MarketplaceBloc>().add(const LoadMarketplaceData());
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
+    // Get current theme colors
+    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
@@ -49,14 +56,16 @@ class _MarketplacePageState extends State<MarketplacePage> {
                 controller: _searchController,
                 hintText: l10n.searchHint,
                 onSearchTapped: () {
-                  // Handle search tap
+                  context.read<MarketplaceBloc>().add(
+                    SearchProducts(_searchController.text),
+                  );
                 },
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Promotional Banner
+            // Promotional Banner - Now uses dynamic theme colors
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -64,6 +73,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                 height: 120,
                 clipBehavior: Clip.antiAlias,
                 decoration: ShapeDecoration(
+                  // Use theme primary color for banner background
                   color: AppColors.pink500,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.27),
@@ -192,27 +202,80 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
             // Main content area with categories and products
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Category sidebar
-                  CategorySidebar(categories: _categories),
-                  // Product grid
-                  Expanded(
-                    child: ProductGrid(
-                      products: _products,
-                      onProductTapped: (index) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetailPage(product: _products[index]),
+              child: BlocBuilder<MarketplaceBloc, MarketplaceState>(
+                builder: (context, state) {
+                  if (state is MarketplaceLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        // Use theme primary color
+                        color: themeData.primaryColor,
+                      ),
+                    );
+                  }
+
+                  if (state is MarketplaceError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: AppTextStyles.body1.copyWith(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  if (state is MarketplaceLoaded) {
+                    // Find the index of the selected category
+                    final selectedIndex = state.selectedCategoryId != null
+                        ? state.categories.indexWhere(
+                            (cat) => cat.id == state.selectedCategoryId,
+                          )
+                        : null;
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Category sidebar
+                        CategorySidebar(
+                          categories: state.categories,
+                          selectedIndex: selectedIndex != -1
+                              ? selectedIndex
+                              : null,
+                          onCategoryTapped: (index) {
+                            final categoryId = state.categories[index].id;
+                            context.read<MarketplaceBloc>().add(
+                              FilterByCategory(categoryId),
+                            );
+                          },
+                        ),
+                        // Product grid
+                        Expanded(
+                          child: ProductGrid(
+                            products: state.filteredProducts,
+                            onProductTapped: (index) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        ProductDetailsBloc()..add(
+                                          LoadProductDetails(
+                                            state.filteredProducts[index],
+                                          ),
+                                        ),
+                                    child: ProductDetailPage(
+                                      product: state.filteredProducts[index],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

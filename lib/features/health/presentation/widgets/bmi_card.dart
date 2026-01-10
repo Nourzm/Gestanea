@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class BMICard extends StatelessWidget {
   const BMICard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.main500, Color(0xFFB388CC)],
-        ),
+        color: themeData.primaryColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -33,7 +37,7 @@ class BMICard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Pre-pregnancy BMI',
+            l10n.prePregnancyBMI,
             style: AppTextStyles.body1.copyWith(
               color: AppColors.white,
               fontSize: 13,
@@ -41,14 +45,14 @@ class BMICard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '22.5 (Normal)',
+            '22. 5 (${l10n.normalBMI})',
             style: AppTextStyles.headline2.copyWith(
               color: AppColors.white,
               fontSize: 18,
             ),
           ),
           const SizedBox(height: 12),
-          
+
           // Progress Bar
           Row(
             children: [
@@ -57,7 +61,7 @@ class BMICard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Current Gain: -dkg',
+                      '${l10n.currentGain}: 0 kg',
                       style: AppTextStyles.smallLabel.copyWith(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 11,
@@ -87,9 +91,9 @@ class BMICard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -97,7 +101,7 @@ class BMICard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Target Range',
+                    l10n.targetRange,
                     style: AppTextStyles.smallLabel.copyWith(
                       color: AppColors.white,
                       fontSize: 11,
@@ -117,7 +121,7 @@ class BMICard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Expected: 5.5 kg',
+                    '${l10n.expected}: 5.5 kg',
                     style: AppTextStyles.smallLabel.copyWith(
                       color: AppColors.white,
                       fontSize: 11,

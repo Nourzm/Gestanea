@@ -1,11 +1,17 @@
-
-
-
 {
-"full_name": "Nom complet",
-"enable_notifications": "Activer les notifications",
-"phone": "Téléphone",
-"country": "Pays",
+  "locationPermissionRequired": "Autorisation de localisation requise",
+  "locationPermissionMessage": "Nous avons besoin d'accéder à votre localisation pour afficher les médecins à proximité.",
+  "gettingLocation": "Obtention de votre position...",
+  "locationPermissionDenied": "Autorisation de localisation refusée",
+  "locationUpdated": "Localisation mise à jour",
+  "retry": "Réessayer",
+  "showingDoctorsNearYou": "Affichage des médecins près de chez vous",
+  "selectLocation": "Sélectionner l'emplacement",
+  "searchWilaya": "Rechercher une wilaya...",
+  "full_name": "Nom complet",
+  "enable_notifications": "Activer les notifications",
+  "phone": "Téléphone",
+  "country": "Pays",
   "security": "Sécurité",
   "i_gave_birth": "J'ai accouché",
   "no_longer_pregnant": "Je ne suis plus enceinte",
@@ -15,18 +21,15 @@
   "about_app": "À propos de l'application",
   "change": "Modifier",
   "logout": "Se déconnecter",
-  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ?",
+  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ? ",
   "cancel": "Annuler",
   "unknown": "Inconnu",
   "profile": "Profil",
   "profile_updated": "Profil mis à jour",
   "edit_profile": "Modifier le profil",
   "change_profile_photo": "Changer la photo de profil",
-  "full_name": "Nom complet",
   "save_changes": "Enregistrer les modifications",
   "save": "Enregistrer",
-  "enable_notifications": "Activer les notifications",
-
   "plan": "Plan",
   "sundayShort": "D",
   "mondayShort": "L",
@@ -38,10 +41,120 @@
   "todaysMedicine": "Médicaments du jour",
   "upcomingAppointments": "Rendez-vous à venir",
   "scheduled": "Prévu",
-    "addNewMedicine": "Ajouter un médicament",
+  "addNewMedicine": "Ajouter un médicament",
   "addNewAppointment": "Ajouter un rendez-vous",
   "medicine": "Médicaments",
   "appointments": "Rendez-vous",
+  "appointmentName": "Nom du rendez-vous",
+  "medicationName": "Nom du médicament",
+  "nextLabel": "Suivant",
+  "doneLabel": "Terminé",
+  "uploadPicture": "Télécharger une photo",
+  "camera": "Caméra",
+  "gallery": "Galerie",
+  "removeImage": "Supprimer l'image",
+  "tapToAddPicture": "Appuyez pour ajouter une photo",
+  "optionalImageNote": "L'ajout d'une photo est facultatif. Vous pouvez ignorer cette étape.",
+  "camera": "Caméra",
+  "gallery": "Galerie",
+  "removeImage": "Supprimer l'image",
+  "tapToAddPicture": "Appuyez pour ajouter une photo",
+  "optionalImageNote": "L'ajout d'une photo est facultatif. Vous pouvez ignorer cette étape.",
+  "selectFormDose": "Choisir la forme et la dose",
+  "frequencySchedule": "Fréquence et programme",
+  "frequencyType": "Type de fréquence",
+  "frequencyValue": "Valeur de la fréquence",
+  "scheduledTimesLabel": "Heures planifiées",
+  "asNeeded": "Selon les besoins",
+  "dosage": "Dosage",
+  "dosageExample": "ex.: 5 mg ou 10 ml",
+  "formPill": "Comprimé",
+  "formInjection": "Injection",
+  "formSpray": "Spray",
+  "formDrop": "Goutte",
+  "formSyrup": "Sirop",
+  "formOthers": "Autres",
+  "medicinesTaken": "{taken} sur {total} pris",
+  "@medicinesTaken": {
+    "description": "Medicine taken status",
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "daily": "Quotidien",
+  "weekly": "Hebdomadaire",
+  "monthly": "Mensuel",
+  "timesPerDayExample": "ex.: 3 (fois par jour)",
+  "timesPerWeekExample": "ex.: 2 (fois par semaine)",
+  "timesPerMonthExample": "ex.: 1 (fois par mois)",
+  "appointmentDateTime": "Date et heure du rendez-vous",
+  "appointmentLocation": "Lieu du rendez-vous",
+  "selectDate": "Sélectionner la date",
+  "selectTime": "Sélectionner l'heure",
+  "startDate": "Date de début",
+  "endDate": "Date de fin (Optionnel)",
+  "selectStartDate": "Sélectionner la date de début",
+  "selectEndDate": "Sélectionner la date de fin",
+  "addTime": "Ajouter l'heure",
+  "noScheduledTimesAdded": "Aucune heure planifiée ajoutée",
+  "today": "Aujourd'hui",
+  "tomorrow": "Demain",
+  "noAppointmentsFound": "Aucun rendez-vous trouvé",
+  "appointment": "Rendez-vous",
+  "pleaseAddScheduledTime": "Veuillez ajouter au moins une heure planifiée",
+  "reviewsCount": "{count} avis",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "qty": "Qté",
+  "all": "Tout",
+  "taken": "Pris",
+  "missed": "Manqué",
+  "noMedicines": "Aucun médicament",
+  "schedule": "Programme",
+  "availability": "Disponibilité",
+  "specialty": "Spécialité",
+  "bookAppointment": "Réserver un rendez-vous",
+  "price": "Prix",
+  "quantity": "Quantité",
+  "checkout": "Paiement",
+  "applyCoupon": "Appliquer un coupon",
+  "popular": "Populaire",
+  "offers": "Offres",
+  "newLabel": "Nouveau",
+  "contact": "Contact",
+  "message": "Message",
+  "location": "Localisation",
+  "noResults": "Aucun résultat",
+  "search": "Recherche",
+  "sort": "Trier",
+  "marketplace": "Boutique",
+  "doctorsFeatureTitle": "Médecins",
+  "planFeatureTitle": "Plan",
+  "addMedicine": "Ajouter un médicament",
+  "addAppointment": "Ajouter un rendez-vous",
+  "error": "Erreur",
+  "success": "Succès",
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "remove": "Supprimer",
+  "apply": "Appliquer",
+  "reviewsLabel": "Avis",
+  "rating": "Note",
+  "recommended": "Recommandé",
+  "noReviews": "Aucun avis",
+  "delivery": "Livraison",
+  "shipping": "Expédition",
+  "taxes": "Taxes",
   "sunday": "Dimanche",
   "monday": "Lundi",
   "tuesday": "Mardi",
@@ -74,7 +187,7 @@
   "notifications": "Notifications",
   "help": "Aide",
   "about": "À propos",
-  "welcome_back": "Bon retour !",
+  "welcome_back": "Bon retour ! ",
   "or": "— OU —",
   "register": "S'inscrire",
   "auth": "Votre compagnon de confiance à chaque étape de la maternité",
@@ -87,6 +200,13 @@
   "enter_email": "Entrez votre e-mail",
   "enter_name": "Entrez votre nom",
   "rememberMe": "Se souvenir de moi",
+  "sendOtp": "Envoyer le code",
+  "verifyOtp": "Vérifier le code",
+  "enterOtpCode": "Entrez le code de vérification",
+  "otpSent": "Code de vérification envoyé à votre email",
+  "otpCodePlaceholder": "Code à 6 chiffres",
+  "resendOtp": "Renvoyer le code",
+  "noInternetConnection": "Pas de connexion Internet. Veuillez vérifier votre réseau et réessayer.",
   "version": "Version",
   "pregnant": "Enceinte",
   "postpartum": "Postpartum",
@@ -94,13 +214,17 @@
   "@week": {
     "description": "Numéro de la semaine",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "Il reste {days} jours",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "Marché",
@@ -109,8 +233,8 @@
   "skinCare": "Soins de la peau",
   "pregnancyPillow": "Coussin de grossesse",
   "backSupportBelt": "Ceinture de soutien dorsal",
-  "searchHint": "Trouvez ce dont vous avez besoin...",
-  "dontMissOut": "Ne ratez pas !",
+  "searchHint": "Trouvez ce dont vous avez besoin.. .",
+  "dontMissOut": "Ne ratez pas ! ",
   "discountUpTo": "Remise jusqu'à 50%",
   "upgradeNow": "Améliorez maintenant",
   "healthLog": "Journal de santé",
@@ -122,26 +246,77 @@
   "mood": "Humeur",
   "weight": "Poids",
   "heartRate": "Fréquence cardiaque",
+  "veryHappy": "Très heureux(se)",
+  "happy": "Heureux(se)",
+  "neutral": "Neutre",
+  "sad": "Triste",
+  "verySad": "Très triste",
+  "pleaseSelectMood": "Veuillez sélectionner une humeur",
+  "moodLoggedSuccessfully": "Humeur enregistrée avec succès !",
+  "howAreYouFeeling": "Comment vous sentez-vous ?",
+  "energyLevel": "Niveau d'énergie",
+  "low": "Faible",
+  "high": "Élevé",
+  "sleepQuality": "Qualité du sommeil",
+  "howWasYourDay": "Comment s'est passée votre journée ?",
   "bloodPressure": "Tension artérielle",
+  "lowRisk": "Faible risque",
+  "withinNormalRange": "Dans la plage normale",
+  "gestationalDiabetes": "Diabète gestationnel",
+  "glucoseLevelsNormal": "Les niveaux de glucose sont normaux",
+  "preeclampsia": "Prééclampsie",
+  "noProteinInUrine": "Aucune protéine dans les urines",
+  "warningSignsToWatch": "Signes d'alerte à surveiller",
+  "severeHeadache": "Forte migraine",
+  "blurredVision": "Vision trouble",
+  "severeAbdominalPain": "Douleur abdominale sévère",
+  "decreasedFetalMovement": "Mouvements fœtaux diminués",
+  "vaginalBleeding": "Saignement vaginal",
+  "emergencyCall": "Appel d'urgence",
+  "areYouSureCall911": "Êtes-vous sûr de vouloir appeler le 911 ?",
+  "couldNotMakeEmergencyCall": "Impossible de passer l'appel d'urgence.",
+  "ifYouExperienceWarnings": "Si vous ressentez un signe d'alerte, contactez immédiatement votre professionnel de santé.",
+  "allIndicatorsNormal": "Tous les indicateurs sont normaux",
+  "emergencyContact": "Contact d'urgence",
+  "overallRiskLevel": "Niveau de risque global",
+  "call911OrProvider": "Appelez le 911 ou votre professionnel de santé",
   "normal": "Normal",
   "add": "Ajouter",
   "measurement": "Mesure",
   "healthTipMessage": "Bravo ! Vous maintenez un rythme de prise de poids sain. Continuez votre alimentation équilibrée et vos exercices doux.",
   "onTrack": "Sur la bonne voie",
-
+  "moodTab": "Humeur",
+  "recentEntries": "Entrées récentes",
+  "howAreYouFeelingToday": "Comment vous sentez-vous aujourd'hui ?",
+  "feltEnergeticToday": "Je me suis senti énergique aujourd'hui",
+  "hoursAgo": "il y a {hours} heures",
+  "calm": "Calme",
+  "relaxingEvening": "Soirée relaxante",
+  "yesterday": "Hier",
+  "tired": "Fatigué(e)",
+  "needMoreSleep": "Besoin de plus de sommeil",
+  "daysAgo": "il y a {days} jours",
+  "trackingMoodHelps": "Suivre votre humeur vous aide à comprendre votre bien-être.",
+  "great": "Super",
+  "good": "Bien",
+  "okay": "Moyen",
+  "moodTrendsLast7Days": "Tendances de l'humeur (7 derniers jours)",
+  "mostlyPositiveMoods": "Humeurs majoritairement positives",
+  "selfCareSuggestions": "Suggestions d'auto-soin",
+  "takeShortWalk": "Faire une courte promenade",
+  "practiceDeepBreathing": "Pratiquer la respiration profonde",
+  "listenToCalmingMusic": "Écouter de la musique apaisante",
+  "connectWithLovedOnes": "Se connecter avec ses proches",
   "doctors": "Médecins",
   "findDoctors": "trouver des médecins par nom ou spécialité",
   "useCurrentLocation": "Utiliser ma position actuelle",
-  "algiers": "Alger",
-  "oran": "Oran",
-  "constantine": "Constantine",
-  "annaba": "Annaba",
-  "blida": "Blida",
   "doctorsFoundSingle": "1 Médecin Trouvé",
   "doctorsFoundPlural": "{count} Médecins Trouvés",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "Filtrer",
@@ -151,14 +326,18 @@
   "upToKm": "Jusqu'à {distance} km",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "Évaluation minimale",
   "ratingAndAbove": "{rating} et plus",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "Genre",
@@ -169,24 +348,28 @@
   "atLeastReviews": "Au moins {count} avis",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "cancel": "Annuler",
   "applyFilters": "Appliquer les filtres",
   "kmAway": "à {distance} km",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "avis",
   "noDoctorsFound": "Aucun médecin trouvé",
-  "noResults": "Aucun résultat",
   "noMatchingDoctors": "Aucun médecin ne correspond à \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
@@ -203,5 +386,51 @@
   "address": "Adresse",
   "phoneNumber": "Numéro de téléphone",
   "openingHours": "Heures d'ouverture",
-  "callNow": "Appeler maintenant"
+  "callNow": "Appeler maintenant",
+  "take": "Prendre",
+  "noMedicinesFound": "Aucun médicament trouvé",
+  "pleaseLoginToViewPlan": "Veuillez vous connecter pour voir votre plan",
+  "selectColor": "Sélectionnez la couleur",
+  "selectSize": "Sélectionnez la taille",
+  "addToCart": "Ajouter au panier",
+  "buyNow": "Acheter maintenant",
+  "description": "Description",
+  "noDescriptionAvailable": "Aucune description disponible",
+  "specifications": "Spécifications",
+  "customerReviews": "Avis des clientes",
+  "seeAll": "voir tout",
+  "completeYourOrder": "Complétez votre commande",
+  "orderSummary": "Résumé de la commande",
+  "product": "Produit",
+  "size": "Taille",
+  "qty": "Qté",
+  "subtotal": "Sous-total",
+  "deliveryFee": "Frais de livraison",
+  "total": "Total",
+  "deliveryInformation": "Informations de livraison",
+  "fullName": "Nom complet",
+  "enterYourFullName": "Entrez votre nom complet",
+  "phoneNumber": "Numéro de téléphone",
+  "enterYourPhoneNumber": "Entrez votre numéro de téléphone",
+  "deliveryAddress": "Adresse de livraison",
+  "streetAddressApartment": "Adresse, appartement, etc.",
+  "city": "Ville",
+  "enterYourCity": "Entrez votre ville",
+  "specialInstructions": "Instructions spéciales (Facultatif)",
+  "addDeliveryNotes": "Ajoutez des notes de livraison, demandes spéciales...",
+  "paymentMethod": "Méthode de paiement",
+  "cashOnDelivery": "Paiement à la livraison",
+  "creditDebitCard": "Carte de crédit / débit",
+  "digitalWallet": "Portefeuille numérique",
+  "placeOrder": "Passer la commande",
+  "orderPlacedSuccessfully": "Commande {orderId} passée avec succès !",
+  "@orderPlacedSuccessfully": {
+    "placeholders": {
+      "orderId": {
+        "type": "String"
+      }
+    }
+  },
+  "yourInformationIsSecure": "Vos informations sont sécurisées et cryptées",
+  "openNow": "Ouvert maintenant"
 }

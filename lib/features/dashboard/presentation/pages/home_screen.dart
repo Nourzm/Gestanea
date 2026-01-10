@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
+import 'package:gestanea/features/dashboard/domain/entities/pregnancy_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
@@ -12,6 +16,7 @@ import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -39,22 +44,63 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // 👤 Profile section (tap -> Profile page)
+                    // Profile section (tap -> Profile page)
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        // Capture cubit before navigation
+                        final dashboardCubit = context.read<DashboardCubit>();
+                        final authState = context.read<AuthBloc>().state;
+
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ProfileSettingsScreen(),
                           ),
                         );
+
+                        // Refresh dashboard when returning from profile page
+                        // This handles the case where user triggered "I Gave Birth"
+                        if (authState is AuthAuthenticated) {
+                          final userId = authState.user.id;
+                          if (userId.isNotEmpty) {
+                            dashboardCubit.loadDashboardByStringId(userId);
+                          }
+                        }
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Image.asset("assets/images/profile.png"),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              Widget avatar;
+
+                              if (state is AuthAuthenticated) {
+                                avatar = ProfileAvatar(
+                                  imageUrl: state.user.profilePictureUrl,
+                                  userId: state.user.id,
+                                  radius: 24,
+                                );
+                              } else {
+                                avatar = CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.grey.shade300,
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                  ),
+                                );
+                              }
+
+                              return Container(
+                                // border thickness
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.main500, // border color
+                                    width: 3,
+                                  ),
+                                ),
+                                child: avatar,
+                              );
+                            },
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
@@ -79,7 +125,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // 🔔 Notification icon (tap -> Notifications page)
+                    //Notification icon (tap -> Notifications page)
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -90,7 +136,10 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       child: NotificationIcon(
-                        icon: Icon(Icons.notifications, color: Colors.purple),
+                        icon: Icon(
+                          Icons.notifications,
+                          color: AppColors.main500,
+                        ),
                       ),
                     ),
                   ],
@@ -152,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               SvgPicture.asset(
                                 "assets/icons/Stethoscope.svg",
-                                color: Color(0xFF9C27B0),
+                                color: AppColors.main500,
                                 width: 32,
                               ),
                               SizedBox(height: screenHeight * 0.015),
@@ -161,7 +210,7 @@ class HomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.045,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF9C27B0),
+                                  color: AppColors.main500,
                                 ),
                               ),
                               SizedBox(height: screenHeight * 0.005),
@@ -169,9 +218,9 @@ class HomeScreen extends StatelessWidget {
                                 'find the best doctor',
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
-                                  color: const Color(
-                                    0xFF9C27B0,
-                                  ).withOpacity(0.7),
+                                  color: AppColors.main500.withValues(
+                                    alpha: 0.7,
+                                  ),
                                 ),
                               ),
                             ],
@@ -199,12 +248,16 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.black87,
                       ),
                     ),
-                    Text(
-                      'see all',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.035,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.main500,
+                    GestureDetector(
+                      onTap: () =>
+                          onNavigate(3), // Navigate to Plan page (index 3)
+                      child: Text(
+                        'see all',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.035,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.main500,
+                        ),
                       ),
                     ),
                   ],
@@ -213,207 +266,74 @@ class HomeScreen extends StatelessWidget {
 
               SizedBox(height: screenHeight * 0.015),
 
-              // Upcoming items
+              // Upcoming items from database
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Column(
-                  children: [
-                    // Doctor Checkup
-                    Container(
-                      margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                      padding: EdgeInsets.all(screenWidth * 0.04),
-                      decoration: BoxDecoration(
-                        color: AppColors.homeCards,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.main500, // border color
-                          width: 1, // border thickness
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF000000).withOpacity(0.25),
-                            blurRadius: 4,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.main500,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/icons/heartplus.svg",
-                              color: Colors.white,
-                              width: 30,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.04),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Doctor Checkup',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.042,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: screenHeight * 0.005),
-                                Text(
-                                  'Today at 2:00PM',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.035,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SvgPicture.asset(
-                            "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
-                            width: 28,
-                          ),
-                        ],
-                      ),
-                    ),
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  builder: (context, state) {
+                    List<AppointmentReminder> appointments = [];
+                    List<MedicineReminder> medicines = [];
 
-                    // Vitamin D
-                    Container(
-                      margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                      padding: EdgeInsets.all(screenWidth * 0.04),
-                      decoration: BoxDecoration(
-                        color: AppColors.homeCards,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.main500, // border color
-                          width: 1, // border thickness
+                    if (state is PregnancyDashboardLoaded) {
+                      appointments = state.dashboard.upcomingAppointments;
+                      medicines = state.dashboard.medicineReminders;
+                    }
+
+                    // Combine and limit to 3 items
+                    final List<Widget> upcomingItems = [];
+
+                    // Add appointments
+                    for (
+                      var i = 0;
+                      i < appointments.length && upcomingItems.length < 3;
+                      i++
+                    ) {
+                      upcomingItems.add(
+                        _buildUpcomingItem(
+                          context,
+                          screenWidth,
+                          screenHeight,
+                          title: appointments[i].title,
+                          subtitle: _formatAppointmentTime(
+                            appointments[i].dateTime,
+                          ),
+                          icon: "assets/icons/heartplus.svg",
+                          isAppointment: true,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF000000).withOpacity(0.25),
-                            blurRadius: 4,
-                            offset: const Offset(0, 4),
+                      );
+                    }
+
+                    // Add medicines
+                    for (
+                      var i = 0;
+                      i < medicines.length && upcomingItems.length < 3;
+                      i++
+                    ) {
+                      upcomingItems.add(
+                        _buildUpcomingItem(
+                          context,
+                          screenWidth,
+                          screenHeight,
+                          title: medicines[i].medicineName,
+                          subtitle: _formatMedicineTime(
+                            medicines[i].nextDoseTime,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.main500,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/icons/pills.svg",
-                              color: Colors.white,
-                              width: 28,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.04),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Vitamin D',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.042,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: screenHeight * 0.005),
-                                Text(
-                                  'In 2 hours',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.035,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SvgPicture.asset(
-                            "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
-                            width: 28,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                      padding: EdgeInsets.all(screenWidth * 0.04),
-                      decoration: BoxDecoration(
-                        color: AppColors.homeCards,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.main500, // border color
-                          width: 1, // border thickness
+                          icon: "assets/icons/pills.svg",
+                          isAppointment: false,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF000000).withOpacity(0.25),
-                            blurRadius: 4,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.main500,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/icons/pills.svg",
-                              color: Colors.white,
-                              width: 28,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.04),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Vitamin D',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.042,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: screenHeight * 0.005),
-                                Text(
-                                  'In 2 hours',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.035,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SvgPicture.asset(
-                            "assets/icons/Calendar_1.svg",
-                            color: Color(0xFF9C27B0),
-                            width: 28,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                      );
+                    }
+
+                    // Show placeholder if no upcoming events
+                    if (upcomingItems.isEmpty) {
+                      return _buildNoUpcomingItems(screenWidth, screenHeight);
+                    }
+
+                    return Container(
+                      width: double.infinity,
+                      child: Column(children: upcomingItems),
+                    );
+                  },
                 ),
               ),
 
@@ -421,6 +341,171 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  String _formatAppointmentTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final appointmentDate = DateTime(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+    );
+    final tomorrow = today.add(const Duration(days: 1));
+
+    String dayText;
+    if (appointmentDate == today) {
+      dayText = 'Today';
+    } else if (appointmentDate == tomorrow) {
+      dayText = 'Tomorrow';
+    } else {
+      dayText = DateFormat('MMM d').format(dateTime);
+    }
+
+    final timeText = DateFormat('h:mm a').format(dateTime);
+    return '$dayText at $timeText';
+  }
+
+  String _formatMedicineTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final diff = dateTime.difference(now);
+
+    if (diff.isNegative) {
+      return 'Overdue';
+    } else if (diff.inMinutes < 60) {
+      return 'In ${diff.inMinutes} minutes';
+    } else if (diff.inHours < 24) {
+      return 'In ${diff.inHours} hours';
+    } else {
+      return DateFormat('MMM d, h:mm a').format(dateTime);
+    }
+  }
+
+  Widget _buildUpcomingItem(
+    BuildContext context,
+    double screenWidth,
+    double screenHeight, {
+    required String title,
+    required String subtitle,
+    required String icon,
+    required bool isAppointment,
+  }) {
+    return GestureDetector(
+      onTap: () => onNavigate(3), // Navigate to Plan page
+      child: Container(
+        margin: EdgeInsets.only(bottom: screenHeight * 0.015),
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        decoration: BoxDecoration(
+          color: AppColors.homeCards,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.main500, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF000000).withValues(alpha: 0.25),
+              blurRadius: 4,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.main500,
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+                width: isAppointment ? 30 : 28,
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.04),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.042,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: screenHeight * 0.005),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.035,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(
+              "assets/icons/Calendar_1.svg",
+              colorFilter: const ColorFilter.mode(
+                AppColors.main500,
+                BlendMode.srcIn,
+              ),
+              width: 28,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoUpcomingItems(double screenWidth, double screenHeight) {
+    return Container(
+      padding: EdgeInsets.all(screenWidth * 0.06),
+      decoration: BoxDecoration(
+        color: AppColors.homeCards,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.main500.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.event_available,
+            size: 48,
+            color: AppColors.main500.withValues(alpha: 0.5),
+          ),
+          SizedBox(height: screenHeight * 0.01),
+          Text(
+            'No upcoming events',
+            style: TextStyle(
+              fontSize: screenWidth * 0.04,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: screenHeight * 0.005),
+          GestureDetector(
+            onTap: () => onNavigate(3),
+            child: Text(
+              'Add appointments in Plan',
+              style: TextStyle(
+                fontSize: screenWidth * 0.035,
+                color: AppColors.main500,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
