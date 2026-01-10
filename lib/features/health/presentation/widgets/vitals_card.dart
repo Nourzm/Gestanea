@@ -12,6 +12,7 @@ class VitalsCard extends StatelessWidget {
   final String status;
   final Color statusColor;
   final Color textColor;
+  final String? trend;
 
   const VitalsCard({
     super.key,
@@ -21,6 +22,7 @@ class VitalsCard extends StatelessWidget {
     required this.status,
     required this.statusColor,
     required this.textColor,
+    this.trend,
   });
 
   @override
@@ -81,15 +83,31 @@ class VitalsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: Text(
-                  value,
-                  style: AppTextStyles.headline2.copyWith(
-                    fontSize: 16,
-                    color: AppColors.textDark,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style: AppTextStyles.headline2.copyWith(
+                        fontSize: 16,
+                        color: AppColors.textDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (trend != null && trend!.isNotEmpty)
+                      Text(
+                        trend!,
+                        style: AppTextStyles.smallLabel.copyWith(
+                          fontSize: 10,
+                          color: trend!.startsWith('+') 
+                              ? const Color(0xFFFF9800) 
+                              : const Color(0xFF4CAF50),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               const SizedBox(width: 4),

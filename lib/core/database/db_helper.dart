@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 8,
+      version: 10,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -50,7 +50,8 @@ class DatabaseHelper {
         diastolic INTEGER,
         recorded_at TEXT NOT NULL,
         notes TEXT,
-        created_at TEXT NOT NULL
+        created_at TEXT NOT NULL,
+        synced INTEGER DEFAULT 1
       )
     ''');
     }
@@ -90,21 +91,48 @@ class DatabaseHelper {
   ''');
     }
     if (oldVersion < 7) {
-      // Add onboarding_completed column to users table
-      try {
-        await db.execute('ALTER TABLE users ADD COLUMN onboarding_completed INTEGER DEFAULT 0');
-      } catch (e) {
-        // Column might already exist, ignore
-        print('Note: onboarding_completed column may already exist: $e');
+      // Add synced column to measurements table for offline support
+      // Check if column exists first to avoid duplicate column error
+      var result = await db.rawQuery('PRAGMA table_info(measurements)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE measurements ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
       }
     }
     if (oldVersion < 8) {
-      // Add profile_picture_path column to users table
-      try {
-        await db.execute('ALTER TABLE users ADD COLUMN profile_picture_path TEXT');
-      } catch (e) {
-        // Column might already exist, ignore
-        print('Note: profile_picture_path column may already exist: $e');
+      // Add synced column to symptoms table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(symptoms)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE symptoms ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 9) {
+      // Add duration column to symptoms table
+      var result = await db.rawQuery('PRAGMA table_info(symptoms)');
+      bool hasDurationColumn = result.any((column) => column['name'] == 'duration');
+      
+      if (!hasDurationColumn) {
+        await db.execute('''
+          ALTER TABLE symptoms ADD COLUMN duration TEXT
+        ''');
+      }
+    }
+    if (oldVersion < 10) {
+      // Add synced column to lab_results table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(lab_results)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE lab_results ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
       }
     }
   }
@@ -559,7 +587,8 @@ class DatabaseHelper {
     diastolic INTEGER,
     recorded_at TEXT NOT NULL,
     notes TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    synced INTEGER DEFAULT 1
   )
 ''');
     // Symptoms table

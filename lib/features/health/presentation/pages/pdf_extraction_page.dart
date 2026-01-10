@@ -67,6 +67,7 @@ class PdfExtractionPage extends StatelessWidget {
         title: const Text('PDF Lab Report'),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Padding(

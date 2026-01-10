@@ -181,6 +181,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
         title: const Text('Extract Lab Results'),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           if (!_isExtracting)
             IconButton(icon: const Icon(Icons.save), onPressed: _saveResults),

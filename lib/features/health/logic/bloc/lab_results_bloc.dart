@@ -2,14 +2,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/database/db_helper.dart';
 import '../../../../core/database/models/lab_result_model.dart';
 import '../../../../core/services/image_storage_service.dart';
-import '../../data/repositories/lab_results_repository.dart';
+import '../../../../core/services/lab_results_service.dart';
 import 'lab_results_event.dart';
 import 'lab_results_state.dart';
 
 class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
   final ImageStorageService _imageStorage = ImageStorageService();
-  final LabResultsRepository _repository = LabResultsRepository();
+  final LabResultsService _labResultsService = LabResultsService();
   String? _currentUserId;
 
   LabResultsBloc() : super(LabResultsInitial()) {
@@ -35,7 +35,7 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
         return;
       }
       
-      final labResults = await _repository.getLabResults(_currentUserId!);
+      final labResults = await _labResultsService.getLabResults();
       print('Loaded ${labResults.length} lab results');
       final latest = labResults.isNotEmpty ? labResults.first : null;
       emit(LabResultsLoaded(labResults, latest));
@@ -49,7 +49,7 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     try {
       print('Adding lab result: ${event.labResult.testName}');
       print('User ID: ${event.labResult.userId}');
-      await _repository.addLabResult(event.labResult);
+      await _labResultsService.addLabResult(event.labResult);
       print('Lab result added successfully');
       add(LoadLabResults());
     } catch (e) {
@@ -61,7 +61,7 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
   Future<void> _onUpdate(UpdateLabResult event, Emitter<LabResultsState> emit) async {
     try {
       print('Updating lab result: ${event.labResult.testName}');
-      await _repository.updateLabResult(event.labResult);
+      await _labResultsService.updateLabResult(event.labResult);
       print('Lab result updated successfully');
       add(LoadLabResults());
     } catch (e) {
@@ -72,7 +72,7 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
 
   Future<void> _onDelete(DeleteLabResult event, Emitter<LabResultsState> emit) async {
     try {
-      await _repository.deleteLabResult(event.id);
+      await _labResultsService.deleteLabResult(event.id);
       
       // Delete associated image
       if (event.imagePath != null) {
@@ -97,12 +97,5 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
 
   Future<void> _onRefresh(RefreshLabResults event, Emitter<LabResultsState> emit) async {
     add(LoadLabResults());
-  }
-
-  /// Force sync with Supabase
-  Future<void> forceSync() async {
-    if (_currentUserId != null) {
-      await _repository.forceSync(_currentUserId!);
-    }
   }
 }

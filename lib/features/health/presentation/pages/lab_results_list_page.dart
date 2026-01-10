@@ -22,6 +22,7 @@ class LabResultsListPage extends StatelessWidget {
         title: const Text('My Lab Results'),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.download),

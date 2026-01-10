@@ -16,8 +16,8 @@ class MeasurementsListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('My Measurements'),
         backgroundColor: themeData.primaryColor,
-
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<MeasurementsBloc, MeasurementsState>(
         builder: (context, state) {

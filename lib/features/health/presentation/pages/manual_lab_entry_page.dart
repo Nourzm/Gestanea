@@ -103,6 +103,7 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
         title: const Text('Manual Lab Entry'),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

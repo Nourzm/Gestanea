@@ -4,6 +4,7 @@ class SymptomModel {
   final String symptomName;
   final String? severity;
   final String? notes;
+  final String? duration;
   final DateTime recordedAt;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class SymptomModel {
     required this.symptomName,
     this.severity,
     this.notes,
+    this.duration,
     required this.recordedAt,
     required this.createdAt,
   });
@@ -24,8 +26,9 @@ class SymptomModel {
       'symptom_name': symptomName,
       'severity': severity,
       'notes': notes,
+      'duration': duration,
       'recorded_at': recordedAt.toIso8601String(),
-      'created_at': createdAt. toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
@@ -36,6 +39,7 @@ class SymptomModel {
       symptomName: map['symptom_name'] as String,
       severity: map['severity'] as String?,
       notes: map['notes'] as String?,
+      duration: map['duration'] as String?,
       recordedAt: DateTime.parse(map['recorded_at'] as String),
       createdAt: DateTime.parse(map['created_at'] as String),
     );
@@ -47,6 +51,7 @@ class SymptomModel {
     String? symptomName,
     String? severity,
     String? notes,
+    String? duration,
     DateTime? recordedAt,
     DateTime? createdAt,
   }) {
@@ -54,10 +59,11 @@ class SymptomModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       symptomName: symptomName ?? this.symptomName,
-      severity: severity ?? this. severity,
-      notes: notes ??  this.notes,
-      recordedAt: recordedAt ?? this. recordedAt,
-      createdAt: createdAt ?? this. createdAt,
+      severity: severity ?? this.severity,
+      notes: notes ?? this.notes,
+      duration: duration ?? this.duration,
+      recordedAt: recordedAt ?? this.recordedAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

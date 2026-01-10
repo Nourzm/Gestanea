@@ -18,6 +18,7 @@ class SymptomsListPage extends StatelessWidget {
         title: const Text('My Symptoms'),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<SymptomsBloc, SymptomsState>(
         builder: (context, state) {

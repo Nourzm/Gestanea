@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     API_BASE_URL: str = "http://10.0.2.2:8000/api/v1"
 
     class Config:
-        env_file = ".env"
+        env_file = "../.env"
         extra = "allow"
 
 settings = Settings()
