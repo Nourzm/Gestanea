@@ -34,16 +34,11 @@ void main() async {
   final alarmScheduler = AlarmScheduler();
   await alarmScheduler.initialize();
 
-  
   // Initialize Supabase
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  
-  // Initialize connectivity service
-  final connectivityService = ConnectivityService();
-  await connectivityService.initialize();
-  
+
   runApp(const MyApp());
 }
