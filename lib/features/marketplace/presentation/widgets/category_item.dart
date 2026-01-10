@@ -57,21 +57,41 @@ class _CategoryItemState extends State<CategoryItem> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
-              child: Image.asset(
-                widget.imageAsset,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  final themeData = context.watch<ThemeCubit>().currentTheme;
-                  return Container(
-                    color: Colors.grey[300],
-                    child: Icon(
-                      Icons.image_not_supported,
-                      color: themeData.cardColor,
-                      size: 24,
+              child: widget.imageAsset.startsWith('http')
+                  ? Image.network(
+                      widget.imageAsset,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        final themeData = context
+                            .watch<ThemeCubit>()
+                            .currentTheme;
+                        return Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: themeData.cardColor,
+                            size: 24,
+                          ),
+                        );
+                      },
+                    )
+                  : Image.asset(
+                      widget.imageAsset,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        final themeData = context
+                            .watch<ThemeCubit>()
+                            .currentTheme;
+                        return Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: themeData.cardColor,
+                            size: 24,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
           const SizedBox(height: 8),
