@@ -16,6 +16,7 @@ void main() async {
   // Initialize Supabase
   await SupabaseConfig.initialize();
 
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
