@@ -16,12 +16,8 @@ void main() async {
   // Initialize Supabase
   await SupabaseConfig.initialize();
 
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Load environment variables
   await dotenv.load(fileName: ".env");
-
-  // Initialize Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize connectivity service
   final connectivityService = ConnectivityService();

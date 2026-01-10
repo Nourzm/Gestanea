@@ -102,6 +102,104 @@ class MockAuthRepository implements AuthRepository {
     _currentUser = null;
   }
 
+  @override
+  Future<void> sendOtp(String email) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    // Simulate sending OTP - in mock, we just validate the email
+    if (email.isEmpty || !email.contains('@')) {
+      throw Exception('Invalid email');
+    }
+  }
+
+  @override
+  Future<UserEntity> verifyOtp({
+    required String email,
+    required String otpCode,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    // For testing, accept any 6-digit code
+    if (otpCode.length != 6) {
+      throw Exception('Invalid OTP code');
+    }
+
+    // Return existing user or create a basic one
+    if (_users.containsKey(email)) {
+      _currentUser = _users[email];
+      return _currentUser!;
+    }
+
+    final user = UserEntity(
+      id: 'user_${_users.length + 1}',
+      email: email,
+      name: '',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    _users[email] = user;
+    _currentUser = user;
+    return user;
+  }
+
+  @override
+  Future<UserEntity> completeOnboarding({
+    required String name,
+    String? phone,
+    String? country,
+    String? language,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (_currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    final updatedUser = UserEntity(
+      id: _currentUser!.id,
+      email: _currentUser!.email,
+      name: name,
+      phone: phone,
+      country: country,
+      language: language,
+      createdAt: _currentUser!.createdAt,
+      updatedAt: DateTime.now(),
+    );
+
+    _users[_currentUser!.email] = updatedUser;
+    _currentUser = updatedUser;
+
+    return updatedUser;
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String email}) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (!_users.containsKey(email)) {
+      throw Exception('User not found');
+    }
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (_currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    if (newPassword.length < 6) {
+      throw Exception('Password too short');
+    }
+
+    // In a real implementation, we'd verify currentPassword
+    // For mock purposes, we just accept it
+  }
+
   // Test helper methods
   void reset() {
     _users.clear();
