@@ -1,4 +1,7 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+// Supabase remote data source disabled - supabase_flutter not in pubspec.yaml
+// TODO: Enable when supabase_flutter is added
+
+// import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote data source for dashboard data from Supabase
 class DashboardRemoteDataSource {

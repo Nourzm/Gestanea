@@ -52,36 +52,17 @@ class LabResultModel {
       value: map['value'] != null ? (map['value'] as num).toDouble() : null,
       unit: map['unit'] as String?,
       normalRangeMin: map['normal_range_min'] != null
-          ? (map['normal_range_min'] as num).toDouble()
+          ?  (map['normal_range_min'] as num).toDouble()
           : null,
       normalRangeMax: map['normal_range_max'] != null
           ? (map['normal_range_max'] as num).toDouble()
           : null,
       interpretation: map['interpretation'] as String?,
-      labDate: _parseDate(map['lab_date']),
+      labDate: DateTime.parse(map['lab_date'] as String),
       reportImageUrl: map['report_image_url'] as String?,
-      extractedByOcr: map['extracted_by_ocr'] is int 
-          ? (map['extracted_by_ocr'] as int) == 1
-          : map['extracted_by_ocr'] as bool? ?? false,
-      createdAt: _parseDateTime(map['created_at']),
+      extractedByOcr: (map['extracted_by_ocr'] as int) == 1,
+      createdAt: DateTime. parse(map['created_at'] as String),
     );
-  }
-
-  static DateTime _parseDate(dynamic value) {
-    if (value is DateTime) return value;
-    if (value is String) {
-      // Handle both full ISO8601 and date-only formats
-      return DateTime.parse(value.split('T')[0]);
-    }
-    return DateTime.now();
-  }
-
-  static DateTime _parseDateTime(dynamic value) {
-    if (value is DateTime) return value;
-    if (value is String) {
-      return DateTime.parse(value);
-    }
-    return DateTime.now();
   }
 
   LabResultModel copyWith({

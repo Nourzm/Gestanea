@@ -13,9 +13,19 @@ class DashboardProvider extends ChangeNotifier {
   PostpartumDashboard? _postpartumDashboard;
   bool _isLoading = false;
   String? _error;
-  int _userId = 0;
+  String _userId = ''; // Use String instead of int for consistency with database
 
-  DashboardProvider({
+  // Singleton pattern
+  static final DashboardProvider _instance = DashboardProvider._internal();
+
+  factory DashboardProvider({
+    GetPregnancyDashboardUseCase? getPregnancyDashboardUseCase,
+    GetPostpartumDashboardUseCase? getPostpartumDashboardUseCase,
+  }) {
+    return _instance;
+  }
+
+  DashboardProvider._internal({
     GetPregnancyDashboardUseCase? getPregnancyDashboardUseCase,
     GetPostpartumDashboardUseCase? getPostpartumDashboardUseCase,
   }) : _getPregnancyDashboardUseCase =
@@ -23,22 +33,32 @@ class DashboardProvider extends ChangeNotifier {
        _getPostpartumDashboardUseCase =
            getPostpartumDashboardUseCase ?? GetPostpartumDashboardUseCase();
 
+  static DashboardProvider getInstance() {
+    return _instance;
+  }
+
   PregnancyDashboard? get pregnancyDashboard => _pregnancyDashboard;
   PostpartumDashboard? get postpartumDashboard => _postpartumDashboard;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
   void setUserId(int userId) {
+    _userId = userId.toString();
+  }
+
+  void setUserIdString(String userId) {
     _userId = userId;
   }
 
   Future<void> loadPregnancyDashboard() async {
+    if (_userId.isEmpty) return;
+    
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _pregnancyDashboard = await _getPregnancyDashboardUseCase.call(_userId);
+      _pregnancyDashboard = await _getPregnancyDashboardUseCase.callByStringId(_userId);
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -49,12 +69,14 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   Future<void> loadPostpartumDashboard() async {
+    if (_userId.isEmpty) return;
+    
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _postpartumDashboard = await _getPostpartumDashboardUseCase.call(_userId);
+      _postpartumDashboard = await _getPostpartumDashboardUseCase.callByStringId(_userId);
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -62,5 +84,18 @@ class DashboardProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Refresh methods for dashboard updates
+  Future<void> refreshPregnancyDashboard() async {
+    // Small delay to ensure database is updated
+    await Future.delayed(const Duration(milliseconds: 500));
+    await loadPregnancyDashboard();
+  }
+
+  Future<void> refreshPostpartumDashboard() async {
+    // Small delay to ensure database is updated
+    await Future.delayed(const Duration(milliseconds: 500));
+    await loadPostpartumDashboard();
   }
 }

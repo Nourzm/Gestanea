@@ -1,5 +1,4 @@
 // lib/features/dashboard/data/datasources/dashboard_local_data_source.dart
-import 'package:sqflite/sqflite.dart';
 import '../../../../core/database/db_helper.dart';
 
 abstract class DashboardLocalDataSource {
@@ -23,9 +22,6 @@ abstract class DashboardLocalDataSource {
   Future<List<Map<String, dynamic>>> getUpcomingRemindersByStringId(String userId, int days);
   Future<List<Map<String, dynamic>>> getUnresolvedHealthAlertsByStringId(String userId);
   Future<List<Map<String, dynamic>>> getMedicineRemindersByStringId(String userId);
-  
-  // Tips sync methods
-  Future<void> saveTips(List<Map<String, dynamic>> tips);
 }
 
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
@@ -81,15 +77,23 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     
     final result = await db.query(
       'appointments',
-      where: 'user_id = ? AND appointment_date >= ? AND appointment_date <= ? AND is_completed = 0',
+      where: 'user_id = ? AND appointment_date >= ? AND is_completed = 0',
       whereArgs: [
         userId.toString(),
         now.toIso8601String(),
-        futureDate.toIso8601String(),
       ],
       orderBy: 'appointment_date ASC',
     );
-    return result;
+    
+    // Filter in Dart to ensure we only get appointments within the specified days
+    return result.where((apt) {
+      try {
+        final aptDate = DateTime.parse(apt['appointment_date'].toString());
+        return aptDate.isBefore(futureDate);
+      } catch (e) {
+        return false;
+      }
+    }).toList();
   }
 
   @override
@@ -274,15 +278,24 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     
     final result = await db.query(
       'appointments',
-      where: 'user_id = ? AND appointment_date >= ? AND appointment_date <= ? AND is_completed = 0',
+      where: 'user_id = ? AND appointment_date >= ? AND is_completed = 0',
       whereArgs: [
         userId,
         now.toIso8601String(),
-        futureDate.toIso8601String(),
       ],
       orderBy: 'appointment_date ASC',
     );
-    return result;
+    
+    // Filter in Dart to ensure we only get appointments within the specified days
+    final filtered = result.where((apt) {
+      try {
+        final aptDate = DateTime.parse(apt['appointment_date'].toString());
+        return aptDate.isBefore(futureDate);
+      } catch (e) {
+        return false;
+      }
+    }).toList();
+    return filtered;
   }
 
   @override
@@ -333,34 +346,5 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     ''', [userId, today.toIso8601String()]);
     
     return result;
-  }
-
-  @override
-  Future<void> saveTips(List<Map<String, dynamic>> tips) async {
-    final db = await _dbHelper.database;
-    final batch = db.batch();
-    
-    for (final tip in tips) {
-      // Convert to match local schema
-      final tipMap = {
-        'id': tip['id'] ?? tip['id'],
-        'title': tip['title'] ?? '',
-        'content': tip['content'] ?? '',
-        'category': tip['category'],
-        'target_audience': tip['target_audience'],
-        'image_url': tip['image_url'],
-        'source': tip['source'],
-        'is_active': (tip['is_active'] ?? true) ? 1 : 0,
-        'created_at': tip['created_at'] ?? DateTime.now().toIso8601String(),
-      };
-      
-      batch.insert(
-        'tips',
-        tipMap,
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-    
-    await batch.commit(noResult: true);
   }
 }

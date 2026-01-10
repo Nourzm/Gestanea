@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
@@ -17,6 +16,8 @@ import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/dashboard/logic/cubit/upcoming_appointments_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -44,63 +45,43 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Profile section (tap -> Profile page)
+                    // 👤 Profile section (tap -> Profile page)
                     GestureDetector(
                       onTap: () async {
                         // Capture cubit before navigation
                         final dashboardCubit = context.read<DashboardCubit>();
                         final authState = context.read<AuthBloc>().state;
-
+                        
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ProfileSettingsScreen(),
                           ),
                         );
-
+                        
                         // Refresh dashboard when returning from profile page
                         // This handles the case where user triggered "I Gave Birth"
                         if (authState is AuthAuthenticated) {
                           final userId = authState.user.id;
                           if (userId.isNotEmpty) {
+                            // Refresh dashboard to reflect postpartum mode
                             dashboardCubit.loadDashboardByStringId(userId);
+                            // Also refresh BabyCubit to load newly created baby profile and gender
+                            try {
+                              final babyCubit = context.read<BabyCubit>();
+                              babyCubit.loadBabyProfile();
+                            } catch (_) {
+                              // BabyCubit may not be in this subtree; ignore if unavailable
+                            }
                           }
                         }
                       },
                       child: Row(
                         children: [
-                          BlocBuilder<AuthBloc, AuthState>(
-                            builder: (context, state) {
-                              Widget avatar;
-
-                              if (state is AuthAuthenticated) {
-                                avatar = ProfileAvatar(
-                                  imageUrl: state.user.profilePictureUrl,
-                                  userId: state.user.id,
-                                  radius: 24,
-                                );
-                              } else {
-                                avatar = CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: Colors.grey.shade300,
-                                  child: Image.asset(
-                                    "assets/images/profile.png",
-                                  ),
-                                );
-                              }
-
-                              return Container(
-                                // border thickness
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: AppColors.main500, // border color
-                                    width: 3,
-                                  ),
-                                ),
-                                child: avatar,
-                              );
-                            },
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Colors.grey.shade300,
+                            child: Image.asset("assets/images/profile.png"),
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
@@ -125,7 +106,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    //Notification icon (tap -> Notifications page)
+                    // 🔔 Notification icon (tap -> Notifications page)
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -136,10 +117,7 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       child: NotificationIcon(
-                        icon: Icon(
-                          Icons.notifications,
-                          color: AppColors.main500,
-                        ),
+                        icon: Icon(Icons.notifications, color: AppColors.main500),
                       ),
                     ),
                   ],
@@ -218,9 +196,7 @@ class HomeScreen extends StatelessWidget {
                                 'find the best doctor',
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
-                                  color: AppColors.main500.withValues(
-                                    alpha: 0.7,
-                                  ),
+                                  color: AppColors.main500.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -249,8 +225,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () =>
-                          onNavigate(3), // Navigate to Plan page (index 3)
+                      onTap: () => onNavigate(3), // Navigate to Plan page (index 3)
                       child: Text(
                         'see all',
                         style: TextStyle(
@@ -266,75 +241,10 @@ class HomeScreen extends StatelessWidget {
 
               SizedBox(height: screenHeight * 0.015),
 
-              // Upcoming items from database
+              // Upcoming appointments (aligned with Postpartum implementation)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: BlocBuilder<DashboardCubit, DashboardState>(
-                  builder: (context, state) {
-                    List<AppointmentReminder> appointments = [];
-                    List<MedicineReminder> medicines = [];
-
-                    if (state is PregnancyDashboardLoaded) {
-                      appointments = state.dashboard.upcomingAppointments;
-                      medicines = state.dashboard.medicineReminders;
-                    }
-
-                    // Combine and limit to 3 items
-                    final List<Widget> upcomingItems = [];
-
-                    // Add appointments
-                    for (
-                      var i = 0;
-                      i < appointments.length && upcomingItems.length < 3;
-                      i++
-                    ) {
-                      upcomingItems.add(
-                        _buildUpcomingItem(
-                          context,
-                          screenWidth,
-                          screenHeight,
-                          title: appointments[i].title,
-                          subtitle: _formatAppointmentTime(
-                            appointments[i].dateTime,
-                          ),
-                          icon: "assets/icons/heartplus.svg",
-                          isAppointment: true,
-                        ),
-                      );
-                    }
-
-                    // Add medicines
-                    for (
-                      var i = 0;
-                      i < medicines.length && upcomingItems.length < 3;
-                      i++
-                    ) {
-                      upcomingItems.add(
-                        _buildUpcomingItem(
-                          context,
-                          screenWidth,
-                          screenHeight,
-                          title: medicines[i].medicineName,
-                          subtitle: _formatMedicineTime(
-                            medicines[i].nextDoseTime,
-                          ),
-                          icon: "assets/icons/pills.svg",
-                          isAppointment: false,
-                        ),
-                      );
-                    }
-
-                    // Show placeholder if no upcoming events
-                    if (upcomingItems.isEmpty) {
-                      return _buildNoUpcomingItems(screenWidth, screenHeight);
-                    }
-
-                    return Container(
-                      width: double.infinity,
-                      child: Column(children: upcomingItems),
-                    );
-                  },
-                ),
+                child: _buildUpcomingSection(context),
               ),
 
               SizedBox(height: screenHeight * 0.1),
@@ -344,17 +254,193 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+  
+  String _getUserId(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '';
+  }
+  
+  Widget _buildUpcomingSection(BuildContext context) {
+    final userId = _getUserId(context);
+    final cubit = UpcomingAppointmentsCubit.getInstance();
+    
+    if (cubit.state is UpcomingAppointmentsInitial) {
+      cubit.loadUpcomingAppointments(userId);
+    }
+    
+    return BlocProvider<UpcomingAppointmentsCubit>.value(
+      value: cubit,
+      child: BlocBuilder<UpcomingAppointmentsCubit, UpcomingAppointmentsState>(
+        builder: (context, state) {
+          if (state is UpcomingAppointmentsLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is UpcomingAppointmentsLoaded) {
+            return Column(
+              children: state.appointments
+                  .map((appointment) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildUpcomingCard(
+                          icon: _getAppointmentIcon(appointment.appointmentType ?? ''),
+                          iconBgColor: AppColors.main500,
+                          title: appointment.title,
+                          subtitle: _formatAppointmentDateTime(appointment),
+                        ),
+                      ))
+                  .toList(),
+            );
+          } else if (state is UpcomingAppointmentsError) {
+            return Center(
+              child: Text(
+                'Error loading appointments',
+                style: TextStyle(color: Colors.red.shade400),
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                'No upcoming appointments',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 14,
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
 
+  IconData _getAppointmentIcon(String appointmentType) {
+    switch (appointmentType.toLowerCase()) {
+      case 'vaccination':
+      case 'vaccine':
+        return Icons.medical_services;
+      case 'checkup':
+      case 'check-up':
+      case 'medical':
+        return Icons.favorite;
+      case 'appointment':
+        return Icons.calendar_today;
+      default:
+        return Icons.event;
+    }
+  }
+
+  String _formatAppointmentDateTime(dynamic appointment) {
+    final appointmentDate = appointment.appointmentDate;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final appointmentDay = DateTime(
+      appointmentDate.year,
+      appointmentDate.month,
+      appointmentDate.day,
+    );
+
+    String dayText = '';
+    if (appointmentDay == today) {
+      dayText = 'Today';
+    } else if (appointmentDay == today.add(const Duration(days: 1))) {
+      dayText = 'Tomorrow';
+    } else {
+      dayText = '${appointmentDay.day} ${_getMonthName(appointmentDay.month)}';
+    }
+
+    final time = '${appointmentDate.hour.toString().padLeft(2, '0')}:${appointmentDate.minute.toString().padLeft(2, '0')}';
+    return '$dayText at $time';
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
+  }
+
+  Widget _buildUpcomingCard({
+    required IconData icon,
+    required Color iconBgColor,
+    required String title,
+    required String subtitle,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.homeCards,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.main500, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF000000).withValues(alpha: 0.08),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: iconBgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.calendar_today_outlined, color: AppColors.main500, size: 20),
+        ],
+      ),
+    );
+  }
+  
   String _formatAppointmentTime(DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final appointmentDate = DateTime(
-      dateTime.year,
-      dateTime.month,
-      dateTime.day,
-    );
+    final appointmentDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
     final tomorrow = today.add(const Duration(days: 1));
-
+    
     String dayText;
     if (appointmentDate == today) {
       dayText = 'Today';
@@ -363,15 +449,15 @@ class HomeScreen extends StatelessWidget {
     } else {
       dayText = DateFormat('MMM d').format(dateTime);
     }
-
+    
     final timeText = DateFormat('h:mm a').format(dateTime);
     return '$dayText at $timeText';
   }
-
+  
   String _formatMedicineTime(DateTime dateTime) {
     final now = DateTime.now();
     final diff = dateTime.difference(now);
-
+    
     if (diff.isNegative) {
       return 'Overdue';
     } else if (diff.inMinutes < 60) {
@@ -382,7 +468,7 @@ class HomeScreen extends StatelessWidget {
       return DateFormat('MMM d, h:mm a').format(dateTime);
     }
   }
-
+  
   Widget _buildUpcomingItem(
     BuildContext context,
     double screenWidth,
@@ -400,7 +486,10 @@ class HomeScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.homeCards,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.main500, width: 1),
+          border: Border.all(
+            color: AppColors.main500,
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
               color: const Color(0xFF000000).withValues(alpha: 0.25),
@@ -419,10 +508,7 @@ class HomeScreen extends StatelessWidget {
               ),
               child: SvgPicture.asset(
                 icon,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 width: isAppointment ? 30 : 28,
               ),
             ),
@@ -454,10 +540,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SvgPicture.asset(
               "assets/icons/Calendar_1.svg",
-              colorFilter: const ColorFilter.mode(
-                AppColors.main500,
-                BlendMode.srcIn,
-              ),
+              colorFilter: const ColorFilter.mode(AppColors.main500, BlendMode.srcIn),
               width: 28,
             ),
           ],
@@ -465,7 +548,7 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
+  
   Widget _buildNoUpcomingItems(double screenWidth, double screenHeight) {
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.06),
