@@ -6,6 +6,7 @@ import 'add_medicine/upload_picture_page.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
+import 'package:gestanea/core/services/alarm_scheduler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final _medicineRepository = MedicineRepository.getInstance();
+  final _alarmScheduler = AlarmScheduler();
 
   String? selectedMedication;
   String? selectedForm;
@@ -76,17 +78,42 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
         isActive: true,
         createdAt: DateTime.now(),
       );
+      print('💊 Saving medicine: ${medicine.medicineName}');
+      print('   Times: ${medicine.scheduledTimes}');
+      print('   Start date: ${medicine.startDate}');
 
+      // Save medicine to database
       final result = await _medicineRepository.insertMedicine(medicine);
 
       if (result.state) {
+        print('✅ Medicine saved to database');
+
+        // Schedule alarms for this medicine
+        if (medicine.scheduledTimes != null &&
+            medicine.scheduledTimes!.isNotEmpty) {
+          print('⏰ Scheduling alarms for medicine...');
+
+          await _alarmScheduler.scheduleMedicineAlarms(
+            medicineId: medicine.id,
+            medicineName: medicine.medicineName,
+            dosage: medicine.dosage,
+            scheduledTimes: medicine.scheduledTimes!,
+            startDate: medicine.startDate,
+            endDate: medicine.endDate,
+          );
+
+          print('✅ Alarms scheduled successfully');
+        }
+
         if (mounted) {
           Navigator.pop(context, true);
         }
       } else {
         _showError(result.message);
+        Navigator.pop(context, true);
       }
     } catch (e) {
+      print('❌ Error saving medicine: $e');
       _showError('Failed to save medicine: $e');
     }
   }

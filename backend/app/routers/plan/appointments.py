@@ -3,6 +3,7 @@ from typing import Optional, List
 from app.supabase_client import supabase
 from app.schemas.appointment import AppointmentCreate, AppointmentUpdate, AppointmentResponse
 from datetime import datetime
+import uuid
 
 router = APIRouter()
 
@@ -60,6 +61,9 @@ async def create_appointment(appointment: AppointmentCreate):
             raise HTTPException(status_code=400, detail="Appointment title length should be > 2")
         
         appointment_data = appointment.model_dump()
+        
+        # Generate UUID for the appointment
+        appointment_data["id"] = str(uuid.uuid4())
         
         # Add created_at timestamp
         appointment_data["created_at"] = datetime.utcnow().isoformat()

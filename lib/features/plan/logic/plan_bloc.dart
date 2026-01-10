@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
+import 'package:gestanea/core/services/alarm_scheduler.dart';
 import '../data/repositories/medicine_repository.dart';
 import '../data/repositories/appointment_repository.dart';
+import 'dart:developer' as developer;
 
 // Events
 abstract class PlanEvent extends Equatable {
@@ -150,10 +152,12 @@ class PlanError extends PlanState {
 class PlanBloc extends Bloc<PlanEvent, PlanState> {
   final MedicineRepository medicineRepository;
   final AppointmentRepository appointmentRepository;
+  final AlarmScheduler alarmScheduler;
 
   PlanBloc({
     required this.medicineRepository,
     required this.appointmentRepository,
+    required this.alarmScheduler,
   }) : super(PlanInitial()) {
     on<LoadPlanData>(_onLoadPlanData);
     on<RefreshPlanData>(_onRefreshPlanData);
@@ -227,9 +231,44 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
     AddMedicineEvent event,
     Emitter<PlanState> emit,
   ) async {
+    developer.log(
+      '💊 Adding medicine: ${event.medicine.medicineName}',
+      name: 'PlanBloc',
+    );
+    print('💊 Adding medicine: ${event.medicine.medicineName}');
+
     try {
       final result = await medicineRepository.insertMedicine(event.medicine);
       if (result.state) {
+        developer.log('✅ Medicine saved to database', name: 'PlanBloc');
+        print('✅ Medicine saved to database');
+
+        // Schedule alarms for this medicine
+        if (event.medicine.scheduledTimes != null &&
+            event.medicine.scheduledTimes!.isNotEmpty) {
+          developer.log(
+            '⏰ Scheduling alarms for medicine...',
+            name: 'PlanBloc',
+          );
+          print('⏰ Scheduling alarms for medicine...');
+          print('   Times: ${event.medicine.scheduledTimes}');
+
+          await alarmScheduler.scheduleMedicineAlarms(
+            medicineId: event.medicine.id,
+            medicineName: event.medicine.medicineName,
+            dosage: event.medicine.dosage,
+            scheduledTimes: event.medicine.scheduledTimes!,
+            startDate: event.medicine.startDate,
+            endDate: event.medicine.endDate,
+          );
+
+          developer.log('✅ Alarms scheduled for medicine', name: 'PlanBloc');
+          print('✅ Alarms scheduled for medicine');
+        } else {
+          developer.log('⚠️ No scheduled times for medicine', name: 'PlanBloc');
+          print('⚠️ No scheduled times for medicine');
+        }
+
         // Reload data after adding
         if (state is PlanLoaded) {
           final currentState = state as PlanLoaded;
@@ -240,9 +279,21 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
           emit(currentState.copyWith(medicines: medicines));
         }
       } else {
+        developer.log(
+          '❌ Failed to save medicine: ${result.message}',
+          name: 'PlanBloc',
+        );
+        print('❌ Failed to save medicine: ${result.message}');
         emit(PlanError(message: result.message));
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Error adding medicine: $e',
+        name: 'PlanBloc',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      print('❌ Error adding medicine: $e');
       emit(PlanError(message: 'Failed to add medicine: ${e.toString()}'));
     }
   }
@@ -287,11 +338,39 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
     AddAppointmentEvent event,
     Emitter<PlanState> emit,
   ) async {
+    developer.log(
+      '📅 Adding appointment: ${event.appointment.title}',
+      name: 'PlanBloc',
+    );
+    print('📅 Adding appointment: ${event.appointment.title}');
+
     try {
       final result = await appointmentRepository.insertAppointment(
         event.appointment,
       );
       if (result.state) {
+        developer.log('✅ Appointment saved to database', name: 'PlanBloc');
+        print('✅ Appointment saved to database');
+
+        // Schedule alarm for this appointment (30 minutes before)
+        developer.log(
+          '⏰ Scheduling alarm for appointment...',
+          name: 'PlanBloc',
+        );
+        print('⏰ Scheduling alarm for appointment...');
+        print('   Date: ${event.appointment.appointmentDate}');
+
+        await alarmScheduler.scheduleAppointmentAlarm(
+          appointmentId: event.appointment.id,
+          title: event.appointment.title,
+          appointmentDate: event.appointment.appointmentDate,
+          location: event.appointment.location,
+          reminderMinutesBefore: 30,
+        );
+
+        developer.log('✅ Alarm scheduled for appointment', name: 'PlanBloc');
+        print('✅ Alarm scheduled for appointment');
+
         // Reload data after adding
         if (state is PlanLoaded) {
           final currentState = state as PlanLoaded;
@@ -300,9 +379,21 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
           emit(currentState.copyWith(appointments: appointments));
         }
       } else {
+        developer.log(
+          '❌ Failed to save appointment: ${result.message}',
+          name: 'PlanBloc',
+        );
+        print('❌ Failed to save appointment: ${result.message}');
         emit(PlanError(message: result.message));
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Error adding appointment: $e',
+        name: 'PlanBloc',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      print('❌ Error adding appointment: $e');
       emit(PlanError(message: 'Failed to add appointment: ${e.toString()}'));
     }
   }

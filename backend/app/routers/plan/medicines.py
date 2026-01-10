@@ -4,6 +4,7 @@ from app.supabase_client import supabase
 from app.schemas.medicine import MedicineCreate, MedicineUpdate, MedicineResponse, MedicineLogCreate, MedicineLogResponse
 from datetime import datetime
 import json
+import uuid
 
 router = APIRouter()
 
@@ -71,6 +72,9 @@ async def create_medicine(medicine: MedicineCreate):
         medicine_data = medicine.model_dump()
         if medicine_data.get("scheduled_times"):
             medicine_data["scheduled_times"] = json.dumps(medicine_data["scheduled_times"])
+        
+        # Generate UUID for the medicine
+        medicine_data["id"] = str(uuid.uuid4())
         
         # Add created_at timestamp
         medicine_data["created_at"] = datetime.utcnow().isoformat()
