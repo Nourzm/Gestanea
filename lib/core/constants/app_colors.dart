@@ -67,9 +67,4 @@ class AppColors {
     end: Alignment.bottomCenter,
     colors: [Colors.white, Color(0xFFB599CE)],
   );
-  static const Gradient onboarding = LinearGradient(
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-    colors: [Color(0xff9D42E8), Color(0xffB077E5)],
-  );
 }

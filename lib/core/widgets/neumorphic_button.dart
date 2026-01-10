@@ -1,127 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class NeumorphicButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  final double screenWidth;
+  final double screenHeight;
+  final VoidCallback onPressed;
+
   final String text;
-
-  final dynamic prefixIcon; // IconData or SVG path
-  final dynamic suffixIcon; // IconData or SVG path
-
-  final Color? color;
-  final double? minHeight;
-  final double? maxWidth;
-  final bool isLoading;
+  final Icon icon;
+  final Color color;
 
   const NeumorphicButton({
-    super.key,
+    Key? key,
+    required this.screenWidth,
+    required this.screenHeight,
     required this.onPressed,
     required this.text,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.color,
-    this.minHeight,
-    this.maxWidth,
-    this.isLoading = false,
-  });
-
-  Widget? _buildIcon(dynamic icon, Color color) {
-    if (icon == null) return null;
-
-    if (icon is IconData) {
-      return Row(
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          SizedBox(width: 10),
-        ],
-      );
-    } else if (icon is String) {
-      return SvgPicture.asset(
-        icon,
-        width: 18,
-        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      );
-    }
-    return null;
-  }
+    required this.icon,
+    this.color = AppColors.main500,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final buttonHeight = minHeight ?? size.height * 0.08;
-
-    final verticalPadding = size.height * 0.012;
-    final horizontalPadding = size.width * 0.04;
-
-    final prefix = _buildIcon(prefixIcon, Colors.white);
-    final suffix = _buildIcon(suffixIcon, Colors.white);
-
     return GestureDetector(
-      onTap: (isLoading || onPressed == null) ? null : onPressed,
+      onTap: onPressed,
       child: Container(
         width: double.infinity,
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? double.infinity,
-          minHeight: buttonHeight,
-        ),
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          gradient: (isLoading || onPressed == null)
-              ? LinearGradient(colors: [Colors.grey[400]!, Colors.grey[400]!])
-              : (color == null
-                    ? AppColors.onboarding
-                    : LinearGradient(colors: [?color, ?color])),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
-              color: Color.fromARGB(100, 0, 0, 0),
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(4, 4),
+            ),
+            BoxShadow(
+              color: Color(0x7FFFFFFF),
               blurRadius: 10,
-              offset: Offset(5, 5),
+              offset: Offset(-6, -6),
             ),
           ],
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: verticalPadding,
-            horizontal: horizontalPadding,
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Color(0xFFDFE2E8), width: 1),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(4, 4),
+              ),
+            ],
           ),
-          child: isLoading
-              ? const Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(width: 8),
+                Text(
+                  text,
+                  style: AppTextStyles.headline2.copyWith(
+                    color: AppColors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(width: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        prefix ?? const SizedBox(width: 20, height: 20),
-
-                        Text(
-                          text,
-                          style: AppTextStyles.headline2.copyWith(
-                            color: AppColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-
-                    suffix ?? const SizedBox(width: 20, height: 20),
-                  ],
                 ),
+              ],
+            ),
+          ),
         ),
       ),
     );

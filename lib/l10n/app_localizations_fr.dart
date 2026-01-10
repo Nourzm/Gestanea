@@ -9,36 +9,6 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get locationPermissionRequired =>
-      'Autorisation de localisation requise';
-
-  @override
-  String get locationPermissionMessage =>
-      'Nous avons besoin d\'accéder à votre localisation pour afficher les médecins à proximité.';
-
-  @override
-  String get gettingLocation => 'Obtention de votre position...';
-
-  @override
-  String get locationPermissionDenied => 'Autorisation de localisation refusée';
-
-  @override
-  String get locationUpdated => 'Localisation mise à jour';
-
-  @override
-  String get retry => 'Réessayer';
-
-  @override
-  String get showingDoctorsNearYou =>
-      'Affichage des médecins près de chez vous';
-
-  @override
-  String get selectLocation => 'Sélectionner l\'emplacement';
-
-  @override
-  String get searchWilaya => 'Rechercher une wilaya...';
-
-  @override
   String get security => 'Sécurité';
 
   @override
@@ -69,7 +39,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get save_changes => 'Enregistrer les modifications';
 
   @override
-  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ? ';
+  String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ?';
 
   @override
   String get cancel => 'Annuler';
@@ -145,261 +115,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appointments => 'Rendez-vous';
-
-  @override
-  String get appointmentName => 'Nom du rendez-vous';
-
-  @override
-  String get medicationName => 'Nom du médicament';
-
-  @override
-  String get nextLabel => 'Suivant';
-
-  @override
-  String get doneLabel => 'Terminé';
-
-  @override
-  String get uploadPicture => 'Télécharger une photo';
-
-  @override
-  String get camera => 'Caméra';
-
-  @override
-  String get gallery => 'Galerie';
-
-  @override
-  String get removeImage => 'Supprimer l\'image';
-
-  @override
-  String get tapToAddPicture => 'Appuyez pour ajouter une photo';
-
-  @override
-  String get optionalImageNote =>
-      'L\'ajout d\'une photo est facultatif. Vous pouvez ignorer cette étape.';
-
-  @override
-  String get selectFormDose => 'Choisir la forme et la dose';
-
-  @override
-  String get frequencySchedule => 'Fréquence et programme';
-
-  @override
-  String get frequencyType => 'Type de fréquence';
-
-  @override
-  String get frequencyValue => 'Valeur de la fréquence';
-
-  @override
-  String get scheduledTimesLabel => 'Heures planifiées';
-
-  @override
-  String get asNeeded => 'Selon les besoins';
-
-  @override
-  String get dosage => 'Dosage';
-
-  @override
-  String get dosageExample => 'ex.: 5 mg ou 10 ml';
-
-  @override
-  String get formPill => 'Comprimé';
-
-  @override
-  String get formInjection => 'Injection';
-
-  @override
-  String get formSpray => 'Spray';
-
-  @override
-  String get formDrop => 'Goutte';
-
-  @override
-  String get formSyrup => 'Sirop';
-
-  @override
-  String get formOthers => 'Autres';
-
-  @override
-  String medicinesTaken(int taken, int total) {
-    return '$taken sur $total pris';
-  }
-
-  @override
-  String get daily => 'Quotidien';
-
-  @override
-  String get weekly => 'Hebdomadaire';
-
-  @override
-  String get monthly => 'Mensuel';
-
-  @override
-  String get timesPerDayExample => 'ex.: 3 (fois par jour)';
-
-  @override
-  String get timesPerWeekExample => 'ex.: 2 (fois par semaine)';
-
-  @override
-  String get timesPerMonthExample => 'ex.: 1 (fois par mois)';
-
-  @override
-  String get appointmentDateTime => 'Date et heure du rendez-vous';
-
-  @override
-  String get appointmentLocation => 'Lieu du rendez-vous';
-
-  @override
-  String get selectDate => 'Sélectionner la date';
-
-  @override
-  String get selectTime => 'Sélectionner l\'heure';
-
-  @override
-  String get startDate => 'Date de début';
-
-  @override
-  String get endDate => 'Date de fin (Optionnel)';
-
-  @override
-  String get selectStartDate => 'Sélectionner la date de début';
-
-  @override
-  String get selectEndDate => 'Sélectionner la date de fin';
-
-  @override
-  String get addTime => 'Ajouter l\'heure';
-
-  @override
-  String get noScheduledTimesAdded => 'Aucune heure planifiée ajoutée';
-
-  @override
-  String get today => 'Aujourd\'hui';
-
-  @override
-  String get tomorrow => 'Demain';
-
-  @override
-  String get noAppointmentsFound => 'Aucun rendez-vous trouvé';
-
-  @override
-  String get appointment => 'Rendez-vous';
-
-  @override
-  String get pleaseAddScheduledTime =>
-      'Veuillez ajouter au moins une heure planifiée';
-
-  @override
-  String reviewsCount(Object count) {
-    return '$count avis';
-  }
-
-  @override
-  String get qty => 'Qté';
-
-  @override
-  String get noMedicines => 'Aucun médicament';
-
-  @override
-  String get schedule => 'Programme';
-
-  @override
-  String get availability => 'Disponibilité';
-
-  @override
-  String get specialty => 'Spécialité';
-
-  @override
-  String get bookAppointment => 'Réserver un rendez-vous';
-
-  @override
-  String get price => 'Prix';
-
-  @override
-  String get quantity => 'Quantité';
-
-  @override
-  String get checkout => 'Paiement';
-
-  @override
-  String get applyCoupon => 'Appliquer un coupon';
-
-  @override
-  String get popular => 'Populaire';
-
-  @override
-  String get offers => 'Offres';
-
-  @override
-  String get newLabel => 'Nouveau';
-
-  @override
-  String get contact => 'Contact';
-
-  @override
-  String get message => 'Message';
-
-  @override
-  String get location => 'Localisation';
-
-  @override
-  String get noResults => 'Aucun résultat';
-
-  @override
-  String get search => 'Recherche';
-
-  @override
-  String get sort => 'Trier';
-
-  @override
-  String get marketplace => 'Boutique';
-
-  @override
-  String get doctorsFeatureTitle => 'Médecins';
-
-  @override
-  String get planFeatureTitle => 'Plan';
-
-  @override
-  String get addMedicine => 'Ajouter un médicament';
-
-  @override
-  String get addAppointment => 'Ajouter un rendez-vous';
-
-  @override
-  String get error => 'Erreur';
-
-  @override
-  String get success => 'Succès';
-
-  @override
-  String get confirm => 'Confirmer';
-
-  @override
-  String get remove => 'Supprimer';
-
-  @override
-  String get apply => 'Appliquer';
-
-  @override
-  String get reviewsLabel => 'Avis';
-
-  @override
-  String get rating => 'Note';
-
-  @override
-  String get recommended => 'Recommandé';
-
-  @override
-  String get noReviews => 'Aucun avis';
-
-  @override
-  String get delivery => 'Livraison';
-
-  @override
-  String get shipping => 'Expédition';
-
-  @override
-  String get taxes => 'Taxes';
 
   @override
   String get sunday => 'Dimanche';
@@ -495,7 +210,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
-  String get welcome_back => 'Bon retour ! ';
+  String get welcome_back => 'Bon retour !';
 
   @override
   String get or => '— OU —';
@@ -536,28 +251,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rememberMe => 'Se souvenir de moi';
 
   @override
-  String get sendOtp => 'Envoyer le code';
-
-  @override
-  String get verifyOtp => 'Vérifier le code';
-
-  @override
-  String get enterOtpCode => 'Entrez le code de vérification';
-
-  @override
-  String get otpSent => 'Code de vérification envoyé à votre email';
-
-  @override
-  String get otpCodePlaceholder => 'Code à 6 chiffres';
-
-  @override
-  String get resendOtp => 'Renvoyer le code';
-
-  @override
-  String get noInternetConnection =>
-      'Pas de connexion Internet. Veuillez vérifier votre réseau et réessayer.';
-
-  @override
   String get version => 'Version';
 
   @override
@@ -595,10 +288,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backSupportBelt => 'Ceinture de soutien dorsal';
 
   @override
-  String get searchHint => 'Trouvez ce dont vous avez besoin.. .';
+  String get searchHint => 'Trouvez ce dont vous avez besoin...';
 
   @override
-  String get dontMissOut => 'Ne ratez pas ! ';
+  String get dontMissOut => 'Ne ratez pas !';
 
   @override
   String get discountUpTo => 'Remise jusqu\'à 50%';
@@ -653,77 +346,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onTrack => 'Sur la bonne voie';
 
   @override
-  String get moodTab => 'Humeur';
-
-  @override
-  String get recentEntries => 'Entrées récentes';
-
-  @override
-  String get howAreYouFeelingToday => 'Comment vous sentez-vous aujourd\'hui ?';
-
-  @override
-  String get feltEnergeticToday => 'Je me suis senti énergique aujourd\'hui';
-
-  @override
-  String hoursAgo(Object hours) {
-    return 'il y a $hours heures';
-  }
-
-  @override
-  String get calm => 'Calme';
-
-  @override
-  String get relaxingEvening => 'Soirée relaxante';
-
-  @override
-  String get yesterday => 'Hier';
-
-  @override
-  String get tired => 'Fatigué(e)';
-
-  @override
-  String get needMoreSleep => 'Besoin de plus de sommeil';
-
-  @override
-  String daysAgo(Object days) {
-    return 'il y a $days jours';
-  }
-
-  @override
-  String get trackingMoodHelps =>
-      'Suivre votre humeur vous aide à comprendre votre bien-être.';
-
-  @override
-  String get great => 'Super';
-
-  @override
-  String get good => 'Bien';
-
-  @override
-  String get okay => 'Moyen';
-
-  @override
-  String get moodTrendsLast7Days => 'Tendances de l\'humeur (7 derniers jours)';
-
-  @override
-  String get mostlyPositiveMoods => 'Humeurs majoritairement positives';
-
-  @override
-  String get selfCareSuggestions => 'Suggestions d\'auto-soin';
-
-  @override
-  String get takeShortWalk => 'Faire une courte promenade';
-
-  @override
-  String get practiceDeepBreathing => 'Pratiquer la respiration profonde';
-
-  @override
-  String get listenToCalmingMusic => 'Écouter de la musique apaisante';
-
-  @override
-  String get connectWithLovedOnes => 'Se connecter avec ses proches';
-
-  @override
   String get doctors => 'Médecins';
 
   @override
@@ -731,6 +353,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get useCurrentLocation => 'Utiliser ma position actuelle';
+
+  @override
+  String get algiers => 'Alger';
+
+  @override
+  String get oran => 'Oran';
+
+  @override
+  String get constantine => 'Constantine';
+
+  @override
+  String get annaba => 'Annaba';
+
+  @override
+  String get blida => 'Blida';
 
   @override
   String get doctorsFoundSingle => '1 Médecin Trouvé';
@@ -769,6 +406,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gender => 'Genre';
 
   @override
+  String get all => 'Tous';
+
+  @override
   String get male => 'Homme';
 
   @override
@@ -795,6 +435,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noDoctorsFound => 'Aucun médecin trouvé';
+
+  @override
+  String get noResults => 'Aucun résultat';
 
   @override
   String noMatchingDoctors(String query) {
@@ -846,413 +489,4 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get callNow => 'Appeler maintenant';
-
-  @override
-  String get all => 'Tous';
-
-  @override
-  String get taken => 'Pris';
-
-  @override
-  String get missed => 'Manqué';
-
-  @override
-  String get take => 'Prendre';
-
-  @override
-  String get noMedicinesFound => 'Aucun médicament trouvé';
-
-  @override
-  String get pleaseLoginToViewPlan =>
-      'Veuillez vous connecter pour voir votre plan';
-
-  @override
-  String get selectColor => 'Sélectionnez la couleur';
-
-  @override
-  String get selectSize => 'Sélectionnez la taille';
-
-  @override
-  String get addToCart => 'Ajouter au panier';
-
-  @override
-  String get buyNow => 'Acheter maintenant';
-
-  @override
-  String get description => 'Description';
-
-  @override
-  String get noDescriptionAvailable => 'Aucune description disponible';
-
-  @override
-  String get specifications => 'Spécifications';
-
-  @override
-  String get customerReviews => 'Avis des clientes';
-
-  @override
-  String get seeAll => 'voir tout';
-
-  @override
-  String get completeYourOrder => 'Complétez votre commande';
-
-  @override
-  String get orderSummary => 'Résumé de la commande';
-
-  @override
-  String get product => 'Produit';
-
-  @override
-  String get size => 'Taille';
-
-  @override
-  String get subtotal => 'Sous-total';
-
-  @override
-  String get deliveryFee => 'Frais de livraison';
-
-  @override
-  String get total => 'Total';
-
-  @override
-  String get deliveryInformation => 'Informations de livraison';
-
-  @override
-  String get fullName => 'Nom complet';
-
-  @override
-  String get enterYourFullName => 'Entrez votre nom complet';
-
-  @override
-  String get enterYourPhoneNumber => 'Entrez votre numéro de téléphone';
-
-  @override
-  String get deliveryAddress => 'Adresse de livraison';
-
-  @override
-  String get streetAddressApartment => 'Adresse, appartement, etc.';
-
-  @override
-  String get city => 'Ville';
-
-  @override
-  String get enterYourCity => 'Entrez votre ville';
-
-  @override
-  String get specialInstructions => 'Instructions spéciales (Facultatif)';
-
-  @override
-  String get addDeliveryNotes =>
-      'Ajoutez des notes de livraison, demandes spéciales...';
-
-  @override
-  String get paymentMethod => 'Méthode de paiement';
-
-  @override
-  String get cashOnDelivery => 'Paiement à la livraison';
-
-  @override
-  String get creditDebitCard => 'Carte de crédit / débit';
-
-  @override
-  String get digitalWallet => 'Portefeuille numérique';
-
-  @override
-  String get placeOrder => 'Passer la commande';
-
-  @override
-  String orderPlacedSuccessfully(String orderId) {
-    return 'Commande $orderId passée avec succès !';
-  }
-
-  @override
-  String get yourInformationIsSecure =>
-      'Vos informations sont sécurisées et cryptées';
-
-  @override
-  String get openNow => 'Ouvert maintenant';
-
-  @override
-  String get nausea => 'Nausea';
-
-  @override
-  String get headache => 'Headache';
-
-  @override
-  String get backPain => 'Back pain';
-
-  @override
-  String get swelling => 'Swelling';
-
-  @override
-  String get fatigue => 'Fatigue';
-
-  @override
-  String get dizziness => 'Dizziness';
-
-  @override
-  String get heartburn => 'Heartburn';
-
-  @override
-  String get legCramps => 'Leg cramps';
-
-  @override
-  String get other => 'Other';
-
-  @override
-  String get pleaseSelectSymptom => 'Please select a symptom';
-
-  @override
-  String get pleaseSelectSeverity => 'Please select severity';
-
-  @override
-  String get symptomLoggedSuccessfully => 'Symptom logged successfully!';
-
-  @override
-  String get addSymptom => 'Add Symptom';
-
-  @override
-  String get symptomType => 'Symptom type';
-
-  @override
-  String get selectSymptom => 'Select symptom';
-
-  @override
-  String get specifySymptom => 'Specify symptom';
-
-  @override
-  String get pleaseSpecifySymptom => 'Please specify the symptom';
-
-  @override
-  String get severity => 'Severity';
-
-  @override
-  String get mild => 'Mild';
-
-  @override
-  String get moderate => 'Moderate';
-
-  @override
-  String get severe => 'Severe';
-
-  @override
-  String get duration => 'Duration';
-
-  @override
-  String get pleaseEnterDuration => 'Please enter duration';
-
-  @override
-  String get notes => 'Notes';
-
-  @override
-  String get veryHappy => 'Très heureux(se)';
-
-  @override
-  String get happy => 'Heureux(se)';
-
-  @override
-  String get neutral => 'Neutre';
-
-  @override
-  String get sad => 'Triste';
-
-  @override
-  String get verySad => 'Très triste';
-
-  @override
-  String get pleaseSelectMood => 'Veuillez sélectionner une humeur';
-
-  @override
-  String get moodLoggedSuccessfully => 'Humeur enregistrée avec succès !';
-
-  @override
-  String get howAreYouFeeling => 'Comment vous sentez-vous ?';
-
-  @override
-  String get energyLevel => 'Niveau d\'énergie';
-
-  @override
-  String get low => 'Faible';
-
-  @override
-  String get high => 'Élevé';
-
-  @override
-  String get sleepQuality => 'Qualité du sommeil';
-
-  @override
-  String get howWasYourDay => 'Comment s\'est passée votre journée ?';
-
-  @override
-  String get prePregnancyBMI => 'Pre-pregnancy BMI';
-
-  @override
-  String get normalBMI => 'Normal';
-
-  @override
-  String get currentGain => 'Current gain';
-
-  @override
-  String get targetRange => 'Target range';
-
-  @override
-  String get expected => 'Expected';
-
-  @override
-  String get recentLabResults => 'Recent Lab Results';
-
-  @override
-  String get keepLabResultsOrganized =>
-      'Keep your lab results organized for better tracking.';
-
-  @override
-  String get viewAllLabResults => 'View All Lab Results';
-
-  @override
-  String get riskFactorsToMonitor => 'Risk factors to monitor';
-
-  @override
-  String get lowRisk => 'Faible risque';
-
-  @override
-  String get withinNormalRange => 'Dans la plage normale';
-
-  @override
-  String get gestationalDiabetes => 'Diabète gestationnel';
-
-  @override
-  String get glucoseLevelsNormal => 'Les niveaux de glucose sont normaux';
-
-  @override
-  String get preeclampsia => 'Prééclampsie';
-
-  @override
-  String get noProteinInUrine => 'Aucune protéine dans les urines';
-
-  @override
-  String get warningSignsToWatch => 'Signes d\'alerte à surveiller';
-
-  @override
-  String get severeHeadache => 'Forte migraine';
-
-  @override
-  String get blurredVision => 'Vision trouble';
-
-  @override
-  String get severeAbdominalPain => 'Douleur abdominale sévère';
-
-  @override
-  String get decreasedFetalMovement => 'Mouvements fœtaux diminués';
-
-  @override
-  String get vaginalBleeding => 'Saignement vaginal';
-
-  @override
-  String get emergencyCall => 'Appel d\'urgence';
-
-  @override
-  String get areYouSureCall911 => 'Êtes-vous sûr de vouloir appeler le 911 ?';
-
-  @override
-  String get couldNotMakeEmergencyCall =>
-      'Impossible de passer l\'appel d\'urgence.';
-
-  @override
-  String get ifYouExperienceWarnings =>
-      'Si vous ressentez un signe d\'alerte, contactez immédiatement votre professionnel de santé.';
-
-  @override
-  String get allIndicatorsNormal => 'Tous les indicateurs sont normaux';
-
-  @override
-  String get emergencyContact => 'Contact d\'urgence';
-
-  @override
-  String get overallRiskLevel => 'Niveau de risque global';
-
-  @override
-  String get call911OrProvider =>
-      'Appelez le 911 ou votre professionnel de santé';
-
-  @override
-  String get recentSymptoms => 'Recent Symptoms';
-
-  @override
-  String get logNewSymptom => 'Log new symptom';
-
-  @override
-  String get symptomFrequency => 'Symptom frequency';
-
-  @override
-  String get swollenFeet => 'Swollen feet';
-
-  @override
-  String get sleepIssues => 'Sleep issues';
-
-  @override
-  String get times => 'times';
-
-  @override
-  String get commonSymptomsWeek24 =>
-      'Common symptoms at week 24 include back pain and swelling.';
-
-  @override
-  String get viewAllSymptoms => 'View All Symptoms';
-
-  @override
-  String get weightProgress => 'Weight Progress';
-
-  @override
-  String get measurementSavedSuccessfully => 'Measurement saved successfully!';
-
-  @override
-  String get addMeasurement => 'Add Measurement';
-
-  @override
-  String get weightKg => 'Weight (kg)';
-
-  @override
-  String get pleaseEnterWeight => 'Please enter your weight';
-
-  @override
-  String get pleaseEnterValidNumber => 'Please enter a valid number';
-
-  @override
-  String get weightRange => 'Weight must be between 30 and 200 kg';
-
-  @override
-  String get heartRateBpm => 'Heart Rate (bpm)';
-
-  @override
-  String get pleaseEnterHeartRate => 'Please enter your heart rate';
-
-  @override
-  String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
-
-  @override
-  String get systolic => 'Systolic';
-
-  @override
-  String get required => 'Required';
-
-  @override
-  String get invalid => 'Invalid';
-
-  @override
-  String get systolicRange => 'Systolic must be between 70 and 190';
-
-  @override
-  String get diastolic => 'Diastolic';
-
-  @override
-  String get diastolicRange => 'Diastolic must be between 40 and 130';
-
-  @override
-  String get normalRangeLabel => 'Normal range';
-
-  @override
-  String get uploadLabResults => 'Upload Lab Results';
-
-  @override
-  String get nextLabAppointment => 'Next Lab Appointment';
 }

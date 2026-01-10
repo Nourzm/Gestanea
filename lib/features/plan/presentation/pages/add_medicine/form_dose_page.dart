@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FormDosePage extends StatefulWidget {
   final String? selectedForm;
@@ -42,15 +39,14 @@ class _FormDosePageState extends State<FormDosePage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     final forms = [
-      {'name': localizations.formPill, 'icon': '💊'},
-      {'name': localizations.formInjection, 'icon': '💉'},
-      {'name': localizations.formSpray, 'icon': '🧴'},
-      {'name': localizations.formDrop, 'icon': '💧'},
-      {'name': localizations.formSyrup, 'icon': '🧪'},
-      {'name': localizations.formOthers, 'icon': '•••'},
+      {'name': 'Capsule', 'icon': '💊'},
+      {'name': 'Pill', 'icon': '💊'},
+      {'name': 'Injection', 'icon': '💉'},
+      {'name': 'Spray', 'icon': '🧴'},
+      {'name': 'Drop', 'icon': '💧'},
+      {'name': 'Syrup', 'icon': '🧪'},
+      {'name': 'Others', 'icon': '•••'},
     ];
 
     return Column(
@@ -63,13 +59,10 @@ class _FormDosePageState extends State<FormDosePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              Expanded(
+              const Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.selectFormDose,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  'Select Form & Dose',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -86,22 +79,21 @@ class _FormDosePageState extends State<FormDosePage> {
             controller: _dosageController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.dosage,
-              hintText: AppLocalizations.of(context)!.dosageExample,
+              labelText: 'Dosage',
+              hintText: 'e.g., 5mg or 10ml',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: themeData.primaryColor, width: 2),
+                borderSide: const BorderSide(
+                  color: Color(0xFFA67FF5),
+                  width: 2,
+                ),
               ),
               prefixIcon: const Icon(Icons.medical_services),
             ),
             onChanged: (value) {
-              final dose = double.tryParse(value);
-              if (dose != null) {
-                widget.onDoseChanged(dose);
-              }
               setState(() {}); // Rebuild to update button color
             },
           ),
@@ -131,7 +123,7 @@ class _FormDosePageState extends State<FormDosePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: isSelected
-                        ? Border.all(color: themeData.primaryColor, width: 2)
+                        ? Border.all(color: const Color(0xFFA67FF5), width: 2)
                         : null,
                   ),
                   child: Column(
@@ -161,7 +153,7 @@ class _FormDosePageState extends State<FormDosePage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? themeData.primaryColor
+                    ? const Color(0xFFA67FF5)
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -172,12 +164,9 @@ class _FormDosePageState extends State<FormDosePage> {
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
                 disabledForegroundColor: Colors.white,
               ),
-              child: Text(
-                AppLocalizations.of(context)!.nextLabel,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: const Text(
+                'Next',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),

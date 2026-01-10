@@ -239,6 +239,8 @@ class FaqScreen extends StatelessWidget {
 
             // Contact Support Button
             NeumorphicButton(
+              screenWidth: MediaQuery.of(context).size.width,
+              screenHeight: MediaQuery.of(context).size.height,
               text: "Contact Support",
               onPressed: () {
                 Navigator.push(
@@ -246,7 +248,7 @@ class FaqScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const ContactUsScreen()),
                 );
               },
-              prefixIcon: const Icon(Icons.call, color: AppColors.white, size: 24),
+              icon: const Icon(Icons.call, color: AppColors.white, size: 24),
               color: AppColors.main500,
             ),
             const SizedBox(height: 30),

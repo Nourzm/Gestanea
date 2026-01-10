@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:gestanea/core/utils/box_shadow.dart';
-import 'package:gestanea/core/utils/box_decoration.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'neumorphic_section.dart';
-import 'package:gestanea/l10n/app_localizations.dart';
 
 class DeliveryForm extends StatelessWidget {
   final TextEditingController fullNameController;
@@ -30,9 +26,9 @@ class DeliveryForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppLocalizations.of(context)!.deliveryInformation,
-            style: const TextStyle(
+          const Text(
+            'Delivery Information',
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -40,33 +36,29 @@ class DeliveryForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            AppLocalizations.of(context)!.fullName,
+            'Full Name',
             fullNameController,
-            AppLocalizations.of(context)!.enterYourFullName,
+            'Enter your full name',
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            AppLocalizations.of(context)!.phoneNumber,
+            'Phone Number',
             phoneController,
-            AppLocalizations.of(context)!.enterYourPhoneNumber,
+            'Enter your phone number',
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            AppLocalizations.of(context)!.deliveryAddress,
+            'Delivery Address',
             addressController,
-            AppLocalizations.of(context)!.streetAddressApartment,
+            'Street address, apartment, etc.',
           ),
           const SizedBox(height: 16),
-          _buildFormField(
-            AppLocalizations.of(context)!.city,
-            cityController,
-            AppLocalizations.of(context)!.enterYourCity,
-          ),
+          _buildFormField('City', cityController, 'Enter your city'),
           const SizedBox(height: 16),
           _buildFormField(
-            AppLocalizations.of(context)!.specialInstructions,
+            'Special Instructions (Optional)',
             instructionsController,
-            AppLocalizations.of(context)!.addDeliveryNotes,
+            'Add delivery notes, special requests...',
             maxLines: 3,
           ),
         ],
@@ -116,7 +108,6 @@ class NeumorphicTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.bg_1,
@@ -141,8 +132,8 @@ class NeumorphicTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         maxLines: maxLines,
-        style: TextStyle(
-          color: themeData.primaryColor,
+        style: const TextStyle(
+          color: AppColors.main500,
           fontSize: 14,
           fontFamily: 'Lato',
           fontWeight: FontWeight.w400,
@@ -150,7 +141,7 @@ class NeumorphicTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: themeData.primaryColor.withOpacity(0.4),
+            color: AppColors.main500.withOpacity(0.4),
             fontSize: 14,
             fontFamily: 'Lato',
             fontWeight: FontWeight.w400,

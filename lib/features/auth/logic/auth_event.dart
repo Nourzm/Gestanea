@@ -36,43 +36,6 @@ class LoginRequested extends AuthEvent {
 
 class LogoutRequested extends AuthEvent {}
 
-class SendOtpRequested extends AuthEvent {
-  final String email;
-
-  SendOtpRequested({required this.email});
-
-  @override
-  List<Object?> get props => [email];
-}
-
-class VerifyOtpRequested extends AuthEvent {
-  final String email;
-  final String otpCode;
-
-  VerifyOtpRequested({required this.email, required this.otpCode});
-
-  @override
-  List<Object?> get props => [email, otpCode];
-}
-
-class ResendOtpRequested extends AuthEvent {
-  final String email;
-
-  ResendOtpRequested({required this.email});
-
-  @override
-  List<Object?> get props => [email];
-}
-
-class ForgotPasswordRequested extends AuthEvent {
-  final String email;
-
-  ForgotPasswordRequested({required this.email});
-
-  @override
-  List<Object?> get props => [email];
-}
-
 class UpdateProfileRequested extends AuthEvent {
   final String id;
   final String name;
@@ -82,7 +45,6 @@ class UpdateProfileRequested extends AuthEvent {
   final String? language;
   final String? theme;
   final bool? notificationsEnabled;
-  final String? profilePictureUrl;
 
   UpdateProfileRequested({
     required this.id,
@@ -93,7 +55,6 @@ class UpdateProfileRequested extends AuthEvent {
     this.language,
     this.theme,
     this.notificationsEnabled,
-    this.profilePictureUrl,
   });
 
   @override
@@ -106,34 +67,5 @@ class UpdateProfileRequested extends AuthEvent {
     language,
     theme,
     notificationsEnabled,
-    profilePictureUrl,
   ];
-}
-
-/// Event for updating profile picture
-class UpdateProfilePictureRequested extends AuthEvent {
-  final String userId;
-  final String imageFilePath;
-
-  UpdateProfilePictureRequested({
-    required this.userId,
-    required this.imageFilePath,
-  });
-
-  @override
-  List<Object?> get props => [userId, imageFilePath];
-}
-
-/// Event for changing password
-class ChangePasswordRequested extends AuthEvent {
-  final String currentPassword;
-  final String newPassword;
-
-  ChangePasswordRequested({
-    required this.currentPassword,
-    required this.newPassword,
-  });
-
-  @override
-  List<Object?> get props => [currentPassword, newPassword];
 }

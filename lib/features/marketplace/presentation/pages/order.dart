@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:gestanea/core/utils/box_shadow.dart';
-import 'package:gestanea/core/utils/box_decoration.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
-import 'package:gestanea/features/auth/logic/auth_bloc.dart';
-import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/l10n/app_localizations.dart';
-import '../../logic/order_bloc.dart';
 import '../widgets/neumorphic_section.dart';
 import '../widgets/delivery_form.dart';
 import '../widgets/delivery_payment_options.dart';
@@ -42,37 +35,15 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController instructionsController = TextEditingController();
 
+  String selectedPaymentMethod = 'cash';
+
   @override
   void initState() {
     super.initState();
-
-    // Get the current user's name from AuthBloc
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthAuthenticated) {
-      fullNameController.text = authState.user.name;
-      // Also update the phone if available
-      if (authState.user.phone != null && authState.user.phone!.isNotEmpty) {
-        phoneController.text = authState.user.phone!;
-      }
-    }
-
-    fullNameController.addListener(() {
-      context.read<OrderBloc>().add(UpdateFullName(fullNameController.text));
-    });
-    phoneController.addListener(() {
-      context.read<OrderBloc>().add(UpdatePhone(phoneController.text));
-    });
-    addressController.addListener(() {
-      context.read<OrderBloc>().add(UpdateAddress(addressController.text));
-    });
-    cityController.addListener(() {
-      context.read<OrderBloc>().add(UpdateCity(cityController.text));
-    });
-    instructionsController.addListener(() {
-      context.read<OrderBloc>().add(
-        UpdateInstructions(instructionsController.text),
-      );
-    });
+    // TODO: Get user info from auth state/shared preferences
+    // For now, setting a placeholder
+    fullNameController.text =
+        'John Doe'; // Replace with actual user name from auth
   }
 
   @override
@@ -128,7 +99,6 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -143,17 +113,17 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.chevron_left,
-                      color: themeData.primaryColor,
+                      color: AppColors.main500,
                       size: 24,
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context)!.completeYourOrder,
-                        style: const TextStyle(
+                        'Complete Your Order',
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -177,211 +147,104 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                     const SizedBox(height: 8),
 
                     // Order Summary Section
-                    BlocBuilder<OrderBloc, OrderState>(
-                      builder: (context, orderState) {
-                        final state = orderState is OrderInitial
-                            ? orderState
-                            : orderState is OrderFormValid
-                            ? orderState.orderData
-                            : orderState is OrderFormInvalid
-                            ? orderState.orderData
-                            : const OrderInitial();
-
-                        return NeumorphicSection(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    NeumorphicSection(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionTitle('Order Summary'),
+                          const SizedBox(height: 16),
+                          Row(
                             children: [
-                              _buildSectionTitle(
-                                AppLocalizations.of(context)!.orderSummary,
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.grey[300],
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.grey[300],
+                                  image: const DecorationImage(
+                                    image: NetworkImage(
+                                      'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=400',
                                     ),
-                                    child: state.productImage.isNotEmpty
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            child: Image.asset(
-                                              state.productImage,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return const Center(
-                                                      child: Icon(
-                                                        Icons
-                                                            .image_not_supported,
-                                                        color: Colors.grey,
-                                                        size: 40,
-                                                      ),
-                                                    );
-                                                  },
-                                            ),
-                                          )
-                                        : const Center(
-                                            child: Icon(
-                                              Icons.shopping_bag_outlined,
-                                              color: Colors.grey,
-                                              size: 40,
-                                            ),
-                                          ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Premium Pregnancy Pillow',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Row(
                                       children: [
-                                        Text(
-                                          state.productName.isNotEmpty
-                                              ? state.productName
-                                              : AppLocalizations.of(
-                                                  context,
-                                                )!.product,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textPrimary,
+                                        Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.main500,
                                           ),
                                         ),
-                                        const SizedBox(height: 6),
-                                        if (state.selectedColor.isNotEmpty ||
-                                            state.selectedSize.isNotEmpty)
-                                          Row(
-                                            children: [
-                                              if (state
-                                                  .selectedColor
-                                                  .isNotEmpty) ...[
-                                                Container(
-                                                  width: 20,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color:
-                                                        state.selectedColorHex !=
-                                                            null
-                                                        ? Color(
-                                                            int.parse(
-                                                              state
-                                                                  .selectedColorHex!
-                                                                  .replaceFirst(
-                                                                    '#',
-                                                                    '0xFF',
-                                                                  ),
-                                                            ),
-                                                          )
-                                                        : themeData
-                                                              .primaryColor,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  state.selectedColor,
-                                                  style: AppTextStyles.body1
-                                                      .copyWith(
-                                                        fontSize: 12,
-                                                        color: AppColors
-                                                            .textPrimary,
-                                                        height: 1.4,
-                                                      ),
-                                                ),
-                                              ],
-                                              if (state
-                                                  .selectedSize
-                                                  .isNotEmpty) ...[
-                                                const SizedBox(width: 16),
-                                                Text(
-                                                  '${AppLocalizations.of(context)!.size}: ${state.selectedSize}',
-                                                  style: AppTextStyles.body1
-                                                      .copyWith(
-                                                        fontSize: 12,
-                                                        color: AppColors
-                                                            .textPrimary,
-                                                        height: 1.4,
-                                                      ),
-                                                ),
-                                              ],
-                                            ],
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Purple',
+                                          style: AppTextStyles.body1.copyWith(
+                                            fontSize: 12,
+                                            color: AppColors.textPrimary,
+                                            height: 1.4,
                                           ),
-                                        const SizedBox(height: 6),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              '${AppLocalizations.of(context)!.qty}: ${state.quantity}',
-                                              style: AppTextStyles.body1
-                                                  .copyWith(
-                                                    fontSize: 12,
-                                                    color:
-                                                        AppColors.textPrimary,
-                                                    height: 1.4,
-                                                  ),
-                                            ),
-                                          ],
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Text(
+                                          'Size: Standard',
+                                          style: AppTextStyles.body1.copyWith(
+                                            fontSize: 12,
+                                            color: AppColors.textPrimary,
+                                            height: 1.4,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              const Divider(
-                                color: Color(0xFFD0C0E0),
-                                height: 1,
-                              ),
-                              const SizedBox(height: 12),
-                              BlocBuilder<OrderBloc, OrderState>(
-                                builder: (context, state) {
-                                  final subtotal = state is OrderInitial
-                                      ? state.subtotal
-                                      : 22.40;
-                                  final deliveryFee = state is OrderInitial
-                                      ? state.deliveryFee
-                                      : 5.00;
-                                  final total = state is OrderInitial
-                                      ? state.total
-                                      : 27.40;
-
-                                  return Column(
-                                    children: [
-                                      _buildPriceRow(
-                                        AppLocalizations.of(context)!.subtotal,
-                                        "${subtotal.toStringAsFixed(0)}DA",
-                                      ),
-                                      const SizedBox(height: 8),
-                                      _buildPriceRow(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.deliveryFee,
-                                        '${deliveryFee.toStringAsFixed(0)}DA',
-                                      ),
-                                      const SizedBox(height: 12),
-                                      const Divider(
-                                        color: Color(0xFFD0C0E0),
-                                        height: 1,
-                                      ),
-                                      const SizedBox(height: 12),
-                                      _buildPriceRow(
-                                        AppLocalizations.of(context)!.total,
-                                        '${total.toStringAsFixed(0)}DA',
-                                        isBold: true,
-                                      ),
-                                    ],
-                                  );
-                                },
+                                    const SizedBox(height: 6),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Qty: 1',
+                                          style: AppTextStyles.body1.copyWith(
+                                            fontSize: 12,
+                                            color: AppColors.textPrimary,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        );
-                      },
+                          const SizedBox(height: 16),
+                          const Divider(color: Color(0xFFD0C0E0), height: 1),
+                          const SizedBox(height: 12),
+                          _buildPriceRow('Subtotal', '\$22.40'),
+                          const SizedBox(height: 8),
+                          _buildPriceRow('Delivery Fee', '\$5.00'),
+                          const SizedBox(height: 12),
+                          const Divider(color: Color(0xFFD0C0E0), height: 1),
+                          const SizedBox(height: 12),
+                          _buildPriceRow('Total', '\$27.40', isBold: true),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -398,100 +261,40 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                     const SizedBox(height: 20),
 
                     // Payment Method Section
-                    BlocBuilder<OrderBloc, OrderState>(
-                      builder: (context, state) {
-                        final selectedPaymentMethod = state is OrderInitial
-                            ? state.paymentMethod
-                            : 'cash';
-
-                        return PaymentMethodSection(
-                          selectedPaymentMethod: selectedPaymentMethod,
-                          onPaymentMethodChanged: (method) {
-                            context.read<OrderBloc>().add(
-                              SelectPaymentMethod(method),
-                            );
-                          },
-                        );
+                    PaymentMethodSection(
+                      selectedPaymentMethod: selectedPaymentMethod,
+                      onPaymentMethodChanged: (method) {
+                        setState(() {
+                          selectedPaymentMethod = method;
+                        });
                       },
                     ),
 
                     const SizedBox(height: 20),
 
                     // Place Order Button
-                    BlocConsumer<OrderBloc, OrderState>(
-                      listener: (context, state) {
-                        if (state is OrderPlaced) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.orderPlacedSuccessfully(state.orderId),
-                              ),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                          Navigator.pop(context);
-                        } else if (state is OrderError) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.message),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        } else if (state is OrderFormInvalid) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.errorMessage),
-                              backgroundColor: Colors.orange,
-                            ),
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        final isPlacing = state is OrderPlacing;
-
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: isPlacing
-                                ? null
-                                : () {
-                                    context.read<OrderBloc>().add(
-                                      const PlaceOrder(),
-                                    );
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: themeData.primaryColor,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            child: isPlacing
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                : Text(
-                                    AppLocalizations.of(context)!.placeOrder,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Lato',
-                                    ),
-                                  ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main500,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                        );
-                      },
+                        ),
+                        child: const Text(
+                          'Place Order',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Lato',
+                          ),
+                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 12),
@@ -505,9 +308,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.textSecondary,
                         ),
-                        child: Text(
-                          AppLocalizations.of(context)!.cancel,
-                          style: const TextStyle(
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Lato',
@@ -526,18 +329,18 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: themeData.primaryColor.withOpacity(0.2),
+                            color: AppColors.main500.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.check,
                             size: 14,
-                            color: themeData.primaryColor,
+                            color: AppColors.main500,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          AppLocalizations.of(context)!.yourInformationIsSecure,
+                          'Your information is secure and encrypted',
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary.withOpacity(0.7),

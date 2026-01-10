@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../pages/plan_page.dart'; // Ensure only this correct import exists
 
@@ -23,9 +21,6 @@ class PlanToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    // Get current theme colors
-    final themeData = context.watch<ThemeCubit>().currentTheme;
-
     return Container(
       padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -60,9 +55,8 @@ class PlanToggle extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
                 decoration: BoxDecoration(
-                  // Use theme primary color for selected state
                   color: selectedSection == PlanSection.medicines
-                      ? themeData.primaryColor
+                      ? AppColors.main500
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(22),
                 ),
@@ -101,9 +95,8 @@ class PlanToggle extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
                 decoration: BoxDecoration(
-                  // Use theme primary color for selected state
                   color: selectedSection == PlanSection.appointments
-                      ? themeData.primaryColor
+                      ? AppColors.main500
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(22),
                 ),

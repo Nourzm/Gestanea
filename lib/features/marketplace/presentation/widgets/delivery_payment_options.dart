@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'neumorphic_section.dart';
-import 'package:gestanea/l10n/app_localizations.dart';
 
 class PaymentMethodSection extends StatelessWidget {
   final String selectedPaymentMethod;
@@ -21,9 +18,9 @@ class PaymentMethodSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppLocalizations.of(context)!.paymentMethod,
-            style: const TextStyle(
+          const Text(
+            'Payment Method',
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -31,21 +28,21 @@ class PaymentMethodSection extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           PaymentOption(
-            label: AppLocalizations.of(context)!.cashOnDelivery,
+            label: 'Cash on Delivery',
             value: 'cash',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('cash'),
           ),
           const SizedBox(height: 12),
           PaymentOption(
-            label: AppLocalizations.of(context)!.creditDebitCard,
+            label: 'Credit / Debit Card',
             value: 'card',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('card'),
           ),
           const SizedBox(height: 12),
           PaymentOption(
-            label: AppLocalizations.of(context)!.digitalWallet,
+            label: 'Digital Wallet',
             value: 'wallet',
             selectedValue: selectedPaymentMethod,
             onTap: () => onPaymentMethodChanged('wallet'),
@@ -73,7 +70,6 @@ class PaymentOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = value == selectedValue;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
 
     return GestureDetector(
       onTap: onTap,
@@ -81,13 +77,11 @@ class PaymentOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isSelected
-              ? themeData.primaryColor
+              ? AppColors.main500
               : AppColors.bg_1.withOpacity(0.5),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? themeData.primaryColor
-                : const Color(0xFFD0C0E0),
+            color: isSelected ? AppColors.main500 : const Color(0xFFD0C0E0),
             width: 1,
           ),
         ),

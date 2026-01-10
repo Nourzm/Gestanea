@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/widgets/header.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:gestanea/core/session/session_manager.dart';
 import '../widgets/week_calendar.dart';
 import '../widgets/plan_toggle.dart';
 import 'main_content.dart';
 import 'medicines_page.dart';
 import 'appointments_page.dart';
-import '../../logic/plan_bloc.dart';
-import '../../logic/medicines_bloc.dart';
-import '../../data/repositories/medicine_repository.dart';
-import '../../data/repositories/appointment_repository.dart';
 
 class PlanMainPage extends StatefulWidget {
   const PlanMainPage({super.key});
@@ -22,73 +15,9 @@ class PlanMainPage extends StatefulWidget {
   State<PlanMainPage> createState() => _PlanMainPageState();
 }
 
-class _PlanMainPageState extends State<PlanMainPage> {
-  final _sessionManager = SessionManager();
-  String? _userId;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserId();
-  }
-
-  Future<void> _loadUserId() async {
-    final userId = await _sessionManager.getCurrentUserId();
-    setState(() {
-      _userId = userId;
-      _isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        backgroundColor: AppColors.bg_1,
-        body: Center(
-          child: BlocBuilder<ThemeCubit, ThemeState>(
-            builder: (context, themeState) {
-              return CircularProgressIndicator(
-                color: themeState.themeData.primaryColor,
-              );
-            },
-          ),
-        ),
-      );
-    }
-
-    if (_userId == null) {
-      return Scaffold(
-        backgroundColor: AppColors.bg_1,
-        body: Center(
-          child: Text(AppLocalizations.of(context)!.pleaseLoginToViewPlan),
-        ),
-      );
-    }
-
-    return BlocProvider(
-      create: (context) => PlanBloc(
-        medicineRepository: MedicineRepository.getInstance(),
-        appointmentRepository: AppointmentRepository.getInstance(),
-      ),
-      child: _PlanMainPageContent(userId: _userId!),
-    );
-  }
-}
-
-class _PlanMainPageContent extends StatefulWidget {
-  final String userId;
-
-  const _PlanMainPageContent({super.key, required this.userId});
-
-  @override
-  State<_PlanMainPageContent> createState() => _PlanMainPageContentState();
-}
-
 enum PlanSection { none, medicines, appointments }
 
-class _PlanMainPageContentState extends State<_PlanMainPageContent> {
+class _PlanMainPageState extends State<PlanMainPage> {
   PlanSection selectedSection = PlanSection.none;
   DateTime selectedDate = DateTime.now();
 
@@ -130,33 +59,15 @@ class _PlanMainPageContentState extends State<_PlanMainPageContent> {
     return '$weekday, $month ${date.day}';
   }
 
-  void _navigateToPage(PlanSection section) async {
-    final bloc = context.read<PlanBloc>();
+  void _navigateToPage(PlanSection section) {
     if (section == PlanSection.medicines) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: bloc),
-              BlocProvider(create: (context) => MedicinesBloc()),
-            ],
-            child: MedicinesPage(userId: widget.userId),
-          ),
-        ),
-      );
-      // Reload plan data when returning
-      bloc.add(LoadPlanData(userId: widget.userId, date: selectedDate));
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const MedicinesPage()));
     } else if (section == PlanSection.appointments) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => BlocProvider.value(
-            value: bloc,
-            child: AppointmentsPage(userId: widget.userId),
-          ),
-        ),
-      );
-      // Reload plan data when returning
-      bloc.add(LoadPlanData(userId: widget.userId, date: selectedDate));
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const AppointmentsPage()));
     }
   }
 
@@ -172,10 +83,7 @@ class _PlanMainPageContentState extends State<_PlanMainPageContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: AppLocalizations.of(context)!.plan,
-              showBackButton: false,
-            ),
+            Header(title: 'Plan', showBackButton: false),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -238,7 +146,6 @@ class _PlanMainPageContentState extends State<_PlanMainPageContent> {
 
                     // Main Content
                     MainContent(
-                      userId: widget.userId,
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       showMedicine: true,

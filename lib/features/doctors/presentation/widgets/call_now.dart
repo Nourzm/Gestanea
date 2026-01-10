@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class CallNowSection extends StatelessWidget {
   final VoidCallback onPressed;
@@ -13,14 +11,13 @@ class CallNowSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [themeData.secondaryColor, themeData.primaryColor],
+          gradient: const LinearGradient(
+            colors: [AppColors.main600, AppColors.main500],
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [

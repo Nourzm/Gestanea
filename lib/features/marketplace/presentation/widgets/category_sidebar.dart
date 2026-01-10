@@ -5,13 +5,11 @@ import 'category_item.dart';
 class CategorySidebar extends StatelessWidget {
   final List<ProductCategoryModel> categories;
   final Function(int)? onCategoryTapped;
-  final int? selectedIndex;
 
   const CategorySidebar({
     super.key,
     required this.categories,
     this.onCategoryTapped,
-    this.selectedIndex,
   });
 
   @override
@@ -24,11 +22,9 @@ class CategorySidebar extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(height: 15),
         itemBuilder: (context, index) {
           final category = categories[index];
-          final isSelected = selectedIndex == index;
           return CategoryItem(
             label: category.name ?? '',
             imageAsset: category.imageUrl ?? '',
-            isSelected: isSelected,
             onTap: () => onCategoryTapped?.call(index),
           );
         },

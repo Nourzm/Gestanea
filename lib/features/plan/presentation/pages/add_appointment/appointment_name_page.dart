@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
-
 // Page 1: Appointment Name
 class AppointmentNamePage extends StatefulWidget {
   final String initialName;
@@ -43,7 +39,6 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -54,13 +49,10 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              Expanded(
+              const Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.appointmentName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  'Appointment Name',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -106,7 +98,7 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
               onPressed: _controller.text.isNotEmpty ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _controller.text.isNotEmpty
-                    ? themeData.primaryColor
+                    ? const Color(0xFFA67FF5)
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -115,12 +107,9 @@ class _AppointmentNamePageState extends State<AppointmentNamePage> {
                 ),
                 elevation: 0,
               ),
-              child: Text(
-                AppLocalizations.of(context)!.nextLabel,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: const Text(
+                'Next',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
