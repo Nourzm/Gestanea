@@ -73,11 +73,13 @@ async def create_medicine(medicine: MedicineCreate):
         if medicine_data.get("scheduled_times"):
             medicine_data["scheduled_times"] = json.dumps(medicine_data["scheduled_times"])
         
-        # Generate UUID for the medicine
-        medicine_data["id"] = str(uuid.uuid4())
+        # Use client-provided ID if available, otherwise generate UUID
+        if not medicine_data.get("id"):
+            medicine_data["id"] = str(uuid.uuid4())
         
-        # Add created_at timestamp
-        medicine_data["created_at"] = datetime.utcnow().isoformat()
+        # Use client-provided created_at if available, otherwise use current time
+        if not medicine_data.get("created_at"):
+            medicine_data["created_at"] = datetime.utcnow().isoformat()
         
         response = supabase.table("medicines").insert(medicine_data).execute()
         

@@ -27,7 +27,8 @@ class MedicineBase(BaseModel):
 
 class MedicineCreate(MedicineBase):
     """Schema for creating a new medicine."""
-    pass
+    id: Optional[str] = None  # Allow client to provide ID
+    created_at: Optional[str] = None  # Allow client to provide timestamp
 
 
 class MedicineUpdate(BaseModel):
@@ -63,7 +64,6 @@ class MedicineLogBase(BaseModel):
     logged_date: str  # ISO date format YYYY-MM-DD
     logged_at: str  # ISO datetime format
     status: str  # Status: taken, missed, or skipped
-    dosage_taken: Optional[str] = None
     notes: Optional[str] = None
 
 

@@ -81,16 +81,38 @@ class MedicineRemoteDataSource implements MedicineDataSource {
   Future<bool> insertMedicine(MedicineModel medicine) async {
     try {
       final uri = Uri.parse('$baseUrl$endpoint/');
+
+      // Prepare data for backend - send the local ID to maintain consistency
+      // between local and remote databases
+      final medicineData = {
+        'id': medicine.id, // Send the local ID
+        'user_id': medicine.userId,
+        'baby_id': medicine.babyId,
+        'medicine_name': medicine.medicineName,
+        'dosage': medicine.dosage,
+        'type': medicine.type,
+        'frequency_type': medicine.frequencyType,
+        'frequency_value': medicine.frequencyValue,
+        'scheduled_times': medicine.scheduledTimes, // Send as list
+        'start_date': medicine.startDate.toIso8601String().split('T')[0],
+        'end_date': medicine.endDate?.toIso8601String().split('T')[0],
+        'medicine_image_url': medicine.medicineImageUrl,
+        'is_active': medicine.isActive ? 1 : 0,
+        'created_at': medicine.createdAt.toIso8601String(),
+      };
+
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(medicine.toMap()),
+        body: json.encode(medicineData),
       );
 
       if (response.statusCode == 201) {
+        print('✅ Medicine created successfully in Supabase');
         return true;
       } else {
         print('Failed to create medicine: ${response.statusCode}');
+        print('Response body: ${response.body}');
         return false;
       }
     } catch (e) {
@@ -143,16 +165,30 @@ class MedicineRemoteDataSource implements MedicineDataSource {
   Future<bool> logMedicine(MedicineLoggedModel log) async {
     try {
       final uri = Uri.parse('$baseUrl$endpoint/logs/');
+
+      // Prepare log data for backend - only send fields that exist in Supabase table
+      final logData = {
+        'id': log.id,
+        'medicine_id': log.medicineId,
+        'user_id': log.userId,
+        'logged_date': log.loggedDate.toIso8601String().split('T')[0],
+        'logged_at': log.loggedAt.toIso8601String(),
+        'status': log.status,
+        'notes': log.notes,
+      };
+
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(log.toMap()),
+        body: json.encode(logData),
       );
 
       if (response.statusCode == 201) {
+        print('✅ Medicine log created successfully in Supabase');
         return true;
       } else {
         print('Failed to log medicine: ${response.statusCode}');
+        print('Response body: ${response.body}');
         return false;
       }
     } catch (e) {
