@@ -16,13 +16,16 @@ import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage
 import 'package:gestanea/features/dashboard/logic/cubit/upcoming_appointments_cubit.dart';
 import 'postpartum_track_page.dart';
 import 'package:gestanea/features/baby/presentation/pages/vaccine_tracker_page.dart';
+import 'package:gestanea/features/plan/presentation/pages/plan_page.dart' show PlanMainPage;
 
 class PostpartumDashboardPage extends StatefulWidget {
   final String babyGender;
+  final Function(int)? onNavigationIndexChange;
 
   const PostpartumDashboardPage({
     super.key,
     required this.babyGender,
+    this.onNavigationIndexChange,
   });
 
   @override
@@ -96,21 +99,28 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   void _navigateToTrackPage() {
-    final userId = _getUserId();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => BabyCubit(
-            repository: BabyRepository(
-              BabyLocalDataSource(DatabaseHelper.instance),
-            ),
-            userId: userId,
-          )..loadBabyProfile(),
-          child: PostpartumTrackPage(babyGender: widget.babyGender),
+    // If callback is provided, use it to navigate through the dashboard navbar
+    // Index 1 is the Track page in DashboardPage
+    if (widget.onNavigationIndexChange != null) {
+      widget.onNavigationIndexChange!(1);
+    } else {
+      // Fallback to old navigation method
+      final userId = _getUserId();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => BabyCubit(
+              repository: BabyRepository(
+                BabyLocalDataSource(DatabaseHelper.instance),
+              ),
+              userId: userId,
+            )..loadBabyProfile(),
+            child: PostpartumTrackPage(babyGender: widget.babyGender),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -623,16 +633,19 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   Widget _buildUpcomingSection() {
-    // Only show scheduled (not completed) vaccines as upcoming events
+    // Show all upcoming events (vaccines, appointments, medicines)
     final babyState = context.read<BabyCubit>().state;
     String? babyId;
     if (babyState is BabyLoaded) {
       babyId = babyState.baby.id;
     }
+    
+    final userId = _getUserId();
+    
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: babyId != null ? _vaccineLocalDataSource.getUpcomingVaccinesForBaby(babyId, limit: 10) : Future.value([]),
-      builder: (context, vaccineSnapshot) {
-        final vaccines = vaccineSnapshot.data ?? [];
+      future: babyId != null ? _vaccineLocalDataSource.getUpcomingEventsForBaby(babyId, userId, limit: 10) : Future.value([]),
+      builder: (context, eventSnapshot) {
+        final events = eventSnapshot.data ?? [];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -647,38 +660,19 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                     color: Colors.black87,
                   ),
                 ),
-                // Optionally add a 'see all' button for vaccines
               ],
             ),
             const SizedBox(height: 16),
-            if (vaccines.isNotEmpty)
+            if (events.isNotEmpty)
               Column(
-                children: vaccines
-                    .map((vaccine) => Padding(
+                children: events
+                    .map((event) => Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: GestureDetector(
                             onTap: () {
-                              final userId = _getUserId();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BlocProvider<BabyCubit>.value(
-                                    value: context.read<BabyCubit>(),
-                                    child: VaccineTrackerPage(
-                                      isGirl: currentBabyGender.toLowerCase() == 'girl' || currentBabyGender.toLowerCase() == 'female',
-                                    ),
-                                  ),
-                                ),
-                              );
+                              _navigateToEventPage(event);
                             },
-                            child: _buildUpcomingCard(
-                              icon: Icons.medical_services,
-                              iconBgColor: Colors.green.shade300,
-                              title: vaccine['vaccine_name'] ?? 'Vaccine',
-                              subtitle: vaccine['scheduled_date'] != null && vaccine['scheduled_date'] != ''
-                                  ? vaccine['scheduled_date']
-                                  : (vaccine['scheduled_age'] ?? ''),
-                            ),
+                            child: _buildUpcomingEventCard(event),
                           ),
                         ))
                     .toList(),
@@ -686,7 +680,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
             else
               Center(
                 child: Text(
-                  'No upcoming scheduled vaccines',
+                  'No upcoming events',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 14,
@@ -697,6 +691,105 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
         );
       },
     );
+  }
+
+  void _navigateToEventPage(Map<String, dynamic> event) {
+    final eventType = event['type'];
+    
+    switch (eventType) {
+      case 'vaccine':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BlocProvider<BabyCubit>.value(
+              value: context.read<BabyCubit>(),
+              child: VaccineTrackerPage(
+                isGirl: currentBabyGender.toLowerCase() == 'girl' || currentBabyGender.toLowerCase() == 'female',
+              ),
+            ),
+          ),
+        );
+        break;
+      case 'appointment':
+        // Navigate to appointments/plan page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BlocProvider<BabyCubit>.value(
+              value: context.read<BabyCubit>(),
+              child: const PlanMainPage(),
+            ),
+          ),
+        );
+        break;
+      case 'medicine':
+        // Navigate to medicines/plan page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BlocProvider<BabyCubit>.value(
+              value: context.read<BabyCubit>(),
+              child: const PlanMainPage(),
+            ),
+          ),
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  Widget _buildUpcomingEventCard(Map<String, dynamic> event) {
+    final eventType = event['type'];
+    IconData icon = Icons.event;
+    Color iconBgColor = Colors.blue.shade300;
+    String title = event['event_title'] ?? 'Event';
+    String subtitle = _formatEventDate(event['event_date']);
+
+    if (eventType == 'vaccine') {
+      icon = Icons.medical_services;
+      iconBgColor = Colors.green.shade300;
+    } else if (eventType == 'appointment') {
+      icon = _getAppointmentIcon(event['appointment_type'] ?? '');
+      iconBgColor = Colors.orange.shade300;
+    } else if (eventType == 'medicine') {
+      icon = Icons.medication;
+      iconBgColor = Colors.purple.shade300;
+    }
+
+    return _buildUpcomingCard(
+      icon: icon,
+      iconBgColor: iconBgColor,
+      title: title,
+      subtitle: subtitle,
+    );
+  }
+
+  String _formatEventDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return 'No date';
+    }
+
+    try {
+      final date = DateTime.parse(dateString);
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final eventDay = DateTime(date.year, date.month, date.day);
+
+      String dayText = '';
+      if (eventDay == today) {
+        dayText = 'Today';
+      } else if (eventDay == today.add(const Duration(days: 1))) {
+        dayText = 'Tomorrow';
+      } else {
+        dayText = '${eventDay.day} ${_getMonthName(eventDay.month)}';
+      }
+
+      final time = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+      return '$dayText at $time';
+    } catch (e) {
+      return dateString;
+    }
   }
 
   IconData _getAppointmentIcon(String appointmentType) {

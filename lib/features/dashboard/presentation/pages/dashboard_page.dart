@@ -165,6 +165,7 @@ class _DashboardPageState extends State<DashboardPage>
                 ? HomeScreen(onNavigate: _setPageIndex)
                 : PostpartumDashboardPage(
                     babyGender: currentBabyGender,
+                    onNavigationIndexChange: _setPageIndex,
                   ),
             showPregnancyMode
                 ? const WeekTrackerPage()

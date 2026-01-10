@@ -203,4 +203,75 @@ class VaccineLocalDataSource {
     final result = await db.query('vaccines', where: 'id = ?', whereArgs: [vaccineId]);
     return result.isNotEmpty ? result.first : null;
   }
+
+  /// Returns all upcoming events (vaccines, appointments, medicines) for a baby, sorted by date
+  Future<List<Map<String, dynamic>>> getUpcomingEventsForBaby(String babyId, String userId, {int limit = 20}) async {
+    final db = await _dbHelper.database;
+    final now = DateTime.now().toIso8601String();
+    final events = <Map<String, dynamic>>[];
+
+    // Get upcoming vaccines
+    final vaccines = await db.query(
+      'vaccines',
+      where: 'baby_id = ? AND is_completed = 0 AND scheduled_date IS NOT NULL AND scheduled_date != ""',
+      whereArgs: [babyId],
+      orderBy: 'scheduled_date ASC',
+    );
+
+    for (var vaccine in vaccines) {
+      events.add({
+        ...vaccine,
+        'type': 'vaccine',
+        'event_date': vaccine['scheduled_date'],
+        'event_title': vaccine['vaccine_name'],
+      });
+    }
+
+    // Get upcoming appointments for the user (associated with baby)
+    final appointments = await db.query(
+      'appointments',
+      where: 'user_id = ? AND appointment_date >= ? AND is_completed = 0',
+      whereArgs: [userId, now],
+      orderBy: 'appointment_date ASC',
+    );
+
+    for (var appointment in appointments) {
+      events.add({
+        ...appointment,
+        'type': 'appointment',
+        'event_date': appointment['appointment_date'],
+        'event_title': appointment['appointment_type'] ?? 'Appointment',
+      });
+    }
+
+    // Get upcoming medicine reminders for the user
+    final medicines = await db.query(
+      'medicines',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+
+    for (var medicine in medicines) {
+      events.add({
+        ...medicine,
+        'type': 'medicine',
+        'event_date': medicine['next_dose_time'] ?? DateTime.now().toIso8601String(),
+        'event_title': medicine['medicine_name'],
+      });
+    }
+
+    // Sort all events by date
+    events.sort((a, b) {
+      try {
+        final dateA = DateTime.parse(a['event_date'].toString());
+        final dateB = DateTime.parse(b['event_date'].toString());
+        return dateA.compareTo(dateB);
+      } catch (e) {
+        return 0;
+      }
+    });
+
+    // Return limited results
+    return events.take(limit).toList();
+  }
 }
