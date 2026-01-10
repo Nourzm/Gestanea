@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-
 /// Service to check and monitor network connectivity
 class ConnectivityService {
   static final ConnectivityService _instance = ConnectivityService._internal();

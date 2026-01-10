@@ -1,14 +1,26 @@
 // lib/features/dashboard/data/repositories/dashboard_repository_impl.dart
+import 'package:gestanea/core/services/connectivity_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/pregnancy_dashboard.dart';
 import '../../domain/entities/postpartum_dashboard.dart';
 import '../datasources/dashboard_local_data_source.dart';
+import '../datasources/dashboard_remote_data_source.dart';
 import 'dashboard_repository.dart';
 
 class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardLocalDataSource _localDataSource;
+  final DashboardRemoteDataSource? _remoteDataSource;
+  final ConnectivityService? _connectivityService;
 
-  DashboardRepositoryImpl({DashboardLocalDataSource? localDataSource})
-    : _localDataSource = localDataSource ?? DashboardLocalDataSourceImpl();
+  DashboardRepositoryImpl({
+    DashboardLocalDataSource? localDataSource,
+    DashboardRemoteDataSource? remoteDataSource,
+    ConnectivityService? connectivityService,
+  }) : _localDataSource = localDataSource ?? DashboardLocalDataSourceImpl(),
+       _remoteDataSource =
+           remoteDataSource ??
+           DashboardRemoteDataSource(Supabase.instance.client),
+       _connectivityService = connectivityService;
 
   @override
   Future<bool> isUserPregnant(int userId) async {
@@ -478,5 +490,24 @@ class DashboardRepositoryImpl implements DashboardRepository {
       motherHealthStatus: motherHealthStatus,
       tipOfTheDay: tipOfTheDay,
     );
+  }
+
+  @override
+  Future<void> syncTips() async {
+    // Sync tips from remote in background (non-blocking)
+    try {
+      if (await _connectivityService?.isOnline == true) {
+        final tips = await _remoteDataSource!.syncTips();
+        if (tips.isNotEmpty) {
+          await _localDataSource.saveTips(tips);
+          print('Synced ${tips.length} tips from remote');
+        }
+      } else {
+        print('Info: Offline - using cached tips');
+      }
+    } catch (e) {
+      // Don't fail if sync fails - use local cached tips
+      print('Warning: Failed to sync tips from remote (using cached): $e');
+    }
   }
 }

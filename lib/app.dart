@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/core/services/connectivity_service.dart';
 import 'package:gestanea/core/session/session_manager.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:gestanea/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:gestanea/features/auth/data/models/auth_repo_impl.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/routes.dart';
-import 'package:gestanea/core/database/db_helper.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -31,8 +33,10 @@ class _MyAppState extends State<MyApp> {
 
   // Provide repository & bloc instances as fields so they live with the app life-cycle.
   late final DatabaseHelper _dbHelper;
+  late final AuthRemoteDataSource _authRemote;
   late final AuthLocalDataSource _authLocal;
   late final SessionManager _sessionManager;
+  late final ConnectivityService _connectivityService;
   late final AuthRepositoryImpl _authRepository;
   late final AuthBloc _authBloc;
   late final ThemeCubit _themeCubit;
@@ -44,11 +48,15 @@ class _MyAppState extends State<MyApp> {
     // Initialize non-async parts synchronously. Opening the DB file happens lazily
     // when DatabaseHelper.database is awaited elsewhere.
     _dbHelper = DatabaseHelper.instance;
+    _authRemote = AuthRemoteDataSource();
     _authLocal = AuthLocalDataSource(_dbHelper);
     _sessionManager = SessionManager();
+    _connectivityService = ConnectivityService();
     _authRepository = AuthRepositoryImpl(
+      remoteDataSource: _authRemote,
       localDataSource: _authLocal,
       sessionManager: _sessionManager,
+      connectivityService: _connectivityService,
     );
     _authBloc = AuthBloc(repository: _authRepository)..add(AppStarted());
     _themeCubit =
