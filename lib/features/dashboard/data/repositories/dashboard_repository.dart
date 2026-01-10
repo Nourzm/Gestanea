@@ -13,7 +13,4 @@ abstract class DashboardRepository {
   Future<PostpartumDashboard> getPostpartumDashboardByStringId(String userId);
   Future<bool> isUserPregnantByStringId(String userId);
   Future<bool> hasActiveBabyByStringId(String userId);
-  
-  // Sync tips from remote (non-blocking, works offline)
-  Future<void> syncTips();
 }

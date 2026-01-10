@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class FancyNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final List<NavBarItem> items;
   final double barHeight;
+  final Color? primaryColor; // Add gender-based color
+  
   const FancyNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
     required this.items,
     required this.barHeight,
+    this.primaryColor, // Optional, defaults to AppColors.main500
   });
 
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+    final navColor = primaryColor ?? AppColors.main500; // Use provided color or default
 
     // --- RESPONSIVE VALUES ---
     final notchSize = w * 0.10; // size of notch curve
@@ -64,11 +66,11 @@ class FancyNavBar extends StatelessWidget {
               width: circleSize,
               height: circleSize,
               decoration: BoxDecoration(
-                color: themeData.primaryColor,
+                color: navColor, // Use personalized color
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: themeData.primaryColor.withOpacity(0.25),
+                    color: navColor.withOpacity(0.25), // Match shadow to color
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -128,7 +130,7 @@ class FancyNavBar extends StatelessWidget {
                             fontSize: w * 0.033, // responsive
                             fontWeight: FontWeight.w600,
                             color: active
-                                ? themeData.primaryColor
+                                ? navColor // Use personalized color for active label
                                 : Colors.grey.shade500,
                           ),
                         ),

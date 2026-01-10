@@ -1,21 +1,18 @@
 // lib/features/dashboard/presentation/pages/dashboard_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/babyTracking/data/datasources/baby_local_data_source.dart';
-import 'package:gestanea/features/babyTracking/logic/cubit/baby_cubit.dart';
-import 'package:gestanea/features/babyTracking/logic/repositories/baby_repository.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
+import 'package:gestanea/features/baby/logic/cubit/baby_cubit_factory.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
-import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/navbar.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'postpartum_dashboard_page.dart';
-import 'package:gestanea/features/pregnancyTracking/presentation/pages/week_tracker_page.dart';
-import 'package:gestanea/features/babyTracking/presentation/pages/postpartum_track_page.dart';
+import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
+import 'postpartum_track_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
@@ -32,9 +29,9 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage>
     with WidgetsBindingObserver, RouteAware {
   int _currentIndex = 0;
-  String babyGender = 'girl';
   String? _userId;
   DashboardCubit? _dashboardCubit;
+  BabyCubit? _babyCubit;
 
   @override
   void initState() {
@@ -73,7 +70,12 @@ class _DashboardPageState extends State<DashboardPage>
     final userIdInt = int.tryParse(_userId ?? '0') ?? 0;
     if (userIdInt > 0 && _dashboardCubit != null) {
       _dashboardCubit!.loadDashboard(userIdInt);
+    } else if (_userId != null && _userId!.isNotEmpty && _dashboardCubit != null) {
+      // For UUID-based user IDs, use the string-based method
+      _dashboardCubit!.loadDashboardByStringId(_userId!);
     }
+    // Also refresh baby profile to get updated gender
+    _babyCubit?.loadBabyProfile();
   }
 
   void _setPageIndex(index) {
@@ -88,6 +90,14 @@ class _DashboardPageState extends State<DashboardPage>
       return authState.user.id;
     }
     return '0'; // Default if not authenticated
+  }
+
+  Color _getNavBarColor(String babyGender) {
+    final isGirl = babyGender.toLowerCase() == 'girl' || 
+                   babyGender.toLowerCase() == 'female';
+    return isGirl 
+      ? const Color(0xFFFF9EC9)  // Pink for girls
+      : const Color(0xFF87CEEB); // Blue for boys
   }
 
   @override
@@ -111,39 +121,29 @@ class _DashboardPageState extends State<DashboardPage>
           },
         ),
         BlocProvider<BabyCubit>(
-          create: (context) => BabyCubit(
-            repository: BabyRepository(
-              BabyLocalDataSource(DatabaseHelper.instance),
-            ),
-            userId: _userId ?? '0',
-          ),
+          create: (context) {
+            final babyCubit = BabyCubitFactory.create(_userId ?? '0');
+            _babyCubit = babyCubit; // Store reference for refresh
+            babyCubit.loadBabyProfile(); // Load baby profile to get gender
+            return babyCubit;
+          },
         ),
       ],
-      child: BlocBuilder<DashboardCubit, DashboardState>(
-        builder: (context, dashboardState) {
-          // Determine mode based on dashboard state
-          final bool isPregnant = dashboardState is PregnancyDashboardLoaded;
-          final bool isPostpartum = dashboardState is PostpartumDashboardLoaded;
-          final bool isError = dashboardState is DashboardError;
-          final bool isLoading = dashboardState is DashboardLoading;
-
-          // Get postpartum dashboard data if available
-          PostpartumDashboard? postpartumDashboard;
-          String? currentBabyGender;
-          if (isPostpartum) {
-            postpartumDashboard =
-                (dashboardState as PostpartumDashboardLoaded).dashboard;
-            // Extract baby gender from dashboard
-            currentBabyGender = postpartumDashboard.babyGender;
+      child: BlocBuilder<BabyCubit, BabyState>(
+        builder: (context, babyState) {
+          // Get baby gender from BabyLoaded state
+          String currentBabyGender = 'boy'; // Default to boy
+          if (babyState is BabyLoaded) {
+            final gender = babyState.baby.gender?.toLowerCase() ?? '';
+            currentBabyGender = (gender == 'female' || gender == 'girl') ? 'girl' : 'boy';
           }
 
-          // Update theme based on pregnancy state and baby gender
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.read<ThemeCubit>().updateTheme(
-              isPregnant: isPregnant || dashboardState is DashboardInitial,
-              babyGender: currentBabyGender,
-            );
-          });
+          return BlocBuilder<DashboardCubit, DashboardState>(
+            builder: (context, dashboardState) {
+              // Determine mode based on dashboard state
+              final bool isPregnant = dashboardState is PregnancyDashboardLoaded;
+              final bool isError = dashboardState is DashboardError;
+              final bool isLoading = dashboardState is DashboardLoading;
 
           // Show loading indicator only during actual loading
           // For initial state or error, show pregnancy dashboard as default
@@ -164,12 +164,12 @@ class _DashboardPageState extends State<DashboardPage>
             showPregnancyMode
                 ? HomeScreen(onNavigate: _setPageIndex)
                 : PostpartumDashboardPage(
-                    babyGender: currentBabyGender ?? 'girl',
-                    dashboard: postpartumDashboard,
+                    babyGender: currentBabyGender,
+                    onNavigationIndexChange: _setPageIndex,
                   ),
             showPregnancyMode
                 ? const WeekTrackerPage()
-                : PostpartumTrackPage(babyGender: currentBabyGender ?? 'girl'),
+                : PostpartumTrackPage(babyGender: currentBabyGender),
             const HealthLogScreen(),
             const PlanMainPage(),
             BlocProvider(
@@ -191,9 +191,10 @@ class _DashboardPageState extends State<DashboardPage>
                   right: 0,
                   bottom: 0,
                   child: FancyNavBar(
-                    barHeight: h,
+                    barHeight: 80,
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
+                    primaryColor: showPregnancyMode ? null : _getNavBarColor(currentBabyGender),
                     items: [
                       NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
                       NavBarItem(
@@ -214,6 +215,8 @@ class _DashboardPageState extends State<DashboardPage>
                 ),
               ],
             ),
+          );
+            },
           );
         },
       ),
