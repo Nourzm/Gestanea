@@ -73,47 +73,78 @@ class ProductDetailPage extends StatelessWidget {
                   ),
 
                   // Main product image with thumbnail gallery
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        // Main image
-                        Container(
-                          width: double.infinity,
-                          height: screenHeight * 0.35,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x3F000000),
-                                blurRadius: 10,
-                                offset: Offset(4, 4),
-                                spreadRadius: 0,
-                              ),
-                              BoxShadow(
-                                color: AppColors.white,
-                                blurRadius: 10,
-                                offset: Offset(-4, -4),
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              state.product.imageUrls[state.currentImageIndex],
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Center(
-                                  child: Icon(
-                                    Icons.image_not_supported,
-                                    size: 50,
-                                    color: themeData.cardColor,
-                                  ),
-                                );
-                              },
+                  if (state.product.imageUrls.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          // Main image
+                          Container(
+                            width: double.infinity,
+                            height: screenHeight * 0.35,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3F000000),
+                                  blurRadius: 10,
+                                  offset: Offset(4, 4),
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
+                                  color: AppColors.white,
+                                  blurRadius: 10,
+                                  offset: Offset(-4, -4),
+                                  spreadRadius: 0,
+                                ),
+                              ],
                             ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child:
+                                  state.product.imageUrls[state.currentImageIndex]
+                                      .startsWith('http')
+                                ? Image.network(
+                                    state.product.imageUrls[state
+                                        .currentImageIndex],
+                                    fit: BoxFit.contain,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded /
+                                                  loadingProgress.expectedTotalBytes!
+                                              : null,
+                                          color: themeData.primaryColor,
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Center(
+                                        child: Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: themeData.cardColor,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    state.product.imageUrls[state
+                                        .currentImageIndex],
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Center(
+                                        child: Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: themeData.cardColor,
+                                        ),
+                                      );
+                                    },
+                                  ),
                           ),
                         ),
 
@@ -153,10 +184,51 @@ class ProductDetailPage extends StatelessWidget {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    state.product.imageUrls[index],
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child:
+                                      state.product.imageUrls[index].startsWith(
+                                        'http',
+                                      )
+                                      ? Image.network(
+                                          state.product.imageUrls[index],
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) return child;
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  color: themeData.primaryColor,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.grey[300],
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 20,
+                                                color: Colors.grey[600],
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          state.product.imageUrls[index],
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.grey[300],
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 20,
+                                                color: Colors.grey[600],
+                                              ),
+                                            );
+                                          },
+                                        ),
                                 ),
                               ),
                             ),
@@ -729,7 +801,7 @@ class ProductDetailPage extends StatelessWidget {
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
             color: themeData.primaryColor,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         Text(
@@ -737,7 +809,7 @@ class ProductDetailPage extends StatelessWidget {
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
             color: AppColors.textDark,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],
