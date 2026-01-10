@@ -7,7 +7,7 @@
 /// - Production: https://your-api-domain.com/api/v1
 class Config {
   // API Configuration
-  static const String apiBaseUrl = 'http://10.80.25.128:8000/api/v1';
+  static const String apiBaseUrl = 'http://10.0.2.2:8000/api/v1';
 
   // You can also use environment-based configuration:
   // static const String apiBaseUrl = String.fromEnvironment(
