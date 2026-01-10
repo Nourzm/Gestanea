@@ -29,7 +29,6 @@
   "privacy_policy": "سياسة الخصوصية",
   "about_app": "حول التطبيق",
   "change": "تغيير",
-
   "plan": "الخطة",
   "sundayShort": "ح",
   "mondayShort": "ن",
@@ -73,8 +72,12 @@
   "@medicinesTaken": {
     "description": "Medicine taken status",
     "placeholders": {
-      "taken": {"type": "int"},
-      "total": {"type": "int"}
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "daily": "يوميًا",
@@ -83,7 +86,6 @@
   "timesPerDayExample": "مثال: 3 مرات يوميًا",
   "timesPerWeekExample": "مثال: 2 مرتين أسبوعيًا",
   "timesPerMonthExample": "مثال: 1 مرة شهريًا",
-
   "appointmentDateTime": "تاريخ ووقت الموعد",
   "appointmentLocation": "مكان الموعد",
   "selectDate": "اختر التاريخ",
@@ -98,10 +100,15 @@
   "tomorrow": "غداً",
   "noAppointmentsFound": "لا توجد مواعيد",
   "appointment": "موعد",
- 
   "pleaseAddScheduledTime": "يرجى إضافة وقت مجدول واحد على الأقل",
   "reviewsCount": "{count} تقييمات",
-  "@reviewsCount": {"placeholders": {"count": {"type": "Object"}}},
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "qty": "الكمية",
   "all": "الكل",
   "taken": "تم تناولها",
@@ -187,6 +194,13 @@
   "enter_email": "أدخلي بريدكِ الإلكتروني",
   "enter_name": "أدخلي اسمكِ",
   "rememberMe": "تذكريني",
+  "sendOtp": "إرسال الرمز",
+  "verifyOtp": "تحقق من الرمز",
+  "enterOtpCode": "أدخلي رمز التحقق",
+  "otpSent": "تم إرسال رمز التحقق إلى بريدكِ الإلكتروني",
+  "otpCodePlaceholder": "رمز من 6 أرقام",
+  "resendOtp": "إعادة إرسال الرمز",
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتكِ والمحاولة مرة أخرى.",
   "version": "الإصدار",
   "pregnant": "حامل",
   "postpartum": "ما بعد الولادة",
@@ -194,13 +208,17 @@
   "@week": {
     "description": "رقم الأسبوع",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "{days} أيام متبقية",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "المتجر",
@@ -228,16 +246,16 @@
   "measurement": "القياس",
   "healthTipMessage": "عمل رائع! أنتِ تحافظين على وتيرة زيادة وزن صحية. استمري في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.",
   "onTrack": "على المسار الصحيح",
-
   "doctors": "الأطباء",
   "findDoctors": "ابحثي عن الأطباء بالاسم أو التخصص",
   "useCurrentLocation": "استخدمي موقعي الحالي",
- 
   "doctorsFoundSingle": "تم العثور على طبيب واحد",
   "doctorsFoundPlural": "تم العثور على {count} أطباء",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "تصفية",
@@ -247,14 +265,18 @@
   "upToKm": "حتى {distance} كم",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "التقييم الأدنى",
   "ratingAndAbove": "{rating} وما فوق",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "الجنس",
@@ -265,14 +287,18 @@
   "atLeastReviews": "على الأقل {count} مراجعة",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applyFilters": "تطبيق التصفية",
   "kmAway": "على بعد {distance} كم",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "مراجعات",
@@ -280,7 +306,9 @@
   "noMatchingDoctors": "لا يوجد أطباء يطابقون \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "حاولي تعديل التصفية",
@@ -298,11 +326,9 @@
   "phoneNumber": "رقم الهاتف",
   "openingHours": "ساعات العمل",
   "callNow": "اتصلي الآن",
-
   "take": "تناولي",
   "noMedicinesFound": "لم يتم العثور على أدوية",
   "pleaseLoginToViewPlan": "يرجى تسجيل الدخول لعرض خطتك",
-
   "selectColor": "اختاري اللون",
   "selectSize": "اختاري المقاس",
   "addToCart": "أضيفي إلى السلة",
@@ -312,7 +338,6 @@
   "specifications": "المواصفات",
   "customerReviews": "تقييمات العملاء",
   "seeAll": "عرض الكل",
-
   "completeYourOrder": "أكملي طلبك",
   "orderSummary": "ملخص الطلب",
   "product": "المنتج",
@@ -340,10 +365,11 @@
   "orderPlacedSuccessfully": "تم تقديم الطلب {orderId} بنجاح!",
   "@orderPlacedSuccessfully": {
     "placeholders": {
-      "orderId": {"type": "String"}
+      "orderId": {
+        "type": "String"
+      }
     }
   },
   "yourInformationIsSecure": "معلوماتك آمنة ومشفرة",
   "openNow": "مفتوح الآن"
 }
-

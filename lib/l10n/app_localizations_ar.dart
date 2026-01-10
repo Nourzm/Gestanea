@@ -530,6 +530,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rememberMe => 'تذكريني';
 
   @override
+  String get sendOtp => 'إرسال الرمز';
+
+  @override
+  String get verifyOtp => 'تحقق من الرمز';
+
+  @override
+  String get enterOtpCode => 'أدخلي رمز التحقق';
+
+  @override
+  String get otpSent => 'تم إرسال رمز التحقق إلى بريدكِ الإلكتروني';
+
+  @override
+  String get otpCodePlaceholder => 'رمز من 6 أرقام';
+
+  @override
+  String get resendOtp => 'إعادة إرسال الرمز';
+
+  @override
+  String get noInternetConnection =>
+      'لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتكِ والمحاولة مرة أخرى.';
+
+  @override
   String get version => 'الإصدار';
 
   @override

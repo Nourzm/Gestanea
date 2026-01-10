@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'core/config/supabase_config.dart';
 import 'core/services/connectivity_service.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/alarm_scheduler.dart';
@@ -14,6 +13,10 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
+
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
