@@ -61,7 +61,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
   }
 
   void _showImageSourceDialog() {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
+    final themeData = context.read<ThemeCubit>().currentTheme;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
