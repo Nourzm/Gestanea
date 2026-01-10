@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
               },
 
               //routing - proper flow with splash → onboarding → login → dashboard
-              initialRoute: AppRoutes.splash, // Start with splash screen
+              initialRoute: AppRoutes.dashboard, // Start with splash screen
               routes: appRoutes,
             );
           },

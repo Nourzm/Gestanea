@@ -35,7 +35,7 @@ class VitalsTabContent extends StatelessWidget {
                   children: [
                     Expanded(
                       child: VitalsCard(
-                        icon: Icons.monitor_weight_outlined,
+                        iconPath: 'assets/icons/health.svg',
                         title: localizations.weight,
                         value: '69 Kg',
                         status: localizations.normal,
@@ -46,7 +46,7 @@ class VitalsTabContent extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: VitalsCard(
-                        icon: Icons.favorite,
+                        iconPath: 'assets/icons/heartplus.svg',
                         title: localizations.heartRate,
                         value: '72 bpm',
                         status: localizations.normal,
@@ -64,7 +64,7 @@ class VitalsTabContent extends StatelessWidget {
                   children: [
                     Expanded(
                       child: VitalsCard(
-                        icon: Icons.favorite,
+                        iconPath: 'assets/icons/Stethoscope.svg',
                         title: localizations.bloodPressure,
                         value: '120/80',
                         status: localizations.normal,

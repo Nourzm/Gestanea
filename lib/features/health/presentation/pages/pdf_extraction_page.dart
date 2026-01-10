@@ -2,36 +2,61 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
+import 'package:gestanea/core/session/session_manager.dart';
+import 'package:gestanea/core/services/image_storage_service.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import 'manual_lab_entry_page.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:uuid/uuid.dart';
 
 class PdfExtractionPage extends StatelessWidget {
   final String pdfPath;
 
   const PdfExtractionPage({super.key, required this.pdfPath});
 
-  void _saveJustPdf(BuildContext context) {
-    final labResult = LabResultModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: 'current_user',
-      testName: 'PDF Lab Report',
-      labDate: DateTime.now(),
-      reportImageUrl: pdfPath,
-      extractedByOcr: false,
-      createdAt: DateTime.now(),
-    );
+  Future<void> _saveJustPdf(BuildContext context) async {
+    try {
+      // Get user ID from session
+      final sessionManager = SessionManager();
+      var userId = await sessionManager.getCurrentUserId();
+      if (userId == null || userId.isEmpty) {
+        userId = 'test_user_id';
+        await sessionManager.saveCurrentUserId(userId);
+      }
+      
+      // Upload PDF to Supabase storage
+      final imageStorageService = ImageStorageService();
+      final pdfFile = File(pdfPath);
+      final uploadedUrl = await imageStorageService.savePdf(pdfFile, userId);
+      
+      final labResult = LabResultModel(
+        id: const Uuid().v4(),
+        userId: userId,
+        testName: 'PDF Lab Report',
+        labDate: DateTime.now(),
+        reportImageUrl: uploadedUrl,
+        extractedByOcr: false,
+        createdAt: DateTime.now(),
+      );
 
-    context.read<LabResultsBloc>().add(AddLabResult(labResult));
+      context.read<LabResultsBloc>().add(AddLabResult(labResult));
 
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('PDF saved! '),
-        backgroundColor: Colors.green,
-      ),
-    );
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('PDF saved and uploaded!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to save PDF: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
