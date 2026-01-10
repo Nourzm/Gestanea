@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 10,
+      version: 12,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -134,6 +134,47 @@ class DatabaseHelper {
           ALTER TABLE lab_results ADD COLUMN synced INTEGER DEFAULT 1
         ''');
       }
+    }
+    if (oldVersion < 11) {
+      // Add synced column to moods table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(moods)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE moods ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 12) {
+      // Remove foreign key constraint from moods table
+      // SQLite doesn't support dropping foreign keys, so we need to recreate the table
+      
+      // 1. Create new moods table without foreign key
+      await db.execute('''
+        CREATE TABLE moods_new (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          mood TEXT NOT NULL,
+          intensity INTEGER,
+          notes TEXT,
+          recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          synced INTEGER DEFAULT 1
+        )
+      ''');
+      
+      // 2. Copy data from old table to new table
+      await db.execute('''
+        INSERT INTO moods_new (id, user_id, mood, intensity, notes, recorded_at, created_at, synced)
+        SELECT id, user_id, mood, intensity, notes, recorded_at, created_at, synced FROM moods
+      ''');
+      
+      // 3. Drop old table
+      await db.execute('DROP TABLE moods');
+      
+      // 4. Rename new table to original name
+      await db.execute('ALTER TABLE moods_new RENAME TO moods');
     }
   }
 
@@ -263,7 +304,7 @@ class DatabaseHelper {
       )
     ''');
 
-    // Moods table
+    // Moods table (no foreign key constraint for Supabase compatibility)
     await db.execute('''
       CREATE TABLE moods (
         id TEXT PRIMARY KEY,
@@ -272,8 +313,7 @@ class DatabaseHelper {
         intensity INTEGER,
         notes TEXT,
         recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
 

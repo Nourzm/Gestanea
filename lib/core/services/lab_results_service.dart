@@ -8,6 +8,8 @@ class LabResultsService {
   final SupabaseClient _supabase = Supabase.instance.client;
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
   final Connectivity _connectivity = Connectivity();
+  
+  bool _isListeningToConnectivity = false;
 
   /// Check if device has internet connectivity
   Future<bool> _hasConnectivity() async {
@@ -80,16 +82,26 @@ class LabResultsService {
     try {
       final db = await _dbHelper.database;
       
-      // Clear synced lab results
+      // Get IDs of unsynced records to preserve them
+      final unsyncedMaps = await db.query(
+        'lab_results',
+        columns: ['id'],
+        where: 'synced = 0',
+      );
+      final unsyncedIds = unsyncedMaps.map((m) => m['id'] as String).toSet();
+      
+      // Clear only synced lab results (keep unsynced ones)
       await db.delete('lab_results', where: 'synced = 1');
       
-      // Insert fresh data from Supabase
+      // Insert fresh data from Supabase, but skip any that are unsynced locally
       for (final labResult in labResults) {
-        await db.insert(
-          'lab_results',
-          {...labResult.toMap(), 'synced': 1},
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+        if (!unsyncedIds.contains(labResult.id)) {
+          await db.insert(
+            'lab_results',
+            {...labResult.toMap(), 'synced': 1},
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
       }
     } catch (e) {
       print('Error updating local cache: $e');
@@ -128,7 +140,7 @@ class LabResultsService {
             'interpretation': labResult.interpretation,
             'lab_date': labResult.labDate.toIso8601String().split('T')[0],
             'report_image_url': labResult.reportImageUrl,
-            'extracted_by_ocr': labResult.extractedByOcr,
+            'extracted_by_ocr': labResult.extractedByOcr ? 1 : 0,
             'created_at': labResult.createdAt.toIso8601String(),
           });
 
@@ -178,7 +190,7 @@ class LabResultsService {
           'interpretation': labResult.interpretation,
           'lab_date': labResult.labDate.toIso8601String().split('T')[0],
           'report_image_url': labResult.reportImageUrl,
-          'extracted_by_ocr': labResult.extractedByOcr,
+          'extracted_by_ocr': labResult.extractedByOcr ? 1 : 0,
           'created_at': labResult.createdAt.toIso8601String(),
         });
 
@@ -227,7 +239,7 @@ class LabResultsService {
               'interpretation': labResult.interpretation,
               'lab_date': labResult.labDate.toIso8601String().split('T')[0],
               'report_image_url': labResult.reportImageUrl,
-              'extracted_by_ocr': labResult.extractedByOcr,
+              'extracted_by_ocr': labResult.extractedByOcr ? 1 : 0,
             })
             .eq('id', labResult.id);
 
@@ -302,5 +314,24 @@ class LabResultsService {
     );
     
     return maps.map((map) => LabResultModel.fromMap(map)).toList();
+  }
+
+  /// Start listening to connectivity changes and auto-sync when online
+  void startConnectivityListener() {
+    if (_isListeningToConnectivity) return;
+    _isListeningToConnectivity = true;
+
+    _connectivity.onConnectivityChanged.listen((result) async {
+      print('DEBUG Connectivity changed: $result');
+      if (result != ConnectivityResult.none) {
+        print('DEBUG Connection restored, syncing lab results...');
+        try {
+          await _syncLocalToSupabase();
+          print('DEBUG Auto-sync completed');
+        } catch (e) {
+          print('DEBUG Auto-sync failed: $e');
+        }
+      }
+    });
   }
 }

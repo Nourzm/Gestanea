@@ -7,6 +7,7 @@ import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_state.dart';
+import '../../logic/bloc/symptoms_event.dart';
 import '../pages/symptoms_list_page.dart';
 import 'dialogs/add_symptom_dialog.dart';
 
@@ -25,9 +26,15 @@ class SymptomsTabContent extends StatelessWidget {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<SymptomsBloc>().add(LoadSymptoms());
+              await Future.delayed(const Duration(milliseconds: 500));
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Recent Symptoms
@@ -132,6 +139,7 @@ class SymptomsTabContent extends StatelessWidget {
                 // Tip Card
                 _buildTipCard(localizations.commonSymptomsWeek24),
               ],
+              ),
             ),
           ),
         ),
@@ -379,50 +387,118 @@ class SymptomsTabContent extends StatelessWidget {
   Widget _buildFrequencyChart(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            localizations.symptomFrequency,
-            style: AppTextStyles.subtitle1.copyWith(
-              fontSize: 14,
-              color: AppColors.textDark,
+    return BlocBuilder<SymptomsBloc, SymptomsState>(
+      builder: (context, state) {
+        if (state is! SymptomsLoaded || state.symptoms.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x3F000000),
+                  blurRadius: 4,
+                  offset: Offset(2, 2),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: AppColors.white,
+                  blurRadius: 6,
+                  offset: Offset(-3, -3),
+                  spreadRadius: 0,
+                ),
+              ],
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  localizations.symptomFrequency,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: 14,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No symptom data available',
+                  style: AppTextStyles.smallLabel.copyWith(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Calculate frequency of each symptom
+        final Map<String, int> frequencyMap = {};
+        for (final symptom in state.symptoms) {
+          final name = symptom.symptomName.toLowerCase();
+          frequencyMap[name] = (frequencyMap[name] ?? 0) + 1;
+        }
+
+        // Sort by frequency and take top 5
+        final sortedSymptoms = frequencyMap.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+        final topSymptoms = sortedSymptoms.take(5).toList();
+
+        // Find max value for normalization
+        final maxCount = topSymptoms.isEmpty ? 1 : topSymptoms.first.value;
+
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(2, 2),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: AppColors.white,
+                blurRadius: 6,
+                offset: Offset(-3, -3),
+                spreadRadius: 0,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          _buildFrequencyBar(context, localizations.backPain, 0.85),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.swollenFeet, 0.6),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.heartburn, 0.5),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.sleepIssues, 0.7),
-        ],
-      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localizations.symptomFrequency,
+                style: AppTextStyles.subtitle1.copyWith(
+                  fontSize: 14,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...topSymptoms.asMap().entries.map((entry) {
+                final index = entry.key;
+                final symptomEntry = entry.value;
+                final symptomName = symptomEntry.key[0].toUpperCase() + symptomEntry.key.substring(1);
+                final count = symptomEntry.value;
+                final normalizedValue = count / maxCount;
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index < topSymptoms.length - 1 ? 10 : 0),
+                  child: _buildFrequencyBar(context, symptomName, normalizedValue, count),
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildFrequencyBar(BuildContext context, String label, double value) {
+  Widget _buildFrequencyBar(BuildContext context, String label, double value, int count) {
     final localizations = AppLocalizations.of(context)!;
     final themeData = context.watch<ThemeCubit>().currentTheme;
 
@@ -440,7 +516,7 @@ class SymptomsTabContent extends StatelessWidget {
               ),
             ),
             Text(
-              '${(value * 7).toInt()} ${localizations.times}',
+              '$count ${count == 1 ? 'time' : localizations.times}',
               style: AppTextStyles.smallLabel.copyWith(
                 fontSize: 11,
                 color: AppColors.textDark,

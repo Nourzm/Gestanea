@@ -6,6 +6,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_state.dart';
+import '../../logic/bloc/measurements_event.dart';
 import '../pages/measurements_list_page.dart';
 import 'vitals_card.dart';
 import 'bmi_card.dart';
@@ -108,12 +109,19 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
                 color: Color(0xFFFAF0FF),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
               ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // Time Range Selector
-                    Container(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  context.read<MeasurementsBloc>().add(LoadMeasurements());
+                  // Wait a bit for the refresh to complete
+                  await Future.delayed(const Duration(milliseconds: 500));
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      // Time Range Selector
+                      Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -296,6 +304,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
                       },
                     ),
                   ],
+                ),
                 ),
               ),
             ),

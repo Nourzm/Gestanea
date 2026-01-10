@@ -7,6 +7,7 @@ import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_state.dart';
+import '../../logic/bloc/lab_results_event.dart';
 import '../pages/lab_results_list_page.dart';
 import '../pages/lab_papers_gallery_page.dart';
 import 'dialogs/upload_lab_results_dialog.dart';
@@ -26,9 +27,15 @@ class LabResultsTabContent extends StatelessWidget {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<LabResultsBloc>().add(LoadLabResults());
+              await Future.delayed(const Duration(milliseconds: 500));
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Recent Lab Results
@@ -192,6 +199,7 @@ class LabResultsTabContent extends StatelessWidget {
                 // Tip Card
                 _buildTipCard(l10n.keepLabResultsOrganized),
               ],
+              ),
             ),
           ),
         ),

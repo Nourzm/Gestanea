@@ -19,6 +19,9 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     on<DeleteLabResult>(_onDelete);
     on<ExportLabResultsAsZip>(_onExport);
     on<RefreshLabResults>(_onRefresh);
+    
+    // Start listening for connectivity changes to auto-sync
+    _labResultsService.startConnectivityListener();
   }
 
   void setUserId(String userId) {

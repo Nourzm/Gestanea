@@ -151,6 +151,19 @@ class SymptomsListPage extends StatelessWidget {
                 ),
               ],
             ),
+            if (symptom.duration != null && symptom.duration!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Duration: ${symptom.duration}',
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ],
             if (symptom.notes != null && symptom.notes!.isNotEmpty) ...[
               const Divider(height: 20),
               Text(

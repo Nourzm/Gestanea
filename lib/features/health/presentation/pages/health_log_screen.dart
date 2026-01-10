@@ -15,6 +15,8 @@ import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_event.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_event.dart';
+import '../../logic/bloc/moods_bloc.dart';
+import '../../logic/bloc/moods_event.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
@@ -86,6 +88,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
           create: (context) => MeasurementsBloc()..add(LoadMeasurements()),
         ),
         BlocProvider(create: (context) => SymptomsBloc()..add(LoadSymptoms())),
+        BlocProvider(create: (context) => MoodsBloc()..add(LoadMoods())),
         BlocProvider(
           create: (context) {
             final bloc = LabResultsBloc();

@@ -6,6 +6,7 @@ class MoodModel {
   final String? notes;
   final DateTime recordedAt;
   final DateTime createdAt;
+  final int synced;
 
   MoodModel({
     required this.id,
@@ -15,6 +16,7 @@ class MoodModel {
     this.notes,
     required this.recordedAt,
     required this.createdAt,
+    this.synced = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class MoodModel {
       'notes': notes,
       'recorded_at': recordedAt.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
+      'synced': synced,
     };
   }
 
@@ -38,6 +41,7 @@ class MoodModel {
       notes: map['notes'] as String?,
       recordedAt: DateTime.parse(map['recorded_at'] as String),
       createdAt: DateTime.parse(map['created_at'] as String),
+      synced: (map['synced'] as int?) ?? 0,
     );
   }
 
@@ -49,6 +53,7 @@ class MoodModel {
     String? notes,
     DateTime? recordedAt,
     DateTime? createdAt,
+    int? synced,
   }) {
     return MoodModel(
       id: id ?? this.id,
@@ -58,6 +63,7 @@ class MoodModel {
       notes: notes ?? this.notes,
       recordedAt: recordedAt ?? this.recordedAt,
       createdAt: createdAt ?? this.createdAt,
+      synced: synced ?? this.synced,
     );
   }
 }
