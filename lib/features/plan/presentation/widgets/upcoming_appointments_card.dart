@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class UpcomingAppointmentsCard extends StatelessWidget {
   final double screenWidth;
@@ -19,7 +17,6 @@ class UpcomingAppointmentsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.045),
       decoration: BoxDecoration(
@@ -83,11 +80,7 @@ class UpcomingAppointmentsCard extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(
-              Icons.access_time,
-              color: themeData.secondaryColor,
-              size: 28,
-            ),
+            child: Icon(Icons.access_time, color: AppColors.main600, size: 28),
           ),
         ],
       ),

@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:gestanea/core/widgets/header.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import '../widgets/health_header.dart';
 import '../widgets/health_tab_sidebar.dart';
 import '../widgets/vitals_tab_content.dart';
 import '../widgets/symptoms_tab_content.dart';
 import '../widgets/lab_results_tab_content.dart';
 import '../widgets/risk_alerts_tab_content.dart';
 import '../widgets/mood_tab_content.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../logic/bloc/measurements_bloc.dart';
-import '../../logic/bloc/measurements_event.dart';
-import '../../logic/bloc/symptoms_bloc.dart';
-import '../../logic/bloc/symptoms_event.dart';
-import '../../logic/bloc/lab_results_bloc.dart';
-import '../../logic/bloc/lab_results_event.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class HealthLogScreen extends StatefulWidget {
   const HealthLogScreen({super.key});
@@ -57,74 +48,42 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => MeasurementsBloc()..add(LoadMeasurements()),
-        ),
-        BlocProvider(create: (context) => SymptomsBloc()..add(LoadSymptoms())),
-        BlocProvider(
-          create: (context) => LabResultsBloc()..add(LoadLabResults()),
-        ),
-      ],
-      child: Scaffold(
-        backgroundColor: AppColors.bg_1,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Header with notification navigation
-              Header(
-                title: localizations.healthLog,
-                onNotificationTapped: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationsPage(),
-                    ),
-                  );
-                },
-              ),
+    return Scaffold(
+      backgroundColor: AppColors.bg_1,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            HealthHeader(
+              title: localizations.healthLog,
+              subtitle: localizations.trackYourWellness,
+              onNotificationTapped: () {
+                // Handle notification tap
+              },
+            ),
 
-              // Subtitle - CLOSER to header (pulled up)
-              Transform.translate(
-                offset: const Offset(0, -8),
-                child: Text(
-                  localizations.trackYourWellness,
-                  style: TextStyle(
-                    color: context
-                        .watch<ThemeCubit>()
-                        .currentTheme
-                        .primaryColor,
-                    fontSize: 14,
-                    fontFamily: 'Lato',
+            // Main content with sidebar and tab content
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left Sidebar Navigation
+                  HealthTabSidebar(
+                    tabs: _tabs,
+                    selectedIndex: _selectedTabIndex,
+                    onTabSelected: (index) {
+                      setState(() => _selectedTabIndex = index);
+                    },
                   ),
-                  textAlign: TextAlign.center,
-                ),
+
+                  // Tab Content Area
+                  Expanded(
+                    child: _getTabContent(),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 8),
-
-              // Main content with sidebar and tab content
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Left Sidebar Navigation
-                    HealthTabSidebar(
-                      tabs: _tabs,
-                      selectedIndex: _selectedTabIndex,
-                      onTabSelected: (index) {
-                        setState(() => _selectedTabIndex = index);
-                      },
-                    ),
-
-                    // Tab Content Area
-                    Expanded(child: _getTabContent()),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

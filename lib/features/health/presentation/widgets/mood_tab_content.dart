@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'dialogs/add_mood_dialog.dart';
 
 class MoodTabContent extends StatelessWidget {
   const MoodTabContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
+    final localizations = AppLocalizations.of(context)!;
 
     return Stack(
       children: [
@@ -28,7 +24,7 @@ class MoodTabContent extends StatelessWidget {
               children: [
                 // Current Mood
                 Text(
-                  l10n.howAreYouFeelingToday,
+                  'How are you feeling today?',
                   style: AppTextStyles.headline2.copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
@@ -37,12 +33,13 @@ class MoodTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Mood Selector
-                _buildMoodSelector(context),
+                _buildMoodSelector(),
+
                 const SizedBox(height: 20),
 
                 // Recent Mood Entries
                 Text(
-                  l10n.recentEntries,
+                  'Recent Entries',
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 16,
                     color: AppColors.textDark,
@@ -51,46 +48,45 @@ class MoodTabContent extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 _buildMoodEntryCard(
-                  context,
                   emoji: '😊',
-                  mood: l10n.happy,
-                  note: l10n.feltEnergeticToday,
-                  time: l10n.hoursAgo(2),
+                  mood: 'Happy',
+                  note: 'Felt energetic today',
+                  time: '2 hours ago',
                   color: const Color(0xFFFFF9C4),
                 ),
                 const SizedBox(height: 12),
                 _buildMoodEntryCard(
-                  context,
                   emoji: '😌',
-                  mood: l10n.calm,
-                  note: l10n.relaxingEvening,
-                  time: l10n.yesterday,
+                  mood: 'Calm',
+                  note: 'Relaxing evening',
+                  time: 'Yesterday',
                   color: const Color(0xFFE1F5FE),
                 ),
                 const SizedBox(height: 12),
                 _buildMoodEntryCard(
-                  context,
                   emoji: '😴',
-                  mood: l10n.tired,
-                  note: l10n.needMoreSleep,
-                  time: l10n.daysAgo(2),
+                  mood: 'Tired',
+                  note: 'Need more sleep',
+                  time: '2 days ago',
                   color: const Color(0xFFE8EAF6),
                 ),
 
                 const SizedBox(height: 20),
 
                 // Mood Trends
-                _buildMoodTrendsCard(context),
+                _buildMoodTrendsCard(),
 
                 const SizedBox(height: 20),
 
                 // Self-Care Suggestions
-                _buildSelfCareCard(context),
+                _buildSelfCareCard(),
 
                 const SizedBox(height: 16),
 
                 // Tip Card
-                _buildTipCard(l10n.trackingMoodHelps),
+                _buildTipCard(
+                  'Tracking your mood helps identify patterns and manage emotional wellbeing during pregnancy.',
+                ),
               ],
             ),
           ),
@@ -105,9 +101,7 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                ),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -130,9 +124,7 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                ),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
@@ -149,70 +141,60 @@ class MoodTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodSelector(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+  Widget _buildMoodSelector() {
     final moods = [
-      {'emoji': '😄', 'label': l10n.great},
-      {'emoji': '😊', 'label': l10n.good},
-      {'emoji': '😐', 'label': l10n.okay},
-      {'emoji': '😔', 'label': l10n.sad},
-      {'emoji': '😢', 'label': l10n.verySad},
+      {'emoji': '😄', 'label': 'Great'},
+      {'emoji': '😊', 'label': 'Good'},
+      {'emoji': '😐', 'label': 'Okay'},
+      {'emoji': '😔', 'label': 'Low'},
+      {'emoji': '😢', 'label': 'Sad'},
     ];
 
-    return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => const AddMoodDialog(),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x3F000000),
-              blurRadius: 4,
-              offset: Offset(2, 2),
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              color: AppColors.white,
-              blurRadius: 6,
-              offset: Offset(-3, -3),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: moods.map((mood) {
-            return Column(
-              children: [
-                Text(mood['emoji']!, style: const TextStyle(fontSize: 32)),
-                const SizedBox(height: 4),
-                Text(
-                  mood['label']!,
-                  style: AppTextStyles.smallLabel.copyWith(
-                    fontSize: 11,
-                    color: AppColors.textDark,
-                  ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(2, 2),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: AppColors.white,
+            blurRadius: 6,
+            offset: Offset(-3, -3),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: moods.map((mood) {
+          return Column(
+            children: [
+              Text(
+                mood['emoji']!,
+                style: const TextStyle(fontSize: 32),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                mood['label']!,
+                style: AppTextStyles.smallLabel.copyWith(
+                  fontSize: 11,
+                  color: AppColors.textDark,
                 ),
-              ],
-            );
-          }).toList(),
-        ),
+              ),
+            ],
+          );
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildMoodEntryCard(
-    BuildContext context, {
+  Widget _buildMoodEntryCard({
     required String emoji,
     required String mood,
     required String note,
@@ -241,7 +223,10 @@ class MoodTabContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 40)),
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 40),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -278,15 +263,12 @@ class MoodTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodTrendsCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
-
+  Widget _buildMoodTrendsCard() {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [themeData.primaryColor, themeData.lightColor],
+        gradient: const LinearGradient(
+          colors: [AppColors.main500, Color(0xFFB388CC)],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
@@ -308,7 +290,7 @@ class MoodTabContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.moodTrendsLast7Days,
+            'Mood Trends (Last 7 Days)',
             style: AppTextStyles.subtitle1.copyWith(
               color: AppColors.white,
               fontSize: 14,
@@ -327,7 +309,7 @@ class MoodTabContent extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.mostlyPositiveMoods,
+            'Mostly positive moods this week! 🌟',
             style: AppTextStyles.smallLabel.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
               fontSize: 12,
@@ -341,7 +323,10 @@ class MoodTabContent extends StatelessWidget {
   Widget _buildMoodTrendItem(String emoji, String count) {
     return Column(
       children: [
-        Text(emoji, style: const TextStyle(fontSize: 24)),
+        Text(
+          emoji,
+          style: const TextStyle(fontSize: 24),
+        ),
         const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -361,9 +346,7 @@ class MoodTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildSelfCareCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+  Widget _buildSelfCareCard() {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -392,7 +375,7 @@ class MoodTabContent extends StatelessWidget {
               const Icon(Icons.spa, color: Color(0xFF2E7D32), size: 24),
               const SizedBox(width: 8),
               Text(
-                l10n.selfCareSuggestions,
+                'Self-Care Suggestions',
                 style: AppTextStyles.subtitle1.copyWith(
                   fontSize: 14,
                   color: const Color(0xFF2E7D32),
@@ -402,10 +385,10 @@ class MoodTabContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          _buildSelfCareItem(l10n.takeShortWalk),
-          _buildSelfCareItem(l10n.practiceDeepBreathing),
-          _buildSelfCareItem(l10n.listenToCalmingMusic),
-          _buildSelfCareItem(l10n.connectWithLovedOnes),
+          _buildSelfCareItem('Take a short walk'),
+          _buildSelfCareItem('Practice deep breathing'),
+          _buildSelfCareItem('Listen to calming music'),
+          _buildSelfCareItem('Connect with loved ones'),
         ],
       ),
     );

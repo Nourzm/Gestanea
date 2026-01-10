@@ -2,7 +2,6 @@
 class PostpartumDashboard {
   final String userName;
   final String babyName;
-  final String babyGender; // Added for theme switching
   final int babyAgeInMonths;
   final double babyWeight;
   final double babyHeight;
@@ -15,7 +14,6 @@ class PostpartumDashboard {
   const PostpartumDashboard({
     required this.userName,
     required this.babyName,
-    required this.babyGender,
     required this.babyAgeInMonths,
     required this.babyWeight,
     required this.babyHeight,

@@ -4,17 +4,9 @@ import 'add_medicine/form_dose_page.dart';
 import 'add_medicine/frequency_page.dart';
 import 'add_medicine/upload_picture_page.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/database/models/medicine_model.dart';
-import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
-import 'package:uuid/uuid.dart';
-import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class AddMedicineFlow extends StatefulWidget {
-  final String userId;
-
-  const AddMedicineFlow({super.key, required this.userId});
+  const AddMedicineFlow({super.key});
 
   @override
   State<AddMedicineFlow> createState() => _AddMedicineFlowState();
@@ -23,17 +15,13 @@ class AddMedicineFlow extends StatefulWidget {
 class _AddMedicineFlowState extends State<AddMedicineFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  final _medicineRepository = MedicineRepository.getInstance();
 
   String? selectedMedication;
   String? selectedForm;
-  double? selectedDose;
-  int? frequencyNumber;
-  String frequencyType = 'daily';
-  List<String> scheduledTimes = [];
+  double selectedDose = 0.5;
+  int frequencyNumber = 1;
 
   DateTime? startingDate;
-  DateTime? endingDate;
   String? medicationImage;
 
   void _nextPage() {
@@ -56,49 +44,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
     }
   }
 
-  Future<void> _saveMedicine() async {
-    try {
-      final uuid = Uuid();
-      final medicine = MedicineModel(
-        id: uuid.v4(),
-        userId: widget.userId,
-        babyId: null,
-        medicineName: selectedMedication!,
-
-        dosage: '$selectedDose $selectedForm',
-        type: selectedForm,
-        frequencyType: frequencyType,
-        frequencyValue: frequencyNumber,
-        scheduledTimes: scheduledTimes,
-        startDate: startingDate!,
-        endDate: endingDate,
-        medicineImageUrl: medicationImage,
-        isActive: true,
-        createdAt: DateTime.now(),
-      );
-
-      final result = await _medicineRepository.insertMedicine(medicine);
-
-      if (result.state) {
-        if (mounted) {
-          Navigator.pop(context, true);
-        }
-      } else {
-        _showError(result.message);
-      }
-    } catch (e) {
-      _showError('Failed to save medicine: $e');
-    }
-  }
-
-  void _showError(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,12 +62,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                 children: [
                   MedicationNamePage(
                     onMedicationSelected: (med) {
-                      if (med.length <= 2) {
-                        _showError(
-                          'Medicine name must be greater than 2 characters',
-                        );
-                        return;
-                      }
                       setState(() => selectedMedication = med);
                       _nextPage();
                     },
@@ -130,64 +69,20 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                   ),
                   FormDosePage(
                     selectedForm: selectedForm,
-                    selectedDose: selectedDose ?? 0,
+                    selectedDose: selectedDose,
                     onFormSelected: (form) =>
                         setState(() => selectedForm = form),
                     onDoseChanged: (dose) =>
                         setState(() => selectedDose = dose),
-                    onNext: () {
-                      if (selectedForm == null || selectedForm!.isEmpty) {
-                        _showError('Please select a form');
-                        return;
-                      }
-                      if (selectedDose == null || selectedDose! <= 0) {
-                        _showError('Please enter a valid dose');
-                        return;
-                      }
-                      _nextPage();
-                    },
+                    onNext: _nextPage,
                     onBack: _previousPage,
                   ),
-                  FrequencyPage(
-                    onNext: () {
-                      if (frequencyNumber == null || frequencyNumber! <= 0) {
-                        _showError('Please enter a valid frequency value');
-                        return;
-                      }
-
-                      if (startingDate == null) {
-                        _showError('Please select a starting date');
-                        return;
-                      }
-                      if (scheduledTimes.isEmpty) {
-                        _showError(
-                          AppLocalizations.of(context)!.pleaseAddScheduledTime,
-                        );
-                        return;
-                      }
-                      _nextPage();
-                    },
-                    onBack: _previousPage,
-                    onFrequencyChanged: (freq) =>
-                        setState(() => frequencyNumber = freq),
-                    onFrequencyTypeChanged: (type) =>
-                        setState(() => frequencyType = type),
-                    onScheduledTimesChanged: (times) =>
-                        setState(() => scheduledTimes = times),
-                    onDateSelected: (date) =>
-                        setState(() => startingDate = date),
-                    onEndDateSelected: (date) =>
-                        setState(() => endingDate = date),
-                  ),
+                  FrequencyPage(onNext: _nextPage, onBack: _previousPage),
 
                   UploadPicturePage(
                     onBack: _previousPage,
-                    initialImagePath: medicationImage,
-                    onImageSelected: (imagePath) {
-                      setState(() => medicationImage = imagePath);
-                    },
-                    onDone: () async {
-                      await _saveMedicine();
+                    onDone: () {
+                      Navigator.pop(context);
                     },
                   ),
                 ],
@@ -200,7 +95,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Widget _buildProgressIndicator() {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -211,7 +105,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
               margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? themeData.primaryColor
+                    ? const Color(0xFFA67FF5)
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

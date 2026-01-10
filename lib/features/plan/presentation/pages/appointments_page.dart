@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/widgets/Sub_Header.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
-import '../../logic/plan_bloc.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_local_data_source.dart';
+import 'package:gestanea/features/plan/data/repositories/plan_database_initializer.dart';
+import 'package:gestanea/features/plan/data/mock_data/plan_mock_data.dart';
 
 class AppointmentsPage extends StatefulWidget {
-  final String userId;
-
-  const AppointmentsPage({super.key, required this.userId});
+  const AppointmentsPage({super.key});
 
   @override
   State<AppointmentsPage> createState() => _AppointmentsPageState();
@@ -19,6 +17,10 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   bool _showBadge = true;
   final ScrollController _scrollController = ScrollController();
+  final PlanLocalDataSource _dataSource = PlanLocalDataSource();
+  final PlanDatabaseInitializer _dbInitializer = PlanDatabaseInitializer();
+  List<AppointmentModel> _appointments = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -27,8 +29,26 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     _loadAppointments();
   }
 
-  void _loadAppointments() {
-    context.read<PlanBloc>().add(LoadAppointments(userId: widget.userId));
+  Future<void> _loadAppointments() async {
+    // TODO: Replace with actual user ID from auth
+    final userId = PlanMockData.mockUserId;
+
+    try {
+      // Initialize database with mock data if empty
+      await _dbInitializer.initializeWithMockData(userId);
+
+      // Load from database
+      final appointments = await _dataSource.getAppointments(userId);
+
+      setState(() {
+        _appointments = appointments;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -65,9 +85,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             SubHeader(
               title: localizations.appointments,
               showBackButton: true,
-              onBackPressed: () {
-                Navigator.of(context).pop();
-              },
+              onBackPressed: () => Navigator.of(context).pop(),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -83,72 +101,39 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
                       ),
-                      child: BlocBuilder<PlanBloc, PlanState>(
-                        builder: (context, state) {
-                          if (state is PlanLoading) {
-                            final themeData = context
-                                .watch<ThemeCubit>()
-                                .currentTheme;
-                            return Center(
+                      child: _isLoading
+                          ? Center(
                               child: CircularProgressIndicator(
-                                color: themeData.primaryColor,
+                                color: AppColors.main500,
                               ),
-                            );
-                          }
-
-                          if (state is PlanError) {
-                            return Center(
+                            )
+                          : _appointments.isEmpty
+                          ? Center(
                               child: Padding(
                                 padding: EdgeInsets.all(screenHeight * 0.05),
                                 child: Text(
-                                  '${localizations.error}: ${state.message}',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.04,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-
-                          List<AppointmentModel> appointments = [];
-                          if (state is AppointmentsLoaded) {
-                            appointments = state.appointments;
-                          } else if (state is PlanLoaded) {
-                            appointments = state.appointments;
-                          }
-
-                          if (appointments.isEmpty) {
-                            return Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(screenHeight * 0.05),
-                                child: Text(
-                                  localizations.noAppointmentsFound,
+                                  'No appointments found',
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.04,
                                     color: Colors.grey.shade600,
                                   ),
                                 ),
                               ),
-                            );
-                          }
-
-                          return Column(
-                            children: appointments.map((appointment) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: screenHeight * 0.015,
-                                ),
-                                child: _buildAppointmentCard(
-                                  appointment,
-                                  screenWidth,
-                                  screenHeight,
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
+                            )
+                          : Column(
+                              children: _appointments.map((appointment) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: screenHeight * 0.015,
+                                  ),
+                                  child: _buildAppointmentCard(
+                                    appointment,
+                                    screenWidth,
+                                    screenHeight,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                     ),
 
                     SizedBox(height: screenHeight * 0.1),
@@ -162,6 +147,19 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     );
   }
 
+  IconData _getIconForAppointmentType(String? type) {
+    switch (type) {
+      case 'Checkup':
+        return Icons.favorite_border;
+      case 'Imaging':
+        return Icons.camera_alt_outlined;
+      case 'Lab Test':
+        return Icons.science_outlined;
+      default:
+        return Icons.access_time;
+    }
+  }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final tomorrow = now.add(Duration(days: 1));
@@ -169,26 +167,25 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {
-      return AppLocalizations.of(context)!.today;
+      return 'Today';
     } else if (date.year == tomorrow.year &&
         date.month == tomorrow.month &&
         date.day == tomorrow.day) {
-      return AppLocalizations.of(context)!.tomorrow;
+      return 'Tomorrow';
     } else {
-      final localizations = AppLocalizations.of(context)!;
       final months = [
-        localizations.jan,
-        localizations.feb,
-        localizations.mar,
-        localizations.apr,
-        localizations.may,
-        localizations.jun,
-        localizations.jul,
-        localizations.aug,
-        localizations.sep,
-        localizations.oct,
-        localizations.nov,
-        localizations.dec,
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${months[date.month - 1]} ${date.day}, ${date.year}';
     }
@@ -208,9 +205,10 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     double screenWidth,
     double screenHeight,
   ) {
-    final localizations = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
-    final icon = Icons.access_time;
+    final now = DateTime.now();
+    final remaining = appointment.appointmentDate.difference(now);
+    final totalSeconds = remaining.inSeconds > 0 ? remaining.inSeconds : 0;
+    final icon = _getIconForAppointmentType(appointment.appointmentType);
     final dateStr = _formatDate(appointment.appointmentDate);
     final timeStr = _formatTime(appointment.appointmentDate);
 
@@ -246,10 +244,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: [
-                          themeData.primaryColor,
-                          themeData.secondaryColor,
-                        ],
+                        colors: [AppColors.main500, AppColors.main600],
                       ),
                     ),
                     child: Icon(icon, color: Colors.white, size: 24),
@@ -272,7 +267,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                         Text(
                           appointment.doctorName ??
                               appointment.location ??
-                              localizations.appointment,
+                              'Appointment',
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: Colors.grey.shade600,
@@ -319,7 +314,60 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             ],
           ),
         ),
+        // Animated badge for remaining time at top right
+        Positioned(
+          top: 0,
+          right: 0,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: totalSeconds > 0 ? null : 0,
+            curve: Curves.easeInOut,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: totalSeconds > 0 ? 1.0 : 0.0,
+              child: Padding(
+                padding: EdgeInsets.only(right: screenWidth * 0.05, top: 8),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.main600,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.access_time, color: Colors.white, size: 14),
+                      SizedBox(width: 4),
+                      Text(
+                        totalSeconds > 0
+                            ? _formatDuration(Duration(seconds: totalSeconds))
+                            : 'Now',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    if (duration.inDays > 0) {
+      return '${duration.inDays}d ${duration.inHours % 24}h';
+    } else if (duration.inHours > 0) {
+      return '${duration.inHours}h ${duration.inMinutes % 60}m';
+    } else if (duration.inMinutes > 0) {
+      return '${duration.inMinutes}m';
+    } else {
+      return '${duration.inSeconds}s';
+    }
   }
 }

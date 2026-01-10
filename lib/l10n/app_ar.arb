@@ -1,36 +1,35 @@
+
+
+
 {
-  "locationPermissionRequired": "مطلوب إذن الموقع",
-  "locationPermissionMessage": "نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.",
-  "gettingLocation": "جارٍ تحديد موقعك...",
-  "locationPermissionDenied": "تم رفض إذن الموقع",
-  "locationUpdated": "تم تحديث الموقع",
-  "retry": "إعادة المحاولة",
-  "showingDoctorsNearYou": "عرض الأطباء القريبين منك",
-  "selectLocation": "اختر الموقع",
-  "searchWilaya": "ابحث عن ولاية...",
-  "full_name": "الاسم الكامل",
-  "enable_notifications": "تفعيل الإشعارات",
-  "phone": "الهاتف",
-  "country": "البلد",
-  "logout_confirmation": "هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟",
+
+"full_name": "الاسم الكامل",
+"enable_notifications": "تفعيل الإشعارات",
+"phone": "الهاتف",
+"country": "البلد",
+  "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "cancel": "إلغاء",
   "unknown": "غير معروف",
   "profile": "الملف الشخصي",
   "profile_updated": "تم تحديث الملف الشخصي",
   "edit_profile": "تعديل الملف الشخصي",
   "change_profile_photo": "تغيير صورة الملف الشخصي",
-  "save_changes": "حفظ التغييرات",
+  "full_name": "الاسم الكامل",
+    "save_changes": "حفظ التغييرات",
   "save": "حفظ",
+  "enable_notifications": "تفعيل الإشعارات",
   "security": "الأمان",
-  "i_gave_birth": "لقد ولدتُ",
+  "i_gave_birth": "لقد ولدت",
   "no_longer_pregnant": "لم أعد حاملاً",
   "help_support": "المساعدة والدعم",
-  "contact_us": "اتصلي بنا",
+  "contact_us": "اتصل بنا",
   "privacy_policy": "سياسة الخصوصية",
   "about_app": "حول التطبيق",
   "change": "تغيير",
-  "plan": "الخطة",
-  "sundayShort": "ح",
+
+    "plan": "الخطة",
+  
+    "sundayShort": "ح",
   "mondayShort": "ن",
   "tuesdayShort": "ث",
   "wednesdayShort": "ر",
@@ -40,115 +39,10 @@
   "todaysMedicine": "دواء اليوم",
   "upcomingAppointments": "المواعيد القادمة",
   "scheduled": "مجدول",
-  "addNewMedicine": "إضافة دواء جديد",
+    "addNewMedicine": "إضافة دواء جديد",
   "addNewAppointment": "إضافة موعد جديد",
   "medicine": "الأدوية",
   "appointments": "المواعيد",
-  "appointmentName": "اسم الموعد",
-  "medicationName": "اسم الدواء",
-  "nextLabel": "التالي",
-  "doneLabel": "تم",
-  "uploadPicture": "ارفعي صورة",
-  "camera": "الكاميرا",
-  "gallery": "المعرض",
-  "removeImage": "إزالة الصورة",
-  "tapToAddPicture": "اضغط لإضافة صورة",
-  "optionalImageNote": "إضافة صورة اختيارية. يمكنك تخطي هذه الخطوة.",
-  "selectFormDose": "اختاري الشكل والجرعة",
-  "frequencySchedule": "التكرار والجدول",
-  "frequencyType": "نوع التكرار",
-  "frequencyValue": "قيمة التكرار",
-  "scheduledTimesLabel": "الأوقات المجدولة",
-  "asNeeded": "عند الحاجة",
-  "dosage": "الجرعة",
-  "dosageExample": "مثال: 5mg أو 10ml",
-  "formPill": "حبة دواء",
-  "formInjection": "حقنة",
-  "formSpray": "رذاذ",
-  "formDrop": "قطرة",
-  "formSyrup": "شراب",
-  "formOthers": "أخرى",
-  "medicinesTaken": "{taken} من {total} تم أخذها",
-  "@medicinesTaken": {
-    "description": "Medicine taken status",
-    "placeholders": {
-      "taken": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "daily": "يوميًا",
-  "weekly": "أسبوعيًا",
-  "monthly": "شهريًا",
-  "timesPerDayExample": "مثال: 3 مرات يوميًا",
-  "timesPerWeekExample": "مثال: 2 مرتين أسبوعيًا",
-  "timesPerMonthExample": "مثال: 1 مرة شهريًا",
-  "appointmentDateTime": "تاريخ ووقت الموعد",
-  "appointmentLocation": "مكان الموعد",
-  "selectDate": "اختر التاريخ",
-  "selectTime": "اختر الوقت",
-  "startDate": "تاريخ البدء",
-  "endDate": "تاريخ النهاية (اختياري)",
-  "selectStartDate": "اختر تاريخ البدء",
-  "selectEndDate": "اختر تاريخ النهاية",
-  "addTime": "إضافة وقت",
-  "noScheduledTimesAdded": "لم تتم إضافة أوقات مجدولة بعد",
-  "today": "اليوم",
-  "tomorrow": "غداً",
-  "noAppointmentsFound": "لا توجد مواعيد",
-  "appointment": "موعد",
-  "pleaseAddScheduledTime": "يرجى إضافة وقت مجدول واحد على الأقل",
-  "reviewsCount": "{count} تقييمات",
-  "@reviewsCount": {
-    "placeholders": {
-      "count": {
-        "type": "Object"
-      }
-    }
-  },
-  "qty": "الكمية",
-  "all": "الكل",
-  "taken": "تم تناولها",
-  "missed": "فاتت",
-  "noMedicines": "لا توجد أدوية",
-  "schedule": "الجدول",
-  "availability": "التوفر",
-  "specialty": "التخصص",
-  "bookAppointment": "احجزي موعدًا",
-  "price": "السعر",
-  "quantity": "الكمية",
-  "checkout": "إتمام الشراء",
-  "applyCoupon": "تطبيق القسيمة",
-  "popular": "شائع",
-  "offers": "عروض",
-  "newLabel": "جديد",
-  "contact": "تواصل",
-  "message": "رسالة",
-  "location": "الموقع",
-  "noResults": "لا توجد نتائج",
-  "search": "بحث",
-  "sort": "فرز",
-  "marketplace": "المتجر",
-  "doctorsFeatureTitle": "الأطباء",
-  "planFeatureTitle": "الخطة",
-  "addMedicine": "أضيفي دواء",
-  "addAppointment": "أضيفي موعدًا",
-  "error": "خطأ",
-  "success": "نجاح",
-  "cancel": "إلغاء",
-  "confirm": "تأكيد",
-  "remove": "إزالة",
-  "apply": "تطبيق",
-  "reviewsLabel": "تقييمات",
-  "rating": "التقييم",
-  "recommended": "موصى به",
-  "noReviews": "لا توجد تقييمات",
-  "delivery": "التسليم",
-  "shipping": "الشحن",
-  "taxes": "الضرائب",
   "sunday": "الأحد",
   "monday": "الاثنين",
   "tuesday": "الثلاثاء",
@@ -181,26 +75,19 @@
   "notifications": "الإشعارات",
   "help": "المساعدة",
   "about": "حول",
-  "welcome_back": "مرحباً بعودتكِ! ",
+  "welcome_back": "مرحباً بعودتك!",
   "or": "— أو —",
   "register": "تسجيل",
-  "auth": "رفيقكِ الموثوق في كل مرحلة من مراحل الأمومة",
-  "auth2": "دعي Gestanéa ترشدكِ خلال الحمل، ورعاية الطفل، وما بعده.",
-  "forgot": "نسيتِ كلمة المرور؟",
-  "notRegistered": "لم تقومي بالتسجيل بعد؟",
+  "auth": "رفيقك الموثوق في كل مرحلة من مراحل الأمومة",
+  "auth2": "دع Gestanéa ترشدك خلال الحمل، ورعاية الطفل، وما بعده.",
+  "forgot": "نسيت كلمة المرور؟",
+  "notRegistered": "لم تقم بالتسجيل بعد؟",
   "createAccount": "إنشاء حساب",
-  "your_name": "اسمكِ",
+  "your_name": "اسمك",
   "email": "البريد الإلكتروني",
-  "enter_email": "أدخلي بريدكِ الإلكتروني",
-  "enter_name": "أدخلي اسمكِ",
-  "rememberMe": "تذكريني",
-  "sendOtp": "إرسال الرمز",
-  "verifyOtp": "تحقق من الرمز",
-  "enterOtpCode": "أدخلي رمز التحقق",
-  "otpSent": "تم إرسال رمز التحقق إلى بريدكِ الإلكتروني",
-  "otpCodePlaceholder": "رمز من 6 أرقام",
-  "resendOtp": "إعادة إرسال الرمز",
-  "noInternetConnection": "لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتكِ والمحاولة مرة أخرى.",
+  "enter_email": "أدخل بريدك الإلكتروني",
+  "enter_name": "أدخل اسمك",
+  "rememberMe": "تذكرني",
   "version": "الإصدار",
   "pregnant": "حامل",
   "postpartum": "ما بعد الولادة",
@@ -208,31 +95,27 @@
   "@week": {
     "description": "رقم الأسبوع",
     "placeholders": {
-      "week": {
-        "type": "int"
-      }
+      "week": {"type": "int"}
     }
   },
   "daysLeft": "{days} أيام متبقية",
   "@daysLeft": {
     "placeholders": {
-      "days": {
-        "type": "int"
-      }
+      "days": {"type": "int"}
     }
   },
-  "market": "المتجر",
+  "market": "السوق",
   "maternityWear": "ملابس الحمل",
   "painRelief": "تخفيف الألم",
   "skinCare": "العناية بالبشرة",
   "pregnancyPillow": "وسادة الحمل",
   "backSupportBelt": "حزام دعم الظهر",
-  "searchHint": "ابحثي عما تحتاجينه.. .",
-  "dontMissOut": "لا تفوتي الفرصة! ",
+  "searchHint": "ابحث عما تحتاجه...",
+  "dontMissOut": "لا تفوت الفرصة!",
   "discountUpTo": "خصم يصل إلى 50%",
-  "upgradeNow": "قومي بالترقية الآن",
+  "upgradeNow": "قم بالترقية الآن",
   "healthLog": "سجل الصحة",
-  "trackYourWellness": "تابعي صحتكِ",
+  "trackYourWellness": "تابع صحتك",
   "vitals": "المؤشرات الحيوية",
   "symptoms": "الأعراض",
   "labResults": "نتائج\nالمختبر",
@@ -244,18 +127,22 @@
   "normal": "طبيعي",
   "add": "إضافة",
   "measurement": "القياس",
-  "healthTipMessage": "عمل رائع! أنتِ تحافظين على وتيرة زيادة وزن صحية. استمري في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.",
+  "healthTipMessage": "عمل رائع! أنت تحافظ على وتيرة زيادة وزن صحية. استمر في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.",
   "onTrack": "على المسار الصحيح",
+
   "doctors": "الأطباء",
-  "findDoctors": "ابحثي عن الأطباء بالاسم أو التخصص",
-  "useCurrentLocation": "استخدمي موقعي الحالي",
+  "findDoctors": "ابحث عن الأطباء بالاسم أو التخصص",
+  "useCurrentLocation": "استخدام موقعي الحالي",
+  "algiers": "الجزائر",
+  "oran": "وهران",
+  "constantine": "قسنطينة",
+  "annaba": "عنابة",
+  "blida": "البليدة",
   "doctorsFoundSingle": "تم العثور على طبيب واحد",
   "doctorsFoundPlural": "تم العثور على {count} أطباء",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": {"type": "int"}
     }
   },
   "filter": "تصفية",
@@ -265,18 +152,14 @@
   "upToKm": "حتى {distance} كم",
   "@upToKm": {
     "placeholders": {
-      "distance": {
-        "type": "String"
-      }
+      "distance": {"type": "String"}
     }
   },
   "minimumRating": "التقييم الأدنى",
   "ratingAndAbove": "{rating} وما فوق",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {
-        "type": "String"
-      }
+      "rating": {"type": "String"}
     }
   },
   "gender": "الجنس",
@@ -287,31 +170,27 @@
   "atLeastReviews": "على الأقل {count} مراجعة",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": {"type": "int"}
     }
   },
+  "cancel": "إلغاء",
   "applyFilters": "تطبيق التصفية",
   "kmAway": "على بعد {distance} كم",
   "@kmAway": {
     "placeholders": {
-      "distance": {
-        "type": "String"
-      }
+      "distance": {"type": "String"}
     }
   },
   "reviews": "مراجعات",
   "noDoctorsFound": "لم يتم العثور على أطباء",
+  "noResults": "لا توجد نتائج",
   "noMatchingDoctors": "لا يوجد أطباء يطابقون \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {
-        "type": "String"
-      }
+      "query": {"type": "String"}
     }
   },
-  "tryAdjustingFilters": "حاولي تعديل التصفية",
+  "tryAdjustingFilters": "حاول تعديل التصفية",
   "doctorDetails": "تفاصيل الطبيب",
   "couldNotOpenMaps": "تعذر فتح الخرائط",
   "phoneNumberNotAvailable": "رقم الهاتف غير متوفر",
@@ -320,56 +199,10 @@
   "pediatrician": "طبيب أطفال",
   "obstetrician": "طبيب توليد",
   "generalPractitioner": "طبيب عام",
-  "getDirections": "احصلي على الاتجاهات",
+  "getDirections": "احصل على الاتجاهات",
   "contactInformation": "معلومات الاتصال",
   "address": "العنوان",
   "phoneNumber": "رقم الهاتف",
   "openingHours": "ساعات العمل",
-  "callNow": "اتصلي الآن",
-  "take": "تناولي",
-  "noMedicinesFound": "لم يتم العثور على أدوية",
-  "pleaseLoginToViewPlan": "يرجى تسجيل الدخول لعرض خطتك",
-  "selectColor": "اختاري اللون",
-  "selectSize": "اختاري المقاس",
-  "addToCart": "أضيفي إلى السلة",
-  "buyNow": "اشتري الآن",
-  "description": "الوصف",
-  "noDescriptionAvailable": "لا يوجد وصف متاح",
-  "specifications": "المواصفات",
-  "customerReviews": "تقييمات العملاء",
-  "seeAll": "عرض الكل",
-  "completeYourOrder": "أكملي طلبك",
-  "orderSummary": "ملخص الطلب",
-  "product": "المنتج",
-  "size": "المقاس",
-  "qty": "الكمية",
-  "subtotal": "المجموع الفرعي",
-  "deliveryFee": "رسوم التوصيل",
-  "total": "المجموع",
-  "deliveryInformation": "معلومات التوصيل",
-  "fullName": "الاسم الكامل",
-  "enterYourFullName": "أدخلي اسمك الكامل",
-  "phoneNumber": "رقم الهاتف",
-  "enterYourPhoneNumber": "أدخلي رقم هاتفك",
-  "deliveryAddress": "عنوان التوصيل",
-  "streetAddressApartment": "عنوان الشارع، الشقة، إلخ.",
-  "city": "المدينة",
-  "enterYourCity": "أدخلي مدينتك",
-  "specialInstructions": "تعليمات خاصة (اختياري)",
-  "addDeliveryNotes": "أضيفي ملاحظات التوصيل، طلبات خاصة...",
-  "paymentMethod": "طريقة الدفع",
-  "cashOnDelivery": "الدفع عند الاستلام",
-  "creditDebitCard": "بطاقة ائتمان / خصم",
-  "digitalWallet": "محفظة رقمية",
-  "placeOrder": "إتمام الطلب",
-  "orderPlacedSuccessfully": "تم تقديم الطلب {orderId} بنجاح!",
-  "@orderPlacedSuccessfully": {
-    "placeholders": {
-      "orderId": {
-        "type": "String"
-      }
-    }
-  },
-  "yourInformationIsSecure": "معلوماتك آمنة ومشفرة",
-  "openNow": "مفتوح الآن"
+  "callNow": "اتصل الآن"
 }

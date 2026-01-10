@@ -3,8 +3,6 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class DoctorInfo extends StatelessWidget {
   final DoctorModel doctor;
@@ -14,7 +12,6 @@ class DoctorInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,14 +30,14 @@ class DoctorInfo extends StatelessWidget {
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 13,
-            color: themeData.secondaryColor,
+            color: AppColors.main600,
             fontWeight: FontWeight.w400,
           ),
         ),
         const SizedBox(height: 6),
         Row(
           children: [
-            Icon(Icons.location_on, size: 14, color: themeData.primaryColor),
+            const Icon(Icons.location_on, size: 14, color: AppColors.main500),
             const SizedBox(width: 4),
             Text(
               l10n.kmAway((doctor.distance ?? 0).toStringAsFixed(1)),
@@ -69,7 +66,7 @@ class DoctorInfo extends StatelessWidget {
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 11,
-                color: themeData.primaryColor,
+                color: AppColors.main500,
               ),
             ),
           ],

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/utils/box_shadow.dart';
-import 'package:gestanea/core/utils/box_decoration.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class searchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -21,7 +18,6 @@ class searchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       height: 40,
       decoration: BoxDecoration(
@@ -52,8 +48,8 @@ class searchBar extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 onChanged: onChanged,
-                style: TextStyle(
-                  color: themeData.primaryColor,
+                style: const TextStyle(
+                  color: AppColors.main500,
                   fontSize: 16,
                   fontFamily: 'Lato',
                   fontWeight: FontWeight.w400,
@@ -61,7 +57,7 @@ class searchBar extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: TextStyle(
-                    color: themeData.primaryColor.withOpacity(0.6),
+                    color: const Color(0x99B077E4),
                     fontSize: 16,
                     fontFamily: 'Lato',
                     fontWeight: FontWeight.w400,
@@ -81,9 +77,9 @@ class searchBar extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: Icon(
+                child: const Icon(
                   Icons.search,
-                  color: themeData.primaryColor,
+                  color: AppColors.main500,
                   size: 24,
                 ),
               ),

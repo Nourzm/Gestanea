@@ -21,15 +21,6 @@ class AuthAuthenticated extends AuthState {
 
 class AuthUnauthenticated extends AuthState {}
 
-class OtpSent extends AuthState {
-  final String email;
-
-  OtpSent(this.email);
-
-  @override
-  List<Object?> get props => [email];
-}
-
 class AuthFailure extends AuthState {
   final String message;
 
@@ -38,23 +29,3 @@ class AuthFailure extends AuthState {
   @override
   List<Object?> get props => [message];
 }
-
-class AuthOTPResent extends AuthState {
-  final String email;
-
-  AuthOTPResent(this.email);
-
-  @override
-  List<Object?> get props => [email];
-}
-
-class PasswordResetEmailSent extends AuthState {
-  final String email;
-
-  PasswordResetEmailSent(this.email);
-
-  @override
-  List<Object?> get props => [email];
-}
-
-class PasswordChangedSuccess extends AuthState {}

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class WeekCalendar extends StatelessWidget {
@@ -23,7 +21,6 @@ class WeekCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: weekDays.map((date) {
@@ -47,7 +44,7 @@ class WeekCalendar extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [themeData.primaryColor, themeData.lightColor],
+                      colors: [AppColors.main500, AppColors.lightPurple],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [

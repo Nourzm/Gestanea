@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class CategoryItem extends StatefulWidget {
   final String label;
   final String imageAsset;
   final Color textColor;
   final VoidCallback? onTap;
-  final bool isSelected;
 
   const CategoryItem({
     super.key,
@@ -17,7 +14,6 @@ class CategoryItem extends StatefulWidget {
     required this.imageAsset,
     this.textColor = AppColors.textDark,
     this.onTap,
-    this.isSelected = false,
   });
 
   @override
@@ -27,7 +23,6 @@ class CategoryItem extends StatefulWidget {
 class _CategoryItemState extends State<CategoryItem> {
   @override
   Widget build(BuildContext context) {
-    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: widget.onTap,
       child: Column(
@@ -61,12 +56,11 @@ class _CategoryItemState extends State<CategoryItem> {
                 widget.imageAsset,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  final themeData = context.watch<ThemeCubit>().currentTheme;
                   return Container(
                     color: Colors.grey[300],
-                    child: Icon(
+                    child: const Icon(
                       Icons.image_not_supported,
-                      color: themeData.cardColor,
+                      color: AppColors.main300,
                       size: 24,
                     ),
                   );
@@ -79,12 +73,10 @@ class _CategoryItemState extends State<CategoryItem> {
             widget.label,
             textAlign: TextAlign.center,
             style: AppTextStyles.smallLabel.copyWith(
-              color: widget.isSelected
-                  ? themeData.primaryColor
-                  : widget.textColor,
+              color: widget.textColor,
               fontSize: 9,
               fontFamily: 'Lato',
-              fontWeight: widget.isSelected ? FontWeight.w900 : FontWeight.w500,
+              fontWeight: FontWeight.w500,
               height: 1.33,
             ),
           ),

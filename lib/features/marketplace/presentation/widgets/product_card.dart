@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class ProductCard extends StatefulWidget {
   final String imageAsset;
@@ -44,16 +42,12 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    // Get current theme colors
-    final themeData = context.watch<ThemeCubit>().currentTheme;
-
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          // Use theme card color
-          color: themeData.cardColor,
+          color: AppColors.main300,
           borderRadius: BorderRadius.circular(16),
           boxShadow: _cardShadow,
         ),
@@ -87,20 +81,19 @@ class _ProductCardState extends State<ProductCard> {
                       top: 5,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                          horizontal: 6,
+                          vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          // Use theme primary color for discount badge
-                          color: themeData.primaryColor,
-                          borderRadius: BorderRadius.circular(20),
+                          color: widget.discountBgColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
                           widget.discount!,
                           style: AppTextStyles.smallLabel.copyWith(
                             color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
                           ),
                         ),
                       ),
@@ -136,7 +129,7 @@ class _ProductCardState extends State<ProductCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "${widget.price.toStringAsFixed(0)} DA",
+                        "\$${widget.price.toStringAsFixed(2)}",
                         style: const TextStyle(
                           color: Color(0xFF1C2229),
                           fontSize: 11,
@@ -149,7 +142,7 @@ class _ProductCardState extends State<ProductCard> {
                       if (widget.oldPrice != null) ...[
                         const SizedBox(width: 3),
                         Text(
-                          "${widget.oldPrice!.toStringAsFixed(0)} DA",
+                          "\$${widget.oldPrice!.toStringAsFixed(2)}",
                           style: const TextStyle(
                             color: Color(0xFF9C77BE),
                             fontSize: 9,

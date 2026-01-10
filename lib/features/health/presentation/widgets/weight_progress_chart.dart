@@ -2,8 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class WeightProgressChart extends StatelessWidget {
@@ -11,13 +9,12 @@ class WeightProgressChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final themeData = context.watch<ThemeCubit>().currentTheme;
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.main300,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -41,7 +38,7 @@ class WeightProgressChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                l10n.weightProgress,
+                'Weight Progress',
                 style: AppTextStyles.subtitle1.copyWith(
                   color: AppColors.textDark,
                   fontSize: 14,
@@ -49,16 +46,13 @@ class WeightProgressChart extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
                   color: const Color(0xFFB8E6B8),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  l10n.onTrack,
+                  localizations.onTrack,
                   style: AppTextStyles.smallLabel.copyWith(
                     color: const Color(0xFF2D5F2D),
                     fontSize: 11,
@@ -103,12 +97,8 @@ class WeightProgressChart extends StatelessWidget {
                       },
                     ),
                   ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -121,14 +111,14 @@ class WeightProgressChart extends StatelessWidget {
                       FlSpot(24, 72),
                     ],
                     isCurved: true,
-                    color: themeData.primaryColor,
+                    color: AppColors.main500,
                     barWidth: 2.5,
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 3,
-                          color: themeData.primaryColor,
+                          color: AppColors.main500,
                           strokeWidth: 1.5,
                           strokeColor: Colors.white,
                         );
