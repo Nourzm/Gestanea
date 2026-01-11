@@ -2505,6 +2505,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next Lab Appointment'**
   String get nextLabAppointment;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Track'**
+  String get navTrack;
+
+  /// No description provided for @navHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get navHealth;
+
+  /// No description provided for @navPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get navPlan;
+
+  /// No description provided for @navMarket.
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get navMarket;
+
+  /// No description provided for @hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello'**
+  String get hello;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'DONE'**
+  String get done;
+
+  /// No description provided for @daysToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'DAYS TO GO'**
+  String get daysToGo;
+
+  /// No description provided for @weekLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEK'**
+  String get weekLabel;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @ourTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Tips'**
+  String get ourTips;
+
+  /// No description provided for @followBestPractices.
+  ///
+  /// In en, this message translates to:
+  /// **'follow best practices'**
+  String get followBestPractices;
+
+  /// No description provided for @ourDoctors.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Doctors'**
+  String get ourDoctors;
+
+  /// No description provided for @findTheBestDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'find the best doctor'**
+  String get findTheBestDoctor;
+
+  /// No description provided for @upComing.
+  ///
+  /// In en, this message translates to:
+  /// **'Up coming'**
+  String get upComing;
+
+  /// No description provided for @noUpcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming events'**
+  String get noUpcomingEvents;
+
+  /// No description provided for @addAppointmentsInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Add appointments in Plan'**
+  String get addAppointmentsInPlan;
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @inMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'In {minutes} minutes'**
+  String inMinutes(int minutes);
+
+  /// No description provided for @inHours.
+  ///
+  /// In en, this message translates to:
+  /// **'In {hours} hours'**
+  String inHours(int hours);
+
+  /// No description provided for @todayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Today at {time}'**
+  String todayAt(String time);
+
+  /// No description provided for @tomorrowAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow at {time}'**
+  String tomorrowAt(String time);
+
+  /// No description provided for @at.
+  ///
+  /// In en, this message translates to:
+  /// **'at'**
+  String get at;
 }
 
 class _AppLocalizationsDelegate

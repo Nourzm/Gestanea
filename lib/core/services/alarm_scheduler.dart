@@ -12,42 +12,31 @@ final Map<int, Map<String, dynamic>> _alarmMetadata = {};
 @pragma('vm:entry-point')
 void medicineAlarmCallback(int id) async {
   developer.log('🔔 Medicine alarm triggered! ID: $id', name: 'AlarmScheduler');
-  print('🔔 Medicine alarm triggered! ID: $id');
 
   try {
-    // CRITICAL FIX: Force a fresh SharedPreferences instance in this isolate
-    print('📖 Retrieving metadata for alarm $id from SharedPreferences...');
-
     // Retry logic to handle cross-isolate SharedPreferences consistency
     Map<String, dynamic>? metadata;
     SharedPreferences? prefs;
 
     for (int attempt = 1; attempt <= 3; attempt++) {
-      print('🔄 Attempt $attempt to retrieve metadata...');
-
       // Get fresh instance each time
       prefs = await SharedPreferences.getInstance();
 
       // Force reload from disk
       await prefs.reload();
-      print('💾 SharedPreferences reloaded (attempt $attempt)');
 
       // List all keys to debug
       final allKeys = prefs.getKeys();
-      print('📋 All stored keys (attempt $attempt): $allKeys');
 
       final metadataJson = prefs.getString('alarm_$id');
-      print('📄 Raw metadata JSON for alarm_$id: $metadataJson');
 
       if (metadataJson != null) {
         metadata = json.decode(metadataJson) as Map<String, dynamic>;
-        print('✅ Metadata decoded successfully: $metadata');
         break;
       }
 
       // Wait before retrying
       if (attempt < 3) {
-        print('⏳ Waiting 500ms before retry...');
         await Future.delayed(const Duration(milliseconds: 500));
       }
     }
@@ -56,10 +45,6 @@ void medicineAlarmCallback(int id) async {
       developer.log(
         '❌ No metadata found for alarm $id after 3 attempts',
         name: 'AlarmScheduler',
-      );
-      print('❌ No metadata found for alarm $id after 3 attempts');
-      print(
-        '🔍 Available alarm keys: ${prefs?.getKeys().where((k) => k.startsWith("alarm_")).toList()}',
       );
 
       // Show fallback notification
@@ -89,7 +74,6 @@ void medicineAlarmCallback(int id) async {
         payload: 'medicine:$id',
       );
 
-      print('✅ Fallback notification shown');
       return;
     }
 
@@ -100,7 +84,6 @@ void medicineAlarmCallback(int id) async {
     );
     const initSettings = InitializationSettings(android: androidSettings);
     await notifications.initialize(initSettings);
-    print('✅ Notification plugin initialized in background');
 
     // Show notification
     const androidDetails = AndroidNotificationDetails(
@@ -126,7 +109,6 @@ void medicineAlarmCallback(int id) async {
       '✅ Medicine notification shown for ${metadata['medicineName']}',
       name: 'AlarmScheduler',
     );
-    print('✅ Medicine notification shown for ${metadata['medicineName']}');
   } catch (e, stackTrace) {
     developer.log(
       '❌ Error in medicine alarm callback: $e',
@@ -134,8 +116,6 @@ void medicineAlarmCallback(int id) async {
       error: e,
       stackTrace: stackTrace,
     );
-    print('❌ Error in medicine alarm callback: $e');
-    print('Stack trace: $stackTrace');
   }
 }
 
@@ -146,42 +126,33 @@ void appointmentAlarmCallback(int id) async {
     '🔔 Appointment alarm triggered! ID: $id',
     name: 'AlarmScheduler',
   );
-  print('🔔 Appointment alarm triggered! ID: $id');
 
   try {
     // CRITICAL FIX: Force a fresh SharedPreferences instance in this isolate
-    print('📖 Retrieving metadata for alarm $id from SharedPreferences...');
 
     // Retry logic to handle cross-isolate SharedPreferences consistency
     Map<String, dynamic>? metadata;
     SharedPreferences? prefs;
 
     for (int attempt = 1; attempt <= 3; attempt++) {
-      print('🔄 Attempt $attempt to retrieve metadata...');
-
       // Get fresh instance each time
       prefs = await SharedPreferences.getInstance();
 
       // Force reload from disk
       await prefs.reload();
-      print('💾 SharedPreferences reloaded (attempt $attempt)');
 
       // List all keys to debug
       final allKeys = prefs.getKeys();
-      print('📋 All stored keys (attempt $attempt): $allKeys');
 
       final metadataJson = prefs.getString('alarm_$id');
-      print('📄 Raw metadata JSON for alarm_$id: $metadataJson');
 
       if (metadataJson != null) {
         metadata = json.decode(metadataJson) as Map<String, dynamic>;
-        print('✅ Metadata decoded successfully: $metadata');
         break;
       }
 
       // Wait before retrying
       if (attempt < 3) {
-        print('⏳ Waiting 500ms before retry...');
         await Future.delayed(const Duration(milliseconds: 500));
       }
     }
@@ -190,10 +161,6 @@ void appointmentAlarmCallback(int id) async {
       developer.log(
         '❌ No metadata found for alarm $id after 3 attempts',
         name: 'AlarmScheduler',
-      );
-      print('❌ No metadata found for alarm $id after 3 attempts');
-      print(
-        '🔍 Available alarm keys: ${prefs?.getKeys().where((k) => k.startsWith("alarm_")).toList()}',
       );
 
       // Show fallback notification
@@ -223,7 +190,6 @@ void appointmentAlarmCallback(int id) async {
         payload: 'appointment:$id',
       );
 
-      print('✅ Fallback notification shown');
       return;
     }
 
@@ -234,7 +200,6 @@ void appointmentAlarmCallback(int id) async {
     );
     const initSettings = InitializationSettings(android: androidSettings);
     await notifications.initialize(initSettings);
-    print('✅ Notification plugin initialized in background');
 
     // Show notification
     final location = metadata['location'] as String?;
@@ -265,7 +230,6 @@ void appointmentAlarmCallback(int id) async {
       '✅ Appointment notification shown for ${metadata['title']}',
       name: 'AlarmScheduler',
     );
-    print('✅ Appointment notification shown for ${metadata['title']}');
   } catch (e, stackTrace) {
     developer.log(
       '❌ Error in appointment alarm callback: $e',
@@ -273,8 +237,6 @@ void appointmentAlarmCallback(int id) async {
       error: e,
       stackTrace: stackTrace,
     );
-    print('❌ Error in appointment alarm callback: $e');
-    print('Stack trace: $stackTrace');
   }
 }
 
@@ -297,7 +259,6 @@ class AlarmScheduler {
     }
 
     developer.log('🚀 Initializing alarm manager...', name: 'AlarmScheduler');
-    print('🚀 Initializing alarm manager...');
 
     try {
       await AndroidAlarmManager.initialize();
@@ -306,7 +267,6 @@ class AlarmScheduler {
         '✅ Alarm manager initialized successfully',
         name: 'AlarmScheduler',
       );
-      print('✅ Alarm manager initialized successfully');
     } catch (e, stackTrace) {
       developer.log(
         '❌ Failed to initialize alarm manager: $e',
@@ -314,7 +274,6 @@ class AlarmScheduler {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Failed to initialize alarm manager: $e');
       rethrow;
     }
   }
@@ -328,7 +287,6 @@ class AlarmScheduler {
       '💾 Storing metadata for alarm $id: $metadata',
       name: 'AlarmScheduler',
     );
-    print('💾 Storing metadata for alarm $id: $metadata');
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -337,7 +295,6 @@ class AlarmScheduler {
       // CRITICAL FIX 1: Use commit() instead of setString()
       // commit() forces immediate write to disk, while setString() is async
       final saved = await prefs.setString('alarm_$id', metadataJson);
-      print('💾 setString returned: $saved');
 
       if (!saved) {
         throw Exception('setString returned false');
@@ -346,24 +303,17 @@ class AlarmScheduler {
       // CRITICAL FIX 2: Multiple verification attempts
       bool verified = false;
       for (int attempt = 1; attempt <= 3; attempt++) {
-        print('🔄 Verification attempt $attempt...');
-
         // Force reload from disk to ensure persistence
         await prefs.reload();
-        print('💾 SharedPreferences reloaded (attempt $attempt)');
 
         // Verify the data was actually saved
         final verification = prefs.getString('alarm_$id');
         if (verification != null && verification == metadataJson) {
           verified = true;
-          print(
-            '✅ Metadata verified in SharedPreferences: alarm_$id (attempt $attempt)',
-          );
           break;
         }
 
         if (attempt < 3) {
-          print('⚠️ Verification failed, retrying...');
           // Try saving again
           await prefs.setString('alarm_$id', metadataJson);
           await Future.delayed(const Duration(milliseconds: 200));
@@ -386,7 +336,6 @@ class AlarmScheduler {
       // Final verification
       await prefs.reload();
       final finalCheck = prefs.getString('alarm_$id');
-      print('🔍 Final verification: ${finalCheck != null ? "PASS" : "FAIL"}');
     } catch (e, stackTrace) {
       developer.log(
         '❌ Failed to store metadata: $e',
@@ -394,7 +343,6 @@ class AlarmScheduler {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Failed to store metadata: $e');
       rethrow;
     }
   }
@@ -412,10 +360,6 @@ class AlarmScheduler {
       '📅 Scheduling medicine alarms for: $medicineName',
       name: 'AlarmScheduler',
     );
-    print('📅 Scheduling medicine alarms for: $medicineName');
-    print('   Times: $scheduledTimes');
-    print('   Start date: $startDate');
-    print('   End date: $endDate');
 
     final now = DateTime.now();
     int scheduledCount = 0;
@@ -427,7 +371,6 @@ class AlarmScheduler {
           '⚠️ Failed to parse time: ${scheduledTimes[i]}',
           name: 'AlarmScheduler',
         );
-        print('⚠️ Failed to parse time: ${scheduledTimes[i]}');
         continue;
       }
 
@@ -447,7 +390,6 @@ class AlarmScheduler {
           '⏰ Time has passed today, scheduling for tomorrow: $alarmTime',
           name: 'AlarmScheduler',
         );
-        print('⏰ Time has passed today, scheduling for tomorrow: $alarmTime');
       }
 
       // Don't schedule if before start date
@@ -456,7 +398,6 @@ class AlarmScheduler {
           '⚠️ Alarm time before start date, skipping',
           name: 'AlarmScheduler',
         );
-        print('⚠️ Alarm time before start date, skipping');
         continue;
       }
 
@@ -466,7 +407,6 @@ class AlarmScheduler {
           '⚠️ Alarm time after end date, skipping',
           name: 'AlarmScheduler',
         );
-        print('⚠️ Alarm time after end date, skipping');
         continue;
       }
 
@@ -481,14 +421,11 @@ class AlarmScheduler {
           'dosage': dosage,
           'type': 'medicine',
         });
-
-        print('✅ Metadata stored successfully for alarm $alarmId');
       } catch (e) {
         developer.log(
           '❌ Failed to store metadata for alarm $alarmId: $e',
           name: 'AlarmScheduler',
         );
-        print('❌ Failed to store metadata for alarm $alarmId: $e');
         continue; // Skip scheduling this alarm if metadata storage fails
       }
 
@@ -510,14 +447,11 @@ class AlarmScheduler {
             '✅ Scheduled medicine alarm $alarmId for $medicineName at ${scheduledTimes[i]} (next trigger: $alarmTime)',
             name: 'AlarmScheduler',
           );
-          print('✅ Scheduled medicine alarm $alarmId for $medicineName');
-          print('   Time: ${scheduledTimes[i]} (next trigger: $alarmTime)');
         } else {
           developer.log(
             '❌ Failed to schedule alarm $alarmId for $medicineName',
             name: 'AlarmScheduler',
           );
-          print('❌ Failed to schedule alarm $alarmId for $medicineName');
         }
       } catch (e, stackTrace) {
         developer.log(
@@ -526,16 +460,12 @@ class AlarmScheduler {
           error: e,
           stackTrace: stackTrace,
         );
-        print('❌ Error scheduling alarm for $medicineName: $e');
       }
     }
 
     developer.log(
       '📊 Scheduled $scheduledCount out of ${scheduledTimes.length} alarms for $medicineName',
       name: 'AlarmScheduler',
-    );
-    print(
-      '📊 Scheduled $scheduledCount out of ${scheduledTimes.length} alarms for $medicineName',
     );
   }
 
@@ -551,9 +481,6 @@ class AlarmScheduler {
       '📅 Scheduling appointment alarm for: $title',
       name: 'AlarmScheduler',
     );
-    print('📅 Scheduling appointment alarm for: $title');
-    print('   Appointment date: $appointmentDate');
-    print('   Reminder: $reminderMinutesBefore minutes before');
 
     final now = DateTime.now();
     final reminderTime = appointmentDate.subtract(
@@ -566,7 +493,6 @@ class AlarmScheduler {
         '⚠️ Appointment reminder time has passed, skipping',
         name: 'AlarmScheduler',
       );
-      print('⚠️ Appointment reminder time has passed, skipping');
       return;
     }
 
@@ -579,14 +505,11 @@ class AlarmScheduler {
         'location': location,
         'type': 'appointment',
       });
-
-      print('✅ Metadata stored successfully for alarm $alarmId');
     } catch (e) {
       developer.log(
         '❌ Failed to store metadata for alarm $alarmId: $e',
         name: 'AlarmScheduler',
       );
-      print('❌ Failed to store metadata for alarm $alarmId: $e');
       return; // Don't schedule if metadata storage fails
     }
 
@@ -606,14 +529,11 @@ class AlarmScheduler {
           '✅ Scheduled appointment alarm $alarmId for $title at $reminderTime',
           name: 'AlarmScheduler',
         );
-        print('✅ Scheduled appointment alarm $alarmId for $title');
-        print('   Reminder time: $reminderTime');
       } else {
         developer.log(
           '❌ Failed to schedule appointment alarm $alarmId for $title',
           name: 'AlarmScheduler',
         );
-        print('❌ Failed to schedule appointment alarm $alarmId for $title');
       }
     } catch (e, stackTrace) {
       developer.log(
@@ -622,7 +542,6 @@ class AlarmScheduler {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Error scheduling appointment alarm for $title: $e');
     }
   }
 
@@ -632,7 +551,6 @@ class AlarmScheduler {
       '🗑️ Cancelling alarms for medicine $medicineId',
       name: 'AlarmScheduler',
     );
-    print('🗑️ Cancelling alarms for medicine $medicineId');
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -647,7 +565,6 @@ class AlarmScheduler {
       '✅ Cancelled alarms for medicine $medicineId',
       name: 'AlarmScheduler',
     );
-    print('✅ Cancelled alarms for medicine $medicineId');
   }
 
   /// Cancel alarm for an appointment
@@ -656,7 +573,6 @@ class AlarmScheduler {
       '🗑️ Cancelling alarm for appointment $appointmentId',
       name: 'AlarmScheduler',
     );
-    print('🗑️ Cancelling alarm for appointment $appointmentId');
 
     final prefs = await SharedPreferences.getInstance();
     final alarmId = appointmentId.hashCode.abs();
@@ -667,7 +583,6 @@ class AlarmScheduler {
       '✅ Cancelled alarm for appointment $appointmentId',
       name: 'AlarmScheduler',
     );
-    print('✅ Cancelled alarm for appointment $appointmentId');
   }
 
   /// Generate unique alarm ID for medicine
@@ -689,7 +604,6 @@ class AlarmScheduler {
           '⚠️ Invalid time values: $timeString',
           name: 'AlarmScheduler',
         );
-        print('⚠️ Invalid time values: $timeString');
         return null;
       }
       return TimeOfDay(hour: hour, minute: minute);
@@ -698,7 +612,6 @@ class AlarmScheduler {
         '⚠️ Error parsing time: $timeString - $e',
         name: 'AlarmScheduler',
       );
-      print('⚠️ Error parsing time: $timeString - $e');
       return null;
     }
   }

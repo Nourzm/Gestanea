@@ -16,6 +16,9 @@ class CategorySidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get current locale
+    final locale = Localizations.localeOf(context);
+
     return Container(
       width: 75,
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -26,7 +29,7 @@ class CategorySidebar extends StatelessWidget {
           final category = categories[index];
           final isSelected = selectedIndex == index;
           return CategoryItem(
-            label: category.name ?? '',
+            label: category.getTranslatedName(locale.languageCode),
             imageAsset: category.imageUrl ?? '',
             isSelected: isSelected,
             onTap: () => onCategoryTapped?.call(index),

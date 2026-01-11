@@ -1,5 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer' as developer;
 
@@ -28,7 +27,6 @@ class NotificationService {
       '🚀 Initializing notification service...',
       name: 'NotificationService',
     );
-    print('🚀 Initializing notification service...');
 
     try {
       // Request notification permission for Android 13+
@@ -37,7 +35,6 @@ class NotificationService {
         '📱 Notification permission: $permissionStatus',
         name: 'NotificationService',
       );
-      print('📱 Notification permission: $permissionStatus');
 
       const androidSettings = AndroidInitializationSettings(
         '@mipmap/ic_launcher',
@@ -54,7 +51,6 @@ class NotificationService {
         '✅ Notification service initialized: $initialized',
         name: 'NotificationService',
       );
-      print('✅ Notification service initialized: $initialized');
     } catch (e, stackTrace) {
       developer.log(
         '❌ Failed to initialize notification service: $e',
@@ -62,7 +58,6 @@ class NotificationService {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Failed to initialize notification service: $e');
       rethrow;
     }
   }
@@ -73,7 +68,6 @@ class NotificationService {
       '👆 Notification tapped: ${response.payload}',
       name: 'NotificationService',
     );
-    print('👆 Notification tapped: ${response.payload}');
     // Handle navigation based on payload if needed
   }
 
@@ -87,7 +81,6 @@ class NotificationService {
       '💊 Showing medicine notification: $medicineName',
       name: 'NotificationService',
     );
-    print('💊 Showing medicine notification: $medicineName');
 
     try {
       const androidDetails = AndroidNotificationDetails(
@@ -114,7 +107,6 @@ class NotificationService {
         '✅ Medicine notification shown successfully',
         name: 'NotificationService',
       );
-      print('✅ Medicine notification shown successfully');
     } catch (e, stackTrace) {
       developer.log(
         '❌ Failed to show medicine notification: $e',
@@ -122,7 +114,6 @@ class NotificationService {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Failed to show medicine notification: $e');
       rethrow;
     }
   }
@@ -137,7 +128,6 @@ class NotificationService {
       '📅 Showing appointment notification: $title',
       name: 'NotificationService',
     );
-    print('📅 Showing appointment notification: $title');
 
     try {
       const androidDetails = AndroidNotificationDetails(
@@ -165,7 +155,6 @@ class NotificationService {
         '✅ Appointment notification shown successfully',
         name: 'NotificationService',
       );
-      print('✅ Appointment notification shown successfully');
     } catch (e, stackTrace) {
       developer.log(
         '❌ Failed to show appointment notification: $e',
@@ -173,7 +162,6 @@ class NotificationService {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Failed to show appointment notification: $e');
       rethrow;
     }
   }

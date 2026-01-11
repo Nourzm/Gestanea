@@ -103,140 +103,160 @@ class ProductDetailPage extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child:
-                                  state.product.imageUrls[state.currentImageIndex]
+                                  state
+                                      .product
+                                      .imageUrls[state.currentImageIndex]
                                       .startsWith('http')
-                                ? Image.network(
-                                    state.product.imageUrls[state
-                                        .currentImageIndex],
-                                    fit: BoxFit.contain,
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress.expectedTotalBytes != null
-                                              ? loadingProgress.cumulativeBytesLoaded /
-                                                  loadingProgress.expectedTotalBytes!
-                                              : null,
-                                          color: themeData.primaryColor,
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Icon(
-                                          Icons.image_not_supported,
-                                          size: 50,
-                                          color: themeData.cardColor,
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : Image.asset(
-                                    state.product.imageUrls[state
-                                        .currentImageIndex],
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Icon(
-                                          Icons.image_not_supported,
-                                          size: 50,
-                                          color: themeData.cardColor,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Thumbnail gallery
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            state.product.imageUrls.length,
-                            (index) => GestureDetector(
-                              onTap: () {
-                                context.read<ProductDetailsBloc>().add(
-                                  ChangeImage(index),
-                                );
-                              },
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                margin: const EdgeInsets.only(right: 12),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: state.currentImageIndex == index
-                                        ? themeData.primaryColor
-                                        : Colors.transparent,
-                                    width: 2,
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x26000000),
-                                      blurRadius: 4,
-                                      offset: Offset(2, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child:
-                                      state.product.imageUrls[index].startsWith(
-                                        'http',
-                                      )
-                                      ? Image.network(
-                                          state.product.imageUrls[index],
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child, loadingProgress) {
-                                            if (loadingProgress == null) return child;
+                                  ? Image.network(
+                                      state.product.imageUrls[state
+                                          .currentImageIndex],
+                                      fit: BoxFit.contain,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
                                             return Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: themeData.primaryColor,
-                                                ),
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                    : null,
+                                                color: themeData.primaryColor,
                                               ),
                                             );
                                           },
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.grey[300],
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
                                               child: Icon(
                                                 Icons.image_not_supported,
-                                                size: 20,
-                                                color: Colors.grey[600],
+                                                size: 50,
+                                                color: themeData.cardColor,
                                               ),
                                             );
                                           },
-                                        )
-                                      : Image.asset(
-                                          state.product.imageUrls[index],
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.grey[300],
+                                    )
+                                  : Image.asset(
+                                      state.product.imageUrls[state
+                                          .currentImageIndex],
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
                                               child: Icon(
                                                 Icons.image_not_supported,
-                                                size: 20,
-                                                color: Colors.grey[600],
+                                                size: 50,
+                                                color: themeData.cardColor,
                                               ),
                                             );
                                           },
-                                        ),
+                                    ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Thumbnail gallery
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              state.product.imageUrls.length,
+                              (index) => GestureDetector(
+                                onTap: () {
+                                  context.read<ProductDetailsBloc>().add(
+                                    ChangeImage(index),
+                                  );
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  margin: const EdgeInsets.only(right: 12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: state.currentImageIndex == index
+                                          ? themeData.primaryColor
+                                          : Colors.transparent,
+                                      width: 2,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x26000000),
+                                        blurRadius: 4,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child:
+                                        state.product.imageUrls[index]
+                                            .startsWith('http')
+                                        ? Image.network(
+                                            state.product.imageUrls[index],
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (
+                                                  context,
+                                                  child,
+                                                  loadingProgress,
+                                                ) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child: SizedBox(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                            strokeWidth: 2,
+                                                            color: themeData
+                                                                .primaryColor,
+                                                          ),
+                                                    ),
+                                                  );
+                                                },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 20,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  );
+                                                },
+                                          )
+                                        : Image.asset(
+                                            state.product.imageUrls[index],
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 20,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  );
+                                                },
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
                   const SizedBox(height: 24),
 
@@ -273,7 +293,9 @@ class ProductDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          state.product.productName,
+                          state.product.getTranslatedName(
+                            Localizations.localeOf(context).languageCode,
+                          ),
                           style: AppTextStyles.headline2.copyWith(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -643,7 +665,9 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            state.product.description ??
+                            state.product.getTranslatedDescription(
+                                  Localizations.localeOf(context).languageCode,
+                                ) ??
                                 AppLocalizations.of(
                                   context,
                                 )!.noDescriptionAvailable,

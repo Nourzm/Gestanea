@@ -536,5 +536,58 @@
   "diastolicRange": "Diastolic must be between 40 and 130",
   "normalRangeLabel": "Normal range",
   "uploadLabResults": "Upload Lab Results",
-  "nextLabAppointment": "Next Lab Appointment"
+  "nextLabAppointment": "Next Lab Appointment",
+  "navHome": "Home",
+  "navTrack": "Track",
+  "navHealth": "Health",
+  "navPlan": "Plan",
+  "navMarket": "Market",
+  "hello": "Hello",
+  "done": "DONE",
+  "daysToGo": "DAYS TO GO",
+  "weekLabel": "WEEK",
+  "day": "day",
+  "days": "days",
+  "more": "More",
+  "ourTips": "Our Tips",
+  "followBestPractices": "follow best practices",
+  "ourDoctors": "Our Doctors",
+  "findTheBestDoctor": "find the best doctor",
+  "upComing": "Up coming",
+  "noUpcomingEvents": "No upcoming events",
+  "addAppointmentsInPlan": "Add appointments in Plan",
+  "overdue": "Overdue",
+  "inMinutes": "In {minutes} minutes",
+  "@inMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "In {hours} hours",
+  "@inHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "todayAt": "Today at {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "tomorrowAt": "Tomorrow at {time}",
+  "@tomorrowAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "at": "at"
 }

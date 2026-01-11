@@ -432,5 +432,57 @@
     }
   },
   "yourInformationIsSecure": "Vos informations sont sécurisées et cryptées",
-  "openNow": "Ouvert maintenant"
+  "openNow": "Ouvert maintenant",
+  "navHome": "Accueil",
+  "navTrack": "Suivre",
+  "navHealth": "Santé",
+  "navPlan": "Plan",
+  "navMarket": "Marché",
+  "hello": "Bonjour",
+  "done": "FAIT",
+  "daysToGo": "JOURS RESTANTS",
+  "weekLabel": "SEMAINE",
+  "day": "jour",
+  "days": "jours",
+  "more": "Plus",
+  "ourTips": "Nos Conseils",
+  "followBestPractices": "suivre les meilleures pratiques",  "ourDoctors": "Nos médecins",
+  "findTheBestDoctor": "trouver le meilleur médecin",
+  "upComing": "À venir",
+  "noUpcomingEvents": "Aucun événement à venir",
+  "addAppointmentsInPlan": "Ajouter des rendez-vous dans le Plan",
+  "overdue": "En retard",
+  "inMinutes": "Dans {minutes} minutes",
+  "@inMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "Dans {hours} heures",
+  "@inHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "todayAt": "Aujourd'hui à {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "tomorrowAt": "Demain à {time}",
+  "@tomorrowAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "at": "à"
 }

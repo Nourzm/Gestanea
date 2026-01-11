@@ -1246,4 +1246,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nextLabAppointment => 'Next Lab Appointment';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navTrack => 'Track';
+
+  @override
+  String get navHealth => 'Health';
+
+  @override
+  String get navPlan => 'Plan';
+
+  @override
+  String get navMarket => 'Market';
+
+  @override
+  String get hello => 'Hello';
+
+  @override
+  String get done => 'DONE';
+
+  @override
+  String get daysToGo => 'DAYS TO GO';
+
+  @override
+  String get weekLabel => 'WEEK';
+
+  @override
+  String get day => 'day';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get ourTips => 'Our Tips';
+
+  @override
+  String get followBestPractices => 'follow best practices';
+
+  @override
+  String get ourDoctors => 'Our Doctors';
+
+  @override
+  String get findTheBestDoctor => 'find the best doctor';
+
+  @override
+  String get upComing => 'Up coming';
+
+  @override
+  String get noUpcomingEvents => 'No upcoming events';
+
+  @override
+  String get addAppointmentsInPlan => 'Add appointments in Plan';
+
+  @override
+  String get overdue => 'Overdue';
+
+  @override
+  String inMinutes(int minutes) {
+    return 'In $minutes minutes';
+  }
+
+  @override
+  String inHours(int hours) {
+    return 'In $hours hours';
+  }
+
+  @override
+  String todayAt(String time) {
+    return 'Today at $time';
+  }
+
+  @override
+  String tomorrowAt(String time) {
+    return 'Tomorrow at $time';
+  }
+
+  @override
+  String get at => 'at';
 }

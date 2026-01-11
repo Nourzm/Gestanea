@@ -1255,4 +1255,87 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nextLabAppointment => 'Next Lab Appointment';
+
+  @override
+  String get navHome => 'Accueil';
+
+  @override
+  String get navTrack => 'Suivre';
+
+  @override
+  String get navHealth => 'Santé';
+
+  @override
+  String get navPlan => 'Plan';
+
+  @override
+  String get navMarket => 'Marché';
+
+  @override
+  String get hello => 'Bonjour';
+
+  @override
+  String get done => 'FAIT';
+
+  @override
+  String get daysToGo => 'JOURS RESTANTS';
+
+  @override
+  String get weekLabel => 'SEMAINE';
+
+  @override
+  String get day => 'jour';
+
+  @override
+  String get days => 'jours';
+
+  @override
+  String get more => 'Plus';
+
+  @override
+  String get ourTips => 'Nos Conseils';
+
+  @override
+  String get followBestPractices => 'suivre les meilleures pratiques';
+
+  @override
+  String get ourDoctors => 'Nos médecins';
+
+  @override
+  String get findTheBestDoctor => 'trouver le meilleur médecin';
+
+  @override
+  String get upComing => 'À venir';
+
+  @override
+  String get noUpcomingEvents => 'Aucun événement à venir';
+
+  @override
+  String get addAppointmentsInPlan => 'Ajouter des rendez-vous dans le Plan';
+
+  @override
+  String get overdue => 'En retard';
+
+  @override
+  String inMinutes(int minutes) {
+    return 'Dans $minutes minutes';
+  }
+
+  @override
+  String inHours(int hours) {
+    return 'Dans $hours heures';
+  }
+
+  @override
+  String todayAt(String time) {
+    return 'Aujourd\'hui à $time';
+  }
+
+  @override
+  String tomorrowAt(String time) {
+    return 'Demain à $time';
+  }
+
+  @override
+  String get at => 'à';
 }
