@@ -7,6 +7,11 @@ import 'package:gestanea/features/auth/presentation/pages/signup_page.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:gestanea/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:gestanea/features/onboarding/presentation/pages/splash_screen.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_common_info_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_user_status_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_pregnancy_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_baby_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_health_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
@@ -19,6 +24,11 @@ import 'core/constants/app_routes.dart';
 Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   AppRoutes.onboarding: (context) => const OnboardingScreen(),
+  AppRoutes.onboardingCommonInfo: (context) => const OnboardingCommonInfoPage(),
+  AppRoutes.onboardingUserStatus: (context) => const OnboardingUserStatusPage(),
+  AppRoutes.onboardingPregnancy: (context) => const OnboardingPregnancyPage(),
+  AppRoutes.onboardingBaby: (context) => const OnboardingBabyPage(),
+  AppRoutes.onboardingHealth: (context) => const OnboardingHealthPage(),
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.auth: (context) => const AuthPage(),
   AppRoutes.personalize: (context) => const Personalize1(),

@@ -4,7 +4,8 @@ import '../widgets/week_progress_card.dart';
 import '../widgets/upcoming_reminders_widget.dart';
 import '../widgets/health_alerts_widget.dart';
 import '../providers/dashboard_provider.dart';
-import 'package:gestanea/core/constants/app_routes.dart'; 
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'tips_overview_page.dart'; 
 
 class PregnancyDashboardPage extends StatefulWidget {
   const PregnancyDashboardPage({super.key});
@@ -133,11 +134,10 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                         const Color(0xFFD4B5E8),
                         Icons.lightbulb_outline,
                         () {
-                          // TODO: Team will implement - Navigate to tips
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => _PlaceholderPage(title: 'Read Tips'),
+                              builder: (context) => const TipsOverviewPage(),
                             ),
                           );
                         },

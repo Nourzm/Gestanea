@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:gestanea/firebase_options.dart';
 import 'app.dart';
 import 'core/config/supabase_config.dart';
 import 'core/services/connectivity_service.dart';
@@ -12,9 +14,15 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
+  await NotificationService.instance.initialize();
   // Initialize Supabase
-  await SupabaseConfig.initialize();
+  try {
+    await SupabaseConfig.initialize();
+  } catch (e) {
+    print('Error initializing Supabase: $e');
+    // Continue app startup even if Supabase fails
+  }
 
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Load environment variables

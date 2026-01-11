@@ -91,6 +91,212 @@ class DatabaseHelper {
   ''');
     }
     if (oldVersion < 7) {
+      // Add onboarding_completed column to users table
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN onboarding_completed INTEGER DEFAULT 0',
+        );
+      } catch (e) {
+        // Column might already exist, ignore
+        print('Note: onboarding_completed column may already exist: $e');
+      }
+    }
+    if (oldVersion < 8) {
+      // Add profile_picture_path column to users table
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN profile_picture_path TEXT',
+        );
+      } catch (e) {
+        // Column might already exist, ignore
+        print('Note: profile_picture_path column may already exist: $e');
+      }
+    }
+    if (oldVersion < 9) {
+      // Create notifications table for FCM notifications
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS notifications (
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL,
+          image_url TEXT,
+          topic TEXT,
+          data TEXT,
+          received_at TEXT NOT NULL,
+          is_read INTEGER DEFAULT 0,
+          read_at TEXT,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        )
+      ''');
+      // Create indexes for notifications table
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_notifications_received_at ON notifications(received_at DESC)',
+      );
+      print('Notifications table created successfully');
+    }
+    if (oldVersion < 10) {
+      // Safety migration: ensure notifications table exists even if the app
+      // reached v9 before the migration was added.
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS notifications (
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL,
+          image_url TEXT,
+          topic TEXT,
+          data TEXT,
+          received_at TEXT NOT NULL,
+          is_read INTEGER DEFAULT 0,
+          read_at TEXT,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        )
+      ''');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_notifications_received_at ON notifications(received_at DESC)',
+      );
+      print('Notifications table ensured (v10 migration)');
+    }
+    if (oldVersion < 11) {
+      // Add onboarding-related columns to users table
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN date_of_birth TEXT',
+        );
+      } catch (e) {
+        print('Note: date_of_birth column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN height_cm REAL',
+        );
+      } catch (e) {
+        print('Note: height_cm column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN baseline_weight REAL',
+        );
+      } catch (e) {
+        print('Note: baseline_weight column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN user_status TEXT',
+        );
+      } catch (e) {
+        print('Note: user_status column may already exist: $e');
+      }
+      
+      // Add columns to pregnancies table
+      try {
+        await db.execute(
+          'ALTER TABLE pregnancies ADD COLUMN is_first_pregnancy INTEGER DEFAULT 0',
+        );
+      } catch (e) {
+        print('Note: is_first_pregnancy column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE pregnancies ADD COLUMN is_high_risk INTEGER DEFAULT 0',
+        );
+      } catch (e) {
+        print('Note: is_high_risk column may already exist: $e');
+      }
+      
+      // Create user_health_profile table
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS user_health_profile (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL UNIQUE,
+          blood_type TEXT,
+          chronic_conditions TEXT,
+          allergies TEXT,
+          emergency_contact_name TEXT,
+          emergency_contact_phone TEXT,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        )
+      ''');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_user_health_profile_user_id ON user_health_profile(user_id)',
+      );
+      print('Onboarding schema updated (v11 migration)');
+    }
+    if (oldVersion < 12) {
+      // Add new columns to tips table for enhanced tips feature
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN is_global INTEGER DEFAULT 0',
+        );
+      } catch (e) {
+        print('Note: is_global column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN priority INTEGER DEFAULT 0',
+        );
+      } catch (e) {
+        print('Note: priority column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN pregnancy_week_from INTEGER',
+        );
+      } catch (e) {
+        print('Note: pregnancy_week_from column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN pregnancy_week_to INTEGER',
+        );
+      } catch (e) {
+        print('Note: pregnancy_week_to column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN pregnancy_month_from INTEGER',
+        );
+      } catch (e) {
+        print('Note: pregnancy_month_from column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN pregnancy_month_to INTEGER',
+        );
+      } catch (e) {
+        print('Note: pregnancy_month_to column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN postpartum_week_from INTEGER',
+        );
+      } catch (e) {
+        print('Note: postpartum_week_from column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN postpartum_week_to INTEGER',
+        );
+      } catch (e) {
+        print('Note: postpartum_week_to column may already exist: $e');
+      }
+      try {
+        await db.execute(
+          'ALTER TABLE tips ADD COLUMN content_json TEXT',
+        );
+      } catch (e) {
+        print('Note: content_json column may already exist: $e');
+      }
+      print('Tips schema updated (v12 migration)');
       // Add synced column to measurements table for offline support
       // Check if column exists first to avoid duplicate column error
       var result = await db.rawQuery('PRAGMA table_info(measurements)');
@@ -192,6 +398,10 @@ class DatabaseHelper {
         notifications_enabled INTEGER DEFAULT 1,
         onboarding_completed INTEGER DEFAULT 0,
         profile_picture_path TEXT,
+        date_of_birth TEXT,
+        height_cm REAL,
+        baseline_weight REAL,
+        user_status TEXT,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
       )
@@ -208,6 +418,8 @@ class DatabaseHelper {
         current_trimester TEXT,
         is_active INTEGER DEFAULT 1,
         medical_conditions TEXT,
+        is_first_pregnancy INTEGER DEFAULT 0,
+        is_high_risk INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
@@ -433,11 +645,20 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
+        content_json TEXT,
         category TEXT,
         target_audience TEXT,
         image_url TEXT,
         source TEXT,
         is_active INTEGER DEFAULT 1,
+        is_global INTEGER DEFAULT 0,
+        priority INTEGER DEFAULT 0,
+        pregnancy_week_from INTEGER,
+        pregnancy_week_to INTEGER,
+        pregnancy_month_from INTEGER,
+        pregnancy_month_to INTEGER,
+        postpartum_week_from INTEGER,
+        postpartum_week_to INTEGER,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
@@ -616,6 +837,50 @@ class DatabaseHelper {
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
+
+    // User health profile table
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS user_health_profile (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL UNIQUE,
+        blood_type TEXT,
+        chronic_conditions TEXT,
+        allergies TEXT,
+        emergency_contact_name TEXT,
+        emergency_contact_phone TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_user_health_profile_user_id ON user_health_profile(user_id)',
+    );
+
+    // Notifications table for FCM notifications
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS notifications (
+        id TEXT PRIMARY KEY,
+        user_id TEXT,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        image_url TEXT,
+        topic TEXT,
+        data TEXT,
+        received_at TEXT NOT NULL,
+        is_read INTEGER DEFAULT 0,
+        read_at TEXT,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+
+    // Create indexes for notifications table
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_notifications_received_at ON notifications(received_at DESC)',
+    );
     // Measurements table (combined vitals)
     await db.execute('''
   CREATE TABLE measurements (
