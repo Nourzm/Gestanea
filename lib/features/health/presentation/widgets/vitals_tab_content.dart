@@ -12,7 +12,7 @@ import 'vitals_card.dart';
 import 'bmi_card.dart';
 import 'weight_progress_chart.dart';
 import 'add_measurement_card.dart';
-import 'health_tip_card.dart';
+import 'ai_health_insights_card.dart';
 import 'dialogs/add_measurment_dialog.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../core/database/models/measurement_model.dart';
@@ -264,8 +264,19 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
                     if (measurements.any((m) => m.systolic != null))
                       const SizedBox(height: 16),
 
-                    // Health Tip
-                    HealthTipCard(message: localizations.healthTipMessage),
+                    // AI Health Insights
+                    AIHealthInsightsCard(
+                      healthData: {
+                        'currentWeight': latest?.weight,
+                        'previousWeight': measurements.length >= 2 ? measurements[1].weight : null,
+                        'heartRate': latest?.heartRate,
+                        'systolic': latest?.systolic,
+                        'diastolic': latest?.diastolic,
+                        'pregnancyWeek': 20, // TODO: Get from user profile
+                      },
+                      insightType: 'vitals',
+                      language: localizations.localeName,
+                    ),
 
                     const SizedBox(height: 16),
 
@@ -365,8 +376,6 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
   }
 
   Widget _buildHeartRateChart(BuildContext context, List measurements, themeData) {
-    final l10n = AppLocalizations.of(context)!;
-    
     // Filter measurements based on time range
     final filteredData = _filterByTimeRange(measurements);
     final heartRateData = filteredData
@@ -500,8 +509,6 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
   }
 
   Widget _buildBloodPressureChart(BuildContext context, List measurements, themeData) {
-    final l10n = AppLocalizations.of(context)!;
-    
     // Filter measurements based on time range
     final filteredData = _filterByTimeRange(measurements);
     final bpData = filteredData

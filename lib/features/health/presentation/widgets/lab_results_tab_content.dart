@@ -11,6 +11,7 @@ import '../../logic/bloc/lab_results_event.dart';
 import '../pages/lab_results_list_page.dart';
 import '../pages/lab_papers_gallery_page.dart';
 import 'dialogs/upload_lab_results_dialog.dart';
+import 'ai_health_insights_card.dart';
 
 class LabResultsTabContent extends StatelessWidget {
   const LabResultsTabContent({super.key});
@@ -196,8 +197,28 @@ class LabResultsTabContent extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Tip Card
-                _buildTipCard(l10n.keepLabResultsOrganized),
+                // AI Lab Results Insights
+                BlocBuilder<LabResultsBloc, LabResultsState>(
+                  builder: (context, state) {
+                    final labResults = state is LabResultsLoaded ? state.labResults : [];
+                    final recentLabs = labResults.take(3).map((lab) => {
+                      'testName': lab.testName,
+                      'value': lab.value,
+                      'unit': lab.unit,
+                      'normalRangeMin': lab.normalRangeMin,
+                      'normalRangeMax': lab.normalRangeMax,
+                    }).toList();
+                    
+                    return AIHealthInsightsCard(
+                      healthData: {
+                        'labResults': recentLabs,
+                        'pregnancyWeek': 20, // TODO: Get from user profile
+                      },
+                      insightType: 'lab',
+                      language: l10n.localeName,
+                    );
+                  },
+                ),
               ],
               ),
             ),

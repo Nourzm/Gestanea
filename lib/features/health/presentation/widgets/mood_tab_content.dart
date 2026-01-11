@@ -10,6 +10,7 @@ import '../../logic/bloc/moods_state.dart';
 import '../../logic/bloc/moods_event.dart';
 import '../pages/moods_list_page.dart';
 import 'dialogs/add_mood_dialog.dart';
+import 'ai_health_insights_card.dart';
 
 class MoodTabContent extends StatelessWidget {
   const MoodTabContent({super.key});
@@ -143,13 +144,29 @@ class MoodTabContent extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Self-Care Suggestions
-                  _buildSelfCareCard(context),
+                  // AI Mood Insights
+                  BlocBuilder<MoodsBloc, MoodsState>(
+                    builder: (context, state) {
+                      final moods = state is MoodsLoaded ? state.moods : [];
+                      
+                      // Count mood distribution
+                      final moodCounts = <String, int>{};
+                      for (final mood in moods) {
+                        moodCounts[mood.mood] = (moodCounts[mood.mood] ?? 0) + 1;
+                      }
+                      
+                      return AIHealthInsightsCard(
+                        healthData: {
+                          'moodCounts': moodCounts,
+                          'pregnancyWeek': 20, // TODO: Get from user profile
+                        },
+                        insightType: 'moods',
+                        language: l10n.localeName,
+                      );
+                    },
+                  ),
 
                   const SizedBox(height: 16),
-
-                  // Tip Card
-                  _buildTipCard(l10n.trackingMoodHelps),
                 ],
               ),
             ),

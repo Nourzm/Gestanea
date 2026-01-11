@@ -10,6 +10,7 @@ import '../../logic/bloc/symptoms_state.dart';
 import '../../logic/bloc/symptoms_event.dart';
 import '../pages/symptoms_list_page.dart';
 import 'dialogs/add_symptom_dialog.dart';
+import 'ai_health_insights_card.dart';
 
 class SymptomsTabContent extends StatelessWidget {
   const SymptomsTabContent({super.key});
@@ -136,8 +137,26 @@ class SymptomsTabContent extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Tip Card
-                _buildTipCard(localizations.commonSymptomsWeek24),
+                // AI Symptom Insights
+                BlocBuilder<SymptomsBloc, SymptomsState>(
+                  builder: (context, state) {
+                    final symptoms = state is SymptomsLoaded ? state.symptoms : [];
+                    final recentSymptoms = symptoms.take(5).map((s) => {
+                      'name': s.symptomName,
+                      'severity': s.severity,
+                      'duration': s.duration,
+                    }).toList();
+                    
+                    return AIHealthInsightsCard(
+                      healthData: {
+                        'symptoms': recentSymptoms,
+                        'pregnancyWeek': 20, // TODO: Get from user profile
+                      },
+                      insightType: 'symptoms',
+                      language: localizations.localeName,
+                    );
+                  },
+                ),
               ],
               ),
             ),
