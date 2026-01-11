@@ -213,11 +213,91 @@ class _MarketplacePageState extends State<MarketplacePage> {
                     );
                   }
 
+                  if (state is MarketplaceOffline) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.wifi_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              l10n.noInternetConnection ??
+                                  'No internet connection',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.headline2.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              'Please check your internet connection and try again',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<MarketplaceBloc>().add(
+                                const LoadMarketplaceData(),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l10n.retry ?? 'Retry'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   if (state is MarketplaceError) {
                     return Center(
-                      child: Text(
-                        state.message,
-                        style: AppTextStyles.body1.copyWith(color: Colors.red),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<MarketplaceBloc>().add(
+                                const LoadMarketplaceData(),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l10n.retry ?? 'Retry'),
+                          ),
+                        ],
                       ),
                     );
                   }
