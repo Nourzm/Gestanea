@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:gestanea/features/plan/logic/plan_bloc.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
@@ -13,6 +14,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
+    // Provide an in-memory SharedPreferences for Supabase
+    SharedPreferences.setMockInitialValues({});
     // Initialize Supabase with test credentials
     await Supabase.initialize(
       url: 'https://test.supabase.co',

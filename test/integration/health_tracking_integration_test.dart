@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:gestanea/features/health/logic/bloc/measurements_bloc.dart';
 import 'package:gestanea/features/health/logic/bloc/measurements_event.dart';
@@ -14,6 +16,14 @@ import 'package:gestanea/core/database/models/symptom_model.dart';
 import 'package:gestanea/core/database/models/mood_model.dart';
 
 void main() {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    await Supabase.initialize(
+      url: 'https://test.supabase.co',
+      anonKey: 'test-anon-key-for-integration-tests',
+    );
+  });
+
   group('Health Tracking BLoC Tests', () {
     group('MeasurementsBloc', () {
       late MeasurementsBloc measurementsBloc;
