@@ -693,5 +693,8 @@
   "overweight": "Surpoids",
   "obese": "Obèse",
   "normalBMI": "Normal",
-  "mixedMoodsCareMessage": "Humeurs mélangées - prenez soin de vous!"
+  "mixedMoodsCareMessage": "Humeurs mélangées - prenez soin de vous!",
+  "pain": "douleur",
+  "sleep": "sommeil",
+  "feet": "pieds"
 }

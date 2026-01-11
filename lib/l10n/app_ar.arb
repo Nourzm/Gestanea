@@ -632,5 +632,8 @@
   "overweight": "زيادة الوزن",
   "obese": "السمنة",
   "normalBMI": "عادي",
-  "mixedMoodsCareMessage": "مزاج مختلط - اعتني بنفسك!"
+  "mixedMoodsCareMessage": "مزاج مختلط - اعتني بنفسك!",
+  "pain": "ألم",
+  "sleep": "نوم",
+  "feet": "قدم"
 }

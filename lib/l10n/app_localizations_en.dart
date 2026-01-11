@@ -1660,4 +1660,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mixedMoodsCareMessage => 'Mixed moods - take care of yourself!';
+
+  @override
+  String get pain => 'pain';
+
+  @override
+  String get sleep => 'sleep';
+
+  @override
+  String get feet => 'feet';
 }

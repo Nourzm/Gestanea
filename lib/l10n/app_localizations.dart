@@ -3261,6 +3261,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mixed moods - take care of yourself!'**
   String get mixedMoodsCareMessage;
+
+  /// No description provided for @pain.
+  ///
+  /// In en, this message translates to:
+  /// **'pain'**
+  String get pain;
+
+  /// No description provided for @sleep.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep'**
+  String get sleep;
+
+  /// No description provided for @feet.
+  ///
+  /// In en, this message translates to:
+  /// **'feet'**
+  String get feet;
 }
 
 class _AppLocalizationsDelegate

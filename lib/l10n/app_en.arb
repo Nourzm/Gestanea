@@ -798,5 +798,8 @@
   "overweight": "Overweight",
   "obese": "Obese",
   "normalBMI": "Normal",
-  "mixedMoodsCareMessage": "Mixed moods - take care of yourself!"
+  "mixedMoodsCareMessage": "Mixed moods - take care of yourself!",
+  "pain": "pain",
+  "sleep": "sleep",
+  "feet": "feet"
 }

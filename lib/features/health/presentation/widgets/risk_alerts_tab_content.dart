@@ -253,8 +253,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
   }
 
   Widget _buildEmergencyContactSetupCard(Map<String, String?> existingContacts) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
@@ -274,14 +277,14 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.phone_callback, color: Colors.white, size: 24),
+                child: Icon(Icons.phone_callback, color: Colors.white, size: isSmallScreen ? 20 : 24),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: isSmallScreen ? 8 : 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,27 +293,31 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                       'Emergency Contacts Setup',
                       style: AppTextStyles.headline2.copyWith(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: isSmallScreen ? 14 : 16,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       'Add important contacts for quick access',
                       style: AppTextStyles.body1.copyWith(
                         color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 12,
+                        fontSize: isSmallScreen ? 10 : 12,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: isSmallScreen ? 12 : 16),
           _buildContactInputRow('Partner', 'partner', existingContacts['partner']),
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
           _buildContactInputRow('Healthcare Provider', 'healthcare', existingContacts['healthcare']),
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
           _buildContactInputRow('Parent/Family', 'parent', existingContacts['parent']),
         ],
       ),
@@ -318,6 +325,8 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
   }
 
   Widget _buildContactInputRow(String label, String type, String? existingValue) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
     final isNoNeed = existingValue == 'NO_NEED';
     final displayText = isNoNeed 
         ? '$label: Not needed' 
@@ -327,7 +336,10 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: isSmallScreen ? 8 : 12, 
+              vertical: isSmallScreen ? 6 : 8,
+            ),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
@@ -337,31 +349,35 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                 Icon(
                   existingValue != null ? Icons.check_circle : Icons.add_circle_outline,
                   color: Colors.white,
-                  size: 20,
+                  size: isSmallScreen ? 16 : 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: isSmallScreen ? 6 : 8),
                 Expanded(
                   child: Text(
                     displayText,
                     style: AppTextStyles.body1.copyWith(
                       color: Colors.white,
-                      fontSize: 13,
+                      fontSize: isSmallScreen ? 11 : 13,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: isSmallScreen ? 4 : 8),
         IconButton(
           onPressed: () => _showAddContactDialog(label, type, existingValue),
           icon: Icon(
             existingValue != null ? Icons.edit : Icons.add,
             color: Colors.white,
+            size: isSmallScreen ? 20 : 24,
           ),
           style: IconButton.styleFrom(
             backgroundColor: Colors.white.withValues(alpha: 0.3),
+            padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
           ),
         ),
       ],
@@ -758,97 +774,109 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
           ),
 
           // Risk Level Card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: _getRiskColor(riskLevel).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: _getRiskColor(riskLevel),
-                width: 2,
-              ),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  _getRiskIcon(riskLevel),
-                  size: 64,
-                  color: _getRiskColor(riskLevel),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  riskLevel.toUpperCase() + ' RISK',
-                  style: AppTextStyles.headline2.copyWith(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isSmallScreen = constraints.maxWidth < 340;
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(isSmallScreen ? 14 : 20),
+                decoration: BoxDecoration(
+                  color: _getRiskColor(riskLevel).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
                     color: _getRiskColor(riskLevel),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    width: 2,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  primaryConcern,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.body1.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textDark,
-                  ),
+                child: Column(
+                  children: [
+                    Icon(
+                      _getRiskIcon(riskLevel),
+                      size: isSmallScreen ? 48 : 64,
+                      color: _getRiskColor(riskLevel),
+                    ),
+                    SizedBox(height: isSmallScreen ? 8 : 12),
+                    Text(
+                      riskLevel.toUpperCase() + ' RISK',
+                      style: AppTextStyles.headline2.copyWith(
+                        color: _getRiskColor(riskLevel),
+                        fontSize: isSmallScreen ? 18 : 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: isSmallScreen ? 6 : 8),
+                    Text(
+                      primaryConcern,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body1.copyWith(
+                        fontSize: isSmallScreen ? 13 : 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
 
           const SizedBox(height: 24),
 
           // Urgency Banner
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
-                  ? const Color(0xFFFFEBEE)
-                  : const Color(0xFFE8F5E9),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
-                    ? Colors.red.shade300
-                    : Colors.green.shade300,
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.schedule,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isSmallScreen = constraints.maxWidth < 340;
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
+                decoration: BoxDecoration(
                   color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
-                      ? Colors.red
-                      : Colors.green,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ACTION NEEDED',
-                        style: AppTextStyles.body1.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: AppColors.textDark,
-                        ),
-                      ),
-                      Text(
-                        urgency,
-                        style: AppTextStyles.body1.copyWith(
-                          fontSize: 14,
-                          color: AppColors.textDark,
-                        ),
-                      ),
-                    ],
+                      ? const Color(0xFFFFEBEE)
+                      : const Color(0xFFE8F5E9),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
+                        ? Colors.red.shade300
+                        : Colors.green.shade300,
                   ),
                 ),
-              ],
-            ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
+                          ? Colors.red
+                          : Colors.green,
+                      size: isSmallScreen ? 20 : 24,
+                    ),
+                    SizedBox(width: isSmallScreen ? 8 : 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ACTION NEEDED',
+                            style: AppTextStyles.body1.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: isSmallScreen ? 10 : 12,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                          Text(
+                            urgency,
+                            style: AppTextStyles.body1.copyWith(
+                              fontSize: isSmallScreen ? 12 : 14,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
 
           const SizedBox(height: 24),
@@ -1055,9 +1083,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildOverallRiskCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
@@ -1081,18 +1111,18 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.check_circle,
               color: AppColors.white,
-              size: 32,
+              size: isSmallScreen ? 24 : 32,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: isSmallScreen ? 10 : 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1101,24 +1131,28 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                   l10n.overallRiskLevel,
                   style: AppTextStyles.body1.copyWith(
                     color: AppColors.white,
-                    fontSize: 13,
+                    fontSize: isSmallScreen ? 11 : 13,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: isSmallScreen ? 2 : 4),
                 Text(
                   l10n.lowRisk,
                   style: AppTextStyles.headline2.copyWith(
                     color: AppColors.white,
-                    fontSize: 24,
+                    fontSize: isSmallScreen ? 18 : 24,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: isSmallScreen ? 2 : 4),
                 Text(
                   l10n.allIndicatorsNormal,
                   style: AppTextStyles.smallLabel.copyWith(
                     color: Colors.white.withValues(alpha: 0.9),
-                    fontSize: 12,
+                    fontSize: isSmallScreen ? 10 : 12,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -1137,8 +1171,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
     required String description,
   }) {
     final themeData = context.watch<ThemeCubit>().currentTheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(isSmallScreen ? 10 : 14),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1160,14 +1197,14 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(isSmallScreen ? 6 : 10),
             decoration: BoxDecoration(
               color: themeData.cardColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: themeData.primaryColor, size: 24),
+            child: Icon(icon, color: themeData.primaryColor, size: isSmallScreen ? 18 : 24),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: isSmallScreen ? 8 : 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1175,33 +1212,44 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                 Text(
                   factor,
                   style: AppTextStyles.subtitle1.copyWith(
-                    fontSize: 14,
+                    fontSize: isSmallScreen ? 12 : 14,
                     color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: isSmallScreen ? 2 : 4),
                 Text(
                   description,
                   style: AppTextStyles.smallLabel.copyWith(
-                    fontSize: 11,
+                    fontSize: isSmallScreen ? 9 : 11,
                     color: AppColors.textDark,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: levelColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              level,
-              style: AppTextStyles.smallLabel.copyWith(
-                fontSize: 11,
-                color: const Color(0xFF2D5F2D),
+          SizedBox(width: isSmallScreen ? 4 : 8),
+          Flexible(
+            flex: 0,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isSmallScreen ? 6 : 10, 
+                vertical: isSmallScreen ? 3 : 4,
+              ),
+              decoration: BoxDecoration(
+                color: levelColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                level,
+                style: AppTextStyles.smallLabel.copyWith(
+                  fontSize: isSmallScreen ? 9 : 11,
+                  color: const Color(0xFF2D5F2D),
+                ),
               ),
             ),
           ),
@@ -1212,9 +1260,11 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildWarningSignsCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(isSmallScreen ? 10 : 14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3CD),
         borderRadius: BorderRadius.circular(16),
@@ -1238,23 +1288,27 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.warning_amber,
-                color: Color(0xFF856404),
-                size: 24,
+                color: const Color(0xFF856404),
+                size: isSmallScreen ? 20 : 24,
               ),
-              const SizedBox(width: 8),
-              Text(
-                l10n.warningSignsToWatch,
-                style: AppTextStyles.subtitle1.copyWith(
-                  fontSize: 14,
-                  color: const Color(0xFF856404),
-                  fontWeight: FontWeight.w600,
+              SizedBox(width: isSmallScreen ? 6 : 8),
+              Expanded(
+                child: Text(
+                  l10n.warningSignsToWatch,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: isSmallScreen ? 12 : 14,
+                    color: const Color(0xFF856404),
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: isSmallScreen ? 8 : 12),
           _buildWarningSignItem(l10n.severeHeadache),
           _buildWarningSignItem(l10n.blurredVision),
           _buildWarningSignItem(l10n.severeAbdominalPain),
@@ -1286,11 +1340,13 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildEmergencyContactCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return GestureDetector(
       onTap: () => _makeEmergencyCall(context),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Color(0xFFE53935), Color(0xFFEF5350)],
@@ -1314,14 +1370,14 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(isSmallScreen ? 8 : 10),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.phone, color: AppColors.white, size: 24),
+              child: Icon(Icons.phone, color: AppColors.white, size: isSmallScreen ? 20 : 24),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: isSmallScreen ? 8 : 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1330,22 +1386,26 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                     l10n.emergencyContact,
                     style: AppTextStyles.body1.copyWith(
                       color: AppColors.white,
-                      fontSize: 13,
+                      fontSize: isSmallScreen ? 11 : 13,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: isSmallScreen ? 2 : 4),
                   Text(
                     l10n.call911OrProvider,
                     style: AppTextStyles.subtitle1.copyWith(
                       color: AppColors.white,
-                      fontSize: 16,
+                      fontSize: isSmallScreen ? 13 : 16,
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward, color: AppColors.white, size: 24),
+            Icon(Icons.arrow_forward, color: AppColors.white, size: isSmallScreen ? 20 : 24),
           ],
         ),
       ),

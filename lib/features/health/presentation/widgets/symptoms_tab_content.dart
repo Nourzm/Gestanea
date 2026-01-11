@@ -72,11 +72,11 @@ class SymptomsTabContent extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 12),
                             child: _buildSymptomCard(
                               context,
-                              icon: _getSymptomIcon(symptom.symptomName),
+                              icon: _getSymptomIcon(symptom.symptomName, localizations),
                               symptom: symptom.symptomName,
                               severity: symptom.severity ?? 'N/A',
                               severityColor: _getSeverityColor(
-                                symptom.severity,
+                                symptom.severity, localizations,
                               ),
                               time: _formatTime(symptom.recordedAt, localizations),
                             ),
@@ -216,36 +216,40 @@ class SymptomsTabContent extends StatelessWidget {
     );
   }
 
-  IconData _getSymptomIcon(String symptom) {
+  IconData _getSymptomIcon(String symptom, AppLocalizations l10n) {
     final lowerSymptom = symptom.toLowerCase();
-    if (lowerSymptom.contains('pain') || lowerSymptom.contains('back')) {
+    // Check against localized symptom names
+    if (lowerSymptom.contains(l10n.backPain.toLowerCase()) || 
+        lowerSymptom.contains(l10n.pain.toLowerCase())) {
       return Icons.airline_seat_flat;
-    } else if (lowerSymptom.contains('sleep')) {
+    } else if (lowerSymptom.contains(l10n.sleepIssues.toLowerCase()) ||
+        lowerSymptom.contains(l10n.sleep.toLowerCase())) {
       return Icons.nights_stay;
-    } else if (lowerSymptom.contains('swell') ||
-        lowerSymptom.contains('feet')) {
+    } else if (lowerSymptom.contains(l10n.swelling.toLowerCase()) ||
+        lowerSymptom.contains(l10n.feet.toLowerCase())) {
       return Icons.water_drop;
-    } else if (lowerSymptom.contains('heart')) {
+    } else if (lowerSymptom.contains(l10n.heartburn.toLowerCase())) {
       return Icons.food_bank;
-    } else if (lowerSymptom.contains('head')) {
+    } else if (lowerSymptom.contains(l10n.headache.toLowerCase())) {
       return Icons.psychology;
-    } else if (lowerSymptom.contains('nausea')) {
+    } else if (lowerSymptom.contains(l10n.nausea.toLowerCase())) {
       return Icons.sick;
     }
     return Icons.health_and_safety;
   }
 
-  Color _getSeverityColor(String? severity) {
-    switch (severity?.toLowerCase()) {
-      case 'mild':
-        return const Color(0xFFFFF3CD);
-      case 'moderate':
-        return const Color(0xFFFFE0B2);
-      case 'severe':
-        return const Color(0xFFFFB8B8);
-      default:
-        return const Color(0xFFFFF3CD);
+  Color _getSeverityColor(String? severity, AppLocalizations l10n) {
+    if (severity == null) return const Color(0xFFFFF3CD);
+    final lowerSeverity = severity.toLowerCase();
+    // Check against localized severity levels
+    if (lowerSeverity == l10n.mild.toLowerCase()) {
+      return const Color(0xFFFFF3CD);
+    } else if (lowerSeverity == l10n.moderate.toLowerCase()) {
+      return const Color(0xFFFFE0B2);
+    } else if (lowerSeverity == l10n.severe.toLowerCase()) {
+      return const Color(0xFFFFB8B8);
     }
+    return const Color(0xFFFFF3CD);
   }
 
   String _formatTime(DateTime dateTime, AppLocalizations localizations) {

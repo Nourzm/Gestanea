@@ -613,32 +613,16 @@ class MoodTabContent extends StatelessWidget {
   String _getMoodEmoji(String mood, AppLocalizations l10n) {
     final moodLower = mood.toLowerCase();
     // Check against localized mood names
-    if (moodLower == l10n.great.toLowerCase()) {
+    if (moodLower.contains(l10n.great.toLowerCase())) {
       return '😄';
-    } else if (moodLower == l10n.good.toLowerCase()) {
+    } else if (moodLower.contains(l10n.good.toLowerCase())) {
       return '😊';
-    } else if (moodLower == l10n.okay.toLowerCase()) {
+    } else if (moodLower.contains(l10n.okay.toLowerCase())) {
       return '😐';
-    } else if (moodLower == l10n.sad.toLowerCase()) {
-      return '😔';
-    } else if (moodLower == l10n.verySad.toLowerCase()) {
+    } else if (moodLower.contains(l10n.verySad.toLowerCase())) {
       return '😢';
-    }
-    // Fallback: check English keywords for backwards compatibility
-    if (moodLower.contains('great') || moodLower.contains('amazing') || moodLower.contains('excellent')) {
-      return '😄';
-    } else if (moodLower.contains('good') || moodLower.contains('happy') || moodLower.contains('joyful')) {
-      return '😊';
-    } else if (moodLower.contains('okay') || moodLower.contains('neutral') || moodLower.contains('fine')) {
-      return '😐';
-    } else if (moodLower.contains('sad') || moodLower.contains('down') || moodLower.contains('low')) {
+    } else if (moodLower.contains(l10n.sad.toLowerCase())) {
       return '😔';
-    } else if (moodLower.contains('very sad') || moodLower.contains('terrible') || moodLower.contains('awful')) {
-      return '😢';
-    } else if (moodLower.contains('calm') || moodLower.contains('relaxed') || moodLower.contains('peaceful')) {
-      return '😌';
-    } else if (moodLower.contains('tired') || moodLower.contains('exhausted') || moodLower.contains('sleepy')) {
-      return '😴';
     }
     return '😊'; // default
   }
@@ -646,32 +630,16 @@ class MoodTabContent extends StatelessWidget {
   Color _getMoodColor(String mood, AppLocalizations l10n) {
     final moodLower = mood.toLowerCase();
     // Check against localized mood names
-    if (moodLower == l10n.great.toLowerCase()) {
+    if (moodLower.contains(l10n.great.toLowerCase())) {
       return const Color(0xFFFFF9C4); // Yellow
-    } else if (moodLower == l10n.good.toLowerCase()) {
+    } else if (moodLower.contains(l10n.good.toLowerCase())) {
       return const Color(0xFFFFF9C4); // Yellow
-    } else if (moodLower == l10n.okay.toLowerCase()) {
+    } else if (moodLower.contains(l10n.okay.toLowerCase())) {
       return const Color(0xFFE0E0E0); // Gray
-    } else if (moodLower == l10n.sad.toLowerCase()) {
-      return const Color(0xFFE1F5FE); // Light Blue
-    } else if (moodLower == l10n.verySad.toLowerCase()) {
+    } else if (moodLower.contains(l10n.verySad.toLowerCase())) {
       return const Color(0xFFE8EAF6); // Light Purple
-    }
-    // Fallback: check English keywords for backwards compatibility
-    if (moodLower.contains('great') || moodLower.contains('amazing') || moodLower.contains('excellent')) {
-      return const Color(0xFFFFF9C4); // Yellow
-    } else if (moodLower.contains('good') || moodLower.contains('happy') || moodLower.contains('joyful')) {
-      return const Color(0xFFFFF9C4); // Yellow
-    } else if (moodLower.contains('okay') || moodLower.contains('neutral') || moodLower.contains('fine')) {
-      return const Color(0xFFE0E0E0); // Gray
-    } else if (moodLower.contains('sad') || moodLower.contains('down') || moodLower.contains('low')) {
+    } else if (moodLower.contains(l10n.sad.toLowerCase())) {
       return const Color(0xFFE1F5FE); // Light Blue
-    } else if (moodLower.contains('very sad') || moodLower.contains('terrible') || moodLower.contains('awful')) {
-      return const Color(0xFFE8EAF6); // Light Purple
-    } else if (moodLower.contains('calm') || moodLower.contains('relaxed') || moodLower.contains('peaceful')) {
-      return const Color(0xFFE1F5FE); // Light Blue
-    } else if (moodLower.contains('tired') || moodLower.contains('exhausted') || moodLower.contains('sleepy')) {
-      return const Color(0xFFE8EAF6); // Light Purple
     }
     return const Color(0xFFFFF9C4); // default yellow
   }

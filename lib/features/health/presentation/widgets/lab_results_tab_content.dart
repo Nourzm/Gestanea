@@ -288,9 +288,11 @@ class LabResultsTabContent extends StatelessWidget {
     required String range,
   }) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(isSmallScreen ? 10 : 14),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -312,63 +314,81 @@ class LabResultsTabContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Test name and status row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                test,
-                style: AppTextStyles.subtitle1.copyWith(
-                  fontSize: 14,
-                  color: AppColors.textDark,
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Text(
+                  test,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: isSmallScreen ? 12 : 14,
+                    color: AppColors.textDark,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  status,
-                  style: AppTextStyles.smallLabel.copyWith(
-                    fontSize: 11,
-                    color: const Color(0xFF2D5F2D),
+              const SizedBox(width: 8),
+              Flexible(
+                flex: 0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isSmallScreen ? 6 : 10,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    status,
+                    style: AppTextStyles.smallLabel.copyWith(
+                      fontSize: isSmallScreen ? 10 : 11,
+                      color: const Color(0xFF2D5F2D),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
+          // Value and date row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                value,
-                style: AppTextStyles.headline2.copyWith(
-                  fontSize: 18,
-                  color: AppColors.textDark,
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.headline2.copyWith(
+                    fontSize: isSmallScreen ? 15 : 18,
+                    color: AppColors.textDark,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Text(
                 date,
                 style: AppTextStyles.smallLabel.copyWith(
-                  fontSize: 11,
+                  fontSize: isSmallScreen ? 10 : 11,
                   color: AppColors.textDark,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: isSmallScreen ? 3 : 4),
+          // Normal range
           Text(
             '${l10n.normalRangeLabel}: $range',
             style: AppTextStyles.smallLabel.copyWith(
-              fontSize: 11,
+              fontSize: isSmallScreen ? 10 : 11,
               color: AppColors.textDark,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

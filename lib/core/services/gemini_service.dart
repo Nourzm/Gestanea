@@ -5,7 +5,13 @@ import 'package:http/http.dart' as http;
 
 
 class GeminiService {
-  static String get _apiKey => dotenv.env['GEMINI_API_KEY'] ?? ''; // TODO: Move to .env
+  static String get _apiKey {
+    final key = dotenv.env['GEMINI_API_KEY'] ?? '';
+    if (key.isEmpty) {
+      print('❌ GEMINI_API_KEY is empty! dotenv.env keys: ${dotenv.env.keys.toList()}');
+    }
+    return key;
+  }
   static const String _model = 'gemini-1.5-flash';
   
   // Cache keys
@@ -20,19 +26,26 @@ class GeminiService {
   static const Duration _riskCacheDuration = Duration(hours: 1);
   
   GeminiService() {
-    if (_apiKey.isEmpty) {
+    final key = _apiKey;
+    if (key.isEmpty) {
       print('⚠️ WARNING: GEMINI_API_KEY not found in .env file!');
+      print('⚠️ Available env keys: ${dotenv.env.keys.toList()}');
     } else {
-      print('✅ Gemini API key loaded: ${_apiKey.substring(0, 10)}...');
+      print('✅ Gemini API key loaded: ${key.substring(0, 10)}...');
     }
   }
 
   Future<String?> _generateContentWithRetry(String prompt, {int maxTokens = 200}) async {
+    if (_apiKey.isEmpty) {
+      print('❌ Cannot call Gemini API - API key is empty!');
+      return null;
+    }
+    
     int attempts = 0;
     while (attempts < 3) {
       try {
         final url = Uri.parse('https://generativelanguage.googleapis.com/v1/models/$_model:generateContent?key=$_apiKey');
-        print('📤 Calling Gemini API: $url');
+        print('📤 Calling Gemini API (attempt ${attempts + 1}/3)...');
         
         final httpResponse = await http.post(
           url,
@@ -46,8 +59,10 @@ class GeminiService {
               'maxOutputTokens': maxTokens,
             }
           }),
-        );
+        ).timeout(const Duration(seconds: 30));
 
+        print('📥 Gemini response status: ${httpResponse.statusCode}');
+        
         if (httpResponse.statusCode == 200) {
           final data = json.decode(httpResponse.body);
           if (data['candidates'] != null && 
@@ -55,7 +70,11 @@ class GeminiService {
               data['candidates'][0]['content'] != null &&
               data['candidates'][0]['content']['parts'] != null &&
               data['candidates'][0]['content']['parts'].isNotEmpty) {
-            return data['candidates'][0]['content']['parts'][0]['text'] as String?;
+            final text = data['candidates'][0]['content']['parts'][0]['text'] as String?;
+            print('✅ Gemini response received: ${text?.substring(0, text.length > 100 ? 100 : text.length)}...');
+            return text;
+          } else {
+            print('❌ Gemini response missing expected structure: ${httpResponse.body.substring(0, httpResponse.body.length > 200 ? 200 : httpResponse.body.length)}');
           }
         } else if (httpResponse.statusCode == 429 || httpResponse.statusCode == 503) {
           attempts++;
@@ -67,8 +86,9 @@ class GeminiService {
         } else {
           print('❌ Gemini API error ${httpResponse.statusCode}: ${httpResponse.body}');
         }
-      } catch (e) {
+      } catch (e, stack) {
         print('❌ Gemini API exception: $e');
+        print('Stack: $stack');
       }
       attempts++;
       if (attempts < 3) await Future.delayed(const Duration(seconds: 1));

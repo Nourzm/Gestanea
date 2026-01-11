@@ -1656,4 +1656,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mixedMoodsCareMessage => 'مزاج مختلط - اعتني بنفسك!';
+
+  @override
+  String get pain => 'ألم';
+
+  @override
+  String get sleep => 'نوم';
+
+  @override
+  String get feet => 'قدم';
 }
