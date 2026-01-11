@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancyTracking/data/repositories/pregnancy_repository.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/widgets/header.dart';
 import '../../../../main.dart' show routeObserver;
 import '../widgets/fetal_visualization_widget.dart';
 import '../widgets/pregnancy_progress_bar.dart';
@@ -45,17 +48,17 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
     super.dispose();
   }
 
-  int _getUserId() {
+  String _getUserId() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      return int.tryParse(authState.user.id) ?? 0;
+      return authState.user.id;
     }
-    return 0;
+    return '';
   }
 
   Future<void> _loadPregnancyData() async {
     final userId = _getUserId();
-    if (userId > 0) {
+    if (userId.isNotEmpty) {
       try {
         final data = await _repository.getPregnancyInfo(userId);
         if (mounted) {
@@ -109,102 +112,87 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
   }
 
   Widget _buildWeekInfoCard() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildStatCard(
+            icon: Icons.calendar_today_rounded,
+            value: '$currentDay',
+            label: 'Day of Week',
+            color: AppColors.main500,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildStatCard(
+            icon: Icons.favorite_rounded,
+            value: trimester.split(' ')[0],
+            label: 'Trimester',
+            color: AppColors.pink500,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildStatCard(
+            icon: Icons.hourglass_bottom_rounded,
+            value: '$daysLeft',
+            label: 'Days Left',
+            color: const Color(0xFF4CAF50),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatCard({
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF9B7FDB).withValues(alpha: 0.1),
-            const Color(0xFF9B7FDB).withValues(alpha: 0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF9B7FDB).withValues(alpha: 0.3),
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          // Week Circle
           Container(
-            width: 100,
-            height: 100,
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
               shape: BoxShape.circle,
-              color: const Color(0xFF9B7FDB),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF9B7FDB).withValues(alpha: 0.3),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'WEEK',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1,
-                  ),
-                ),
-                Text(
-                  '$selectedWeek',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.main700,
             ),
           ),
-
-          // Days Info
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    color: Color(0xFF9B7FDB),
-                    size: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '+$currentDay day${currentDay != 1 ? 's' : ''}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF9B7FDB),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                trimester,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '$daysLeft days to go',
-                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-              ),
-            ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10,
+              color: AppColors.textDark.withOpacity(0.5),
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -215,67 +203,111 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
-        body: const Center(
-          child: CircularProgressIndicator(color: Color(0xFF9B7FDB)),
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.main600),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Track',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF9B7FDB),
+      backgroundColor: const Color(0xFFFAF0FF),
+      body: Stack(
+        children: [
+          // Background Decorative Elements
+          Positioned(
+            top: -100,
+            right: -100,
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.main300.withOpacity(0.4),
+                    AppColors.main300.withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-            color: const Color(0xFF9B7FDB),
+          Positioned(
+            top: 200,
+            left: -50,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.pink300.withOpacity(0.2),
+                    AppColors.pink300.withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                Header(
+                  title: 'Pregnancy Tracker',
+                  showBackButton: false,
+                ),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await _loadPregnancyData();
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FetalVisualizationWidget(week: selectedWeek),
+                          const SizedBox(height: 24),
+                          _buildSectionTitle('Statistics'),
+                          const SizedBox(height: 12),
+                          _buildWeekInfoCard(),
+                          const SizedBox(height: 24),
+                          _buildSectionTitle('Your Progress'),
+                          const SizedBox(height: 12),
+                          PregnancyProgressBar(
+                            currentWeek: selectedWeek,
+                            currentDay: currentDay,
+                            trimester: trimester,
+                            daysLeft: daysLeft,
+                            dueDate: _formatDueDate(),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildSectionTitle('Baby Movements'),
+                          const SizedBox(height: 12),
+                          const KickCounterWidget(),
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FetalVisualizationWidget(week: selectedWeek),
-              const SizedBox(height: 24),
+    );
+  }
 
-              // Display current week info (read-only, auto-calculated)
-              _buildWeekInfoCard(),
-              const SizedBox(height: 24),
-
-              PregnancyProgressBar(
-                currentWeek: selectedWeek,
-                currentDay: currentDay,
-                trimester: trimester,
-                daysLeft: daysLeft,
-                dueDate: _formatDueDate(),
-              ),
-              const SizedBox(height: 32),
-
-              const Text(
-                'Kick Counter',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              const KickCounterWidget(),
-            ],
-          ),
-        ),
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: AppColors.main700,
+        letterSpacing: -0.5,
       ),
     );
   }

@@ -5,6 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:gestanea/features/pregnancyTracking/data/repositories/pregnancy_repository.dart';
+import '../../../../core/services/gemini_service.dart';
+import '../../../../core/services/risk_alerts_service.dart';
+import '../../logic/bloc/measurements_bloc.dart';
+import '../../logic/bloc/measurements_state.dart';
+import '../../logic/bloc/symptoms_bloc.dart';
+import '../../logic/bloc/symptoms_state.dart';
+import '../../logic/bloc/lab_results_bloc.dart';
+import '../../logic/bloc/lab_results_state.dart';
+import '../../logic/bloc/moods_bloc.dart';
+import '../../logic/bloc/moods_state.dart';
 
 class RiskAlertsTabContent extends StatefulWidget {
   const RiskAlertsTabContent({super.key});
@@ -14,21 +26,467 @@ class RiskAlertsTabContent extends StatefulWidget {
 }
 
 class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
+  final GeminiService _geminiService = GeminiService();
+  final RiskAlertsService _riskAlertsService = RiskAlertsService();
+  final PregnancyRepository _pregnancyRepository = PregnancyRepository();
+  Map<String, dynamic>? _riskAssessment;
+  bool _isLoading = false;
+  bool _hasError = false;
+  int _currentWeek = 20; // Default fallback
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-load on init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadRiskAssessment();
+    });
+  }
+
+  Future<void> _loadRiskAssessment({bool clearCache = false}) async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+
+    // Only clear cache if explicitly requested (e.g., on pull-to-refresh)
+    if (clearCache) {
+      await _geminiService.clearCache();
+      print('🔄 Cache cleared, generating fresh risk assessment...');
+    }
+
+    try {
+      print('🔄 _loadRiskAssessment: Starting...');
+      
+      // Get actual pregnancy week
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        print('🔄 _loadRiskAssessment: Fetching pregnancy info for $userId');
+        final pregInfo = await _pregnancyRepository.getPregnancyInfo(userId);
+        _currentWeek = pregInfo['currentWeek'] ?? 20;
+        print('🔄 _loadRiskAssessment: Current week = $_currentWeek');
+      }
+
+      // Gather all health data from blocs
+      print('🔄 _loadRiskAssessment: Reading BLoC states');
+      final measurementsState = context.read<MeasurementsBloc>().state;
+      final symptomsState = context.read<SymptomsBloc>().state;
+      final labResultsState = context.read<LabResultsBloc>().state;
+      final moodsState = context.read<MoodsBloc>().state;
+
+      // Extract vitals
+      final measurements = measurementsState is MeasurementsLoaded 
+          ? measurementsState.measurements : [];
+      final latest = measurements.isNotEmpty ? measurements.first : null;
+
+      final vitalsData = {
+        'currentWeight': latest?.weight,
+        'previousWeight': measurements.length >= 2 ? measurements[1].weight : null,
+        'heartRate': latest?.heartRate,
+        'systolic': latest?.systolic,
+        'diastolic': latest?.diastolic,
+      };
+
+      // Extract symptoms
+      final symptoms = symptomsState is SymptomsLoaded 
+          ? symptomsState.symptoms : [];
+      final recentSymptoms = symptoms.take(10).map((s) => {
+        'name': s.symptomName,
+        'severity': s.severity,
+        'duration': s.duration,
+      }).toList();
+
+      // Extract lab results
+      final labResults = labResultsState is LabResultsLoaded 
+          ? labResultsState.labResults : [];
+      final recentLabs = labResults.take(5).map((lab) => {
+        'testName': lab.testName,
+        'value': lab.value,
+        'unit': lab.unit,
+        'normalRangeMin': lab.normalRangeMin,
+        'normalRangeMax': lab.normalRangeMax,
+      }).toList();
+
+      // Extract moods
+      final moods = moodsState is MoodsLoaded ? moodsState.moods : [];
+      final moodCounts = <String, int>{};
+      for (final mood in moods.take(20)) {
+        moodCounts[mood.mood] = (moodCounts[mood.mood] ?? 0) + 1;
+      }
+
+      // Generate risk assessment
+      print('🔍 Generating risk assessment with:');
+      print('  - Vitals: $vitalsData');
+      print('  - Symptoms: ${recentSymptoms.length} symptoms');
+      print('  - Labs: ${recentLabs.length} labs');
+      print('  - Moods: $moodCounts');
+      
+      final assessment = await _geminiService.generateRiskAssessment(
+        pregnancyWeek: _currentWeek,
+        vitalsData: vitalsData,
+        recentSymptoms: recentSymptoms,
+        recentLabs: recentLabs,
+        moodCounts: moodCounts,
+      );
+
+      print('✅ Risk assessment generated: $assessment');
+
+      // Save to Supabase for historical tracking
+      try {
+        final userId = Supabase.instance.client.auth.currentUser?.id;
+        if (userId != null) {
+          await _riskAlertsService.saveRiskAssessment(
+            userId: userId,
+            assessment: assessment,
+          );
+        }
+      } catch (e) {
+        print('⚠️ Failed to save risk assessment to Supabase: $e');
+        // Don't fail the whole operation if saving fails
+      }
+
+      setState(() {
+        _riskAssessment = assessment;
+        _isLoading = false;
+      });
+    } catch (e, stackTrace) {
+      print('❌ Error loading risk assessment: $e');
+      print('Stack trace: $stackTrace');
+      setState(() {
+        _hasError = true;
+        _isLoading = false;
+      });
+    }
+  }
+
+  Color _getRiskColor(String riskLevel) {
+    switch (riskLevel.toLowerCase()) {
+      case 'none':
+        return const Color(0xFF4CAF50);
+      case 'low':
+        return const Color(0xFF8BC34A);
+      case 'medium':
+        return const Color(0xFFFFA726);
+      case 'high':
+        return const Color(0xFFFF7043);
+      case 'urgent':
+        return const Color(0xFFE53935);
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getRiskIcon(String riskLevel) {
+    switch (riskLevel.toLowerCase()) {
+      case 'none':
+        return Icons.check_circle;
+      case 'low':
+        return Icons.info;
+      case 'medium':
+        return Icons.warning_amber;
+      case 'high':
+        return Icons.warning;
+      case 'urgent':
+        return Icons.emergency;
+      default:
+        return Icons.help;
+    }
+  }
+
+  Future<Map<String, String?>> _getEmergencyContacts() async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) return {};
+
+      final response = await Supabase.instance.client
+          .from('users')
+          .select('partner_phone, healthcare_provider_phone, parent_phone')
+          .eq('id', userId)
+          .single();
+
+      return {
+        'partner': response['partner_phone'] as String?,
+        'healthcare': response['healthcare_provider_phone'] as String?,
+        'parent': response['parent_phone'] as String?,
+      };
+    } catch (e) {
+      print('Error fetching emergency contacts: $e');
+      return {};
+    }
+  }
+
+  bool _hasAllEmergencyContacts(Map<String, String?> contacts) {
+    return (contacts['partner'] != null) &&
+           (contacts['healthcare'] != null) &&
+           (contacts['parent'] != null);
+  }
+
+  Future<void> _saveEmergencyContact(String type, String phoneNumber) async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) return;
+
+      String columnName;
+      switch (type) {
+        case 'partner':
+          columnName = 'partner_phone';
+          break;
+        case 'healthcare':
+          columnName = 'healthcare_provider_phone';
+          break;
+        case 'parent':
+          columnName = 'parent_phone';
+          break;
+        default:
+          return;
+      }
+
+      await Supabase.instance.client
+          .from('users')
+          .update({columnName: phoneNumber})
+          .eq('id', userId);
+
+      setState(() {}); // Refresh UI
+    } catch (e) {
+      print('Error saving emergency contact: $e');
+    }
+  }
+
+  Widget _buildEmergencyContactSetupCard(Map<String, String?> existingContacts) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.phone_callback, color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Emergency Contacts Setup',
+                      style: AppTextStyles.headline2.copyWith(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Add important contacts for quick access',
+                      style: AppTextStyles.body1.copyWith(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildContactInputRow('Partner', 'partner', existingContacts['partner']),
+          const SizedBox(height: 8),
+          _buildContactInputRow('Healthcare Provider', 'healthcare', existingContacts['healthcare']),
+          const SizedBox(height: 8),
+          _buildContactInputRow('Parent/Family', 'parent', existingContacts['parent']),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactInputRow(String label, String type, String? existingValue) {
+    final isNoNeed = existingValue == 'NO_NEED';
+    final displayText = isNoNeed 
+        ? '$label: Not needed' 
+        : (existingValue ?? '$label: Not set');
+    
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  existingValue != null ? Icons.check_circle : Icons.add_circle_outline,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    displayText,
+                    style: AppTextStyles.body1.copyWith(
+                      color: Colors.white,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          onPressed: () => _showAddContactDialog(label, type, existingValue),
+          icon: Icon(
+            existingValue != null ? Icons.edit : Icons.add,
+            color: Colors.white,
+          ),
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.white.withValues(alpha: 0.3),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showAddContactDialog(String label, String type, String? existingValue) async {
+    final isNoNeed = existingValue == 'NO_NEED';
+    final controller = TextEditingController(text: isNoNeed ? '' : existingValue);
+    
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFFF3E5FF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF7B4BA6).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.phone, color: Color(0xFF7B4BA6), size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Add $label Contact',
+                style: AppTextStyles.headline2.copyWith(
+                  color: const Color(0xFF7B4BA6),
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'Phone Number',
+                labelStyle: const TextStyle(color: Color(0xFF7B4BA6)),
+                hintText: 'e.g., 0555123456',
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                prefixIcon: const Icon(Icons.phone, color: Color(0xFF7B4BA6)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF7B4BA6)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF7B4BA6), width: 2),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextButton.icon(
+              onPressed: () => Navigator.pop(context, 'NO_NEED'),
+              icon: const Icon(Icons.block, size: 18),
+              label: const Text('I don\'t need this contact'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey.shade600,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final text = controller.text.trim();
+              if (text.isNotEmpty) {
+                Navigator.pop(context, text);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7B4BA6),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null && result.isNotEmpty) {
+      await _saveEmergencyContact(type, result);
+    }
+  }
+
   Future<void> _makeEmergencyCall(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
 
-    // Show confirmation dialog first
-    final confirmed = await showDialog<bool>(
+    // Get saved emergency contacts
+    final contacts = await _getEmergencyContacts();
+
+    // Show dialog with multiple emergency contact options
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFFFAF0FF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            const Icon(Icons.warning, color: Colors.red, size: 28),
+            const Icon(Icons.phone, color: Colors.red, size: 28),
             const SizedBox(width: 8),
             Text(
-              l10n.emergencyCall,
+              l10n.emergencyContact,
               style: AppTextStyles.headline2.copyWith(
                 color: AppColors.textDark,
                 fontSize: 18,
@@ -36,63 +494,150 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             ),
           ],
         ),
-        content: Text(
-          l10n.areYouSureCall911,
-          style: AppTextStyles.body1.copyWith(
-            color: Colors.grey.shade600,
-            fontSize: 14,
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Who would you like to call?',
+              style: AppTextStyles.body1.copyWith(
+                color: AppColors.textDark,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildEmergencyContactOption(
+              context,
+              icon: Icons.local_hospital,
+              title: 'Hospital (Algeria)',
+              subtitle: '15 - Emergency Medical Services',
+              phoneNumber: '15',
+            ),
+            if (contacts['healthcare'] != null && contacts['healthcare'] != 'NO_NEED') ...[
+              const SizedBox(height: 8),
+              _buildEmergencyContactOption(
+                context,
+                icon: Icons.medical_services,
+                title: 'Healthcare Provider',
+                subtitle: contacts['healthcare']!,
+                phoneNumber: contacts['healthcare']!,
+              ),
+            ],
+            if (contacts['partner'] != null && contacts['partner'] != 'NO_NEED') ...[
+              const SizedBox(height: 8),
+              _buildEmergencyContactOption(
+                context,
+                icon: Icons.favorite,
+                title: 'Partner',
+                subtitle: contacts['partner']!,
+                phoneNumber: contacts['partner']!,
+              ),
+            ],
+            if (contacts['parent'] != null && contacts['parent'] != 'NO_NEED') ...[
+              const SizedBox(height: 8),
+              _buildEmergencyContactOption(
+                context,
+                icon: Icons.family_restroom,
+                title: 'Parent/Family',
+                subtitle: contacts['parent']!,
+                phoneNumber: contacts['parent']!,
+              ),
+            ],
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context),
             child: Text(
               l10n.cancel,
               style: TextStyle(color: Colors.grey.shade600),
             ),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            ),
-            child: Text(
-              l10n.callNow,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
         ],
       ),
     );
+  }
 
-    if (confirmed == true) {
-      final Uri phoneUri = Uri(scheme: 'tel', path: '911');
-      try {
-        if (await canLaunchUrl(phoneUri)) {
-          await launchUrl(phoneUri);
-        } else {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.couldNotMakeEmergencyCall),
-                backgroundColor: Colors.red,
+  Widget _buildEmergencyContactOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String phoneNumber,
+  }) {
+    return InkWell(
+      onTap: () async {
+        Navigator.pop(context);
+        await _callPhoneNumber(context, phoneNumber, title);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF7B4BA6).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
-            );
-          }
-        }
-      } catch (e) {
+              child: Icon(icon, color: const Color(0xFF7B4BA6), size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.subtitle1.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: AppTextStyles.body1.copyWith(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.phone, color: Color(0xFF7B4BA6), size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _callPhoneNumber(BuildContext context, String phoneNumber, String contactName) async {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    try {
+      if (await canLaunchUrl(phoneUri)) {
+        await launchUrl(phoneUri);
+      } else {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text(l10n.couldNotMakePhoneCall),
+              backgroundColor: Colors.red,
+            ),
           );
         }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error calling $contactName: $e'), backgroundColor: Colors.red),
+        );
       }
     }
   }
@@ -108,72 +653,44 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Overall Risk Status
-                _buildOverallRiskCard(context),
-
-                const SizedBox(height: 20),
-
-                // Risk Factors
-                Text(
-                  l10n.riskFactorsToMonitor,
-                  style: AppTextStyles.headline2.copyWith(
-                    fontSize: 18,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                _buildRiskFactorCard(
-                  context,
-                  icon: Icons.favorite,
-                  factor: l10n.bloodPressure,
-                  level: l10n.lowRisk,
-                  levelColor: const Color(0xFFB8E6B8),
-                  description: l10n.withinNormalRange,
-                ),
-                const SizedBox(height: 12),
-                _buildRiskFactorCard(
-                  context,
-                  icon: Icons.science,
-                  factor: l10n.gestationalDiabetes,
-                  level: l10n.lowRisk,
-                  levelColor: const Color(0xFFB8E6B8),
-                  description: l10n.glucoseLevelsNormal,
-                ),
-                const SizedBox(height: 12),
-                _buildRiskFactorCard(
-                  context,
-                  icon: Icons.water_drop,
-                  factor: l10n.preeclampsia,
-                  level: l10n.lowRisk,
-                  levelColor: const Color(0xFFB8E6B8),
-                  description: l10n.noProteinInUrine,
-                ),
-
-                const SizedBox(height: 20),
-
-                // Warning Signs
-                _buildWarningSignsCard(context),
-
-                const SizedBox(height: 16),
-
-                // Emergency Contact
-                _buildEmergencyContactCard(context),
-
-                const SizedBox(height: 16),
-
-                // Tip Card
-                _buildTipCard(l10n.ifYouExperienceWarnings),
-              ],
-            ),
+          child: RefreshIndicator(
+            onRefresh: () => _loadRiskAssessment(clearCache: true),
+            child: _isLoading
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: Color(0xFF7B4BA6)),
+                        SizedBox(height: 16),
+                        Text('Analyzing your health data...', 
+                          style: TextStyle(color: Color(0xFF7B4BA6))),
+                      ],
+                    ),
+                  )
+                : _hasError
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                            const SizedBox(height: 16),
+                            const Text('Unable to assess risk'),
+                            const SizedBox(height: 8),
+                            ElevatedButton.icon(
+                              onPressed: _loadRiskAssessment,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Retry'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF7B4BA6),
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : _buildRiskAssessmentContent(l10n),
           ),
         ),
-
         // TOP inset shadow
         Positioned(
           top: 0,
@@ -198,32 +715,338 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             ),
           ),
         ),
+      ],
+    );
+  }
 
-        // LEFT inset shadow
-        Positioned(
-          top: 0,
-          left: 0,
-          bottom: 0,
-          child: IgnorePointer(
-            child: Container(
-              width: 25,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.12),
-                    Colors.transparent,
+  Widget _buildRiskAssessmentContent(AppLocalizations l10n) {
+    if (_riskAssessment == null) {
+      return const Center(child: Text('No assessment available'));
+    }
+
+    final riskLevel = (_riskAssessment!['riskLevel']?.toString() ?? 'none').isEmpty 
+        ? 'none' : _riskAssessment!['riskLevel'].toString();
+    final primaryConcern = _riskAssessment!['primaryConcern']?.toString() ?? 'No significant concerns';
+    final patterns = (_riskAssessment!['detectedPatterns'] as List<dynamic>?) ?? [];
+    final recommendations = (_riskAssessment!['recommendations'] as List<dynamic>?) ?? [];
+    final urgency = _riskAssessment!['urgency']?.toString() ?? 'Monitor';
+    final reasoning = _riskAssessment!['reasoning']?.toString() ?? 'No assessment details available';
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Emergency Contact Setup Card (show if no contacts configured)
+          FutureBuilder<Map<String, String?>>(
+            future: _getEmergencyContacts(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && !_hasAllEmergencyContacts(snapshot.data!)) {
+                return Column(
+                  children: [
+                    _buildEmergencyContactSetupCard(snapshot.data!),
+                    const SizedBox(height: 16),
                   ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+
+          // Risk Level Card
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: _getRiskColor(riskLevel).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: _getRiskColor(riskLevel),
+                width: 2,
+              ),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  _getRiskIcon(riskLevel),
+                  size: 64,
+                  color: _getRiskColor(riskLevel),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  riskLevel.toUpperCase() + ' RISK',
+                  style: AppTextStyles.headline2.copyWith(
+                    color: _getRiskColor(riskLevel),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  primaryConcern,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.body1.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textDark,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Urgency Banner
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
+                  ? const Color(0xFFFFEBEE)
+                  : const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
+                    ? Colors.red.shade300
+                    : Colors.green.shade300,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.schedule,
+                  color: riskLevel.toLowerCase() == 'urgent' || riskLevel.toLowerCase() == 'high'
+                      ? Colors.red
+                      : Colors.green,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ACTION NEEDED',
+                        style: AppTextStyles.body1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      Text(
+                        urgency,
+                        style: AppTextStyles.body1.copyWith(
+                          fontSize: 14,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Detected Patterns
+          if (patterns.isNotEmpty) ...[
+            Text(
+              'Detected Patterns',
+              style: AppTextStyles.headline2.copyWith(
+                fontSize: 18,
+                color: AppColors.textDark,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...patterns.map((pattern) => Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.fiber_manual_record, size: 12, color: Color(0xFF7B4BA6)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      pattern.toString(),
+                      style: AppTextStyles.body1.copyWith(
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+            const SizedBox(height: 24),
+          ],
+
+          // Recommendations
+          Text(
+            'Recommendations',
+            style: AppTextStyles.headline2.copyWith(
+              fontSize: 18,
+              color: AppColors.textDark,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...recommendations.asMap().entries.map((entry) => Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF7B4BA6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${entry.key + 1}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    entry.value.toString(),
+                    style: AppTextStyles.body1.copyWith(
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+
+          const SizedBox(height: 24),
+
+          // Emergency Call Button (if urgent)
+          if (riskLevel.toLowerCase() == 'urgent') ...[
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _makeEmergencyCall(context),
+                icon: const Icon(Icons.phone, size: 24),
+                label: Text(
+                  l10n.emergencyCall,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 4,
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+          ],
+
+          // AI Reasoning
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3E5FF),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.psychology, color: Color(0xFF7B4BA6)),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AI Analysis',
+                      style: AppTextStyles.body1.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF7B4BA6),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  reasoning,
+                  style: AppTextStyles.body1.copyWith(
+                    color: const Color(0xFF7B4BA6),
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+
+          const SizedBox(height: 16),
+
+          // Emergency Contact Card (Always show)
+          _buildEmergencyContactCard(context),
+
+          const SizedBox(height: 16),
+
+          // Disclaimer
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.warning_amber, color: Colors.orange.shade700, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.',
+                    style: AppTextStyles.body1.copyWith(
+                      fontSize: 11,
+                      color: Colors.orange.shade900,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

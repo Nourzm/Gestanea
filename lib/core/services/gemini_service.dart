@@ -1,33 +1,79 @@
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 
 class GeminiService {
   static String get _apiKey => dotenv.env['GEMINI_API_KEY'] ?? ''; // TODO: Move to .env
   static const String _model = 'gemini-1.5-flash';
   
-  late final GenerativeModel _gemini;
-  
   // Cache keys
   static const String _cacheKeyVitals = 'gemini_cache_vitals';
   static const String _cacheKeySymptoms = 'gemini_cache_symptoms';
   static const String _cacheKeyMoods = 'gemini_cache_moods';
   static const String _cacheKeyLabResults = 'gemini_cache_lab';
+  static const String _cacheKeyRiskAssessment = 'gemini_cache_risk';
   
-  // Cache duration: 6 hours
+  // Cache duration: 6 hours for tips, 1 hour for risk assessment
   static const Duration _cacheDuration = Duration(hours: 6);
+  static const Duration _riskCacheDuration = Duration(hours: 1);
   
   GeminiService() {
-    _gemini = GenerativeModel(
-      model: _model,
-      apiKey: _apiKey,
-      generationConfig: GenerationConfig(
-        temperature: 0.7,
-        maxOutputTokens: 200,
-      ),
-    );
+    if (_apiKey.isEmpty) {
+      print('⚠️ WARNING: GEMINI_API_KEY not found in .env file!');
+    } else {
+      print('✅ Gemini API key loaded: ${_apiKey.substring(0, 10)}...');
+    }
+  }
+
+  Future<String?> _generateContentWithRetry(String prompt, {int maxTokens = 200}) async {
+    int attempts = 0;
+    while (attempts < 3) {
+      try {
+        final url = Uri.parse('https://generativelanguage.googleapis.com/v1/models/$_model:generateContent?key=$_apiKey');
+        print('📤 Calling Gemini API: $url');
+        
+        final httpResponse = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'contents': [{
+              'parts': [{'text': prompt}]
+            }],
+            'generationConfig': {
+              'temperature': 0.7,
+              'maxOutputTokens': maxTokens,
+            }
+          }),
+        );
+
+        if (httpResponse.statusCode == 200) {
+          final data = json.decode(httpResponse.body);
+          if (data['candidates'] != null && 
+              data['candidates'].isNotEmpty && 
+              data['candidates'][0]['content'] != null &&
+              data['candidates'][0]['content']['parts'] != null &&
+              data['candidates'][0]['content']['parts'].isNotEmpty) {
+            return data['candidates'][0]['content']['parts'][0]['text'] as String?;
+          }
+        } else if (httpResponse.statusCode == 429 || httpResponse.statusCode == 503) {
+          attempts++;
+          if (attempts == 3) break;
+          final waitSeconds = attempts * 2;
+          print('⚠️ Gemini quota/busy (${httpResponse.statusCode}). Retrying in $waitSeconds seconds...');
+          await Future.delayed(Duration(seconds: waitSeconds));
+          continue;
+        } else {
+          print('❌ Gemini API error ${httpResponse.statusCode}: ${httpResponse.body}');
+        }
+      } catch (e) {
+        print('❌ Gemini API exception: $e');
+      }
+      attempts++;
+      if (attempts < 3) await Future.delayed(const Duration(seconds: 1));
+    }
+    return null;
   }
   
   /// Generate personalized vitals insights
@@ -122,8 +168,7 @@ Now analyze THEIR specific vitals!
 ''';
     
     try {
-      final response = await _gemini.generateContent([Content.text(prompt)]);
-      final text = response.text ?? '{}';
+      final text = await _generateContentWithRetry(prompt) ?? '{}';
       
       // Extract JSON from response
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(text);
@@ -141,7 +186,7 @@ Now analyze THEIR specific vitals!
         return result;
       }
     } catch (e) {
-      print('Gemini API error: $e');
+      print('Gemini vitals insights error: $e');
     }
     
     // Fallback
@@ -233,8 +278,7 @@ Now address THEIR specific symptoms!
 ''';
     
     try {
-      final response = await _gemini.generateContent([Content.text(prompt)]);
-      final text = response.text ?? '{}';
+      final text = await _generateContentWithRetry(prompt) ?? '{}';
       
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(text);
       if (jsonMatch != null) {
@@ -250,7 +294,7 @@ Now address THEIR specific symptoms!
         return result;
       }
     } catch (e) {
-      print('Gemini API error: $e');
+      print('Gemini symptoms insights error: $e');
     }
     
     return {
@@ -343,8 +387,7 @@ Now analyze THEIR mood pattern!
 ''';
     
     try {
-      final response = await _gemini.generateContent([Content.text(prompt)]);
-      final text = response.text ?? '{}';
+      final text = await _generateContentWithRetry(prompt) ?? '{}';
       
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(text);
       if (jsonMatch != null) {
@@ -360,7 +403,7 @@ Now analyze THEIR mood pattern!
         return result;
       }
     } catch (e) {
-      print('Gemini API error: $e');
+      print('Gemini mood insights error: $e');
     }
     
     return {
@@ -470,8 +513,7 @@ Now address THEIR specific lab results!
 ''';
     
     try {
-      final response = await _gemini.generateContent([Content.text(prompt)]);
-      final text = response.text ?? '{}';
+      final text = await _generateContentWithRetry(prompt) ?? '{}';
       
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(text);
       if (jsonMatch != null) {
@@ -487,13 +529,195 @@ Now address THEIR specific lab results!
         return result;
       }
     } catch (e) {
-      print('Gemini API error: $e');
+      print('Gemini lab results error: $e');
     }
     
     return {
       'message': 'Keep tracking your lab results regularly!',
       'tip1': 'Maintain healthy nutrition and hydration',
       'tip2': 'Attend all scheduled checkups',
+    };
+  }
+  
+  /// Generate comprehensive risk assessment analyzing all health data
+  Future<Map<String, dynamic>> generateRiskAssessment({
+    required int pregnancyWeek,
+    required Map<String, dynamic> vitalsData,
+    required List<Map<String, dynamic>> recentSymptoms,
+    required List<Map<String, dynamic>> recentLabs,
+    required Map<String, int> moodCounts,
+  }) async {
+    final cacheKey = _cacheKeyRiskAssessment;
+    
+    // Check cache (1 hour for risk assessment - fresher than regular tips)
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString(cacheKey);
+    if (cached != null) {
+      final cacheData = json.decode(cached);
+      final timestamp = DateTime.parse(cacheData['timestamp'] as String);
+      final age = DateTime.now().difference(timestamp);
+      if (age < _riskCacheDuration) {
+        final data = Map<String, dynamic>.from(cacheData['data']);
+        return {
+          'riskLevel': (data['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : data['riskLevel'].toString(),
+          'primaryConcern': (data['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : data['primaryConcern'].toString(),
+          'detectedPatterns': data['detectedPatterns'] is List ? data['detectedPatterns'] : [],
+          'recommendations': data['recommendations'] is List ? data['recommendations'] : [],
+          'urgency': (data['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : data['urgency'].toString(),
+          'reasoning': (data['reasoning']?.toString() ?? 'Assessment based on current health indicators.').isEmpty ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
+        };
+      }
+    }
+    
+    // Build comprehensive health summary
+    final weight = vitalsData['currentWeight'];
+    final prevWeight = vitalsData['previousWeight'];
+    final weightChange = weight != null && prevWeight != null ? weight - prevWeight : 0.0;
+    final bp = '${vitalsData['systolic'] ?? 'N/A'}/${vitalsData['diastolic'] ?? 'N/A'}';
+    final hr = vitalsData['heartRate'] ?? 'N/A';
+    
+    final symptomsList = recentSymptoms.map((s) => 
+      '${s['name']} (${s['severity']})').join(', ');
+    
+    final labsList = recentLabs.map((lab) {
+      final value = lab['value'];
+      final min = lab['normalRangeMin'];
+      final max = lab['normalRangeMax'];
+      String status = 'normal';
+      if (value != null && min != null && max != null) {
+        if (value < min) status = 'LOW';
+        else if (value > max) status = 'HIGH';
+      }
+      return '${lab['testName']}: $value ${lab['unit'] ?? ''} ($status)';
+    }).join(', ');
+    
+    final negativeMoods = (moodCounts['Terrible'] ?? 0) + (moodCounts['Bad'] ?? 0);
+    
+    final prompt = '''
+You are a pregnancy risk assessment expert. Analyze ALL health data for DANGEROUS COMBINATIONS.
+
+COMPLETE HEALTH PROFILE (Week $pregnancyWeek):
+
+VITALS:
+- Weight: ${weight ?? 'N/A'}kg (change: ${weightChange.toStringAsFixed(1)}kg)
+- Blood Pressure: $bp mmHg
+- Heart Rate: $hr bpm
+
+SYMPTOMS (last 7 days):
+${symptomsList.isNotEmpty ? symptomsList : 'None reported'}
+
+LAB RESULTS (recent):
+${labsList.isNotEmpty ? labsList : 'No recent labs'}
+
+MENTAL HEALTH:
+- Negative moods: $negativeMoods entries
+
+CRITICAL TASK: Identify DANGEROUS COMBINATIONS that indicate serious pregnancy complications:
+
+HIGH RISK PATTERNS TO DETECT:
+1. Preeclampsia: High BP (>140/90) + headache + swelling + protein in urine
+2. Gestational Diabetes: High glucose + excessive thirst + frequent urination
+3. Anemia: Low hemoglobin + severe fatigue + dizziness + pale skin
+4. Preterm Labor Risk: Cramping + back pain + pressure + bleeding
+5. Depression: Persistent negative moods + severe fatigue + loss of interest
+6. HELLP Syndrome: High BP + upper abdominal pain + nausea + low platelets
+7. Severe Anemia: Hemoglobin <10 + heart palpitations + shortness of breath
+
+OUTPUT FORMAT (JSON):
+{
+  "riskLevel": "none|low|medium|high|urgent",
+  "primaryConcern": "Main issue detected or 'No significant concerns'",
+  "detectedPatterns": ["List of concerning patterns found"],
+  "recommendations": ["Specific actions to take"],
+  "urgency": "Timeframe to act: 'Monitor', 'Schedule appointment', 'Call doctor today', 'Emergency - call now'",
+  "reasoning": "Explain why you assigned this risk level based on data combinations"
+}
+
+EXAMPLES:
+
+IF BP 155/95, Severe Headache, Swelling feet, Week 34:
+{
+  "riskLevel": "urgent",
+  "primaryConcern": "Possible Preeclampsia",
+  "detectedPatterns": ["Very high blood pressure", "Severe headache with high BP", "Edema/swelling present"],
+  "recommendations": ["Call your doctor IMMEDIATELY", "Go to hospital if vision changes occur", "Monitor for upper abdominal pain"],
+  "urgency": "Emergency - call doctor now, don't wait",
+  "reasoning": "High BP combined with severe headache and swelling is the classic preeclampsia triad - requires urgent medical evaluation"
+}
+
+IF Hemoglobin 9.5 LOW, Severe Fatigue, Dizziness, Heart Rate 105:
+{
+  "riskLevel": "high",
+  "primaryConcern": "Severe Anemia",
+  "detectedPatterns": ["Hemoglobin below 10", "Elevated heart rate compensating", "Severe fatigue and dizziness"],
+  "recommendations": ["See doctor within 24-48 hours", "Start iron supplement immediately", "Avoid standing quickly"],
+  "urgency": "Call doctor today to schedule urgent appointment",
+  "reasoning": "Hemoglobin <10 with symptoms indicates severe anemia requiring prompt treatment"
+}
+
+IF All vitals normal, Mild nausea, No concerning symptoms:
+{
+  "riskLevel": "none",
+  "primaryConcern": "No significant concerns",
+  "detectedPatterns": [],
+  "recommendations": ["Continue regular prenatal care", "Monitor for changes", "Maintain healthy habits"],
+  "urgency": "Monitor - routine checkup at next appointment",
+  "reasoning": "All measurements within normal ranges, symptoms typical for pregnancy week"
+}
+
+NOW ANALYZE THEIR DATA - BE THOROUGH AND LOOK FOR DANGEROUS COMBINATIONS!
+''';
+    
+    try {
+      print('📤 Sending risk assessment request to Gemini...');
+      
+      final text = await _generateContentWithRetry(prompt, maxTokens: 500) ?? '{}';
+      print('📥 Gemini response received: ${text.substring(0, text.length > 200 ? 200 : text.length)}...');
+      
+      final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(text);
+      if (jsonMatch != null) {
+        final jsonStr = jsonMatch.group(0)!;
+        final Map<String, dynamic> data = json.decode(jsonStr);
+        
+        // Sanitize the result to ensure all expected fields exist with correct types
+        final result = {
+          'riskLevel': (data['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : data['riskLevel'].toString(),
+          'primaryConcern': (data['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : data['primaryConcern'].toString(),
+          'detectedPatterns': data['detectedPatterns'] is List ? data['detectedPatterns'] : [],
+          'recommendations': data['recommendations'] is List ? data['recommendations'] : [],
+          'urgency': (data['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : data['urgency'].toString(),
+          'reasoning': (data['reasoning']?.toString() ?? 'Assessment based on current health indicators.').isEmpty ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
+        };
+
+        print('✅ Risk assessment parsed successfully: ${result['riskLevel']}');
+        
+        // Cache the response with 1-hour duration
+        if (result['riskLevel'] != null && result['primaryConcern'] != 'Unable to assess - please review data manually') {
+          final cacheData = {
+            'data': result,
+            'timestamp': DateTime.now().toIso8601String(),
+          };
+          await prefs.setString(cacheKey, json.encode(cacheData));
+        }
+        
+        return result;
+      } else {
+        print('❌ No JSON found in response!');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Gemini risk assessment error: $e');
+      print('Stack: $stackTrace');
+    }
+    
+    // Fallback
+    print('⚠️ Gemini assessment failed. Returning fallback result.');
+    return {
+      'riskLevel': 'none',
+      'primaryConcern': 'Unable to assess - please review data manually',
+      'detectedPatterns': [],
+      'recommendations': ['Consult your healthcare provider for evaluation'],
+      'urgency': 'Schedule routine appointment',
+      'reasoning': 'Assessment unavailable',
     };
   }
   
@@ -541,6 +765,7 @@ Now address THEIR specific lab results!
       await prefs.remove(_cacheKeySymptoms);
       await prefs.remove(_cacheKeyMoods);
       await prefs.remove(_cacheKeyLabResults);
+      await prefs.remove(_cacheKeyRiskAssessment);
     } catch (e) {
       print('Cache clear error: $e');
     }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancyTracking/data/repositories/pregnancy_repository.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 
 class KickCounterWidget extends StatefulWidget {
   const KickCounterWidget({super.key});
@@ -18,12 +19,12 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
   DateTime? _startTime;
   final PregnancyRepository _repository = PregnancyRepository();
 
-  int _getUserId() {
+  String _getUserId() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      return int.tryParse(authState.user.id) ?? 0;
+      return authState.user.id;
     }
-    return 0;
+    return '';
   }
 
   void _startTracking() {
@@ -45,7 +46,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
       final duration = DateTime.now().difference(_startTime!).inMinutes;
       final userId = _getUserId();
 
-      if (userId > 0) {
+      if (userId.isNotEmpty) {
         try {
           await _repository.saveKickSession(
             userId,
@@ -65,7 +66,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Session saved: $kickCount kicks'),
-          backgroundColor: const Color(0xFF9B7FDB),
+          backgroundColor: AppColors.main600,
         ),
       );
     }
@@ -83,37 +84,74 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
   @override
   Widget build(BuildContext context) {
     if (!isTracking) {
-      return GestureDetector(
-        onTap: _startTracking,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/images/kickcounter.png',
-                  width: 200,
-                  height: 200,
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Tap to start tracking kicks',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.main600.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-          ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.main300.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Image.asset(
+                'assets/images/kickcounter.png',
+                width: 120,
+                height: 120,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Track Your Baby\'s Movements',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.main700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Counting kicks is a great way to bond with your baby.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.textDark.withOpacity(0.5),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _startTracking,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.main600,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 4,
+                shadowColor: AppColors.main600.withOpacity(0.4),
+              ),
+              child: const Text(
+                'Start Tracking',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -122,77 +160,146 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: AppColors.main600.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
         children: [
-          Image.asset('assets/images/kickcounter.png', width: 200, height: 200),
-          GestureDetector(
-            onTap: _incrementKick,
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFE8A5C8), Color(0xFFFFB6D9)],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFE8A5C8).withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '$kickCount',
-                      style: const TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      'Tap to count',
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              OutlinedButton.icon(
-                onPressed: _resetCounter,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Reset'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF9B7FDB),
-                  side: const BorderSide(color: Color(0xFF9B7FDB), width: 2),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'LIVE TRACKING',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          
+          // Kick Counter Circle
+          GestureDetector(
+            onTap: _incrementKick,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: CircularProgressIndicator(
+                    value: kickCount / 10, // Assuming 10 kicks target
+                    strokeWidth: 8,
+                    backgroundColor: AppColors.bg_1,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.main600),
+                  ),
+                ),
+                Container(
+                  width: 170,
+                  height: 170,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.main600.withOpacity(0.1),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '$kickCount',
+                        style: TextStyle(
+                          fontSize: 64,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.main700,
+                          height: 1,
+                        ),
+                      ),
+                      Text(
+                        'KICKS',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.main600,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'TAP TO COUNT',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark.withOpacity(0.4),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          
+          // Action Buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Reset Button
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _resetCounter,
+                  icon: const Icon(Icons.refresh_rounded, size: 18),
+                  label: const Text('Reset'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.textDark.withOpacity(0.6),
+                    side: BorderSide(color: AppColors.bg_1),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
-              ElevatedButton.icon(
-                onPressed: _stopTracking,
-                icon: const Icon(Icons.check),
-                label: const Text('Finish'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE8A5C8),
+              // Finish Button
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _stopTracking,
+                  icon: const Icon(Icons.check_rounded, size: 18),
+                  label: const Text('Finish'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.main600,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
                 ),
               ),
             ],

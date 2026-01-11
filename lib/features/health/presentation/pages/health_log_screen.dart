@@ -10,6 +10,7 @@ import '../widgets/symptoms_tab_content.dart';
 import '../widgets/lab_results_tab_content.dart';
 import '../widgets/risk_alerts_tab_content.dart';
 import '../widgets/mood_tab_content.dart';
+import 'risk_alert_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_event.dart';
@@ -54,11 +55,11 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
   }
 
   final List<Map<String, dynamic>> _tabs = [
-    {'icon': Icons.favorite, 'labelKey': 'vitals'},
-    {'icon': Icons.medication, 'labelKey': 'symptoms'},
-    {'icon': Icons.science, 'labelKey': 'labResults'},
-    {'icon': Icons.warning_amber_rounded, 'labelKey': 'riskAlerts'},
-    {'icon': Icons.sentiment_satisfied_alt, 'labelKey': 'mood'},
+    {'icon': 'assets/icons/health.svg', 'labelKey': 'vitals'},
+    {'icon': 'assets/icons/symptom-svgrepo-com.svg', 'labelKey': 'symptoms'},
+    {'icon': 'assets/icons/lab-svgrepo-com (1).svg', 'labelKey': 'labResults'},
+    {'icon': 'assets/icons/warning-svgrepo-com.svg', 'labelKey': 'riskAlerts'},
+    {'icon': 'assets/icons/emoji-funny-circle-svgrepo-com.svg', 'labelKey': 'mood'},
   ];
 
   Widget _getTabContent() {
