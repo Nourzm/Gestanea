@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/lab_result_model.dart';
 import '../../../../core/services/image_storage_service.dart';
@@ -84,7 +85,7 @@ class _EditLabResultPageState extends State<EditLabResultPage> {
         context.read<LabResultsBloc>().add(UpdateLabResult(updatedResult));
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Lab result updated successfully')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.labResultUpdatedSuccessfully)),
         );
 
         Navigator.pop(context, true);
@@ -92,7 +93,7 @@ class _EditLabResultPageState extends State<EditLabResultPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating result: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorUpdatingResult(e.toString()))),
         );
       }
     } finally {
@@ -110,7 +111,7 @@ class _EditLabResultPageState extends State<EditLabResultPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Lab Result'),
+        title: Text(AppLocalizations.of(context)!.editLabResult),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -157,12 +158,12 @@ class _EditLabResultPageState extends State<EditLabResultPage> {
                                     return Container(
                                       height: 200,
                                       color: Colors.grey.shade300,
-                                      child: const Column(
+                                      child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Icon(Icons.broken_image, size: 64, color: Colors.grey),
                                           SizedBox(height: 8),
-                                          Text('Image not available'),
+                                          Text(AppLocalizations.of(context)!.imageNotAvailable),
                                         ],
                                       ),
                                     );

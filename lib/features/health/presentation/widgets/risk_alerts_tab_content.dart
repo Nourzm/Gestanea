@@ -429,7 +429,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
             TextButton.icon(
               onPressed: () => Navigator.pop(context, 'NO_NEED'),
               icon: const Icon(Icons.block, size: 18),
-              label: const Text('I don\'t need this contact'),
+              label: Text(AppLocalizations.of(context)!.iDontNeedThisContact),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.grey.shade600,
               ),
@@ -458,7 +458,7 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Save'),
+            child: Text(AppLocalizations.of(context)!.saveEmergencyContacts),
           ),
         ],
       ),
@@ -656,13 +656,13 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
           child: RefreshIndicator(
             onRefresh: () => _loadRiskAssessment(clearCache: true),
             child: _isLoading
-                ? const Center(
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircularProgressIndicator(color: Color(0xFF7B4BA6)),
                         SizedBox(height: 16),
-                        Text('Analyzing your health data...', 
+                        Text(AppLocalizations.of(context)!.analyzingYourHealthData, 
                           style: TextStyle(color: Color(0xFF7B4BA6))),
                       ],
                     ),
@@ -674,12 +674,12 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
                           children: [
                             const Icon(Icons.error_outline, size: 64, color: Colors.red),
                             const SizedBox(height: 16),
-                            const Text('Unable to assess risk'),
+                            Text(AppLocalizations.of(context)!.unableToAssessRisk),
                             const SizedBox(height: 8),
                             ElevatedButton.icon(
                               onPressed: _loadRiskAssessment,
                               icon: const Icon(Icons.refresh),
-                              label: const Text('Retry'),
+                              label: Text(AppLocalizations.of(context)!.retry),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF7B4BA6),
                                 foregroundColor: Colors.white,
@@ -721,16 +721,19 @@ class _RiskAlertsTabContentState extends State<RiskAlertsTabContent> {
 
   Widget _buildRiskAssessmentContent(AppLocalizations l10n) {
     if (_riskAssessment == null) {
-      return const Center(child: Text('No assessment available'));
+      return Center(child: Text(AppLocalizations.of(context)!.noAssessmentAvailable));
     }
 
-    final riskLevel = (_riskAssessment!['riskLevel']?.toString() ?? 'none').isEmpty 
+    final riskLevel = (_riskAssessment!['riskLevel']?.toString() == null || _riskAssessment!['riskLevel'].toString().isEmpty) 
         ? 'none' : _riskAssessment!['riskLevel'].toString();
-    final primaryConcern = _riskAssessment!['primaryConcern']?.toString() ?? 'No significant concerns';
+    final primaryConcern = (_riskAssessment!['primaryConcern']?.toString() == null || _riskAssessment!['primaryConcern'].toString().isEmpty)
+        ? l10n.noSignificantConcernsMessage : _riskAssessment!['primaryConcern'].toString();
     final patterns = (_riskAssessment!['detectedPatterns'] as List<dynamic>?) ?? [];
     final recommendations = (_riskAssessment!['recommendations'] as List<dynamic>?) ?? [];
-    final urgency = _riskAssessment!['urgency']?.toString() ?? 'Monitor';
-    final reasoning = _riskAssessment!['reasoning']?.toString() ?? 'No assessment details available';
+    final urgency = (_riskAssessment!['urgency']?.toString() == null || _riskAssessment!['urgency'].toString().isEmpty)
+        ? 'Monitor' : _riskAssessment!['urgency'].toString();
+    final reasoning = (_riskAssessment!['reasoning']?.toString() == null || _riskAssessment!['reasoning'].toString().isEmpty)
+        ? l10n.noAssessmentDetailsAvailable : _riskAssessment!['reasoning'].toString();
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),

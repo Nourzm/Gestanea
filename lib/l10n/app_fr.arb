@@ -484,5 +484,214 @@
       }
     }
   },
-  "at": "à"
+  "at": "à",
+  "myMoods": "Mes humeurs",
+  "noMoodsLoggedYet": "Aucune humeur enregistrée !",
+  "tapLogMoodToStart": "Appuyez sur \"Enregistrer l'humeur\" pour commencer.",
+  "noData": "Aucune donnée",
+  "pleaseLogInToSaveMood": "Veuillez vous connecter pour enregistrer l'humeur",
+  "mySymptoms": "Mes symptômes",
+  "tapLogNewSymptomToStart": "Appuyez sur \"Enregistrer un nouveau symptôme\" pour commencer.",
+  "myMeasurements": "Mes mesures",
+  "tapAddMeasurementToStart": "Appuyez sur \"Ajouter une mesure\" pour commencer.",
+  "myLabResults": "Mes résultats de laboratoire",
+  "uploadFirstLabResult": "Téléchargez votre premier résultat de laboratoire pour commencer.",
+  "labPapersGallery": "Galerie de documents de laboratoire",
+  "uploadLabReportsToSee": "Téléchargez des rapports de laboratoire pour les voir ici",
+  "exportingLabPapers": "Export des documents de laboratoire...",
+  "healthRiskAssessment": "Évaluation des risques de santé",
+  "analyzingYourHealthData": "Analyse de vos données de santé...",
+  "unableToAssessRisk": "Impossible d'évaluer le risque",
+  "noAssessmentAvailable": "Aucune évaluation disponible",
+  "viewAllMeasurements": "Voir toutes les mesures",
+  "viewAllMoods": "Voir toutes les humeurs",
+  "viewAllLabPapers": "Voir tous les documents de laboratoire",
+  "noWeightDataAvailable": "Aucune donnée de poids disponible",
+  "monitor": "Surveiller",
+  "cameraPermissionDenied": "Permission de caméra refusée",
+  "photosPermissionDenied": "Permission de photos refusée",
+  "failedToPickImage": "Échec de la sélection de l'image : {error}",
+  "@failedToPickImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToPickPDF": "Échec de la sélection du PDF : {error}",
+  "@failedToPickPDF": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEditLabResults": "Réviser et modifier les résultats de laboratoire",
+  "imageNotAvailable": "Image non disponible",
+  "addTest": "Ajouter un test",
+  "saveResults": "Enregistrer {count} résultat(s)",
+  "@saveResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "labResultsSavedSuccessfully": "Résultats de laboratoire enregistrés avec succès !",
+  "failedToSaveResults": "Échec de l'enregistrement des résultats : {error}",
+  "@failedToSaveResults": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noResultsToSave": "Aucun résultat à enregistrer",
+  "pdfLabReport": "Rapport de laboratoire PDF",
+  "savePDFReference": "Enregistrer la référence PDF",
+  "enterDataManually": "Saisir les données manuellement",
+  "pdfSavedAndUploaded": "PDF enregistré et téléchargé !",
+  "failedToSavePDF": "Échec de l'enregistrement du PDF : {error}",
+  "@failedToSavePDF": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "extractLabResults": "Extraire les résultats de laboratoire",
+  "extractingTextFromImage": "Extraction du texte de l'image...",
+  "viewRawText": "Voir le texte brut",
+  "noDataExtracted": "Aucune donnée extraite",
+  "saveImageOnly": "Enregistrer uniquement l'image",
+  "imageSaved": "Image enregistrée ! Vous pouvez ajouter des détails plus tard.",
+  "enterManually": "Saisir manuellement",
+  "noImageSaved": "Aucune image enregistrée. Veuillez réessayer.",
+  "manualLabEntry": "Saisie manuelle de laboratoire",
+  "labResultAddedSuccessfully": "Résultat de laboratoire ajouté avec succès !",
+  "exporting": "Exportation...",
+  "labResultImage": "Image du résultat de laboratoire",
+  "deleteResult": "Supprimer le résultat",
+  "areYouSureDeleteResult": "Êtes-vous sûr de vouloir supprimer {testName} ?",
+  "@areYouSureDeleteResult": {
+    "placeholders": {
+      "testName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Supprimer",
+  "exportLabResults": "Exporter les résultats de laboratoire",
+  "exportAllLabResultsAsZIP": "Exporter toutes les images de résultats de laboratoire dans un fichier ZIP ?",
+  "export": "Exporter",
+  "labResultUpdatedSuccessfully": "Résultat de laboratoire mis à jour avec succès",
+  "errorUpdatingResult": "Erreur lors de la mise à jour du résultat : {error}",
+  "@errorUpdatingResult": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editLabResult": "Modifier le résultat de laboratoire",
+  "errorCallingContact": "Erreur lors de l'appel de {contactName} : {error}",
+  "@errorCallingContact": {
+    "placeholders": {
+      "contactName": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iDontNeedThisContact": "Je n'ai pas besoin de ce contact",
+  "saveEmergencyContacts": "Enregistrer",
+  "setupEmergencyContacts": "Configurer les contacts d'urgence",
+  "setupContactsDescription": "Ajoutez des contacts d'urgence pour un accès rapide en cas de situations urgentes.",
+  "partner": "Partenaire",
+  "healthcareProvider": "Fournisseur de soins de santé",
+  "parent": "Parent/Famille",
+  "actionNeeded": "ACTION REQUISE",
+  "detectedPatterns": "Schémas détectés",
+  "recommendations": "Recommandations",
+  "aiAnalysis": "Analyse IA",
+  "aiRiskAssessmentDisclaimer": "⚠️ Évaluation des risques générée par l'IA. Ce n'est pas un diagnostic médical. Consultez toujours votre professionnel de la santé pour toute préoccupation.",
+  "riskLevel": "RISQUE",
+  "none": "AUCUN",
+  "normalRisk": "Normal",
+  "lowRiskLevel": "Faible",
+  "mediumRisk": "Moyen",
+  "highRisk": "Élevé",
+  "urgentRisk": "Urgent",
+  "noSignificantConcerns": "Aucune préoccupation significative",
+  "heartRateProgress": "Progression de la fréquence cardiaque",
+  "bloodPressureTrend": "Tendance de la pression artérielle",
+  "noSymptomLogged": "Aucun symptôme enregistré",
+  "noMoodsLogged": "Aucune humeur enregistrée",
+  "noLabResultsYet": "Aucun résultat de laboratoire pour le moment",
+  "lowStatus": "Bas",
+  "highStatus": "Élevé",
+  "viewAllLabPapers": "Afficher tous les documents de laboratoire",
+  "systolic": "Systolique",
+  "diastolic": "Diastolique",
+  "noSymptomDataAvailable": "Aucune donnée de symptôme disponible",
+  "noNotes": "Aucune note",
+  "noMoodDataAvailable": "Aucune donnée d'humeur disponible",
+  "noSignificantConcernsMessage": "Aucune préoccupation significative",
+  "noAssessmentDetailsAvailable": "Aucun détail d'évaluation disponible",
+  "minAgo": "il y a {minutes} min",
+  "@minAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "il y a {hours} heures",
+  "@hoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "il y a {days} jours",
+  "@daysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterday": "Hier",
+  "minAgoShort": "il y a {minutes}m",
+  "@minAgoShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgoShort": "il y a {hours}h",
+  "@hoursAgoShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgoShort": "il y a {days}j",
+  "@daysAgoShort": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "underweight": "Insuffisance pondérale",
+  "overweight": "Surpoids",
+  "obese": "Obèse",
+  "normalBMI": "Normal",
+  "mixedMoodsCareMessage": "Humeurs mélangées - prenez soin de vous!"
 }

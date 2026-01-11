@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/lab_result_model.dart';
 import '../../../../core/services/image_storage_service.dart';
@@ -19,7 +20,7 @@ class LabResultsListPage extends StatelessWidget {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Lab Results'),
+        title: Text(AppLocalizations.of(context)!.myLabResults),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -38,7 +39,7 @@ class LabResultsListPage extends StatelessWidget {
           if (state is LabResultsExporting) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text('Exporting.. .')));
+            ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.exporting)));
           }
         },
         builder: (context, state) {
@@ -53,7 +54,7 @@ class LabResultsListPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${AppLocalizations.of(context)!.error}: ${state.message}'),
                 ],
               ),
             );
@@ -61,7 +62,7 @@ class LabResultsListPage extends StatelessWidget {
 
           if (state is LabResultsLoaded) {
             if (state.labResults.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -75,7 +76,7 @@ class LabResultsListPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('Upload your first lab result to get started. '),
+                    Text(AppLocalizations.of(context)!.uploadFirstLabResult),
                   ],
                 ),
               );
@@ -117,7 +118,7 @@ class LabResultsListPage extends StatelessWidget {
             );
           }
 
-          return const Center(child: Text('No data'));
+          return Center(child: Text(AppLocalizations.of(context)!.noData));
         },
       ),
     );
@@ -349,7 +350,7 @@ class LabResultsListPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             AppBar(
-              title: const Text('Lab Result Image'),
+              title: Text(AppLocalizations.of(context)!.labResultImage),
               automaticallyImplyLeading: true,
               backgroundColor: AppColors.main500,
               foregroundColor: Colors.white,
@@ -365,12 +366,12 @@ class LabResultsListPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Result'),
-        content: Text('Are you sure you want to delete ${result.testName}?'),
+        title: Text(AppLocalizations.of(context)!.deleteResult),
+        content: Text(AppLocalizations.of(context)!.areYouSureDeleteResult(result.testName)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -380,7 +381,7 @@ class LabResultsListPage extends StatelessWidget {
               Navigator.pop(dialogContext);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -391,8 +392,8 @@ class LabResultsListPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Export Lab Results'),
-        content: const Text('Export all lab result images as a ZIP file? '),
+        title: Text(AppLocalizations.of(context)!.exportLabResults),
+        content: Text(AppLocalizations.of(context)!.exportAllLabResultsAsZIP),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
@@ -403,7 +404,7 @@ class LabResultsListPage extends StatelessWidget {
               context.read<LabResultsBloc>().add(ExportLabResultsAsZip());
               Navigator.pop(dialogContext);
             },
-            child: const Text('Export'),
+            child: Text(AppLocalizations.of(context)!.export),
           ),
         ],
       ),

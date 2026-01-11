@@ -589,5 +589,214 @@
       }
     }
   },
-  "at": "at"
+  "at": "at",
+  "myMoods": "My Moods",
+  "noMoodsLoggedYet": "No moods logged yet!",
+  "tapLogMoodToStart": "Tap \"Log Mood\" to start.",
+  "noData": "No data",
+  "pleaseLogInToSaveMood": "Please log in to save mood",
+  "mySymptoms": "My Symptoms",
+  "tapLogNewSymptomToStart": "Tap \"Log New Symptom\" to start.",
+  "myMeasurements": "My Measurements",
+  "tapAddMeasurementToStart": "Tap \"Add Measurement\" to start.",
+  "myLabResults": "My Lab Results",
+  "uploadFirstLabResult": "Upload your first lab result to get started.",
+  "labPapersGallery": "Lab Papers Gallery",
+  "uploadLabReportsToSee": "Upload lab reports to see them here",
+  "exportingLabPapers": "Exporting lab papers...",
+  "healthRiskAssessment": "Health Risk Assessment",
+  "analyzingYourHealthData": "Analyzing your health data...",
+  "unableToAssessRisk": "Unable to assess risk",
+  "noAssessmentAvailable": "No assessment available",
+  "viewAllMeasurements": "View All Measurements",
+  "viewAllMoods": "View All Moods",
+  "viewAllLabPapers": "View All Lab Papers",
+  "noWeightDataAvailable": "No weight data available",
+  "monitor": "Monitor",
+  "cameraPermissionDenied": "Camera permission denied",
+  "photosPermissionDenied": "Photos permission denied",
+  "failedToPickImage": "Failed to pick image: {error}",
+  "@failedToPickImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToPickPDF": "Failed to pick PDF: {error}",
+  "@failedToPickPDF": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEditLabResults": "Review & Edit Lab Results",
+  "imageNotAvailable": "Image not available",
+  "addTest": "Add Test",
+  "saveResults": "Save {count} Result(s)",
+  "@saveResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "labResultsSavedSuccessfully": "Lab results saved successfully!",
+  "failedToSaveResults": "Failed to save results: {error}",
+  "@failedToSaveResults": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noResultsToSave": "No results to save",
+  "pdfLabReport": "PDF Lab Report",
+  "savePDFReference": "Save PDF Reference",
+  "enterDataManually": "Enter Data Manually",
+  "pdfSavedAndUploaded": "PDF saved and uploaded!",
+  "failedToSavePDF": "Failed to save PDF: {error}",
+  "@failedToSavePDF": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "extractLabResults": "Extract Lab Results",
+  "extractingTextFromImage": "Extracting text from image...",
+  "viewRawText": "View Raw Text",
+  "noDataExtracted": "No Data Extracted",
+  "saveImageOnly": "Save Image Only",
+  "imageSaved": "Image saved!  You can add details later.",
+  "enterManually": "Enter Manually",
+  "noImageSaved": "No image saved.  Please try again.",
+  "manualLabEntry": "Manual Lab Entry",
+  "labResultAddedSuccessfully": "Lab result added successfully!",
+  "exporting": "Exporting.. .",
+  "labResultImage": "Lab Result Image",
+  "deleteResult": "Delete Result",
+  "areYouSureDeleteResult": "Are you sure you want to delete {testName}?",
+  "@areYouSureDeleteResult": {
+    "placeholders": {
+      "testName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Delete",
+  "exportLabResults": "Export Lab Results",
+  "exportAllLabResultsAsZIP": "Export all lab result images as a ZIP file?",
+  "export": "Export",
+  "labResultUpdatedSuccessfully": "Lab result updated successfully",
+  "errorUpdatingResult": "Error updating result: {error}",
+  "@errorUpdatingResult": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editLabResult": "Edit Lab Result",
+  "errorCallingContact": "Error calling {contactName}: {error}",
+  "@errorCallingContact": {
+    "placeholders": {
+      "contactName": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iDontNeedThisContact": "I don't need this contact",
+  "saveEmergencyContacts": "Save",
+  "setupEmergencyContacts": "Setup Emergency Contacts",
+  "setupContactsDescription": "Add emergency contacts for quick access during urgent situations.",
+  "partner": "Partner",
+  "healthcareProvider": "Healthcare Provider",
+  "parent": "Parent/Family",
+  "actionNeeded": "ACTION NEEDED",
+  "detectedPatterns": "Detected Patterns",
+  "recommendations": "Recommendations",
+  "aiAnalysis": "AI Analysis",
+  "aiRiskAssessmentDisclaimer": "⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.",
+  "riskLevel": "RISK",
+  "none": "NONE",
+  "normalRisk": "Normal",
+  "lowRiskLevel": "Low",
+  "mediumRisk": "Medium",
+  "highRisk": "High",
+  "urgentRisk": "Urgent",
+  "noSignificantConcerns": "No significant concerns",
+  "heartRateProgress": "Heart Rate Progress",
+  "bloodPressureTrend": "Blood Pressure Trend",
+  "noSymptomLogged": "No symptoms logged yet",
+  "noMoodsLogged": "No moods logged yet",
+  "noLabResultsYet": "No lab results yet",
+  "lowStatus": "Low",
+  "highStatus": "High",
+  "viewAllLabPapers": "View All Lab Papers",
+  "systolic": "Systolic",
+  "diastolic": "Diastolic",
+  "noSymptomDataAvailable": "No symptom data available",
+  "noNotes": "No notes",
+  "noMoodDataAvailable": "No mood data available",
+  "noSignificantConcernsMessage": "No significant concerns",
+  "noAssessmentDetailsAvailable": "No assessment details available",
+  "minAgo": "{minutes} min ago",
+  "@minAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{hours} hours ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterday": "Yesterday",
+  "minAgoShort": "{minutes}m ago",
+  "@minAgoShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgoShort": "{hours}h ago",
+  "@hoursAgoShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgoShort": "{days}d ago",
+  "@daysAgoShort": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "underweight": "Underweight",
+  "overweight": "Overweight",
+  "obese": "Obese",
+  "normalBMI": "Normal",
+  "mixedMoodsCareMessage": "Mixed moods - take care of yourself!"
 }

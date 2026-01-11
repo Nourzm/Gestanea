@@ -252,14 +252,14 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
 
                     // Heart Rate Chart
                     if (measurements.any((m) => m.heartRate != null))
-                      _buildHeartRateChart(context, measurements, themeData),
+                      _buildHeartRateChart(context, measurements, themeData, localizations),
 
                     if (measurements.any((m) => m.heartRate != null))
                       const SizedBox(height: 16),
 
                     // Blood Pressure Chart
                     if (measurements.any((m) => m.systolic != null))
-                      _buildBloodPressureChart(context, measurements, themeData),
+                      _buildBloodPressureChart(context, measurements, themeData, localizations),
 
                     if (measurements.any((m) => m.systolic != null))
                       const SizedBox(height: 16),
@@ -298,7 +298,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
                               );
                             },
                             icon: const Icon(Icons.list),
-                            label: const Text('View All Measurements'),
+                            label: Text(AppLocalizations.of(context)!.viewAllMeasurements),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: themeData.primaryColor,
                               foregroundColor: Colors.white,
@@ -375,7 +375,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
     );
   }
 
-  Widget _buildHeartRateChart(BuildContext context, List measurements, themeData) {
+  Widget _buildHeartRateChart(BuildContext context, List measurements, themeData, AppLocalizations localizations) {
     // Filter measurements based on time range
     final filteredData = _filterByTimeRange(measurements);
     final heartRateData = filteredData
@@ -411,7 +411,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Heart Rate Progress',
+                localizations.heartRateProgress,
                 style: AppTextStyles.subtitle1.copyWith(
                   color: AppColors.textDark,
                   fontSize: 14,
@@ -508,7 +508,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
     );
   }
 
-  Widget _buildBloodPressureChart(BuildContext context, List measurements, themeData) {
+  Widget _buildBloodPressureChart(BuildContext context, List measurements, themeData, AppLocalizations localizations) {
     // Filter measurements based on time range
     final filteredData = _filterByTimeRange(measurements);
     final bpData = filteredData
@@ -544,7 +544,7 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Blood Pressure Trend',
+                localizations.bloodPressureTrend,
                 style: AppTextStyles.subtitle1.copyWith(
                   color: AppColors.textDark,
                   fontSize: 14,
@@ -662,9 +662,9 @@ class _VitalsTabContentState extends State<VitalsTabContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildLegendItem('Systolic', const Color(0xFFFF5722)),
+              _buildLegendItem(localizations.systolic, const Color(0xFFFF5722)),
               const SizedBox(width: 16),
-              _buildLegendItem('Diastolic', const Color(0xFF2196F3)),
+              _buildLegendItem(localizations.diastolic, const Color(0xFF2196F3)),
             ],
           ),
         ],

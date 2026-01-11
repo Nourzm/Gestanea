@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
 import 'package:gestanea/core/session/session_manager.dart';
 import 'package:gestanea/core/services/image_storage_service.dart';
@@ -44,15 +45,15 @@ class PdfExtractionPage extends StatelessWidget {
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('PDF saved and uploaded!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pdfSavedAndUploaded),
           backgroundColor: Colors.green,
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to save PDF: $e'),
+          content: Text(AppLocalizations.of(context)!.failedToSavePDF(e.toString())),
           backgroundColor: Colors.red,
         ),
       );
@@ -64,7 +65,7 @@ class PdfExtractionPage extends StatelessWidget {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PDF Lab Report'),
+        title: Text(AppLocalizations.of(context)!.pdfLabReport),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -92,7 +93,7 @@ class PdfExtractionPage extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () => _saveJustPdf(context),
                 icon: const Icon(Icons.save),
-                label: const Text('Save PDF Reference'),
+                label: Text(AppLocalizations.of(context)!.savePDFReference),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: themeData.primaryColor,
                   foregroundColor: Colors.white,
@@ -115,7 +116,7 @@ class PdfExtractionPage extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.edit),
-                label: const Text('Enter Data Manually'),
+                label: Text(AppLocalizations.of(context)!.enterDataManually),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: themeData.primaryColor,
                   padding: const EdgeInsets.symmetric(

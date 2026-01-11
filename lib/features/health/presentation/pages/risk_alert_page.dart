@@ -148,7 +148,7 @@ class _RiskAlertPageState extends State<RiskAlertPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAF0FF),
       appBar: AppBar(
-        title: const Text('Health Risk Assessment'),
+        title: Text(AppLocalizations.of(context)!.healthRiskAssessment),
         backgroundColor: const Color(0xFF7B4BA6),
         foregroundColor: Colors.white,
         actions: [
@@ -182,12 +182,12 @@ class _RiskAlertPageState extends State<RiskAlertPage> {
                     children: [
                       const Icon(Icons.error_outline, size: 64, color: Colors.red),
                       const SizedBox(height: 16),
-                      const Text('Unable to assess risk'),
+                      Text(AppLocalizations.of(context)!.unableToAssessRisk),
                       const SizedBox(height: 8),
                       ElevatedButton.icon(
                         onPressed: _loadRiskAssessment,
                         icon: const Icon(Icons.refresh),
-                        label: const Text('Retry'),
+                        label: Text(AppLocalizations.of(context)!.retry),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF7B4BA6),
                           foregroundColor: Colors.white,
@@ -202,15 +202,15 @@ class _RiskAlertPageState extends State<RiskAlertPage> {
 
   Widget _buildRiskAssessment(AppLocalizations l10n) {
     if (_riskAssessment == null) {
-      return const Center(child: Text('No assessment available'));
+      return Center(child: Text(AppLocalizations.of(context)!.noAssessmentAvailable));
     }
 
-    final riskLevel = (_riskAssessment!['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : _riskAssessment!['riskLevel'].toString();
-    final primaryConcern = (_riskAssessment!['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : _riskAssessment!['primaryConcern'].toString();
+    final riskLevel = (_riskAssessment!['riskLevel']?.toString() == null || _riskAssessment!['riskLevel'].toString().isEmpty) ? 'none' : _riskAssessment!['riskLevel'].toString();
+    final primaryConcern = (_riskAssessment!['primaryConcern']?.toString() == null || _riskAssessment!['primaryConcern'].toString().isEmpty) ? 'No significant concerns' : _riskAssessment!['primaryConcern'].toString();
     final patterns = _riskAssessment!['detectedPatterns'] as List<dynamic>? ?? [];
     final recommendations = _riskAssessment!['recommendations'] as List<dynamic>? ?? [];
-    final urgency = (_riskAssessment!['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : _riskAssessment!['urgency'].toString();
-    final reasoning = (_riskAssessment!['reasoning']?.toString() ?? 'No assessment details available').isEmpty ? 'No assessment details available' : _riskAssessment!['reasoning'].toString();
+    final urgency = (_riskAssessment!['urgency']?.toString() == null || _riskAssessment!['urgency'].toString().isEmpty) ? 'Monitor' : _riskAssessment!['urgency'].toString();
+    final reasoning = (_riskAssessment!['reasoning']?.toString() == null || _riskAssessment!['reasoning'].toString().isEmpty) ? 'No assessment details available' : _riskAssessment!['reasoning'].toString();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),

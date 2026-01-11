@@ -1382,7 +1382,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{hours} hours ago'**
-  String hoursAgo(Object hours);
+  String hoursAgo(int hours);
 
   /// No description provided for @calm.
   ///
@@ -1418,7 +1418,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{days} days ago'**
-  String daysAgo(Object days);
+  String daysAgo(int days);
 
   /// No description provided for @trackingMoodHelps.
   ///
@@ -2655,6 +2655,612 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'at'**
   String get at;
+
+  /// No description provided for @myMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'My Moods'**
+  String get myMoods;
+
+  /// No description provided for @noMoodsLoggedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No moods logged yet!'**
+  String get noMoodsLoggedYet;
+
+  /// No description provided for @tapLogMoodToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Log Mood\" to start.'**
+  String get tapLogMoodToStart;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// No description provided for @pleaseLogInToSaveMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in to save mood'**
+  String get pleaseLogInToSaveMood;
+
+  /// No description provided for @mySymptoms.
+  ///
+  /// In en, this message translates to:
+  /// **'My Symptoms'**
+  String get mySymptoms;
+
+  /// No description provided for @tapLogNewSymptomToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Log New Symptom\" to start.'**
+  String get tapLogNewSymptomToStart;
+
+  /// No description provided for @myMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'My Measurements'**
+  String get myMeasurements;
+
+  /// No description provided for @tapAddMeasurementToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Add Measurement\" to start.'**
+  String get tapAddMeasurementToStart;
+
+  /// No description provided for @myLabResults.
+  ///
+  /// In en, this message translates to:
+  /// **'My Lab Results'**
+  String get myLabResults;
+
+  /// No description provided for @uploadFirstLabResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your first lab result to get started.'**
+  String get uploadFirstLabResult;
+
+  /// No description provided for @labPapersGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Papers Gallery'**
+  String get labPapersGallery;
+
+  /// No description provided for @uploadLabReportsToSee.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload lab reports to see them here'**
+  String get uploadLabReportsToSee;
+
+  /// No description provided for @exportingLabPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting lab papers...'**
+  String get exportingLabPapers;
+
+  /// No description provided for @healthRiskAssessment.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Risk Assessment'**
+  String get healthRiskAssessment;
+
+  /// No description provided for @analyzingYourHealthData.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your health data...'**
+  String get analyzingYourHealthData;
+
+  /// No description provided for @unableToAssessRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to assess risk'**
+  String get unableToAssessRisk;
+
+  /// No description provided for @noAssessmentAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No assessment available'**
+  String get noAssessmentAvailable;
+
+  /// No description provided for @viewAllMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Measurements'**
+  String get viewAllMeasurements;
+
+  /// No description provided for @viewAllMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Moods'**
+  String get viewAllMoods;
+
+  /// No description provided for @viewAllLabPapers.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Lab Papers'**
+  String get viewAllLabPapers;
+
+  /// No description provided for @noWeightDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No weight data available'**
+  String get noWeightDataAvailable;
+
+  /// No description provided for @monitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor'**
+  String get monitor;
+
+  /// No description provided for @cameraPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera permission denied'**
+  String get cameraPermissionDenied;
+
+  /// No description provided for @photosPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos permission denied'**
+  String get photosPermissionDenied;
+
+  /// No description provided for @failedToPickImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image: {error}'**
+  String failedToPickImage(String error);
+
+  /// No description provided for @failedToPickPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick PDF: {error}'**
+  String failedToPickPDF(String error);
+
+  /// No description provided for @reviewEditLabResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Edit Lab Results'**
+  String get reviewEditLabResults;
+
+  /// No description provided for @imageNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Image not available'**
+  String get imageNotAvailable;
+
+  /// No description provided for @addTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Test'**
+  String get addTest;
+
+  /// No description provided for @saveResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {count} Result(s)'**
+  String saveResults(int count);
+
+  /// No description provided for @labResultsSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab results saved successfully!'**
+  String get labResultsSavedSuccessfully;
+
+  /// No description provided for @failedToSaveResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save results: {error}'**
+  String failedToSaveResults(String error);
+
+  /// No description provided for @noResultsToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'No results to save'**
+  String get noResultsToSave;
+
+  /// No description provided for @pdfLabReport.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Lab Report'**
+  String get pdfLabReport;
+
+  /// No description provided for @savePDFReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Save PDF Reference'**
+  String get savePDFReference;
+
+  /// No description provided for @enterDataManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Data Manually'**
+  String get enterDataManually;
+
+  /// No description provided for @pdfSavedAndUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF saved and uploaded!'**
+  String get pdfSavedAndUploaded;
+
+  /// No description provided for @failedToSavePDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save PDF: {error}'**
+  String failedToSavePDF(String error);
+
+  /// No description provided for @extractLabResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract Lab Results'**
+  String get extractLabResults;
+
+  /// No description provided for @extractingTextFromImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting text from image...'**
+  String get extractingTextFromImage;
+
+  /// No description provided for @viewRawText.
+  ///
+  /// In en, this message translates to:
+  /// **'View Raw Text'**
+  String get viewRawText;
+
+  /// No description provided for @noDataExtracted.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data Extracted'**
+  String get noDataExtracted;
+
+  /// No description provided for @saveImageOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Image Only'**
+  String get saveImageOnly;
+
+  /// No description provided for @imageSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved!  You can add details later.'**
+  String get imageSaved;
+
+  /// No description provided for @enterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Manually'**
+  String get enterManually;
+
+  /// No description provided for @noImageSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'No image saved.  Please try again.'**
+  String get noImageSaved;
+
+  /// No description provided for @manualLabEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Lab Entry'**
+  String get manualLabEntry;
+
+  /// No description provided for @labResultAddedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab result added successfully!'**
+  String get labResultAddedSuccessfully;
+
+  /// No description provided for @exporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting.. .'**
+  String get exporting;
+
+  /// No description provided for @labResultImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Result Image'**
+  String get labResultImage;
+
+  /// No description provided for @deleteResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Result'**
+  String get deleteResult;
+
+  /// No description provided for @areYouSureDeleteResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {testName}?'**
+  String areYouSureDeleteResult(String testName);
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @exportLabResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Lab Results'**
+  String get exportLabResults;
+
+  /// No description provided for @exportAllLabResultsAsZIP.
+  ///
+  /// In en, this message translates to:
+  /// **'Export all lab result images as a ZIP file?'**
+  String get exportAllLabResultsAsZIP;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// No description provided for @labResultUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab result updated successfully'**
+  String get labResultUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating result: {error}'**
+  String errorUpdatingResult(String error);
+
+  /// No description provided for @editLabResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Lab Result'**
+  String get editLabResult;
+
+  /// No description provided for @errorCallingContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Error calling {contactName}: {error}'**
+  String errorCallingContact(String contactName, String error);
+
+  /// No description provided for @iDontNeedThisContact.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t need this contact'**
+  String get iDontNeedThisContact;
+
+  /// No description provided for @saveEmergencyContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveEmergencyContacts;
+
+  /// No description provided for @setupEmergencyContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup Emergency Contacts'**
+  String get setupEmergencyContacts;
+
+  /// No description provided for @setupContactsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add emergency contacts for quick access during urgent situations.'**
+  String get setupContactsDescription;
+
+  /// No description provided for @partner.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner'**
+  String get partner;
+
+  /// No description provided for @healthcareProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthcare Provider'**
+  String get healthcareProvider;
+
+  /// No description provided for @parent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent/Family'**
+  String get parent;
+
+  /// No description provided for @actionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTION NEEDED'**
+  String get actionNeeded;
+
+  /// No description provided for @detectedPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Patterns'**
+  String get detectedPatterns;
+
+  /// No description provided for @recommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendations;
+
+  /// No description provided for @aiAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis'**
+  String get aiAnalysis;
+
+  /// No description provided for @aiRiskAssessmentDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.'**
+  String get aiRiskAssessmentDisclaimer;
+
+  /// No description provided for @riskLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'RISK'**
+  String get riskLevel;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'NONE'**
+  String get none;
+
+  /// No description provided for @normalRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normalRisk;
+
+  /// No description provided for @lowRiskLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get lowRiskLevel;
+
+  /// No description provided for @mediumRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get mediumRisk;
+
+  /// No description provided for @highRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get highRisk;
+
+  /// No description provided for @urgentRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgentRisk;
+
+  /// No description provided for @noSignificantConcerns.
+  ///
+  /// In en, this message translates to:
+  /// **'No significant concerns'**
+  String get noSignificantConcerns;
+
+  /// No description provided for @heartRateProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart Rate Progress'**
+  String get heartRateProgress;
+
+  /// No description provided for @bloodPressureTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood Pressure Trend'**
+  String get bloodPressureTrend;
+
+  /// No description provided for @noSymptomLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'No symptoms logged yet'**
+  String get noSymptomLogged;
+
+  /// No description provided for @noMoodsLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'No moods logged yet'**
+  String get noMoodsLogged;
+
+  /// No description provided for @noLabResultsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No lab results yet'**
+  String get noLabResultsYet;
+
+  /// No description provided for @lowStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get lowStatus;
+
+  /// No description provided for @highStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get highStatus;
+
+  /// No description provided for @noSymptomDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No symptom data available'**
+  String get noSymptomDataAvailable;
+
+  /// No description provided for @noNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes'**
+  String get noNotes;
+
+  /// No description provided for @noMoodDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No mood data available'**
+  String get noMoodDataAvailable;
+
+  /// No description provided for @noSignificantConcernsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No significant concerns'**
+  String get noSignificantConcernsMessage;
+
+  /// No description provided for @noAssessmentDetailsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No assessment details available'**
+  String get noAssessmentDetailsAvailable;
+
+  /// No description provided for @minAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min ago'**
+  String minAgo(int minutes);
+
+  /// No description provided for @minAgoShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String minAgoShort(int minutes);
+
+  /// No description provided for @hoursAgoShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String hoursAgoShort(int hours);
+
+  /// No description provided for @daysAgoShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String daysAgoShort(int days);
+
+  /// No description provided for @underweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Underweight'**
+  String get underweight;
+
+  /// No description provided for @overweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Overweight'**
+  String get overweight;
+
+  /// No description provided for @obese.
+  ///
+  /// In en, this message translates to:
+  /// **'Obese'**
+  String get obese;
+
+  /// No description provided for @mixedMoodsCareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed moods - take care of yourself!'**
+  String get mixedMoodsCareMessage;
 }
 
 class _AppLocalizationsDelegate

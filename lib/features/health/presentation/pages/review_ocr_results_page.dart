@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
 import 'package:gestanea/core/session/session_manager.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
@@ -78,8 +79,8 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
         Navigator.pop(context); // Close review page
         Navigator.pop(context); // Close OCR page
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Lab results saved successfully!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.labResultsSavedSuccessfully),
             backgroundColor: Colors.green,
           ),
         );
@@ -88,7 +89,7 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save results: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToSaveResults(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -108,7 +109,7 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
     if (_editableResults.isEmpty) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No results to save')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noResultsToSave)),
       );
     }
   }
@@ -140,7 +141,7 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Review & Edit Lab Results'),
+        title: Text(AppLocalizations.of(context)!.reviewEditLabResults),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -190,12 +191,12 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
                                     errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         color: Colors.grey.shade300,
-                                        child: const Column(
+                                        child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Icon(Icons.broken_image, size: 64, color: Colors.grey),
                                             SizedBox(height: 8),
-                                            Text('Image not available'),
+                                            Text(AppLocalizations.of(context)!.imageNotAvailable),
                                           ],
                                         ),
                                       );
@@ -277,7 +278,7 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
                               ElevatedButton.icon(
                                 onPressed: _addNewTest,
                                 icon: const Icon(Icons.add),
-                                label: const Text('Add Test'),
+                                label: Text(AppLocalizations.of(context)!.addTest),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: themeData.primaryColor,
                                   foregroundColor: Colors.white,
@@ -327,7 +328,7 @@ class _ReviewOcrResultsPageState extends State<ReviewOcrResultsPage> {
                       child: ElevatedButton.icon(
                         onPressed: _editableResults.isEmpty ? null : _saveResults,
                         icon: const Icon(Icons.check),
-                        label: Text('Save ${_editableResults.length} Result(s)'),
+                        label: Text(AppLocalizations.of(context)!.saveResults(_editableResults.length)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,

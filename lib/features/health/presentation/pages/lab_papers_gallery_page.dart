@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -22,7 +23,7 @@ class LabPapersGalleryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lab Papers Gallery'),
+        title: Text(AppLocalizations.of(context)!.labPapersGallery),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -33,7 +34,7 @@ class LabPapersGalleryPage extends StatelessWidget {
               await imageStorage.shareZip();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Exporting lab papers...')),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.exportingLabPapers)),
                 );
               }
             },
@@ -54,7 +55,7 @@ class LabPapersGalleryPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${AppLocalizations.of(context)!.error}: ${state.message}'),
                 ],
               ),
             );
@@ -69,7 +70,7 @@ class LabPapersGalleryPage extends StatelessWidget {
                 .toList();
 
             if (imagePaths.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -83,7 +84,7 @@ class LabPapersGalleryPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('Upload lab reports to see them here'),
+                    Text(AppLocalizations.of(context)!.uploadLabReportsToSee),
                   ],
                 ),
               );
@@ -323,12 +324,12 @@ class LabPapersGalleryPage extends StatelessWidget {
                               return Container(
                                 color: Colors.white,
                                 padding: const EdgeInsets.all(32),
-                                child: const Column(
+                                child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.broken_image, size: 64, color: Colors.grey),
                                     SizedBox(height: 8),
-                                    Text('Image not available'),
+                                    Text(AppLocalizations.of(context)!.imageNotAvailable),
                                   ],
                                 ),
                               );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
@@ -25,7 +26,7 @@ class UploadLabResultsDialog extends StatelessWidget {
         if (!status.isGranted) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Camera permission denied')),
+              SnackBar(content: Text(AppLocalizations.of(context)!.cameraPermissionDenied)),
             );
           }
           return;
@@ -52,7 +53,7 @@ class UploadLabResultsDialog extends StatelessWidget {
         if (!status.isGranted) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Photos permission denied')),
+              SnackBar(content: Text(AppLocalizations.of(context)!.photosPermissionDenied)),
             );
           }
           return;
@@ -87,7 +88,7 @@ class UploadLabResultsDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickImage(e.toString()))));
       }
     }
   }
@@ -122,7 +123,7 @@ class UploadLabResultsDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to pick PDF: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickPDF(e.toString()))));
       }
     }
   }

@@ -11,12 +11,12 @@ class RiskAlertsService {
     required Map<String, dynamic> assessment,
   }) async {
     try {
-      final riskLevel = (assessment['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : assessment['riskLevel'].toString();
-      final primaryConcern = (assessment['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : assessment['primaryConcern'].toString();
+      final riskLevel = (assessment['riskLevel']?.toString() == null || assessment['riskLevel'].toString().isEmpty) ? 'none' : assessment['riskLevel'].toString();
+      final primaryConcern = (assessment['primaryConcern']?.toString() == null || assessment['primaryConcern'].toString().isEmpty) ? 'No significant concerns' : assessment['primaryConcern'].toString();
       final patterns = assessment['detectedPatterns'] as List<dynamic>? ?? [];
       final recommendations = assessment['recommendations'] as List<dynamic>? ?? [];
-      final urgency = (assessment['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : assessment['urgency'].toString();
-      final reasoning = (assessment['reasoning']?.toString() ?? 'No reasoning provided').isEmpty ? 'No reasoning provided' : assessment['reasoning'].toString();
+      final urgency = (assessment['urgency']?.toString() == null || assessment['urgency'].toString().isEmpty) ? 'Monitor' : assessment['urgency'].toString();
+      final reasoning = (assessment['reasoning']?.toString() == null || assessment['reasoning'].toString().isEmpty) ? 'No reasoning provided' : assessment['reasoning'].toString();
 
       final now = DateTime.now();
       final id = '${now.millisecondsSinceEpoch}_${userId.substring(0, 8)}';

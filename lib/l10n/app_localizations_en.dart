@@ -661,7 +661,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feltEnergeticToday => 'Felt energetic today';
 
   @override
-  String hoursAgo(Object hours) {
+  String hoursAgo(int hours) {
     return '$hours hours ago';
   }
 
@@ -681,7 +681,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get needMoreSleep => 'Need more sleep';
 
   @override
-  String daysAgo(Object days) {
+  String daysAgo(int days) {
     return '$days days ago';
   }
 
@@ -1329,4 +1329,335 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get at => 'at';
+
+  @override
+  String get myMoods => 'My Moods';
+
+  @override
+  String get noMoodsLoggedYet => 'No moods logged yet!';
+
+  @override
+  String get tapLogMoodToStart => 'Tap \"Log Mood\" to start.';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get pleaseLogInToSaveMood => 'Please log in to save mood';
+
+  @override
+  String get mySymptoms => 'My Symptoms';
+
+  @override
+  String get tapLogNewSymptomToStart => 'Tap \"Log New Symptom\" to start.';
+
+  @override
+  String get myMeasurements => 'My Measurements';
+
+  @override
+  String get tapAddMeasurementToStart => 'Tap \"Add Measurement\" to start.';
+
+  @override
+  String get myLabResults => 'My Lab Results';
+
+  @override
+  String get uploadFirstLabResult =>
+      'Upload your first lab result to get started.';
+
+  @override
+  String get labPapersGallery => 'Lab Papers Gallery';
+
+  @override
+  String get uploadLabReportsToSee => 'Upload lab reports to see them here';
+
+  @override
+  String get exportingLabPapers => 'Exporting lab papers...';
+
+  @override
+  String get healthRiskAssessment => 'Health Risk Assessment';
+
+  @override
+  String get analyzingYourHealthData => 'Analyzing your health data...';
+
+  @override
+  String get unableToAssessRisk => 'Unable to assess risk';
+
+  @override
+  String get noAssessmentAvailable => 'No assessment available';
+
+  @override
+  String get viewAllMeasurements => 'View All Measurements';
+
+  @override
+  String get viewAllMoods => 'View All Moods';
+
+  @override
+  String get viewAllLabPapers => 'View All Lab Papers';
+
+  @override
+  String get noWeightDataAvailable => 'No weight data available';
+
+  @override
+  String get monitor => 'Monitor';
+
+  @override
+  String get cameraPermissionDenied => 'Camera permission denied';
+
+  @override
+  String get photosPermissionDenied => 'Photos permission denied';
+
+  @override
+  String failedToPickImage(String error) {
+    return 'Failed to pick image: $error';
+  }
+
+  @override
+  String failedToPickPDF(String error) {
+    return 'Failed to pick PDF: $error';
+  }
+
+  @override
+  String get reviewEditLabResults => 'Review & Edit Lab Results';
+
+  @override
+  String get imageNotAvailable => 'Image not available';
+
+  @override
+  String get addTest => 'Add Test';
+
+  @override
+  String saveResults(int count) {
+    return 'Save $count Result(s)';
+  }
+
+  @override
+  String get labResultsSavedSuccessfully => 'Lab results saved successfully!';
+
+  @override
+  String failedToSaveResults(String error) {
+    return 'Failed to save results: $error';
+  }
+
+  @override
+  String get noResultsToSave => 'No results to save';
+
+  @override
+  String get pdfLabReport => 'PDF Lab Report';
+
+  @override
+  String get savePDFReference => 'Save PDF Reference';
+
+  @override
+  String get enterDataManually => 'Enter Data Manually';
+
+  @override
+  String get pdfSavedAndUploaded => 'PDF saved and uploaded!';
+
+  @override
+  String failedToSavePDF(String error) {
+    return 'Failed to save PDF: $error';
+  }
+
+  @override
+  String get extractLabResults => 'Extract Lab Results';
+
+  @override
+  String get extractingTextFromImage => 'Extracting text from image...';
+
+  @override
+  String get viewRawText => 'View Raw Text';
+
+  @override
+  String get noDataExtracted => 'No Data Extracted';
+
+  @override
+  String get saveImageOnly => 'Save Image Only';
+
+  @override
+  String get imageSaved => 'Image saved!  You can add details later.';
+
+  @override
+  String get enterManually => 'Enter Manually';
+
+  @override
+  String get noImageSaved => 'No image saved.  Please try again.';
+
+  @override
+  String get manualLabEntry => 'Manual Lab Entry';
+
+  @override
+  String get labResultAddedSuccessfully => 'Lab result added successfully!';
+
+  @override
+  String get exporting => 'Exporting.. .';
+
+  @override
+  String get labResultImage => 'Lab Result Image';
+
+  @override
+  String get deleteResult => 'Delete Result';
+
+  @override
+  String areYouSureDeleteResult(String testName) {
+    return 'Are you sure you want to delete $testName?';
+  }
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get exportLabResults => 'Export Lab Results';
+
+  @override
+  String get exportAllLabResultsAsZIP =>
+      'Export all lab result images as a ZIP file?';
+
+  @override
+  String get export => 'Export';
+
+  @override
+  String get labResultUpdatedSuccessfully => 'Lab result updated successfully';
+
+  @override
+  String errorUpdatingResult(String error) {
+    return 'Error updating result: $error';
+  }
+
+  @override
+  String get editLabResult => 'Edit Lab Result';
+
+  @override
+  String errorCallingContact(String contactName, String error) {
+    return 'Error calling $contactName: $error';
+  }
+
+  @override
+  String get iDontNeedThisContact => 'I don\'t need this contact';
+
+  @override
+  String get saveEmergencyContacts => 'Save';
+
+  @override
+  String get setupEmergencyContacts => 'Setup Emergency Contacts';
+
+  @override
+  String get setupContactsDescription =>
+      'Add emergency contacts for quick access during urgent situations.';
+
+  @override
+  String get partner => 'Partner';
+
+  @override
+  String get healthcareProvider => 'Healthcare Provider';
+
+  @override
+  String get parent => 'Parent/Family';
+
+  @override
+  String get actionNeeded => 'ACTION NEEDED';
+
+  @override
+  String get detectedPatterns => 'Detected Patterns';
+
+  @override
+  String get recommendations => 'Recommendations';
+
+  @override
+  String get aiAnalysis => 'AI Analysis';
+
+  @override
+  String get aiRiskAssessmentDisclaimer =>
+      '⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.';
+
+  @override
+  String get riskLevel => 'RISK';
+
+  @override
+  String get none => 'NONE';
+
+  @override
+  String get normalRisk => 'Normal';
+
+  @override
+  String get lowRiskLevel => 'Low';
+
+  @override
+  String get mediumRisk => 'Medium';
+
+  @override
+  String get highRisk => 'High';
+
+  @override
+  String get urgentRisk => 'Urgent';
+
+  @override
+  String get noSignificantConcerns => 'No significant concerns';
+
+  @override
+  String get heartRateProgress => 'Heart Rate Progress';
+
+  @override
+  String get bloodPressureTrend => 'Blood Pressure Trend';
+
+  @override
+  String get noSymptomLogged => 'No symptoms logged yet';
+
+  @override
+  String get noMoodsLogged => 'No moods logged yet';
+
+  @override
+  String get noLabResultsYet => 'No lab results yet';
+
+  @override
+  String get lowStatus => 'Low';
+
+  @override
+  String get highStatus => 'High';
+
+  @override
+  String get noSymptomDataAvailable => 'No symptom data available';
+
+  @override
+  String get noNotes => 'No notes';
+
+  @override
+  String get noMoodDataAvailable => 'No mood data available';
+
+  @override
+  String get noSignificantConcernsMessage => 'No significant concerns';
+
+  @override
+  String get noAssessmentDetailsAvailable => 'No assessment details available';
+
+  @override
+  String minAgo(int minutes) {
+    return '$minutes min ago';
+  }
+
+  @override
+  String minAgoShort(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String hoursAgoShort(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String daysAgoShort(int days) {
+    return '${days}d ago';
+  }
+
+  @override
+  String get underweight => 'Underweight';
+
+  @override
+  String get overweight => 'Overweight';
+
+  @override
+  String get obese => 'Obese';
+
+  @override
+  String get mixedMoodsCareMessage => 'Mixed moods - take care of yourself!';
 }

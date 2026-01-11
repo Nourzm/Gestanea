@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/symptom_model.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
@@ -15,7 +16,7 @@ class SymptomsListPage extends StatelessWidget {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Symptoms'),
+        title: Text(AppLocalizations.of(context)!.mySymptoms),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -33,7 +34,7 @@ class SymptomsListPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${AppLocalizations.of(context)!.error}: ${state.message}'),
                 ],
               ),
             );
@@ -41,7 +42,7 @@ class SymptomsListPage extends StatelessWidget {
 
           if (state is SymptomsLoaded) {
             if (state.symptoms.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -55,7 +56,7 @@ class SymptomsListPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('Tap "Log New Symptom" to start. '),
+                    Text(AppLocalizations.of(context)!.tapLogNewSymptomToStart),
                   ],
                 ),
               );
@@ -71,7 +72,7 @@ class SymptomsListPage extends StatelessWidget {
             );
           }
 
-          return const Center(child: Text('No data'));
+          return Center(child: Text(AppLocalizations.of(context)!.noData));
         },
       ),
     );

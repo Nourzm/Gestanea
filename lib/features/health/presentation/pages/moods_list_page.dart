@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/mood_model.dart';
 import '../../logic/bloc/moods_bloc.dart';
@@ -15,7 +16,7 @@ class MoodsListPage extends StatelessWidget {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Moods'),
+        title: Text(AppLocalizations.of(context)!.myMoods),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -33,7 +34,7 @@ class MoodsListPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${AppLocalizations.of(context)!.error}: ${state.message}'),
                 ],
               ),
             );
@@ -41,21 +42,21 @@ class MoodsListPage extends StatelessWidget {
 
           if (state is MoodsLoaded) {
             if (state.moods.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.inbox, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text(
-                      'No moods logged yet!',
+                      AppLocalizations.of(context)!.noMoodsLoggedYet,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('Tap "Log Mood" to start.'),
+                    Text(AppLocalizations.of(context)!.tapLogMoodToStart),
                   ],
                 ),
               );
@@ -71,7 +72,7 @@ class MoodsListPage extends StatelessWidget {
             );
           }
 
-          return const Center(child: Text('No data'));
+          return Center(child: Text(AppLocalizations.of(context)!.noData));
         },
       ),
     );

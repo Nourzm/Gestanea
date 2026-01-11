@@ -53,12 +53,12 @@ class SymptomsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is SymptomsLoaded) {
                       if (state.symptoms.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No symptoms logged yet',
-                              style: TextStyle(color: Colors.grey),
+                              AppLocalizations.of(context)!.noSymptomLogged,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
@@ -78,7 +78,7 @@ class SymptomsTabContent extends StatelessWidget {
                               severityColor: _getSeverityColor(
                                 symptom.severity,
                               ),
-                              time: _formatTime(symptom.recordedAt),
+                              time: _formatTime(symptom.recordedAt, localizations),
                             ),
                           );
                         }).toList(),
@@ -113,7 +113,7 @@ class SymptomsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Symptoms'),
+                        label: Text(AppLocalizations.of(context)!.viewAllSymptoms),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,
@@ -248,18 +248,18 @@ class SymptomsTabContent extends StatelessWidget {
     }
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(DateTime dateTime, AppLocalizations localizations) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inHours < 1) {
-      return '${difference.inMinutes} min ago';
+      return localizations.minAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} hours ago';
+      return localizations.hoursAgo(difference.inHours);
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return localizations.yesterday;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return localizations.daysAgo(difference.inDays);
     } else {
       return DateFormat('MMM dd').format(dateTime);
     }
@@ -441,7 +441,7 @@ class SymptomsTabContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No symptom data available',
+                  localizations.noSymptomDataAvailable,
                   style: AppTextStyles.smallLabel.copyWith(
                     fontSize: 12,
                     color: Colors.grey,

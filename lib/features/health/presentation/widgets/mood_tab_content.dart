@@ -67,12 +67,12 @@ class MoodTabContent extends StatelessWidget {
                     builder: (context, state) {
                       if (state is MoodsLoaded) {
                         if (state.moods.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.all(20.0),
+                          return Padding(
+                            padding: const EdgeInsets.all(20.0),
                             child: Center(
                               child: Text(
-                                'No moods logged yet',
-                                style: TextStyle(color: Colors.grey),
+                                l10n.noMoodsLogged,
+                                style: const TextStyle(color: Colors.grey),
                               ),
                             ),
                           );
@@ -86,11 +86,11 @@ class MoodTabContent extends StatelessWidget {
                               padding: const EdgeInsets.only(bottom: 12),
                               child: _buildMoodEntryCard(
                                 context,
-                                emoji: _getMoodEmoji(mood.mood),
+                                emoji: _getMoodEmoji(mood.mood, l10n),
                                 mood: mood.mood,
-                                note: mood.notes ?? 'No notes',
-                                time: _formatTime(mood.recordedAt),
-                                color: _getMoodColor(mood.mood),
+                                note: mood.notes ?? l10n.noNotes,
+                                time: _formatTime(mood.recordedAt, l10n),
+                                color: _getMoodColor(mood.mood, l10n),
                               ),
                             );
                           }).toList(),
@@ -120,7 +120,7 @@ class MoodTabContent extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Icons.list),
-                          label: const Text('View All Moods'),
+                          label: Text(AppLocalizations.of(context)!.viewAllMoods),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: themeData.primaryColor,
                             foregroundColor: Colors.white,
@@ -399,7 +399,7 @@ class MoodTabContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'No mood data available',
+                  l10n.noMoodDataAvailable,
                   style: AppTextStyles.smallLabel.copyWith(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,
@@ -420,7 +420,7 @@ class MoodTabContent extends StatelessWidget {
         };
 
         for (final mood in state.moods) {
-          final emoji = _getMoodEmoji(mood.mood);
+          final emoji = _getMoodEmoji(mood.mood, l10n);
           moodCounts[emoji] = (moodCounts[emoji] ?? 0) + 1;
         }
 
@@ -474,7 +474,7 @@ class MoodTabContent extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                isPositive ? l10n.mostlyPositiveMoods : 'Mixed moods - take care of yourself!',
+                isPositive ? l10n.mostlyPositiveMoods : l10n.mixedMoodsCareMessage,
                 style: AppTextStyles.smallLabel.copyWith(
                   color: Colors.white.withValues(alpha: 0.9),
                   fontSize: 12,
@@ -610,8 +610,21 @@ class MoodTabContent extends StatelessWidget {
     );
   }
 
-  String _getMoodEmoji(String mood) {
+  String _getMoodEmoji(String mood, AppLocalizations l10n) {
     final moodLower = mood.toLowerCase();
+    // Check against localized mood names
+    if (moodLower == l10n.great.toLowerCase()) {
+      return '😄';
+    } else if (moodLower == l10n.good.toLowerCase()) {
+      return '😊';
+    } else if (moodLower == l10n.okay.toLowerCase()) {
+      return '😐';
+    } else if (moodLower == l10n.sad.toLowerCase()) {
+      return '😔';
+    } else if (moodLower == l10n.verySad.toLowerCase()) {
+      return '😢';
+    }
+    // Fallback: check English keywords for backwards compatibility
     if (moodLower.contains('great') || moodLower.contains('amazing') || moodLower.contains('excellent')) {
       return '😄';
     } else if (moodLower.contains('good') || moodLower.contains('happy') || moodLower.contains('joyful')) {
@@ -630,8 +643,21 @@ class MoodTabContent extends StatelessWidget {
     return '😊'; // default
   }
 
-  Color _getMoodColor(String mood) {
+  Color _getMoodColor(String mood, AppLocalizations l10n) {
     final moodLower = mood.toLowerCase();
+    // Check against localized mood names
+    if (moodLower == l10n.great.toLowerCase()) {
+      return const Color(0xFFFFF9C4); // Yellow
+    } else if (moodLower == l10n.good.toLowerCase()) {
+      return const Color(0xFFFFF9C4); // Yellow
+    } else if (moodLower == l10n.okay.toLowerCase()) {
+      return const Color(0xFFE0E0E0); // Gray
+    } else if (moodLower == l10n.sad.toLowerCase()) {
+      return const Color(0xFFE1F5FE); // Light Blue
+    } else if (moodLower == l10n.verySad.toLowerCase()) {
+      return const Color(0xFFE8EAF6); // Light Purple
+    }
+    // Fallback: check English keywords for backwards compatibility
     if (moodLower.contains('great') || moodLower.contains('amazing') || moodLower.contains('excellent')) {
       return const Color(0xFFFFF9C4); // Yellow
     } else if (moodLower.contains('good') || moodLower.contains('happy') || moodLower.contains('joyful')) {
@@ -650,16 +676,16 @@ class MoodTabContent extends StatelessWidget {
     return const Color(0xFFFFF9C4); // default yellow
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(DateTime dateTime, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return l10n.minAgoShort(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return l10n.hoursAgoShort(difference.inHours);
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}d ago';
+      return l10n.daysAgoShort(difference.inDays);
     } else {
       return DateFormat('MMM dd').format(dateTime);
     }

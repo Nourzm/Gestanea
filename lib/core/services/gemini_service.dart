@@ -559,12 +559,12 @@ Now address THEIR specific lab results!
       if (age < _riskCacheDuration) {
         final data = Map<String, dynamic>.from(cacheData['data']);
         return {
-          'riskLevel': (data['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : data['riskLevel'].toString(),
-          'primaryConcern': (data['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : data['primaryConcern'].toString(),
+          'riskLevel': (data['riskLevel']?.toString() == null || data['riskLevel'].toString().isEmpty) ? 'none' : data['riskLevel'].toString(),
+          'primaryConcern': (data['primaryConcern']?.toString() == null || data['primaryConcern'].toString().isEmpty) ? 'No significant concerns' : data['primaryConcern'].toString(),
           'detectedPatterns': data['detectedPatterns'] is List ? data['detectedPatterns'] : [],
           'recommendations': data['recommendations'] is List ? data['recommendations'] : [],
-          'urgency': (data['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : data['urgency'].toString(),
-          'reasoning': (data['reasoning']?.toString() ?? 'Assessment based on current health indicators.').isEmpty ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
+          'urgency': (data['urgency']?.toString() == null || data['urgency'].toString().isEmpty) ? 'Monitor' : data['urgency'].toString(),
+          'reasoning': (data['reasoning']?.toString() == null || data['reasoning'].toString().isEmpty) ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
         };
       }
     }
@@ -681,12 +681,12 @@ NOW ANALYZE THEIR DATA - BE THOROUGH AND LOOK FOR DANGEROUS COMBINATIONS!
         
         // Sanitize the result to ensure all expected fields exist with correct types
         final result = {
-          'riskLevel': (data['riskLevel']?.toString() ?? 'none').isEmpty ? 'none' : data['riskLevel'].toString(),
-          'primaryConcern': (data['primaryConcern']?.toString() ?? 'No significant concerns').isEmpty ? 'No significant concerns' : data['primaryConcern'].toString(),
+          'riskLevel': (data['riskLevel']?.toString() == null || data['riskLevel'].toString().isEmpty) ? 'none' : data['riskLevel'].toString(),
+          'primaryConcern': (data['primaryConcern']?.toString() == null || data['primaryConcern'].toString().isEmpty) ? 'No significant concerns' : data['primaryConcern'].toString(),
           'detectedPatterns': data['detectedPatterns'] is List ? data['detectedPatterns'] : [],
           'recommendations': data['recommendations'] is List ? data['recommendations'] : [],
-          'urgency': (data['urgency']?.toString() ?? 'Monitor').isEmpty ? 'Monitor' : data['urgency'].toString(),
-          'reasoning': (data['reasoning']?.toString() ?? 'Assessment based on current health indicators.').isEmpty ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
+          'urgency': (data['urgency']?.toString() == null || data['urgency'].toString().isEmpty) ? 'Monitor' : data['urgency'].toString(),
+          'reasoning': (data['reasoning']?.toString() == null || data['reasoning'].toString().isEmpty) ? 'Assessment based on current health indicators.' : data['reasoning'].toString(),
         };
 
         print('✅ Risk assessment parsed successfully: ${result['riskLevel']}');

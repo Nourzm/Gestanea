@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/services/ocr_service.dart';
 import 'package:gestanea/core/services/image_storage_service.dart';
@@ -74,7 +75,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
     // Allow saving even if no data was auto-extracted
     if (_savedImagePath == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No image saved.  Please try again.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noImageSaved)),
       );
       return;
     }
@@ -84,7 +85,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
       showDialog(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('No Data Extracted'),
+          title: Text(AppLocalizations.of(context)!.noDataExtracted),
           content: const Text(
             'OCR could not extract lab results. Would you like to:\n\n1. Save just the image for reference\n2. Enter data manually',
           ),
@@ -114,13 +115,13 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Image saved!  You can add details later.'),
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.imageSaved),
                     backgroundColor: Colors.green,
                   ),
                 );
               },
-              child: const Text('Save Image Only'),
+              child: Text(AppLocalizations.of(context)!.saveImageOnly),
             ),
             TextButton(
               onPressed: () {
@@ -134,7 +135,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
                   ),
                 );
               },
-              child: const Text('Enter Manually'),
+              child: Text(AppLocalizations.of(context)!.enterManually),
             ),
           ],
         ),
@@ -178,7 +179,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Extract Lab Results'),
+        title: Text(AppLocalizations.of(context)!.extractLabResults),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -188,13 +189,13 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
         ],
       ),
       body: _isExtracting
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 20),
-                  Text('Extracting text from image...'),
+                  Text(AppLocalizations.of(context)!.extractingTextFromImage),
                 ],
               ),
             )
@@ -316,7 +317,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
 
                   // Raw extracted text
                   ExpansionTile(
-                    title: const Text('View Raw Text'),
+                    title: Text(AppLocalizations.of(context)!.viewRawText),
                     children: [
                       Container(
                         padding: const EdgeInsets.all(12),

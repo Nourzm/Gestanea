@@ -28,10 +28,10 @@ class BMICard extends StatelessWidget {
   }
 
   String _getBMICategory(double bmi, AppLocalizations l10n) {
-    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 18.5) return l10n.underweight;
     if (bmi < 25) return l10n.normalBMI;
-    if (bmi < 30) return 'Overweight';
-    return 'Obese';
+    if (bmi < 30) return l10n.overweight;
+    return l10n.obese;
   }
 
   double _getWeightGain() {

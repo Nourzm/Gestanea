@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
@@ -87,8 +88,8 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lab result added successfully!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.labResultAddedSuccessfully),
           backgroundColor: Colors.green,
         ),
       );
@@ -100,7 +101,7 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manual Lab Entry'),
+        title: Text(AppLocalizations.of(context)!.manualLabEntry),
         backgroundColor: themeData.primaryColor,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),

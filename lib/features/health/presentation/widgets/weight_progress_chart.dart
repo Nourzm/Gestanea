@@ -60,7 +60,7 @@ class WeightProgressChart extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text('No weight data available'),
+            Text(AppLocalizations.of(context)!.noWeightDataAvailable),
           ],
         ),
       );
@@ -78,7 +78,7 @@ class WeightProgressChart extends StatelessWidget {
       
       // Pregnancy typically involves weight gain, so adjust logic if needed
       if (diff.abs() > 2) {  // More than 2kg change
-        status = 'Monitor';
+        status = l10n.monitor;
         statusColor = const Color(0xFFFFE4B8);
         statusTextColor = const Color(0xFF8B5A00);
       }

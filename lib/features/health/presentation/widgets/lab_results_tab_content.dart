@@ -54,12 +54,12 @@ class LabResultsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is LabResultsLoaded) {
                       if (state.labResults.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No lab results yet',
-                              style: TextStyle(color: Colors.grey),
+                              l10n.noLabResultsYet,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
@@ -77,10 +77,10 @@ class LabResultsTabContent extends StatelessWidget {
                               result.value != null) {
                             if (result.value! < result.normalRangeMin!) {
                               statusColor = const Color(0xFFFFE0B2);
-                              status = 'Low';
+                              status = l10n.lowStatus;
                             } else if (result.value! > result.normalRangeMax!) {
                               statusColor = const Color(0xFFFFB8B8);
-                              status = 'High';
+                              status = l10n.highStatus;
                             }
                           }
 
@@ -136,7 +136,7 @@ class LabResultsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Lab Results'),
+                        label: Text(AppLocalizations.of(context)!.viewAllLabResults),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,
@@ -173,7 +173,7 @@ class LabResultsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.photo_library),
-                        label: const Text('View All Lab Papers'),
+                        label: Text(AppLocalizations.of(context)!.viewAllLabPapers),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: themeData.primaryColor,
                           side: BorderSide(color: themeData.primaryColor, width: 2),

@@ -65,8 +65,8 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please log in to save mood'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseLogInToSaveMood),
           backgroundColor: Colors.red,
         ),
       );

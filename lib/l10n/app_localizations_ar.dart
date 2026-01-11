@@ -659,8 +659,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get feltEnergeticToday => 'Felt energetic today';
 
   @override
-  String hoursAgo(Object hours) {
-    return '$hours hours ago';
+  String hoursAgo(int hours) {
+    return 'منذ $hours ساعات';
   }
 
   @override
@@ -670,7 +670,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get relaxingEvening => 'Relaxing evening';
 
   @override
-  String get yesterday => 'Yesterday';
+  String get yesterday => 'بالأمس';
 
   @override
   String get tired => 'Tired';
@@ -679,8 +679,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get needMoreSleep => 'Need more sleep';
 
   @override
-  String daysAgo(Object days) {
-    return '$days days ago';
+  String daysAgo(int days) {
+    return 'منذ $days أيام';
   }
 
   @override
@@ -1077,7 +1077,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get prePregnancyBMI => 'Pre-pregnancy BMI';
 
   @override
-  String get normalBMI => 'Normal';
+  String get normalBMI => 'عادي';
 
   @override
   String get currentGain => 'Current gain';
@@ -1218,7 +1218,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
 
   @override
-  String get systolic => 'Systolic';
+  String get systolic => 'الانقباضي';
 
   @override
   String get required => 'Required';
@@ -1230,7 +1230,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get systolicRange => 'Systolic must be between 70 and 190';
 
   @override
-  String get diastolic => 'Diastolic';
+  String get diastolic => 'الانبساطي';
 
   @override
   String get diastolicRange => 'Diastolic must be between 40 and 130';
@@ -1326,4 +1326,334 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get at => 'في';
+
+  @override
+  String get myMoods => 'مزاجي';
+
+  @override
+  String get noMoodsLoggedYet => 'لم يتم تسجيل أي حالة مزاجية بعد!';
+
+  @override
+  String get tapLogMoodToStart => 'اضغطي على \"تسجيل الحالة المزاجية\" للبدء.';
+
+  @override
+  String get noData => 'لا توجد بيانات';
+
+  @override
+  String get pleaseLogInToSaveMood => 'يرجى تسجيل الدخول لحفظ الحالة المزاجية';
+
+  @override
+  String get mySymptoms => 'أعراضي';
+
+  @override
+  String get tapLogNewSymptomToStart => 'اضغطي على \"تسجيل عرض جديد\" للبدء.';
+
+  @override
+  String get myMeasurements => 'قياساتي';
+
+  @override
+  String get tapAddMeasurementToStart => 'اضغطي على \"إضافة قياس\" للبدء.';
+
+  @override
+  String get myLabResults => 'نتائج المختبر';
+
+  @override
+  String get uploadFirstLabResult => 'ارفعي أول نتيجة مختبر للبدء.';
+
+  @override
+  String get labPapersGallery => 'معرض أوراق المختبر';
+
+  @override
+  String get uploadLabReportsToSee => 'ارفعي تقارير المختبر لرؤيتها هنا';
+
+  @override
+  String get exportingLabPapers => 'جارٍ تصدير أوراق المختبر...';
+
+  @override
+  String get healthRiskAssessment => 'تقييم المخاطر الصحية';
+
+  @override
+  String get analyzingYourHealthData => 'جارٍ تحليل بياناتك الصحية...';
+
+  @override
+  String get unableToAssessRisk => 'غير قادر على تقييم المخاطر';
+
+  @override
+  String get noAssessmentAvailable => 'لا يوجد تقييم متاح';
+
+  @override
+  String get viewAllMeasurements => 'عرض جميع القياسات';
+
+  @override
+  String get viewAllMoods => 'عرض جميع الحالات المزاجية';
+
+  @override
+  String get viewAllLabPapers => 'عرض جميع أوراق المختبر';
+
+  @override
+  String get noWeightDataAvailable => 'لا توجد بيانات للوزن';
+
+  @override
+  String get monitor => 'مراقبة';
+
+  @override
+  String get cameraPermissionDenied => 'تم رفض إذن الكاميرا';
+
+  @override
+  String get photosPermissionDenied => 'تم رفض إذن الصور';
+
+  @override
+  String failedToPickImage(String error) {
+    return 'فشل في اختيار الصورة: $error';
+  }
+
+  @override
+  String failedToPickPDF(String error) {
+    return 'فشل في اختيار ملف PDF: $error';
+  }
+
+  @override
+  String get reviewEditLabResults => 'مراجعة وتعديل نتائج المختبر';
+
+  @override
+  String get imageNotAvailable => 'الصورة غير متاحة';
+
+  @override
+  String get addTest => 'إضافة اختبار';
+
+  @override
+  String saveResults(int count) {
+    return 'حفظ $count نتيجة';
+  }
+
+  @override
+  String get labResultsSavedSuccessfully => 'تم حفظ نتائج المختبر بنجاح!';
+
+  @override
+  String failedToSaveResults(String error) {
+    return 'فشل في حفظ النتائج: $error';
+  }
+
+  @override
+  String get noResultsToSave => 'لا توجد نتائج لحفظها';
+
+  @override
+  String get pdfLabReport => 'تقرير مختبر PDF';
+
+  @override
+  String get savePDFReference => 'حفظ مرجع PDF';
+
+  @override
+  String get enterDataManually => 'إدخال البيانات يدويًا';
+
+  @override
+  String get pdfSavedAndUploaded => 'تم حفظ وتحميل ملف PDF!';
+
+  @override
+  String failedToSavePDF(String error) {
+    return 'فشل في حفظ ملف PDF: $error';
+  }
+
+  @override
+  String get extractLabResults => 'استخراج نتائج المختبر';
+
+  @override
+  String get extractingTextFromImage => 'جارٍ استخراج النص من الصورة...';
+
+  @override
+  String get viewRawText => 'عرض النص الخام';
+
+  @override
+  String get noDataExtracted => 'لم يتم استخراج بيانات';
+
+  @override
+  String get saveImageOnly => 'حفظ الصورة فقط';
+
+  @override
+  String get imageSaved => 'تم حفظ الصورة! يمكنك إضافة التفاصيل لاحقًا.';
+
+  @override
+  String get enterManually => 'إدخال يدويًا';
+
+  @override
+  String get noImageSaved => 'لم يتم حفظ أي صورة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get manualLabEntry => 'إدخال مختبر يدوي';
+
+  @override
+  String get labResultAddedSuccessfully => 'تمت إضافة نتيجة المختبر بنجاح!';
+
+  @override
+  String get exporting => 'جارٍ التصدير...';
+
+  @override
+  String get labResultImage => 'صورة نتيجة المختبر';
+
+  @override
+  String get deleteResult => 'حذف النتيجة';
+
+  @override
+  String areYouSureDeleteResult(String testName) {
+    return 'هل أنتِ متأكدة من حذف $testName؟';
+  }
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get exportLabResults => 'تصدير نتائج المختبر';
+
+  @override
+  String get exportAllLabResultsAsZIP =>
+      'تصدير جميع صور نتائج المختبر كملف ZIP؟';
+
+  @override
+  String get export => 'تصدير';
+
+  @override
+  String get labResultUpdatedSuccessfully => 'تم تحديث نتيجة المختبر بنجاح';
+
+  @override
+  String errorUpdatingResult(String error) {
+    return 'خطأ في تحديث النتيجة: $error';
+  }
+
+  @override
+  String get editLabResult => 'تعديل نتيجة المختبر';
+
+  @override
+  String errorCallingContact(String contactName, String error) {
+    return 'خطأ في الاتصال بـ $contactName: $error';
+  }
+
+  @override
+  String get iDontNeedThisContact => 'لا أحتاج هذا جهة الاتصال';
+
+  @override
+  String get saveEmergencyContacts => 'حفظ';
+
+  @override
+  String get setupEmergencyContacts => 'إعداد جهات اتصال الطوارئ';
+
+  @override
+  String get setupContactsDescription =>
+      'أضيفي جهات اتصال الطوارئ للوصول السريع في الحالات العاجلة.';
+
+  @override
+  String get partner => 'الشريك';
+
+  @override
+  String get healthcareProvider => 'مقدم الرعاية الصحية';
+
+  @override
+  String get parent => 'الوالدين/العائلة';
+
+  @override
+  String get actionNeeded => 'مطلوب إجراء';
+
+  @override
+  String get detectedPatterns => 'الأنماط المكتشفة';
+
+  @override
+  String get recommendations => 'التوصيات';
+
+  @override
+  String get aiAnalysis => 'تحليل الذكاء الاصطناعي';
+
+  @override
+  String get aiRiskAssessmentDisclaimer =>
+      '⚠️ تقييم المخاطر الناتج عن الذكاء الاصطناعي. ليس تشخيصًا طبيًا. استشيري دائمًا مقدم الرعاية الصحية بشأن المخاوف.';
+
+  @override
+  String get riskLevel => 'الخطر';
+
+  @override
+  String get none => 'لا يوجد';
+
+  @override
+  String get normalRisk => 'عادي';
+
+  @override
+  String get lowRiskLevel => 'منخفض';
+
+  @override
+  String get mediumRisk => 'متوسط';
+
+  @override
+  String get highRisk => 'مرتفع';
+
+  @override
+  String get urgentRisk => 'عاجل';
+
+  @override
+  String get noSignificantConcerns => 'لا توجد مخاوف كبيرة';
+
+  @override
+  String get heartRateProgress => 'تطور معدل ضربات القلب';
+
+  @override
+  String get bloodPressureTrend => 'اتجاه ضغط الدم';
+
+  @override
+  String get noSymptomLogged => 'لم يتم تسجيل أي أعراض';
+
+  @override
+  String get noMoodsLogged => 'لم يتم تسجيل أي حالات مزاجية';
+
+  @override
+  String get noLabResultsYet => 'لا توجد نتائج اختبارات معملية حتى الآن';
+
+  @override
+  String get lowStatus => 'منخفض';
+
+  @override
+  String get highStatus => 'مرتفع';
+
+  @override
+  String get noSymptomDataAvailable => 'لا توجد بيانات الأعراض متاحة';
+
+  @override
+  String get noNotes => 'لا توجد ملاحظات';
+
+  @override
+  String get noMoodDataAvailable => 'لا توجد بيانات الحالة المزاجية متاحة';
+
+  @override
+  String get noSignificantConcernsMessage => 'لا توجد مخاوف كبيرة';
+
+  @override
+  String get noAssessmentDetailsAvailable => 'لا توجد تفاصيل التقييم متاحة';
+
+  @override
+  String minAgo(int minutes) {
+    return 'منذ $minutes دقيقة';
+  }
+
+  @override
+  String minAgoShort(int minutes) {
+    return 'منذ $minutesد';
+  }
+
+  @override
+  String hoursAgoShort(int hours) {
+    return 'منذ $hoursس';
+  }
+
+  @override
+  String daysAgoShort(int days) {
+    return 'منذ $daysي';
+  }
+
+  @override
+  String get underweight => 'نقص الوزن';
+
+  @override
+  String get overweight => 'زيادة الوزن';
+
+  @override
+  String get obese => 'السمنة';
+
+  @override
+  String get mixedMoodsCareMessage => 'مزاج مختلط - اعتني بنفسك!';
 }
