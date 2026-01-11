@@ -3,6 +3,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HealthTabSidebar extends StatelessWidget {
   final List<Map<String, dynamic>> tabs;
@@ -49,8 +50,8 @@ class HealthTabSidebar extends StatelessWidget {
           final isSelected = selectedIndex == index;
           return _buildTabItem(
             context: context,
-            icon: tab['icon'],
-            labelKey: tab['labelKey'],
+            icon: tab['icon'] as String,
+            labelKey: tab['labelKey'] as String,
             isSelected: isSelected,
             onTap: () => onTabSelected(index),
           );
@@ -61,7 +62,7 @@ class HealthTabSidebar extends StatelessWidget {
 
   Widget _buildTabItem({
     required BuildContext context,
-    required IconData icon,
+    required String icon,
     required String labelKey,
     required bool isSelected,
     required VoidCallback onTap,
@@ -82,10 +83,17 @@ class HealthTabSidebar extends StatelessWidget {
                 color: isSelected ? themeData.primaryColor : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: isSelected ? AppColors.white : themeData.primaryColor,
-                size: 24,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset(
+                  icon,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    isSelected ? AppColors.white : themeData.primaryColor,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 4),

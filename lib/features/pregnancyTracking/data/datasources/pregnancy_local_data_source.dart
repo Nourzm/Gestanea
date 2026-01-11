@@ -4,13 +4,13 @@ import '../../../../core/database/models/pregnancy_model.dart';
 import '../../../../core/database/models/kick_count_model.dart';
 
 abstract class PregnancyLocalDataSource {
-  Future<PregnancyModel?> getActivePregnancy(int userId);
+  Future<PregnancyModel?> getActivePregnancy(String userId);
   Future<void> createPregnancy(PregnancyModel pregnancy);
   Future<void> updatePregnancy(PregnancyModel pregnancy);
-  Future<void> deactivatePregnancy(int pregnancyId);
-  Future<Map<String, dynamic>> calculatePregnancyWeek(int userId);
-  Future<List<KickCountModel>> getKickCounts(int userId, {int? limit});
-  Future<KickCountModel?> getTodayKickSession(int userId);
+  Future<void> deactivatePregnancy(String pregnancyId);
+  Future<Map<String, dynamic>> calculatePregnancyWeek(String userId);
+  Future<List<KickCountModel>> getKickCounts(String userId, {int? limit});
+  Future<KickCountModel?> getTodayKickSession(String userId);
   Future<void> saveKickSession(KickCountModel kickCount);
   Future<void> updateKickSession(KickCountModel kickCount);
 }
@@ -22,7 +22,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
       : _dbHelper = dbHelper ?? DatabaseHelper.instance;
 
   @override
-  Future<PregnancyModel?> getActivePregnancy(int userId) async {
+  Future<PregnancyModel?> getActivePregnancy(String userId) async {
     final db = await _dbHelper.database;
     final result = await db.query(
       'pregnancies',
@@ -52,7 +52,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   }
 
   @override
-  Future<void> deactivatePregnancy(int pregnancyId) async {
+  Future<void> deactivatePregnancy(String pregnancyId) async {
     final db = await _dbHelper.database;
     await db.update(
       'pregnancies',
@@ -63,7 +63,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   }
 
   @override
-  Future<Map<String, dynamic>> calculatePregnancyWeek(int userId) async {
+  Future<Map<String, dynamic>> calculatePregnancyWeek(String userId) async {
     final pregnancy = await getActivePregnancy(userId);
     
     if (pregnancy == null) {
@@ -112,7 +112,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   }
 
   @override
-  Future<List<KickCountModel>> getKickCounts(int userId, {int? limit}) async {
+  Future<List<KickCountModel>> getKickCounts(String userId, {int? limit}) async {
     final db = await _dbHelper.database;
     final result = await db.query(
       'kick_counts',
@@ -125,7 +125,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   }
 
   @override
-  Future<KickCountModel?> getTodayKickSession(int userId) async {
+  Future<KickCountModel?> getTodayKickSession(String userId) async {
     final db = await _dbHelper.database;
     final today = DateTime.now();
     final startOfDay = DateTime(today.year, today.month, today.day);

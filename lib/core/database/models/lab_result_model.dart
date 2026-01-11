@@ -11,6 +11,7 @@ class LabResultModel {
   final String? reportImageUrl;
   final bool extractedByOcr;
   final DateTime createdAt;
+  final int synced;
 
   LabResultModel({
     required this.id,
@@ -25,6 +26,7 @@ class LabResultModel {
     this.reportImageUrl,
     this.extractedByOcr = false,
     required this.createdAt,
+    this.synced = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +43,7 @@ class LabResultModel {
       'report_image_url': reportImageUrl,
       'extracted_by_ocr': extractedByOcr ?  1 : 0,
       'created_at': createdAt.toIso8601String(),
+      'synced': synced,
     };
   }
 
@@ -52,17 +55,37 @@ class LabResultModel {
       value: map['value'] != null ? (map['value'] as num).toDouble() : null,
       unit: map['unit'] as String?,
       normalRangeMin: map['normal_range_min'] != null
-          ?  (map['normal_range_min'] as num).toDouble()
+          ? (map['normal_range_min'] as num).toDouble()
           : null,
       normalRangeMax: map['normal_range_max'] != null
           ? (map['normal_range_max'] as num).toDouble()
           : null,
       interpretation: map['interpretation'] as String?,
-      labDate: DateTime.parse(map['lab_date'] as String),
+      labDate: _parseDate(map['lab_date']),
       reportImageUrl: map['report_image_url'] as String?,
-      extractedByOcr: (map['extracted_by_ocr'] as int) == 1,
-      createdAt: DateTime. parse(map['created_at'] as String),
+      extractedByOcr: map['extracted_by_ocr'] is int 
+          ? (map['extracted_by_ocr'] as int) == 1
+          : map['extracted_by_ocr'] as bool? ?? false,
+      createdAt: _parseDateTime(map['created_at']),
+      synced: map['synced'] as int? ?? 0,
     );
+  }
+
+  static DateTime _parseDate(dynamic value) {
+    if (value is DateTime) return value;
+    if (value is String) {
+      // Handle both full ISO8601 and date-only formats
+      return DateTime.parse(value.split('T')[0]);
+    }
+    return DateTime.now();
+  }
+
+  static DateTime _parseDateTime(dynamic value) {
+    if (value is DateTime) return value;
+    if (value is String) {
+      return DateTime.parse(value);
+    }
+    return DateTime.now();
   }
 
   LabResultModel copyWith({
@@ -78,6 +101,7 @@ class LabResultModel {
     String? reportImageUrl,
     bool? extractedByOcr,
     DateTime? createdAt,
+    int? synced,
   }) {
     return LabResultModel(
       id: id ?? this.id,
@@ -92,6 +116,7 @@ class LabResultModel {
       reportImageUrl: reportImageUrl ?? this. reportImageUrl,
       extractedByOcr: extractedByOcr ?? this.extractedByOcr,
       createdAt: createdAt ?? this.createdAt,
+      synced: synced ?? this.synced,
     );
   }
 }

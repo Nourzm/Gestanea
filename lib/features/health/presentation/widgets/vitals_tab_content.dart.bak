@@ -1,0 +1,266 @@
+import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+import '../../logic/bloc/measurements_bloc.dart';
+import '../../logic/bloc/measurements_state.dart';
+import '../pages/measurements_list_page.dart';
+import 'vitals_card.dart';
+import 'bmi_card.dart';
+import 'weight_progress_chart.dart';
+import 'add_measurement_card.dart';
+import 'health_tip_card.dart';
+import 'dialogs/add_measurment_dialog.dart';
+
+enum TimeRange { week, month, threeMonths, all }
+
+class VitalsTabContent extends StatefulWidget {
+  const VitalsTabContent({super.key});
+
+  @override
+  State<VitalsTabContent> createState() => _VitalsTabContentState();
+}
+
+class _VitalsTabContentState extends State<VitalsTabContent> {
+  TimeRange _selectedRange = TimeRange.month;
+
+class _VitalsTabContentState extends State<VitalsTabContent> {
+  TimeRange _selectedRange = TimeRange.month;
+
+  String _getRangeLabel(TimeRange range) {
+    switch (range) {
+      case TimeRange.week:
+        return '1W';
+      case TimeRange.month:
+        return '1M';
+      case TimeRange.threeMonths:
+        return '3M';
+      case TimeRange.all:
+        return 'All';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
+    return BlocBuilder<MeasurementsBloc, MeasurementsState>(
+      builder: (context, state) {
+        final measurements = state is MeasurementsLoaded ? state.measurements : [];
+        final latest = state is MeasurementsLoaded ? state.latest : null;
+        
+        // Calculate stats
+        final latestWeight = latest?.weight?.toStringAsFixed(1) ?? '--';
+        final latestHeartRate = latest?.heartRate?.toString() ?? '--';
+        final latestBP = latest?.bloodPressure ?? '--';
+        
+        // Calculate trends (comparing to previous measurement if available)
+        String? weightTrend;
+        String? heartRateTrend;
+        String? bpTrend;
+        
+        if (measurements.length >= 2) {
+          final current = measurements[0];
+          final previous = measurements[1];
+          
+          if (current.weight != null && previous.weight != null) {
+            final diff = current.weight! - previous.weight!;
+            weightTrend = diff > 0 ? '+${diff.toStringAsFixed(1)}' : diff.toStringAsFixed(1);
+          }
+          
+          if (current.heartRate != null && previous.heartRate != null) {
+            final diff = current.heartRate! - previous.heartRate!;
+            heartRateTrend = diff > 0 ? '+$diff' : '$diff';
+          }
+          
+          if (current.systolic != null && previous.systolic != null) {
+            final diff = current.systolic! - previous.systolic!;
+            bpTrend = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+          }
+        }
+
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFFAF0FF),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Top Row: Weight & Heart Rate
+                Row(
+                  children: [
+                    Expanded(
+                      child: VitalsCard(
+                        iconPath: 'assets/icons/health.svg',
+                        title: localizations.weight,
+                        value: '69 Kg',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: VitalsCard(
+                        iconPath: 'assets/icons/heartplus.svg',
+                        title: localizations.heartRate,
+                        value: '72 bpm',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Second Row: Blood Pressure & Add Measurement
+                Row(
+                  children: [
+                    Expanded(
+                      child: VitalsCard(
+                        iconPath: 'assets/icons/Stethoscope.svg',
+                        title: localizations.bloodPressure,
+                        value: '120/80',
+                        status: localizations.normal,
+                        statusColor: const Color(0xFFB8E6B8),
+                        textColor: const Color(0xFF2D5F2D),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Builder(
+                        builder: (ctx) {
+                          return AddMeasurementCard(
+                            onTap: () {
+                              final bloc = ctx.read<MeasurementsBloc>();
+                              showModalBottomSheet(
+                                context: ctx,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (dialogContext) =>
+                                    AddMeasurementDialog(bloc: bloc),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // BMI Card
+                const BMICard(),
+
+                const SizedBox(height: 16),
+
+                // Weight Progress Chart
+                const WeightProgressChart(),
+
+                const SizedBox(height: 16),
+
+                // Health Tip
+                HealthTipCard(message: localizations.healthTipMessage),
+
+                const SizedBox(height: 16),
+
+                // View All Measurements Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<MeasurementsBloc>(),
+                                child: const MeasurementsListPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.list),
+                        label: const Text('View All Measurements'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: themeData.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // TOP inset shadow overlay
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: IgnorePointer(
+            child: Container(
+              height: 25,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // LEFT inset shadow overlay
+        Positioned(
+          top: 0,
+          left: 0,
+          bottom: 0,
+          child: IgnorePointer(
+            child: Container(
+              width: 25,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

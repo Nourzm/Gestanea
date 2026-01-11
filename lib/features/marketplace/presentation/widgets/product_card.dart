@@ -68,16 +68,27 @@ class _ProductCardState extends State<ProductCard> {
                     width: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        widget.imageAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.image_not_supported),
-                          );
-                        },
-                      ),
+                      child: widget.imageAsset.startsWith('http')
+                          ? Image.network(
+                              widget.imageAsset,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.image_not_supported),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              widget.imageAsset,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.image_not_supported),
+                                );
+                              },
+                            ),
                     ),
                   ),
                   // Only show discount badge if discount is not null

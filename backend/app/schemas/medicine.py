@@ -22,12 +22,13 @@ class MedicineBase(BaseModel):
     start_date: str  # ISO date format YYYY-MM-DD
     end_date: Optional[str] = None  # ISO date format YYYY-MM-DD
     medicine_image_url: Optional[str] = None
-    is_active: bool = True
+    is_active: int = 1
 
 
 class MedicineCreate(MedicineBase):
     """Schema for creating a new medicine."""
-    pass
+    id: Optional[str] = None  # Allow client to provide ID
+    created_at: Optional[str] = None  # Allow client to provide timestamp
 
 
 class MedicineUpdate(BaseModel):
@@ -41,7 +42,7 @@ class MedicineUpdate(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     medicine_image_url: Optional[str] = None
-    is_active: Optional[bool] = None
+    is_active: Optional[int] = None
 
 
 class MedicineResponse(MedicineBase):
@@ -63,7 +64,6 @@ class MedicineLogBase(BaseModel):
     logged_date: str  # ISO date format YYYY-MM-DD
     logged_at: str  # ISO datetime format
     status: str  # Status: taken, missed, or skipped
-    dosage_taken: Optional[str] = None
     notes: Optional[str] = None
 
 

@@ -7,8 +7,11 @@ import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_state.dart';
+import '../../logic/bloc/lab_results_event.dart';
 import '../pages/lab_results_list_page.dart';
+import '../pages/lab_papers_gallery_page.dart';
 import 'dialogs/upload_lab_results_dialog.dart';
+import 'ai_health_insights_card.dart';
 
 class LabResultsTabContent extends StatelessWidget {
   const LabResultsTabContent({super.key});
@@ -25,9 +28,15 @@ class LabResultsTabContent extends StatelessWidget {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<LabResultsBloc>().add(LoadLabResults());
+              await Future.delayed(const Duration(milliseconds: 500));
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Recent Lab Results
@@ -45,12 +54,12 @@ class LabResultsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is LabResultsLoaded) {
                       if (state.labResults.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No lab results yet',
-                              style: TextStyle(color: Colors.grey),
+                              l10n.noLabResultsYet,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
@@ -68,10 +77,10 @@ class LabResultsTabContent extends StatelessWidget {
                               result.value != null) {
                             if (result.value! < result.normalRangeMin!) {
                               statusColor = const Color(0xFFFFE0B2);
-                              status = 'Low';
+                              status = l10n.lowStatus;
                             } else if (result.value! > result.normalRangeMax!) {
                               statusColor = const Color(0xFFFFB8B8);
-                              status = 'High';
+                              status = l10n.highStatus;
                             }
                           }
 
@@ -127,10 +136,47 @@ class LabResultsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Lab Results'),
+                        label: Text(AppLocalizations.of(context)!.viewAllLabResults),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 12),
+
+                // View Lab Papers Gallery Button
+                Builder(
+                  builder: (btnContext) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            btnContext,
+                            MaterialPageRoute(
+                              builder: (navContext) => BlocProvider.value(
+                                value: btnContext.read<LabResultsBloc>(),
+                                child: const LabPapersGalleryPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.photo_library),
+                        label: Text(AppLocalizations.of(context)!.viewAllLabPapers),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: themeData.primaryColor,
+                          side: BorderSide(color: themeData.primaryColor, width: 2),
                           padding: const EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: 24,
@@ -151,9 +197,30 @@ class LabResultsTabContent extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Tip Card
-                _buildTipCard(l10n.keepLabResultsOrganized),
+                // AI Lab Results Insights
+                BlocBuilder<LabResultsBloc, LabResultsState>(
+                  builder: (context, state) {
+                    final labResults = state is LabResultsLoaded ? state.labResults : [];
+                    final recentLabs = labResults.take(3).map((lab) => {
+                      'testName': lab.testName,
+                      'value': lab.value,
+                      'unit': lab.unit,
+                      'normalRangeMin': lab.normalRangeMin,
+                      'normalRangeMax': lab.normalRangeMax,
+                    }).toList();
+                    
+                    return AIHealthInsightsCard(
+                      healthData: {
+                        'labResults': recentLabs,
+                        'pregnancyWeek': 20, // TODO: Get from user profile
+                      },
+                      insightType: 'lab',
+                      language: l10n.localeName,
+                    );
+                  },
+                ),
               ],
+              ),
             ),
           ),
         ),
@@ -221,9 +288,11 @@ class LabResultsTabContent extends StatelessWidget {
     required String range,
   }) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(isSmallScreen ? 10 : 14),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -245,63 +314,81 @@ class LabResultsTabContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Test name and status row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                test,
-                style: AppTextStyles.subtitle1.copyWith(
-                  fontSize: 14,
-                  color: AppColors.textDark,
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Text(
+                  test,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: isSmallScreen ? 12 : 14,
+                    color: AppColors.textDark,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  status,
-                  style: AppTextStyles.smallLabel.copyWith(
-                    fontSize: 11,
-                    color: const Color(0xFF2D5F2D),
+              const SizedBox(width: 8),
+              Flexible(
+                flex: 0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isSmallScreen ? 6 : 10,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    status,
+                    style: AppTextStyles.smallLabel.copyWith(
+                      fontSize: isSmallScreen ? 10 : 11,
+                      color: const Color(0xFF2D5F2D),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
+          // Value and date row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                value,
-                style: AppTextStyles.headline2.copyWith(
-                  fontSize: 18,
-                  color: AppColors.textDark,
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.headline2.copyWith(
+                    fontSize: isSmallScreen ? 15 : 18,
+                    color: AppColors.textDark,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Text(
                 date,
                 style: AppTextStyles.smallLabel.copyWith(
-                  fontSize: 11,
+                  fontSize: isSmallScreen ? 10 : 11,
                   color: AppColors.textDark,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: isSmallScreen ? 3 : 4),
+          // Normal range
           Text(
             '${l10n.normalRangeLabel}: $range',
             style: AppTextStyles.smallLabel.copyWith(
-              fontSize: 11,
+              fontSize: isSmallScreen ? 10 : 11,
               color: AppColors.textDark,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -313,11 +400,12 @@ class LabResultsTabContent extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        final bloc = context.read<LabResultsBloc>();
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const UploadLabResultsDialog(),
+          builder: (dialogContext) => UploadLabResultsDialog(bloc: bloc),
         );
       },
       child: Container(

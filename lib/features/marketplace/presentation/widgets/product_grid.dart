@@ -14,6 +14,8 @@ class ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = context.watch<ThemeCubit>().currentTheme;
+    final locale = Localizations.localeOf(context);
+
     return Container(
       decoration: const ShapeDecoration(
         color: Color(0xFFFAECFF),
@@ -47,7 +49,7 @@ class ProductGrid extends StatelessWidget {
             imageAsset: product.imageUrls.isNotEmpty
                 ? product.imageUrls[0]
                 : '',
-            title: product.productName,
+            title: product.getTranslatedName(locale.languageCode),
             price: product.price,
             oldPrice: product.originalPrice,
             discount: discount,

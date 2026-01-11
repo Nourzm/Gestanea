@@ -34,3 +34,5 @@ class DoctorsError extends DoctorsState {
 
   DoctorsError(this.message);
 }
+
+class DoctorsOffline extends DoctorsState {}

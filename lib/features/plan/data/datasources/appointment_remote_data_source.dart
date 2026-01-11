@@ -84,16 +84,35 @@ class AppointmentRemoteDataSource implements AppointmentDataSource {
 
     try {
       final uri = Uri.parse('$baseUrl$endpoint/');
+
+      // Send the local ID to maintain consistency between local and remote
+      final appointmentData = {
+        'id': appointment.id,
+        'user_id': appointment.userId,
+        'baby_id': appointment.babyId,
+        'title': appointment.title,
+        'doctor_name': appointment.doctorName,
+        'appointment_type': appointment.appointmentType,
+        'appointment_date': appointment.appointmentDate.toIso8601String(),
+        'location': appointment.location,
+        'notes': appointment.notes,
+        'reminder_time': appointment.reminderTime?.toIso8601String(),
+        'is_completed': appointment.isCompleted ? 1 : 0,
+        'created_at': appointment.createdAt.toIso8601String(),
+      };
+
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(appointment.toMap()),
+        body: json.encode(appointmentData),
       );
 
       if (response.statusCode == 201) {
+        print('✅ Appointment created successfully in Supabase');
         return true;
       } else {
         print('Failed to create appointment: ${response.statusCode}');
+        print('Response body: ${response.body}');
         return false;
       }
     } catch (e) {

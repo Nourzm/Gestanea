@@ -5,9 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../../core/database/models/mood_model.dart';
+import '../../../logic/bloc/moods_bloc.dart';
+import '../../../logic/bloc/moods_event.dart';
 
 class AddMoodDialog extends StatefulWidget {
-  const AddMoodDialog({super.key});
+  final MoodsBloc bloc;
+  final String? initialMood;
+
+  const AddMoodDialog({super.key, required this.bloc, this.initialMood});
 
   @override
   State<AddMoodDialog> createState() => _AddMoodDialogState();
@@ -21,6 +28,12 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
   double _energyLevel = 3;
   int _sleepQuality = 3;
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMood = widget.initialMood;
+  }
 
   @override
   void dispose() {
@@ -49,11 +62,29 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       return;
     }
 
-    print('Mood: $_selectedMood');
-    print('Energy Level: $_energyLevel');
-    print('Sleep Quality: $_sleepQuality');
-    print('Notes: ${_notesController.text}');
-    print('Date: $_selectedDate');
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseLogInToSaveMood),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final mood = MoodModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: userId,
+      mood: _selectedMood!,
+      intensity: _energyLevel.toInt(),
+      notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+      recordedAt: _selectedDate,
+      createdAt: DateTime.now(),
+    );
+
+    // Use widget.bloc to add mood
+    widget.bloc.add(AddMood(mood));
 
     Navigator.pop(context);
 

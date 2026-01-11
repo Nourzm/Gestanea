@@ -4,11 +4,11 @@ import '../../../../core/database/models/pregnancy_model.dart';
 import '../../../../core/database/models/kick_count_model.dart';
 
 abstract class IPregnancyRepository {
-  Future<PregnancyModel?> getActivePregnancy(int userId);
-  Future<Map<String, dynamic>> getPregnancyInfo(int userId);
-  Future<void> deactivatePregnancy(int userId);
-  Future<List<KickCountModel>> getKickHistory(int userId, {int? limit});
-  Future<void> saveKickSession(int userId, int kickCount, int durationMinutes, String? notes);
+  Future<PregnancyModel?> getActivePregnancy(String userId);
+  Future<Map<String, dynamic>> getPregnancyInfo(String userId);
+  Future<void> deactivatePregnancy(String userId);
+  Future<List<KickCountModel>> getKickHistory(String userId, {int? limit});
+  Future<void> saveKickSession(String userId, int kickCount, int durationMinutes, String? notes);
 }
 
 class PregnancyRepository implements IPregnancyRepository {
@@ -18,34 +18,34 @@ class PregnancyRepository implements IPregnancyRepository {
       : _dataSource = dataSource ?? PregnancyLocalDataSourceImpl();
 
   @override
-  Future<PregnancyModel?> getActivePregnancy(int userId) async {
+  Future<PregnancyModel?> getActivePregnancy(String userId) async {
     return await _dataSource.getActivePregnancy(userId);
   }
 
   @override
-  Future<Map<String, dynamic>> getPregnancyInfo(int userId) async {
+  Future<Map<String, dynamic>> getPregnancyInfo(String userId) async {
     return await _dataSource.calculatePregnancyWeek(userId);
   }
 
   @override
-  Future<void> deactivatePregnancy(int userId) async {
+  Future<void> deactivatePregnancy(String userId) async {
     final pregnancy = await _dataSource.getActivePregnancy(userId);
     if (pregnancy != null) {
-      await _dataSource.deactivatePregnancy(int.parse(pregnancy.id));
+      await _dataSource.deactivatePregnancy(pregnancy.id);
     }
   }
 
   @override
-  Future<List<KickCountModel>> getKickHistory(int userId, {int? limit}) async {
+  Future<List<KickCountModel>> getKickHistory(String userId, {int? limit}) async {
     return await _dataSource.getKickCounts(userId, limit: limit);
   }
 
   @override
-  Future<void> saveKickSession(int userId, int kickCount, int durationMinutes, String? notes) async {
+  Future<void> saveKickSession(String userId, int kickCount, int durationMinutes, String? notes) async {
     final now = DateTime.now();
     final kickSession = KickCountModel(
       id: now.millisecondsSinceEpoch.toString(),
-      userId: userId.toString(),
+      userId: userId,
       kickCount: kickCount,
       durationMinutes: durationMinutes,
       recordedAt: now,

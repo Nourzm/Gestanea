@@ -5,6 +5,7 @@ import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/session/session_manager.dart';
+import 'package:gestanea/core/services/alarm_scheduler.dart';
 import '../widgets/week_calendar.dart';
 import '../widgets/plan_toggle.dart';
 import 'main_content.dart';
@@ -71,6 +72,7 @@ class _PlanMainPageState extends State<PlanMainPage> {
       create: (context) => PlanBloc(
         medicineRepository: MedicineRepository.getInstance(),
         appointmentRepository: AppointmentRepository.getInstance(),
+        alarmScheduler: AlarmScheduler(),
       ),
       child: _PlanMainPageContent(userId: _userId!),
     );

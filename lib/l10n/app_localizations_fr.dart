@@ -665,7 +665,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get feltEnergeticToday => 'Je me suis senti énergique aujourd\'hui';
 
   @override
-  String hoursAgo(Object hours) {
+  String hoursAgo(int hours) {
     return 'il y a $hours heures';
   }
 
@@ -685,7 +685,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get needMoreSleep => 'Besoin de plus de sommeil';
 
   @override
-  String daysAgo(Object days) {
+  String daysAgo(int days) {
     return 'il y a $days jours';
   }
 
@@ -1230,7 +1230,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
 
   @override
-  String get systolic => 'Systolic';
+  String get systolic => 'Systolique';
 
   @override
   String get required => 'Required';
@@ -1242,7 +1242,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get systolicRange => 'Systolic must be between 70 and 190';
 
   @override
-  String get diastolic => 'Diastolic';
+  String get diastolic => 'Diastolique';
 
   @override
   String get diastolicRange => 'Diastolic must be between 40 and 130';
@@ -1255,4 +1255,440 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nextLabAppointment => 'Next Lab Appointment';
+
+  @override
+  String get navHome => 'Accueil';
+
+  @override
+  String get navTrack => 'Suivre';
+
+  @override
+  String get navHealth => 'Santé';
+
+  @override
+  String get navPlan => 'Plan';
+
+  @override
+  String get navMarket => 'Marché';
+
+  @override
+  String get hello => 'Bonjour';
+
+  @override
+  String get done => 'FAIT';
+
+  @override
+  String get daysToGo => 'JOURS RESTANTS';
+
+  @override
+  String get weekLabel => 'SEMAINE';
+
+  @override
+  String get day => 'jour';
+
+  @override
+  String get days => 'jours';
+
+  @override
+  String get more => 'Plus';
+
+  @override
+  String get ourTips => 'Nos Conseils';
+
+  @override
+  String get followBestPractices => 'suivre les meilleures pratiques';
+
+  @override
+  String get ourDoctors => 'Nos médecins';
+
+  @override
+  String get findTheBestDoctor => 'trouver le meilleur médecin';
+
+  @override
+  String get upComing => 'À venir';
+
+  @override
+  String get noUpcomingEvents => 'Aucun événement à venir';
+
+  @override
+  String get addAppointmentsInPlan => 'Ajouter des rendez-vous dans le Plan';
+
+  @override
+  String get overdue => 'En retard';
+
+  @override
+  String inMinutes(int minutes) {
+    return 'Dans $minutes minutes';
+  }
+
+  @override
+  String inHours(int hours) {
+    return 'Dans $hours heures';
+  }
+
+  @override
+  String todayAt(String time) {
+    return 'Aujourd\'hui à $time';
+  }
+
+  @override
+  String tomorrowAt(String time) {
+    return 'Demain à $time';
+  }
+
+  @override
+  String get at => 'à';
+
+  @override
+  String get myMoods => 'Mes humeurs';
+
+  @override
+  String get noMoodsLoggedYet => 'Aucune humeur enregistrée !';
+
+  @override
+  String get tapLogMoodToStart =>
+      'Appuyez sur \"Enregistrer l\'humeur\" pour commencer.';
+
+  @override
+  String get noData => 'Aucune donnée';
+
+  @override
+  String get pleaseLogInToSaveMood =>
+      'Veuillez vous connecter pour enregistrer l\'humeur';
+
+  @override
+  String get mySymptoms => 'Mes symptômes';
+
+  @override
+  String get tapLogNewSymptomToStart =>
+      'Appuyez sur \"Enregistrer un nouveau symptôme\" pour commencer.';
+
+  @override
+  String get myMeasurements => 'Mes mesures';
+
+  @override
+  String get tapAddMeasurementToStart =>
+      'Appuyez sur \"Ajouter une mesure\" pour commencer.';
+
+  @override
+  String get myLabResults => 'Mes résultats de laboratoire';
+
+  @override
+  String get uploadFirstLabResult =>
+      'Téléchargez votre premier résultat de laboratoire pour commencer.';
+
+  @override
+  String get labPapersGallery => 'Galerie de documents de laboratoire';
+
+  @override
+  String get uploadLabReportsToSee =>
+      'Téléchargez des rapports de laboratoire pour les voir ici';
+
+  @override
+  String get exportingLabPapers => 'Export des documents de laboratoire...';
+
+  @override
+  String get healthRiskAssessment => 'Évaluation des risques de santé';
+
+  @override
+  String get analyzingYourHealthData => 'Analyse de vos données de santé...';
+
+  @override
+  String get unableToAssessRisk => 'Impossible d\'évaluer le risque';
+
+  @override
+  String get noAssessmentAvailable => 'Aucune évaluation disponible';
+
+  @override
+  String get viewAllMeasurements => 'Voir toutes les mesures';
+
+  @override
+  String get viewAllMoods => 'Voir toutes les humeurs';
+
+  @override
+  String get viewAllLabPapers => 'Afficher tous les documents de laboratoire';
+
+  @override
+  String get noWeightDataAvailable => 'Aucune donnée de poids disponible';
+
+  @override
+  String get monitor => 'Surveiller';
+
+  @override
+  String get cameraPermissionDenied => 'Permission de caméra refusée';
+
+  @override
+  String get photosPermissionDenied => 'Permission de photos refusée';
+
+  @override
+  String failedToPickImage(String error) {
+    return 'Échec de la sélection de l\'image : $error';
+  }
+
+  @override
+  String failedToPickPDF(String error) {
+    return 'Échec de la sélection du PDF : $error';
+  }
+
+  @override
+  String get reviewEditLabResults =>
+      'Réviser et modifier les résultats de laboratoire';
+
+  @override
+  String get imageNotAvailable => 'Image non disponible';
+
+  @override
+  String get addTest => 'Ajouter un test';
+
+  @override
+  String saveResults(int count) {
+    return 'Enregistrer $count résultat(s)';
+  }
+
+  @override
+  String get labResultsSavedSuccessfully =>
+      'Résultats de laboratoire enregistrés avec succès !';
+
+  @override
+  String failedToSaveResults(String error) {
+    return 'Échec de l\'enregistrement des résultats : $error';
+  }
+
+  @override
+  String get noResultsToSave => 'Aucun résultat à enregistrer';
+
+  @override
+  String get pdfLabReport => 'Rapport de laboratoire PDF';
+
+  @override
+  String get savePDFReference => 'Enregistrer la référence PDF';
+
+  @override
+  String get enterDataManually => 'Saisir les données manuellement';
+
+  @override
+  String get pdfSavedAndUploaded => 'PDF enregistré et téléchargé !';
+
+  @override
+  String failedToSavePDF(String error) {
+    return 'Échec de l\'enregistrement du PDF : $error';
+  }
+
+  @override
+  String get extractLabResults => 'Extraire les résultats de laboratoire';
+
+  @override
+  String get extractingTextFromImage => 'Extraction du texte de l\'image...';
+
+  @override
+  String get viewRawText => 'Voir le texte brut';
+
+  @override
+  String get noDataExtracted => 'Aucune donnée extraite';
+
+  @override
+  String get saveImageOnly => 'Enregistrer uniquement l\'image';
+
+  @override
+  String get imageSaved =>
+      'Image enregistrée ! Vous pouvez ajouter des détails plus tard.';
+
+  @override
+  String get enterManually => 'Saisir manuellement';
+
+  @override
+  String get noImageSaved => 'Aucune image enregistrée. Veuillez réessayer.';
+
+  @override
+  String get manualLabEntry => 'Saisie manuelle de laboratoire';
+
+  @override
+  String get labResultAddedSuccessfully =>
+      'Résultat de laboratoire ajouté avec succès !';
+
+  @override
+  String get exporting => 'Exportation...';
+
+  @override
+  String get labResultImage => 'Image du résultat de laboratoire';
+
+  @override
+  String get deleteResult => 'Supprimer le résultat';
+
+  @override
+  String areYouSureDeleteResult(String testName) {
+    return 'Êtes-vous sûr de vouloir supprimer $testName ?';
+  }
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get exportLabResults => 'Exporter les résultats de laboratoire';
+
+  @override
+  String get exportAllLabResultsAsZIP =>
+      'Exporter toutes les images de résultats de laboratoire dans un fichier ZIP ?';
+
+  @override
+  String get export => 'Exporter';
+
+  @override
+  String get labResultUpdatedSuccessfully =>
+      'Résultat de laboratoire mis à jour avec succès';
+
+  @override
+  String errorUpdatingResult(String error) {
+    return 'Erreur lors de la mise à jour du résultat : $error';
+  }
+
+  @override
+  String get editLabResult => 'Modifier le résultat de laboratoire';
+
+  @override
+  String errorCallingContact(String contactName, String error) {
+    return 'Erreur lors de l\'appel de $contactName : $error';
+  }
+
+  @override
+  String get iDontNeedThisContact => 'Je n\'ai pas besoin de ce contact';
+
+  @override
+  String get saveEmergencyContacts => 'Enregistrer';
+
+  @override
+  String get setupEmergencyContacts => 'Configurer les contacts d\'urgence';
+
+  @override
+  String get setupContactsDescription =>
+      'Ajoutez des contacts d\'urgence pour un accès rapide en cas de situations urgentes.';
+
+  @override
+  String get partner => 'Partenaire';
+
+  @override
+  String get healthcareProvider => 'Fournisseur de soins de santé';
+
+  @override
+  String get parent => 'Parent/Famille';
+
+  @override
+  String get actionNeeded => 'ACTION REQUISE';
+
+  @override
+  String get detectedPatterns => 'Schémas détectés';
+
+  @override
+  String get recommendations => 'Recommandations';
+
+  @override
+  String get aiAnalysis => 'Analyse IA';
+
+  @override
+  String get aiRiskAssessmentDisclaimer =>
+      '⚠️ Évaluation des risques générée par l\'IA. Ce n\'est pas un diagnostic médical. Consultez toujours votre professionnel de la santé pour toute préoccupation.';
+
+  @override
+  String get riskLevel => 'RISQUE';
+
+  @override
+  String get none => 'AUCUN';
+
+  @override
+  String get normalRisk => 'Normal';
+
+  @override
+  String get lowRiskLevel => 'Faible';
+
+  @override
+  String get mediumRisk => 'Moyen';
+
+  @override
+  String get highRisk => 'Élevé';
+
+  @override
+  String get urgentRisk => 'Urgent';
+
+  @override
+  String get noSignificantConcerns => 'Aucune préoccupation significative';
+
+  @override
+  String get heartRateProgress => 'Progression de la fréquence cardiaque';
+
+  @override
+  String get bloodPressureTrend => 'Tendance de la pression artérielle';
+
+  @override
+  String get noSymptomLogged => 'Aucun symptôme enregistré';
+
+  @override
+  String get noMoodsLogged => 'Aucune humeur enregistrée';
+
+  @override
+  String get noLabResultsYet => 'Aucun résultat de laboratoire pour le moment';
+
+  @override
+  String get lowStatus => 'Bas';
+
+  @override
+  String get highStatus => 'Élevé';
+
+  @override
+  String get noSymptomDataAvailable => 'Aucune donnée de symptôme disponible';
+
+  @override
+  String get noNotes => 'Aucune note';
+
+  @override
+  String get noMoodDataAvailable => 'Aucune donnée d\'humeur disponible';
+
+  @override
+  String get noSignificantConcernsMessage =>
+      'Aucune préoccupation significative';
+
+  @override
+  String get noAssessmentDetailsAvailable =>
+      'Aucun détail d\'évaluation disponible';
+
+  @override
+  String minAgo(int minutes) {
+    return 'il y a $minutes min';
+  }
+
+  @override
+  String minAgoShort(int minutes) {
+    return 'il y a ${minutes}m';
+  }
+
+  @override
+  String hoursAgoShort(int hours) {
+    return 'il y a ${hours}h';
+  }
+
+  @override
+  String daysAgoShort(int days) {
+    return 'il y a ${days}j';
+  }
+
+  @override
+  String get underweight => 'Insuffisance pondérale';
+
+  @override
+  String get overweight => 'Surpoids';
+
+  @override
+  String get obese => 'Obèse';
+
+  @override
+  String get mixedMoodsCareMessage =>
+      'Humeurs mélangées - prenez soin de vous!';
+
+  @override
+  String get pain => 'douleur';
+
+  @override
+  String get sleep => 'sommeil';
+
+  @override
+  String get feet => 'pieds';
 }

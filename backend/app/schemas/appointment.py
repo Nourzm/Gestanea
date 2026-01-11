@@ -20,12 +20,13 @@ class AppointmentBase(BaseModel):
     location: Optional[str] = None
     notes: Optional[str] = None
     reminder_time: Optional[str] = None  # ISO datetime format
-    is_completed: bool = False
+    is_completed: int = 0
 
 
 class AppointmentCreate(AppointmentBase):
     """Schema for creating a new appointment."""
-    pass
+    id: Optional[str] = None  # Allow client to provide ID
+    created_at: Optional[str] = None  # Allow client to provide timestamp
 
 
 class AppointmentUpdate(BaseModel):
@@ -37,7 +38,7 @@ class AppointmentUpdate(BaseModel):
     location: Optional[str] = None
     notes: Optional[str] = None
     reminder_time: Optional[str] = None
-    is_completed: Optional[bool] = None
+    is_completed: Optional[int] = None
 
 
 class AppointmentResponse(AppointmentBase):

@@ -19,8 +19,6 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      // NOTE: bumped to 10 to guarantee notifications table is created for
-      // users who previously upgraded to v9 before the notifications migration existed.
       version: 12,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
@@ -52,7 +50,8 @@ class DatabaseHelper {
         diastolic INTEGER,
         recorded_at TEXT NOT NULL,
         notes TEXT,
-        created_at TEXT NOT NULL
+        created_at TEXT NOT NULL,
+        synced INTEGER DEFAULT 1
       )
     ''');
     }
@@ -298,6 +297,90 @@ class DatabaseHelper {
         print('Note: content_json column may already exist: $e');
       }
       print('Tips schema updated (v12 migration)');
+      // Add synced column to measurements table for offline support
+      // Check if column exists first to avoid duplicate column error
+      var result = await db.rawQuery('PRAGMA table_info(measurements)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE measurements ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 8) {
+      // Add synced column to symptoms table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(symptoms)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE symptoms ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 9) {
+      // Add duration column to symptoms table
+      var result = await db.rawQuery('PRAGMA table_info(symptoms)');
+      bool hasDurationColumn = result.any((column) => column['name'] == 'duration');
+      
+      if (!hasDurationColumn) {
+        await db.execute('''
+          ALTER TABLE symptoms ADD COLUMN duration TEXT
+        ''');
+      }
+    }
+    if (oldVersion < 10) {
+      // Add synced column to lab_results table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(lab_results)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE lab_results ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 11) {
+      // Add synced column to moods table for offline support
+      var result = await db.rawQuery('PRAGMA table_info(moods)');
+      bool hasSyncedColumn = result.any((column) => column['name'] == 'synced');
+      
+      if (!hasSyncedColumn) {
+        await db.execute('''
+          ALTER TABLE moods ADD COLUMN synced INTEGER DEFAULT 1
+        ''');
+      }
+    }
+    if (oldVersion < 12) {
+      // Remove foreign key constraint from moods table
+      // SQLite doesn't support dropping foreign keys, so we need to recreate the table
+      
+      // 1. Create new moods table without foreign key
+      await db.execute('''
+        CREATE TABLE moods_new (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          mood TEXT NOT NULL,
+          intensity INTEGER,
+          notes TEXT,
+          recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          synced INTEGER DEFAULT 1
+        )
+      ''');
+      
+      // 2. Copy data from old table to new table
+      await db.execute('''
+        INSERT INTO moods_new (id, user_id, mood, intensity, notes, recorded_at, created_at, synced)
+        SELECT id, user_id, mood, intensity, notes, recorded_at, created_at, synced FROM moods
+      ''');
+      
+      // 3. Drop old table
+      await db.execute('DROP TABLE moods');
+      
+      // 4. Rename new table to original name
+      await db.execute('ALTER TABLE moods_new RENAME TO moods');
     }
   }
 
@@ -433,7 +516,7 @@ class DatabaseHelper {
       )
     ''');
 
-    // Moods table
+    // Moods table (no foreign key constraint for Supabase compatibility)
     await db.execute('''
       CREATE TABLE moods (
         id TEXT PRIMARY KEY,
@@ -442,8 +525,7 @@ class DatabaseHelper {
         intensity INTEGER,
         notes TEXT,
         recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     ''');
 
@@ -810,7 +892,8 @@ class DatabaseHelper {
     diastolic INTEGER,
     recorded_at TEXT NOT NULL,
     notes TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    synced INTEGER DEFAULT 1
   )
 ''');
     // Symptoms table

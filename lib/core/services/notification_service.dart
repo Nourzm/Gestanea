@@ -1,120 +1,178 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:developer' as developer;
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await NotificationService.instance.setupFlutterNotifications();
-  await NotificationService.instance.showNotification(message);
-}
-
+/// Service to handle local notifications for medicines and appointments
 class NotificationService {
-  NotificationService._();
-  static final NotificationService instance = NotificationService._();
+  static final NotificationService _instance = NotificationService._internal();
+  factory NotificationService() => _instance;
+  NotificationService._internal();
 
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
+  final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
 
-  bool _isFlutterLocalNotificationsInitialized = false;
+  bool _initialized = false;
 
+  /// Initialize notification service
   Future<void> initialize() async {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Request permission
-    await _requestPermission();
-
-    // Setup message handlers
-    await _setupMessageHandlers();
-
-    final token = await _messaging.getToken();
-    print("FCM token: $token");
-  }
-
-  Future<void> _requestPermission() async {
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      provisional: false,
-      announcement: false,
-      carPlay: false,
-      criticalAlert: false,
-    );
-
-    print("Permission status: ${settings.authorizationStatus}");
-  }
-
-  Future<void> _setupMessageHandlers() async {
-    // Foreground message
-    FirebaseMessaging.onMessage.listen((message) {
-      showNotification(message);
-    });
-
-    // Background message when app is opened from a notification
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
-
-    // App opened from terminated state
-    final initialMessage = await _messaging.getInitialMessage();
-    if (initialMessage != null) {
-      _handleBackgroundMessage(initialMessage);
-    }
-  }
-
-  void _handleBackgroundMessage(RemoteMessage message) {
-    if (message.data['type'] == 'chat') {
-      // Open chat screen
-    }
-  }
-
-  Future<void> setupFlutterNotifications() async {
-    if (_isFlutterLocalNotificationsInitialized) return;
-
-    // Android setup
-    const channel = AndroidNotificationChannel(
-      'high_importance_channel',
-      'High Importance Notifications',
-      description: 'This channel is used for important notifications.',
-      importance: Importance.high,
-    );
-
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(channel);
-
-    const initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-  }
-
-  Future<void> showNotification(RemoteMessage message) async {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-
-    if (notification != null && android != null) {
-      await _localNotifications.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'high_importance_channel',
-            'High Importance Notifications',
-            channelDescription:
-                'This channel is used for important notifications.',
-            importance: Importance.high,
-            priority: Priority.high,
-            icon: '@mipmap/ic_launcher',
-          ),
-          iOS: const DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        payload: message.data.toString(),
+    if (_initialized) {
+      developer.log(
+        '⚠️ Notification service already initialized',
+        name: 'NotificationService',
       );
+      return;
     }
+
+    developer.log(
+      '🚀 Initializing notification service...',
+      name: 'NotificationService',
+    );
+
+    try {
+      // Request notification permission for Android 13+
+      final permissionStatus = await Permission.notification.request();
+      developer.log(
+        '📱 Notification permission: $permissionStatus',
+        name: 'NotificationService',
+      );
+
+      const androidSettings = AndroidInitializationSettings(
+        '@mipmap/ic_launcher',
+      );
+      const initSettings = InitializationSettings(android: androidSettings);
+
+      final initialized = await _notifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _onNotificationTapped,
+      );
+
+      _initialized = true;
+      developer.log(
+        '✅ Notification service initialized: $initialized',
+        name: 'NotificationService',
+      );
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Failed to initialize notification service: $e',
+        name: 'NotificationService',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Handle notification tap
+  void _onNotificationTapped(NotificationResponse response) {
+    developer.log(
+      '👆 Notification tapped: ${response.payload}',
+      name: 'NotificationService',
+    );
+    // Handle navigation based on payload if needed
+  }
+
+  /// Show a medicine reminder notification
+  Future<void> showMedicineNotification({
+    required int id,
+    required String medicineName,
+    required String dosage,
+  }) async {
+    developer.log(
+      '💊 Showing medicine notification: $medicineName',
+      name: 'NotificationService',
+    );
+
+    try {
+      const androidDetails = AndroidNotificationDetails(
+        'medicine_reminders',
+        'Medicine Reminders',
+        channelDescription: 'Notifications for medicine reminders',
+        importance: Importance.high,
+        priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+      );
+
+      const notificationDetails = NotificationDetails(android: androidDetails);
+
+      await _notifications.show(
+        id,
+        'Medicine Reminder',
+        'Time to take $medicineName ($dosage)',
+        notificationDetails,
+        payload: 'medicine:$id',
+      );
+
+      developer.log(
+        '✅ Medicine notification shown successfully',
+        name: 'NotificationService',
+      );
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Failed to show medicine notification: $e',
+        name: 'NotificationService',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Show an appointment reminder notification
+  Future<void> showAppointmentNotification({
+    required int id,
+    required String title,
+    required String? location,
+  }) async {
+    developer.log(
+      '📅 Showing appointment notification: $title',
+      name: 'NotificationService',
+    );
+
+    try {
+      const androidDetails = AndroidNotificationDetails(
+        'appointment_reminders',
+        'Appointment Reminders',
+        channelDescription: 'Notifications for appointment reminders',
+        importance: Importance.high,
+        priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+      );
+
+      const notificationDetails = NotificationDetails(android: androidDetails);
+
+      final locationText = location != null ? ' at $location' : '';
+      await _notifications.show(
+        id,
+        'Appointment Reminder',
+        'You have an appointment: $title$locationText',
+        notificationDetails,
+        payload: 'appointment:$id',
+      );
+
+      developer.log(
+        '✅ Appointment notification shown successfully',
+        name: 'NotificationService',
+      );
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Failed to show appointment notification: $e',
+        name: 'NotificationService',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Cancel a specific notification
+  Future<void> cancelNotification(int id) async {
+    await _notifications.cancel(id);
+  }
+
+  /// Cancel all notifications
+  Future<void> cancelAllNotifications() async {
+    await _notifications.cancelAll();
   }
 }

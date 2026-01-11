@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
@@ -10,9 +11,12 @@ import '../../pages/pdf_extraction_page.dart';
 import '../../pages/manual_lab_entry_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import '../../../logic/bloc/lab_results_bloc.dart';
 
 class UploadLabResultsDialog extends StatelessWidget {
-  const UploadLabResultsDialog({super.key});
+  final LabResultsBloc bloc;
+  
+  const UploadLabResultsDialog({super.key, required this.bloc});
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
@@ -22,7 +26,7 @@ class UploadLabResultsDialog extends StatelessWidget {
         if (!status.isGranted) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Camera permission denied')),
+              SnackBar(content: Text(AppLocalizations.of(context)!.cameraPermissionDenied)),
             );
           }
           return;
@@ -49,7 +53,7 @@ class UploadLabResultsDialog extends StatelessWidget {
         if (!status.isGranted) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Photos permission denied')),
+              SnackBar(content: Text(AppLocalizations.of(context)!.photosPermissionDenied)),
             );
           }
           return;
@@ -69,11 +73,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to OCR extraction page
+        // Navigate to OCR extraction page with bloc provider
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OcrExtractionPage(imageFile: imageFile),
+            builder: (newContext) => BlocProvider.value(
+              value: bloc,
+              child: OcrExtractionPage(imageFile: imageFile),
+            ),
           ),
         );
       }
@@ -81,7 +88,7 @@ class UploadLabResultsDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickImage(e.toString()))));
       }
     }
   }
@@ -101,11 +108,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to PDF viewer/extraction page
+        // Navigate to PDF viewer/extraction page with bloc provider
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PdfExtractionPage(pdfPath: pdfPath),
+            builder: (newContext) => BlocProvider.value(
+              value: bloc,
+              child: PdfExtractionPage(pdfPath: pdfPath),
+            ),
           ),
         );
       }
@@ -113,7 +123,7 @@ class UploadLabResultsDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to pick PDF: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickPDF(e.toString()))));
       }
     }
   }

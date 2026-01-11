@@ -5,13 +5,14 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     SUPABASE_URL: str
     SUPABASE_ANON_KEY: str
+    SUPABASE_SERVICE_ROLE_KEY: str
     
     # API Base URL 
    
     API_BASE_URL: str = "http://10.0.2.2:8000/api/v1"
 
     class Config:
-        env_file = ".env"
+        env_file = "../.env"
         extra = "allow"
 
 settings = Settings()
