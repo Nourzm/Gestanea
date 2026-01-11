@@ -5,6 +5,7 @@ import 'dart:developer' as developer;
 /// Service to handle local notifications for medicines and appointments
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
+  static NotificationService get instance => _instance;
   factory NotificationService() => _instance;
   NotificationService._internal();
 

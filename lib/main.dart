@@ -32,10 +32,7 @@ void main() async {
   final connectivityService = ConnectivityService();
   await connectivityService.initialize();
 
-  // Initialize notification service
-
-  final notificationService = NotificationService();
-  await notificationService.initialize();
+  // Notification service already initialized above via the singleton
 
   // Initialize alarm scheduler
 
