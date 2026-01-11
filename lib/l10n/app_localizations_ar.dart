@@ -1243,4 +1243,87 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get nextLabAppointment => 'Next Lab Appointment';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navTrack => 'التتبع';
+
+  @override
+  String get navHealth => 'الصحة';
+
+  @override
+  String get navPlan => 'الخطة';
+
+  @override
+  String get navMarket => 'المتجر';
+
+  @override
+  String get hello => 'مرحباً';
+
+  @override
+  String get done => 'تم';
+
+  @override
+  String get daysToGo => 'أيام متبقية';
+
+  @override
+  String get weekLabel => 'أسبوع';
+
+  @override
+  String get day => 'يوم';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String get more => 'المزيد';
+
+  @override
+  String get ourTips => 'نصائحنا';
+
+  @override
+  String get followBestPractices => 'اتبعي أفضل الممارسات';
+
+  @override
+  String get ourDoctors => 'أطباؤنا';
+
+  @override
+  String get findTheBestDoctor => 'ابحثي عن أفضل طبيب';
+
+  @override
+  String get upComing => 'القادمة';
+
+  @override
+  String get noUpcomingEvents => 'لا توجد أحداث قادمة';
+
+  @override
+  String get addAppointmentsInPlan => 'أضيفي المواعيد في الخطة';
+
+  @override
+  String get overdue => 'متأخر';
+
+  @override
+  String inMinutes(int minutes) {
+    return 'خلال $minutes دقائق';
+  }
+
+  @override
+  String inHours(int hours) {
+    return 'خلال $hours ساعات';
+  }
+
+  @override
+  String todayAt(String time) {
+    return 'اليوم في $time';
+  }
+
+  @override
+  String tomorrowAt(String time) {
+    return 'غداً في $time';
+  }
+
+  @override
+  String get at => 'في';
 }

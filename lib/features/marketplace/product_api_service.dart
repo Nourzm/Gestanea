@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'package:http/http.dart' as http;
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_category_model.dart';
@@ -94,6 +95,25 @@ class ProductApiService {
       isAvailable = (json['is_available'] as int? ?? 1) == 1;
     }
 
+    // Parse translations if present
+    Map<String, dynamic>? translations;
+    if (json['translations'] != null) {
+      if (json['translations'] is String) {
+        try {
+          translations =
+              jsonDecode(json['translations'] as String)
+                  as Map<String, dynamic>;
+        } catch (e) {
+          developer.log(
+            'Failed to parse product translations: $e',
+            name: 'ProductApiService',
+          );
+        }
+      } else if (json['translations'] is Map) {
+        translations = Map<String, dynamic>.from(json['translations'] as Map);
+      }
+    }
+
     return ProductModel(
       id: json['id'] as String,
       productName: json['product_name'] as String,
@@ -114,6 +134,7 @@ class ProductApiService {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : DateTime.now(),
+      translations: translations,
     );
   }
 
@@ -161,6 +182,14 @@ class ProductApiService {
 
   /// Helper to convert API JSON to ProductCategoryModel
   static ProductCategoryModel _categoryFromJson(Map<String, dynamic> json) {
+    // Parse translations if present
+    Map<String, dynamic>? translations;
+    if (json['translations'] != null) {
+      if (json['translations'] is Map) {
+        translations = Map<String, dynamic>.from(json['translations'] as Map);
+      }
+    }
+
     return ProductCategoryModel(
       id: json['id'] as String,
       name: json['name'] as String?,
@@ -169,6 +198,7 @@ class ProductApiService {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : DateTime.now(),
+      translations: translations,
     );
   }
 

@@ -371,5 +371,57 @@
     }
   },
   "yourInformationIsSecure": "معلوماتك آمنة ومشفرة",
-  "openNow": "مفتوح الآن"
+  "openNow": "مفتوح الآن",
+  "navHome": "الرئيسية",
+  "navTrack": "التتبع",
+  "navHealth": "الصحة",
+  "navPlan": "الخطة",
+  "navMarket": "المتجر",
+  "hello": "مرحباً",
+  "done": "تم",
+  "daysToGo": "أيام متبقية",
+  "weekLabel": "أسبوع",
+  "day": "يوم",
+  "days": "أيام",
+  "more": "المزيد",
+  "ourTips": "نصائحنا",
+  "followBestPractices": "اتبعي أفضل الممارسات",  "ourDoctors": "أطباؤنا",
+  "findTheBestDoctor": "ابحثي عن أفضل طبيب",
+  "upComing": "القادمة",
+  "noUpcomingEvents": "لا توجد أحداث قادمة",
+  "addAppointmentsInPlan": "أضيفي المواعيد في الخطة",
+  "overdue": "متأخر",
+  "inMinutes": "خلال {minutes} دقائق",
+  "@inMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "خلال {hours} ساعات",
+  "@inHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "todayAt": "اليوم في {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "tomorrowAt": "غداً في {time}",
+  "@tomorrowAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "at": "في"
 }

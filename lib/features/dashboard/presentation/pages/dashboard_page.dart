@@ -13,6 +13,7 @@ import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard
 import 'package:gestanea/features/dashboard/presentation/pages/home_screen.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/navbar.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'postpartum_dashboard_page.dart';
 import 'package:gestanea/features/pregnancyTracking/presentation/pages/week_tracker_page.dart';
 import 'package:gestanea/features/babyTracking/presentation/pages/postpartum_track_page.dart';
@@ -121,6 +122,7 @@ class _DashboardPageState extends State<DashboardPage>
       ],
       child: BlocBuilder<DashboardCubit, DashboardState>(
         builder: (context, dashboardState) {
+          final l10n = AppLocalizations.of(context)!;
           // Determine mode based on dashboard state
           final bool isPregnant = dashboardState is PregnancyDashboardLoaded;
           final bool isPostpartum = dashboardState is PostpartumDashboardLoaded;
@@ -195,19 +197,25 @@ class _DashboardPageState extends State<DashboardPage>
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
                     items: [
-                      NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
+                      NavBarItem(
+                        icon: "assets/icons/home.svg",
+                        label: l10n.navHome,
+                      ),
                       NavBarItem(
                         icon: "assets/icons/track.svg",
-                        label: "Track",
+                        label: l10n.navTrack,
                       ),
                       NavBarItem(
                         icon: "assets/icons/health.svg",
-                        label: "Health",
+                        label: l10n.navHealth,
                       ),
-                      NavBarItem(icon: "assets/icons/plan.svg", label: "Plan"),
+                      NavBarItem(
+                        icon: "assets/icons/plan.svg",
+                        label: l10n.navPlan,
+                      ),
                       NavBarItem(
                         icon: "assets/icons/market.svg",
-                        label: "Market",
+                        label: l10n.navMarket,
                       ),
                     ],
                   ),

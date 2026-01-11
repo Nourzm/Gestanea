@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_category_model.dart';
 import 'package:gestanea/features/marketplace/product_api_service.dart';
+import 'package:gestanea/core/services/connectivity_service.dart';
 
 // Events
 abstract class MarketplaceEvent extends Equatable {
@@ -96,9 +97,15 @@ class MarketplaceError extends MarketplaceState {
   List<Object?> get props => [message];
 }
 
+class MarketplaceOffline extends MarketplaceState {}
+
 // BLoC
 class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
-  MarketplaceBloc() : super(MarketplaceInitial()) {
+  final ConnectivityService _connectivityService;
+
+  MarketplaceBloc({ConnectivityService? connectivityService})
+    : _connectivityService = connectivityService ?? ConnectivityService(),
+      super(MarketplaceInitial()) {
     on<LoadMarketplaceData>(_onLoadMarketplaceData);
     on<SearchProducts>(_onSearchProducts);
     on<FilterByCategory>(_onFilterByCategory);
@@ -110,6 +117,13 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
   ) async {
     emit(MarketplaceLoading());
     try {
+      // Check connectivity first
+      final isOnline = await _connectivityService.checkConnectivity();
+      if (!isOnline) {
+        emit(MarketplaceOffline());
+        return;
+      }
+
       // Fetch categories and products from the backend API
       final categories = await ProductApiService.getCategories();
       final products = await ProductApiService.getProducts(isAvailable: true);
@@ -122,9 +136,18 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
         ),
       );
     } catch (e) {
-      emit(
-        MarketplaceError('Failed to load marketplace data: ${e.toString()}'),
-      );
+      // Check if it's a network error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socketexception') ||
+          errorMessage.contains('network') ||
+          errorMessage.contains('connection') ||
+          errorMessage.contains('unreachable')) {
+        emit(MarketplaceOffline());
+      } else {
+        emit(
+          MarketplaceError('Failed to load marketplace data: ${e.toString()}'),
+        );
+      }
     }
   }
 
@@ -164,7 +187,16 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
           ),
         );
       } catch (e) {
-        emit(MarketplaceError('Failed to search products: ${e.toString()}'));
+        // Check if it's a network error
+        final errorMessage = e.toString().toLowerCase();
+        if (errorMessage.contains('socketexception') ||
+            errorMessage.contains('network') ||
+            errorMessage.contains('connection') ||
+            errorMessage.contains('unreachable')) {
+          emit(MarketplaceOffline());
+        } else {
+          emit(MarketplaceError('Failed to search products: ${e.toString()}'));
+        }
       }
     }
   }
@@ -196,7 +228,16 @@ class MarketplaceBloc extends Bloc<MarketplaceEvent, MarketplaceState> {
           ),
         );
       } catch (e) {
-        emit(MarketplaceError('Failed to filter products: ${e.toString()}'));
+        // Check if it's a network error
+        final errorMessage = e.toString().toLowerCase();
+        if (errorMessage.contains('socketexception') ||
+            errorMessage.contains('network') ||
+            errorMessage.contains('connection') ||
+            errorMessage.contains('unreachable')) {
+          emit(MarketplaceOffline());
+        } else {
+          emit(MarketplaceError('Failed to filter products: ${e.toString()}'));
+        }
       }
     }
   }

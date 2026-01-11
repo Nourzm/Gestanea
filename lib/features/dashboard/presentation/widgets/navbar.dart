@@ -22,6 +22,9 @@ class FancyNavBar extends StatelessWidget {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
+    // Check if current locale is RTL (Arabic)
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
     // --- RESPONSIVE VALUES ---
     final notchSize = w * 0.10; // size of notch curve
     final circleSize = w * 0.18; // floating circle size
@@ -29,6 +32,14 @@ class FancyNavBar extends StatelessWidget {
     final iconSizeInactive = w * 0.065; // inactive icons
     final itemWidth = w / items.length;
     final bottomPadding = h * 0.015; // space for labels
+
+    // Calculate position based on RTL direction
+    final int displayIndex = isRTL
+        ? (items.length - 1 - currentIndex)
+        : currentIndex;
+    final double circleLeft =
+        itemWidth * displayIndex + (itemWidth - circleSize) / 2;
+    final double notchCenterX = itemWidth * displayIndex + itemWidth / 2;
 
     return SizedBox(
       height: barHeight + circleSize * 0.6,
@@ -44,7 +55,7 @@ class FancyNavBar extends StatelessWidget {
             right: 0,
             child: CustomPaint(
               painter: _NotchedBarPainter(
-                notchCenterX: itemWidth * currentIndex + itemWidth / 2,
+                notchCenterX: notchCenterX,
                 notchRadius: notchSize,
                 borderRadius: 20,
               ),
@@ -59,7 +70,7 @@ class FancyNavBar extends StatelessWidget {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
             bottom: barHeight - circleSize * 0.40,
-            left: itemWidth * currentIndex + (itemWidth - circleSize) / 2,
+            left: circleLeft,
             child: Container(
               width: circleSize,
               height: circleSize,

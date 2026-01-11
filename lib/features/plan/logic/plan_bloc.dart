@@ -178,7 +178,6 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       isOnline,
     ) {
       if (isOnline) {
-        print('📶 Connection restored - syncing pending data...');
         // Trigger a refresh to sync pending items
         if (state is PlanLoaded) {
           final currentState = state as PlanLoaded;
@@ -268,13 +267,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       '💊 Adding medicine: ${event.medicine.medicineName}',
       name: 'PlanBloc',
     );
-    print('💊 Adding medicine: ${event.medicine.medicineName}');
 
     try {
       final result = await medicineRepository.insertMedicine(event.medicine);
       if (result.state) {
         developer.log('✅ Medicine saved to database', name: 'PlanBloc');
-        print('✅ Medicine saved to database');
 
         // Schedule alarms for this medicine
         if (event.medicine.scheduledTimes != null &&
@@ -283,8 +280,6 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
             '⏰ Scheduling alarms for medicine...',
             name: 'PlanBloc',
           );
-          print('⏰ Scheduling alarms for medicine...');
-          print('   Times: ${event.medicine.scheduledTimes}');
 
           await alarmScheduler.scheduleMedicineAlarms(
             medicineId: event.medicine.id,
@@ -296,10 +291,8 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
           );
 
           developer.log('✅ Alarms scheduled for medicine', name: 'PlanBloc');
-          print('✅ Alarms scheduled for medicine');
         } else {
           developer.log('⚠️ No scheduled times for medicine', name: 'PlanBloc');
-          print('⚠️ No scheduled times for medicine');
         }
 
         // Reload data after adding
@@ -316,7 +309,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
           '❌ Failed to save medicine: ${result.message}',
           name: 'PlanBloc',
         );
-        print('❌ Failed to save medicine: ${result.message}');
+
         emit(PlanError(message: result.message));
       }
     } catch (e, stackTrace) {
@@ -326,7 +319,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Error adding medicine: $e');
+
       emit(PlanError(message: 'Failed to add medicine: ${e.toString()}'));
     }
   }
@@ -375,7 +368,6 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       '📅 Adding appointment: ${event.appointment.title}',
       name: 'PlanBloc',
     );
-    print('📅 Adding appointment: ${event.appointment.title}');
 
     try {
       final result = await appointmentRepository.insertAppointment(
@@ -383,15 +375,12 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       );
       if (result.state) {
         developer.log('✅ Appointment saved to database', name: 'PlanBloc');
-        print('✅ Appointment saved to database');
 
         // Schedule alarm for this appointment (30 minutes before)
         developer.log(
           '⏰ Scheduling alarm for appointment...',
           name: 'PlanBloc',
         );
-        print('⏰ Scheduling alarm for appointment...');
-        print('   Date: ${event.appointment.appointmentDate}');
 
         await alarmScheduler.scheduleAppointmentAlarm(
           appointmentId: event.appointment.id,
@@ -402,7 +391,6 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         );
 
         developer.log('✅ Alarm scheduled for appointment', name: 'PlanBloc');
-        print('✅ Alarm scheduled for appointment');
 
         // Reload data after adding
         if (state is PlanLoaded) {
@@ -416,7 +404,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
           '❌ Failed to save appointment: ${result.message}',
           name: 'PlanBloc',
         );
-        print('❌ Failed to save appointment: ${result.message}');
+
         emit(PlanError(message: result.message));
       }
     } catch (e, stackTrace) {
@@ -426,7 +414,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         error: e,
         stackTrace: stackTrace,
       );
-      print('❌ Error adding appointment: $e');
+
       emit(PlanError(message: 'Failed to add appointment: ${e.toString()}'));
     }
   }
