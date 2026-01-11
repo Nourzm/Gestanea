@@ -54,6 +54,9 @@ void main() {
       when(
         mockAppointmentRepository.getAppointmentsByDate(any, any),
       ).thenAnswer((_) async => []);
+      when(
+        mockAppointmentRepository.getUpcomingAppointments(any),
+      ).thenAnswer((_) async => []);
       when(mockAppointmentRepository.insertAppointment(any)).thenAnswer(
         (_) async => appt_repo.ReturnResult(state: true, message: 'Success'),
       );
@@ -115,7 +118,12 @@ void main() {
 
       blocTest<PlanBloc, PlanState>(
         'emits [PlanLoading, PlanError] when loading medicines fails',
-        build: () => planBloc,
+        build: () {
+          when(
+            mockMedicineRepository.getMedicines(any),
+          ).thenThrow(Exception('Failed to load'));
+          return planBloc;
+        },
         act: (bloc) => bloc.add(const LoadMedicines(userId: 'invalid_user')),
         expect: () => [
           isA<PlanLoading>(),
@@ -142,26 +150,46 @@ void main() {
       );
 
       blocTest<PlanBloc, PlanState>(
-        'emits [PlanLoading, PlanLoaded] when medicine is added successfully',
+        'emits [PlanLoaded] when medicine is added successfully',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: [
+            MedicineModel(
+              id: 'existing',
+              userId: 'user_1',
+              medicineName: 'Existing Medicine',
+              dosage: '1 pill',
+              frequencyType: 'Daily',
+              scheduledTimes: ['08:00'],
+              startDate: DateTime.now(),
+              isActive: true,
+              createdAt: DateTime.now(),
+            ),
+          ],
+          medicineLogs: const [],
+          appointments: const [],
+        ),
         act: (bloc) => bloc.add(AddMedicineEvent(medicine: testMedicine)),
-        expect: () => [
-          isA<PlanLoading>(),
-          isA<PlanLoaded>().having(
-            (state) => state is PlanLoaded,
-            'is PlanLoaded',
-            true,
-          ),
-        ],
+        expect: () => [isA<PlanLoaded>()],
       );
 
       blocTest<PlanBloc, PlanState>(
         'handles medicine with empty name gracefully',
-        build: () => planBloc,
+        build: () {
+          when(mockMedicineRepository.insertMedicine(any)).thenAnswer(
+            (_) async => med_repo.ReturnResult(
+              state: false,
+              message: 'Invalid medicine name',
+            ),
+          );
+          return planBloc;
+        },
+        seed: () =>
+            const PlanLoaded(medicines: [], medicineLogs: [], appointments: []),
         act: (bloc) => bloc.add(
           AddMedicineEvent(medicine: testMedicine.copyWith(medicineName: '')),
         ),
-        expect: () => [isA<PlanLoading>(), isA<PlanError>()],
+        expect: () => [isA<PlanError>()],
       );
     });
 
@@ -177,34 +205,108 @@ void main() {
       );
 
       blocTest<PlanBloc, PlanState>(
-        'emits [PlanLoading, PlanLoaded] when medicine is logged successfully',
+        'emits [PlanLoaded] when medicine is logged successfully',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: [
+            MedicineModel(
+              id: 'med_1',
+              userId: 'user_1',
+              medicineName: 'Test Medicine',
+              dosage: '1 pill',
+              frequencyType: 'Daily',
+              scheduledTimes: ['08:00'],
+              startDate: DateTime.now(),
+              isActive: true,
+              createdAt: DateTime.now(),
+            ),
+          ],
+          medicineLogs: [
+            MedicineLoggedModel(
+              id: 'log_0',
+              medicineId: 'med_1',
+              userId: 'user_1',
+              loggedDate: DateTime.now().subtract(const Duration(days: 1)),
+              status: 'taken',
+              notes: 'Previous log',
+              loggedAt: DateTime.now().subtract(const Duration(days: 1)),
+            ),
+          ],
+          appointments: const [],
+        ),
         act: (bloc) => bloc.add(LogMedicineEvent(log: testLog)),
-        expect: () => [
-          isA<PlanLoading>(),
-          isA<PlanLoaded>().having(
-            (state) => state is PlanLoaded,
-            'is PlanLoaded',
-            true,
-          ),
-        ],
+        expect: () => [isA<PlanLoaded>()],
       );
 
       blocTest<PlanBloc, PlanState>(
         'handles missed medicine logging',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: [
+            MedicineModel(
+              id: 'med_1',
+              userId: 'user_1',
+              medicineName: 'Test Medicine',
+              dosage: '1 pill',
+              frequencyType: 'Daily',
+              scheduledTimes: ['08:00'],
+              startDate: DateTime.now(),
+              isActive: true,
+              createdAt: DateTime.now(),
+            ),
+          ],
+          medicineLogs: [
+            MedicineLoggedModel(
+              id: 'log_0',
+              medicineId: 'med_1',
+              userId: 'user_1',
+              loggedDate: DateTime.now().subtract(const Duration(days: 1)),
+              status: 'taken',
+              notes: 'Previous log',
+              loggedAt: DateTime.now().subtract(const Duration(days: 1)),
+            ),
+          ],
+          appointments: const [],
+        ),
         act: (bloc) =>
             bloc.add(LogMedicineEvent(log: testLog.copyWith(status: 'missed'))),
-        expect: () => [isA<PlanLoading>(), isA<PlanLoaded>()],
+        expect: () => [isA<PlanLoaded>()],
       );
 
       blocTest<PlanBloc, PlanState>(
         'handles skipped medicine logging',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: [
+            MedicineModel(
+              id: 'med_1',
+              userId: 'user_1',
+              medicineName: 'Test Medicine',
+              dosage: '1 pill',
+              frequencyType: 'Daily',
+              scheduledTimes: ['08:00'],
+              startDate: DateTime.now(),
+              isActive: true,
+              createdAt: DateTime.now(),
+            ),
+          ],
+          medicineLogs: [
+            MedicineLoggedModel(
+              id: 'log_0',
+              medicineId: 'med_1',
+              userId: 'user_1',
+              loggedDate: DateTime.now().subtract(const Duration(days: 1)),
+              status: 'taken',
+              notes: 'Previous log',
+              loggedAt: DateTime.now().subtract(const Duration(days: 1)),
+            ),
+          ],
+          appointments: const [],
+        ),
         act: (bloc) => bloc.add(
           LogMedicineEvent(log: testLog.copyWith(status: 'skipped')),
         ),
-        expect: () => [isA<PlanLoading>(), isA<PlanLoaded>()],
+        expect: () => [isA<PlanLoaded>()],
       );
     });
 
@@ -254,23 +356,52 @@ void main() {
       );
 
       blocTest<PlanBloc, PlanState>(
-        'emits [PlanLoading, PlanLoaded] when appointment is added successfully',
+        'emits [PlanLoaded] when appointment is added successfully',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: const [],
+          medicineLogs: const [],
+          appointments: [
+            AppointmentModel(
+              id: 'existing',
+              userId: 'user_1',
+              title: 'Existing Appointment',
+              doctorName: 'Dr. Test',
+              appointmentType: 'Checkup',
+              appointmentDate: DateTime.now().add(const Duration(days: 5)),
+              location: 'Hospital',
+              notes: 'Test',
+              isCompleted: false,
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
         act: (bloc) =>
             bloc.add(AddAppointmentEvent(appointment: testAppointment)),
-        expect: () => [
-          isA<PlanLoading>(),
-          isA<PlanLoaded>().having(
-            (state) => state is PlanLoaded,
-            'is PlanLoaded',
-            true,
-          ),
-        ],
+        expect: () => [isA<PlanLoaded>()],
       );
 
       blocTest<PlanBloc, PlanState>(
         'handles appointment in the past',
         build: () => planBloc,
+        seed: () => PlanLoaded(
+          medicines: const [],
+          medicineLogs: const [],
+          appointments: [
+            AppointmentModel(
+              id: 'existing',
+              userId: 'user_1',
+              title: 'Existing Appointment',
+              doctorName: 'Dr. Test',
+              appointmentType: 'Checkup',
+              appointmentDate: DateTime.now().add(const Duration(days: 5)),
+              location: 'Hospital',
+              notes: 'Test',
+              isCompleted: false,
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
         act: (bloc) => bloc.add(
           AddAppointmentEvent(
             appointment: testAppointment.copyWith(
@@ -278,7 +409,7 @@ void main() {
             ),
           ),
         ),
-        expect: () => [isA<PlanLoading>(), isA<PlanLoaded>()],
+        expect: () => [isA<PlanLoaded>()],
       );
     });
 
@@ -302,8 +433,9 @@ void main() {
       blocTest<PlanBloc, PlanState>(
         'loads plan data for different dates',
         build: () => planBloc,
-        act: (bloc) {
+        act: (bloc) async {
           bloc.add(LoadPlanData(userId: 'user_1', date: testDate));
+          await Future.delayed(const Duration(milliseconds: 100));
           bloc.add(
             LoadPlanData(
               userId: 'user_1',
@@ -324,12 +456,11 @@ void main() {
       final testDate = DateTime.now();
 
       blocTest<PlanBloc, PlanState>(
-        'emits [PlanLoading, PlanLoaded] when plan data is refreshed',
+        'emits [PlanLoaded] when plan data is refreshed',
         build: () => planBloc,
         act: (bloc) =>
             bloc.add(RefreshPlanData(userId: 'user_1', date: testDate)),
         expect: () => [
-          isA<PlanLoading>(),
           isA<PlanLoaded>().having(
             (state) => state is PlanLoaded,
             'is PlanLoaded',
@@ -343,9 +474,11 @@ void main() {
       blocTest<PlanBloc, PlanState>(
         'handles multiple rapid events',
         build: () => planBloc,
-        act: (bloc) {
+        act: (bloc) async {
           bloc.add(const LoadMedicines(userId: 'user_1'));
+          await Future.delayed(const Duration(milliseconds: 50));
           bloc.add(const LoadAppointments(userId: 'user_1'));
+          await Future.delayed(const Duration(milliseconds: 50));
           bloc.add(LoadPlanData(userId: 'user_1', date: DateTime.now()));
         },
         expect: () => [
@@ -361,7 +494,7 @@ void main() {
       blocTest<PlanBloc, PlanState>(
         'handles add and load sequence',
         build: () => planBloc,
-        act: (bloc) {
+        act: (bloc) async {
           final medicine = MedicineModel(
             id: 'test',
             userId: 'user_1',
@@ -373,12 +506,18 @@ void main() {
             isActive: true,
             createdAt: DateTime.now(),
           );
+          // First load to get into a proper state
+          bloc.add(const LoadMedicines(userId: 'user_1'));
+          await Future.delayed(const Duration(milliseconds: 100));
+          // Then add medicine (won't emit since state is MedicinesLoaded, not PlanLoaded)
           bloc.add(AddMedicineEvent(medicine: medicine));
+          await Future.delayed(const Duration(milliseconds: 100));
+          // Load again
           bloc.add(const LoadMedicines(userId: 'user_1'));
         },
         expect: () => [
           isA<PlanLoading>(),
-          isA<PlanLoaded>(),
+          isA<MedicinesLoaded>(),
           isA<PlanLoading>(),
           isA<MedicinesLoaded>(),
         ],

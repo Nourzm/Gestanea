@@ -8,6 +8,8 @@ import 'location_service_test.mocks.dart';
 
 @GenerateMocks([GeolocatorPlatform])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('LocationService', () {
     late LocationService locationService;
 
