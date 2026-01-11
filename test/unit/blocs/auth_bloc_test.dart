@@ -87,7 +87,7 @@ void main() {
 
     group('SignUpRequested', () {
       blocTest<AuthBloc, AuthState>(
-        'emits [AuthLoading, AuthAuthenticated] when signup succeeds',
+        'emits [AuthLoading, OtpSent] when signup succeeds',
         build: () {
           when(
             mockRepository.signUp(
@@ -109,11 +109,7 @@ void main() {
         ),
         expect: () => [
           isA<AuthLoading>(),
-          isA<AuthAuthenticated>().having(
-            (s) => s.user.name,
-            'user name',
-            'Test User',
-          ),
+          isA<OtpSent>().having((s) => s.email, 'email', 'test@example.com'),
         ],
         verify: (_) {
           verify(
@@ -178,7 +174,7 @@ void main() {
             password: 'password123',
           ),
         ),
-        expect: () => [isA<AuthLoading>(), isA<AuthAuthenticated>()],
+        expect: () => [isA<AuthLoading>(), isA<OtpSent>()],
       );
     });
 
