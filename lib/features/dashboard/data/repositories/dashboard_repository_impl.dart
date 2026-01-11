@@ -510,4 +510,40 @@ class DashboardRepositoryImpl implements DashboardRepository {
       print('Warning: Failed to sync tips from remote (using cached): $e');
     }
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> getTips({
+    String? category,
+    String? targetAudience,
+    int? currentWeek,
+    int? currentMonth,
+    bool isPostpartum = false,
+    int? postpartumWeek,
+    int limit = 50,
+  }) async {
+    return await _localDataSource.getTips(
+      category: category,
+      targetAudience: targetAudience,
+      currentWeek: currentWeek,
+      currentMonth: currentMonth,
+      isPostpartum: isPostpartum,
+      postpartumWeek: postpartumWeek,
+      limit: limit,
+    );
+  }
+
+  @override
+  Future<List<String>> getSavedTipIds(String userId) async {
+    return await _localDataSource.getSavedTipIds(userId);
+  }
+
+  @override
+  Future<void> saveTipForUser(String userId, String tipId) async {
+    return await _localDataSource.saveTipForUser(userId, tipId);
+  }
+
+  @override
+  Future<void> removeSavedTipForUser(String userId, String tipId) async {
+    return await _localDataSource.removeSavedTipForUser(userId, tipId);
+  }
 }

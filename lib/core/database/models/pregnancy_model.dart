@@ -7,6 +7,8 @@ class PregnancyModel {
   final String? currentTrimester;
   final bool isActive;
   final String?  medicalConditions;
+  final bool isFirstPregnancy;
+  final bool isHighRisk;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -19,6 +21,8 @@ class PregnancyModel {
     this. currentTrimester,
     this.isActive = true,
     this.medicalConditions,
+    this.isFirstPregnancy = false,
+    this.isHighRisk = false,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -33,6 +37,8 @@ class PregnancyModel {
       'current_trimester': currentTrimester,
       'is_active': isActive ? 1 : 0,
       'medical_conditions': medicalConditions,
+      'is_first_pregnancy': isFirstPregnancy ? 1 : 0,
+      'is_high_risk': isHighRisk ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -46,8 +52,10 @@ class PregnancyModel {
       dueDate: DateTime.parse(map['due_date'] as String),
       currentWeek: map['current_week'] as int?,
       currentTrimester: map['current_trimester'] as String?,
-      isActive: (map['is_active'] as int) == 1,
+      isActive: (map['is_active'] as int? ?? 1) == 1,
       medicalConditions: map['medical_conditions'] as String?,
+      isFirstPregnancy: (map['is_first_pregnancy'] as int? ?? 0) == 1,
+      isHighRisk: (map['is_high_risk'] as int? ?? 0) == 1,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
     );

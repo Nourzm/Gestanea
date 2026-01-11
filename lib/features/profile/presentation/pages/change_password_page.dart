@@ -68,6 +68,7 @@ class _NeumorphicPasswordFieldState extends State<NeumorphicPasswordField> {
           const SizedBox(height: 6),
           TextFormField(
             controller: widget.controller,
+            textAlignVertical: TextAlignVertical.center,
             obscureText: _obscureText,
             validator: widget.validator,
             style: const TextStyle(
@@ -76,6 +77,7 @@ class _NeumorphicPasswordFieldState extends State<NeumorphicPasswordField> {
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
+              border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
               isDense: true,
               errorText: null,

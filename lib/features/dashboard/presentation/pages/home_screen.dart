@@ -9,7 +9,7 @@ import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/pregnancy_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_overview_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
@@ -158,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     // Our Tips Card
-                    Expanded(child: ClickableTipsCard(targetPage: Tips())),
+                    Expanded(child: ClickableTipsCard(targetPage: const TipsOverviewPage())),
 
                     SizedBox(width: screenWidth * 0.04),
 

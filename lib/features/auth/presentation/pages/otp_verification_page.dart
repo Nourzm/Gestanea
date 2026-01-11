@@ -121,7 +121,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthAuthenticated) {
-              Navigator.pushReplacementNamed(context, AppRoutes.personalize);
+              Navigator.pushReplacementNamed(context, AppRoutes.onboardingCommonInfo);
             } else if (state is AuthFailure) {
               final message = state.message.replaceAll('Exception: ', '');
               

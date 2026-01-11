@@ -12,10 +12,9 @@ import 'package:gestanea/features/babyTracking/logic/repositories/baby_repositor
 import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_overview_page.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart'
     show DoctorsScreen;
-import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
-    as tips;
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:intl/intl.dart';
 import 'package:gestanea/features/babyTracking/presentation/pages/postpartum_track_page.dart';
@@ -387,7 +386,9 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const tips.Tips()),
+                          MaterialPageRoute(
+                            builder: (_) => const TipsOverviewPage(),
+                          ),
                         );
                       },
                       child: _buildInfoCard(
