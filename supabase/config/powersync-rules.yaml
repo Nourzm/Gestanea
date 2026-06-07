@@ -1,0 +1,63 @@
+# PowerSync sync rules for Gestanéa.
+#
+# Upload these to your PowerSync instance (Dashboard → Manage instance →
+# Sync rules) OR commit them as `sync-rules.yaml` if you self-host.
+#
+# Pattern:
+#   - by_user        — rows that belong to the signed-in user only.
+#   - by_baby        — rows scoped through a baby they own (cascade).
+#   - global_catalog — public read-only content (tips, doctors, etc.).
+#
+# The `where` clauses MUST match the Supabase RLS policies in
+# supabase/migrations/20260607000000_init_schema.sql so PowerSync never
+# sends rows the user can't legally read.
+
+bucket_definitions:
+  by_user:
+    parameters: select request.user_id() as user_id
+    data:
+      - select * from users           where id      = bucket.user_id
+      - select * from pregnancies     where user_id = bucket.user_id
+      - select * from kick_counts     where user_id = bucket.user_id
+      - select * from babies          where user_id = bucket.user_id
+      - select * from vitals          where user_id = bucket.user_id
+      - select * from measurements    where user_id = bucket.user_id
+      - select * from symptoms        where user_id = bucket.user_id
+      - select * from moods           where user_id = bucket.user_id
+      - select * from lab_results     where user_id = bucket.user_id
+      - select * from risk_alerts     where user_id = bucket.user_id
+      - select * from appointments    where user_id = bucket.user_id
+      - select * from medicines       where user_id = bucket.user_id
+      - select * from medicine_logged where user_id = bucket.user_id
+      - select * from reminders       where user_id = bucket.user_id
+      - select * from user_saved_tips where user_id = bucket.user_id
+      - select * from product_reviews where user_id = bucket.user_id
+      - select * from cart_items      where user_id = bucket.user_id
+      - select * from orders          where user_id = bucket.user_id
+
+  by_baby:
+    parameters: |
+      select b.id as baby_id
+      from babies b
+      where b.user_id = request.user_id()
+    data:
+      - select * from baby_growth  where baby_id = bucket.baby_id
+      - select * from milestones   where baby_id = bucket.baby_id
+      - select * from feeding_logs where baby_id = bucket.baby_id
+
+  by_order:
+    parameters: |
+      select o.id as order_id
+      from orders o
+      where o.user_id = request.user_id()
+    data:
+      - select * from order_items where order_id = bucket.order_id
+
+  global_catalog:
+    data:
+      - select * from tips               where is_active = 1
+      - select * from doctors
+      - select * from product_categories
+      - select * from products           where is_available = 1
+      - select * from product_variants
+      - select * from product_specs

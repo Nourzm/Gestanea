@@ -1,6 +1,7 @@
 import 'package:gestanea/core/database/models/user_model.dart';
 import 'package:gestanea/core/services/supabase_service.dart';
 import 'package:gestanea/core/session/session_manager.dart';
+import 'package:gestanea/core/sync/powersync_service.dart';
 import 'package:gestanea/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:gestanea/features/auth/data/models/auth_repo.dart';
 import 'package:gestanea/features/auth/data/models/user_entity.dart';
@@ -49,6 +50,9 @@ class AuthRepositoryImpl implements AuthRepository {
         phoneOverride: phone,
       );
       await sessionManager.saveCurrentUserId(model.id);
+      // Kick off PowerSync as soon as we have a session.
+      // ignore: unawaited_futures
+      PowerSyncService.instance.connect();
       return UserEntity.fromModel(model);
     }
 
@@ -92,6 +96,8 @@ class AuthRepositoryImpl implements AuthRepository {
       if (user == null) throw Exception('Invalid credentials');
       final model = await _upsertLocalUserFrom(user);
       await sessionManager.saveCurrentUserId(model.id);
+      // ignore: unawaited_futures
+      PowerSyncService.instance.connect();
       return UserEntity.fromModel(model);
     }
 
@@ -127,6 +133,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (_online) {
       await _supabase.auth.signOut();
     }
+    await PowerSyncService.instance.disconnect();
     await sessionManager.clearSession();
   }
 
