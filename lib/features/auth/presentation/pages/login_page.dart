@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
-import 'package:gestanea/core/widgets/custom_button.dart';
-import 'package:gestanea/core/widgets/neumorphic_button.dart';
+import 'package:gestanea/core/widgets/gradient_pill_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
@@ -221,17 +220,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 BlocBuilder<AuthBloc, AuthState>(
                                   builder: (context, state) {
                                     final isLoading = state is AuthLoading;
-                                    if (isLoading) {
-                                      return const SizedBox(
-                                        height: 48,
-                                        child: Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      );
-                                    }
-                                    return NeumorphicButton(
-                                      text: t.login,
-                                      onPressed: _onLoginPressed,
+                                    return GradientPillButton(
+                                      label: t.login,
+                                      isLoading: isLoading,
+                                      onPressed:
+                                          isLoading ? null : _onLoginPressed,
                                     );
                                   },
                                 ),

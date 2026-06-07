@@ -4,25 +4,32 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class SubHeader extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool showBackButton;
+  final VoidCallback? onBackPressed;
 
-  const SubHeader({super.key, required this.title});
+  const SubHeader({
+    super.key,
+    required this.title,
+    this.showBackButton = true,
+    this.onBackPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.bg_1,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: AppColors.main500,
-          size: 24, // change size
-        ),
-        onPressed: () {
-          Navigator.pop(context); // back action
-        },
-      ),
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.main500,
+                size: 24,
+              ),
+              onPressed: onBackPressed ?? () => Navigator.pop(context),
+            )
+          : null,
       title: Text(
-        'Languages',
+        title,
         style: AppTextStyles.headline1.copyWith(
           color: AppColors.main500,
           fontSize: 32,

@@ -1,187 +1,333 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/category_card.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/tipFinal_card.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
-class Tips extends StatelessWidget {
+/// Tips list page. Replaces the previous stub that mis-used a marketplace
+/// widget. Matches Figma frame 102:247.
+class Tips extends StatefulWidget {
   const Tips({super.key});
 
   @override
+  State<Tips> createState() => _TipsState();
+}
+
+class _TipsState extends State<Tips> {
+  final TextEditingController _searchController = TextEditingController();
+
+  static const _categories = <_TipCategory>[
+    _TipCategory('Wellness', Icons.spa_outlined),
+    _TipCategory('Nutrition', Icons.restaurant_outlined),
+    _TipCategory('Exercise', Icons.fitness_center_outlined),
+    _TipCategory('Sleep', Icons.bedtime_outlined),
+    _TipCategory('Mind', Icons.self_improvement_outlined),
+  ];
+
+  static const _tips = <_TipItem>[
+    _TipItem(
+      title: 'Eating for Two',
+      summary: 'Essential nutrients and meal planning for a healthy pregnancy',
+      readMinutes: 5,
+      featured: true,
+    ),
+    _TipItem(
+      title: 'Gentle Prenatal Stretches',
+      summary: 'Low-impact moves to ease back pain and stay flexible',
+      readMinutes: 4,
+    ),
+    _TipItem(
+      title: 'Sleep Better While Pregnant',
+      summary: 'Pillow tricks and positions that actually work',
+      readMinutes: 6,
+    ),
+    _TipItem(
+      title: 'Managing Morning Sickness',
+      summary: 'What helps, what doesn’t, and when to see a doctor',
+      readMinutes: 3,
+    ),
+  ];
+
+  int _selectedCategory = 0;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController = TextEditingController();
+    final screenWidth = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context)!;
 
-    // final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppColors.bg_1,
       appBar: AppBar(
         backgroundColor: AppColors.bg_1,
+        elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.main500,
-            size: 24, // change size
-          ),
-          onPressed: () {
-            Navigator.pop(context); // back action
-          },
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.main500, size: 22),
+          onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
+        title: const Text(
           'Tips',
-          style: AppTextStyles.headline1.copyWith(
+          style: TextStyle(
             color: AppColors.main500,
-            fontSize: 32,
+            fontSize: 28,
             fontFamily: 'Lato',
-            letterSpacing: -0.40,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
           ),
-          textAlign: TextAlign.center,
         ),
         centerTitle: true,
-        elevation: 0,
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: AppColors.shadow1,
+            ),
+            child: const Icon(Icons.notifications_outlined,
+                color: AppColors.main500, size: 20),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          color: AppColors.bg_1,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            searchBar(
+              controller: _searchController,
+              hintText: l10n.searchHint,
+              onSearchTapped: () {},
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 78,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (context, i) {
+                  final cat = _categories[i];
+                  final selected = _selectedCategory == i;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedCategory = i),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: selected
+                                ? const LinearGradient(
+                                    colors: [
+                                      AppColors.main500,
+                                      AppColors.main600,
+                                    ],
+                                  )
+                                : null,
+                            color: selected ? null : Colors.white,
+                            boxShadow: AppColors.shadow1,
+                          ),
+                          child: Icon(
+                            cat.icon,
+                            color: selected
+                                ? Colors.white
+                                : AppColors.main500,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          cat.label,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: selected
+                                ? AppColors.main600
+                                : Colors.black54,
+                            fontWeight: selected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            for (final tip in _tips)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: tip.featured
+                    ? _FeaturedTipCard(tip: tip)
+                    : _TipListCard(tip: tip),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TipCategory {
+  const _TipCategory(this.label, this.icon);
+  final String label;
+  final IconData icon;
+}
+
+class _TipItem {
+  const _TipItem({
+    required this.title,
+    required this.summary,
+    required this.readMinutes,
+    this.featured = false,
+  });
+  final String title;
+  final String summary;
+  final int readMinutes;
+  final bool featured;
+}
+
+class _FeaturedTipCard extends StatelessWidget {
+  const _FeaturedTipCard({required this.tip});
+  final _TipItem tip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAECFF),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.shadow1,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 120,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.main300, AppColors.main500],
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(Icons.restaurant_outlined,
+                color: Colors.white, size: 36),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(14),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                searchBar(
-                  controller: searchController,
-                  hintText: l10n.searchHint,
-                  onSearchTapped: () {
-                    // Handle search tap
-                  },
+                Text(
+                  tip.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xFF1C2229),
+                  ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 6),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
+                    Expanded(
+                      child: Text(
+                        tip.summary,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF4C4C4C),
+                          height: 1.4,
+                        ),
+                      ),
                     ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_forward_ios,
+                        color: AppColors.main500, size: 16),
                   ],
                 ),
-                SizedBox(height: 10),
-
-                ProductCardToggle(initialExpanded: true),
-                ProductCardToggle(),
-                ProductCardToggle(),
-
-                // Container(
-                //   width: double.infinity,
-                //   decoration: BoxDecoration(
-                //     color: const Color(0xFFFAECFF),
-                //     borderRadius: BorderRadius.circular(16),
-                //     boxShadow: AppColors.shadow1,
-                //   ),
-                //   child: Column(
-                //     children: [
-                //       Container(
-                //         width: 321,
-                //         height: 100,
-                //         clipBehavior: Clip.antiAlias,
-                //         decoration: ShapeDecoration(
-                //           color: const Color(0xFFE8E9EA),
-                //           shape: RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(12),
-                //           ),
-                //         ),
-                //       ),
-                //       Container(
-                //         width: 321,
-                //         height: 23,
-                //         child: Stack(
-                //           children: [
-                //             Container(
-                //               width: 185,
-                //               child: Column(
-                //                 mainAxisSize: MainAxisSize.min,
-                //                 mainAxisAlignment: MainAxisAlignment.start,
-                //                 crossAxisAlignment: CrossAxisAlignment.start,
-                //                 spacing: 4,
-                //                 children: [
-                //                   Container(
-                //                     width: double.infinity,
-                //                     height: 44,
-                //                     child: Column(
-                //                       mainAxisSize: MainAxisSize.min,
-                //                       mainAxisAlignment: MainAxisAlignment.start,
-                //                       crossAxisAlignment:
-                //                           CrossAxisAlignment.start,
-                //                       children: [
-                //                         SizedBox(
-                //                           width: 185,
-                //                           height: 44,
-                //                           child: Text(
-                //                             'Pregnancy Pillow',
-                //                             style: TextStyle(
-                //                               color: const Color(0xFF1C2229),
-                //                               fontSize: 16,
-                //                               fontFamily: 'Lato',
-                //                               fontWeight: FontWeight.w700,
-                //                               height: 1.38,
-                //                               letterSpacing: -0.18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                   Container(width: double.infinity, height: 17),
-                //                 ],
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         width: 268,
-                //         child: Text(
-                //           'Essential nutrients and meal planning for \na healthy pregnancy',
-                //           style: TextStyle(
-                //             color: const Color(0xFF4C4C4C),
-                //             fontSize: 12,
-                //             fontFamily: 'Lato',
-                //             fontWeight: FontWeight.w500,
-                //             height: 1.67,
-                //           ),
-                //         ),
-                //       ),
-                //       Container(
-                //         transform: Matrix4.identity()
-                //           ..translate(0.0, 0.0)
-                //           ..rotateZ(-3.14),
-                //         width: 27,
-                //         height: 27,
-                //         clipBehavior: Clip.antiAlias,
-                //         decoration: BoxDecoration(),
-                //         child: Stack(),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TipListCard extends StatelessWidget {
+  const _TipListCard({required this.tip});
+  final _TipItem tip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAECFF),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.shadow1,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8E9EA),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(Icons.lightbulb_outline,
+                color: AppColors.main500),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tip.title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1C2229),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  tip.summary,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF4C4C4C),
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '${tip.readMinutes} min read',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.main500,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

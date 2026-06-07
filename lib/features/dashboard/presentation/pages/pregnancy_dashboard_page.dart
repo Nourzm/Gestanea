@@ -4,7 +4,9 @@ import '../widgets/week_progress_card.dart';
 import '../widgets/upcoming_reminders_widget.dart';
 import '../widgets/health_alerts_widget.dart';
 import '../providers/dashboard_provider.dart';
-import 'package:gestanea/core/constants/app_routes.dart'; 
+import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
+    as tips;
 
 class PregnancyDashboardPage extends StatefulWidget {
   const PregnancyDashboardPage({super.key});
@@ -115,32 +117,24 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                   children: [
                     Expanded(
                       child: _buildActionCard(
-                        'Find Doctor',
-                        'Search nearby',
+                        'Our Tips',
+                        'follow best practices',
                         const Color(0xFF9B7FDB),
-                        Icons.medical_services_outlined,
-        () {
-          // ✅ Navigate to actual doctors screen instead of placeholder
-          Navigator.pushNamed(context, AppRoutes.doctors);
-        },
+                        Icons.lightbulb_outline,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const tips.Tips()),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildActionCard(
-                        'Read Tips',
-                        'Daily advice',
+                        'Our Doctors',
+                        'find the best doctor',
                         const Color(0xFFD4B5E8),
-                        Icons.lightbulb_outline,
-                        () {
-                          // TODO: Team will implement - Navigate to tips
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => _PlaceholderPage(title: 'Read Tips'),
-                            ),
-                          );
-                        },
+                        Icons.medical_services_outlined,
+                        () => Navigator.pushNamed(context, AppRoutes.doctors),
                       ),
                     ),
                   ],
@@ -274,37 +268,3 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
   }
 }
 
-// Placeholder page for team to implement
-class _PlaceholderPage extends StatelessWidget {
-  final String title;
-
-  const _PlaceholderPage({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: const Color(0xFF9B7FDB),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.construction, size: 80, color: Colors.grey),
-            const SizedBox(height: 20),
-            Text(
-              '$title Page',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'To be implemented by team',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

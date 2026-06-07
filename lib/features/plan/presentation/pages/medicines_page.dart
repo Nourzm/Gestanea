@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/widgets/Sub_Header.dart';
+import 'package:gestanea/core/widgets/subheader.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/features/plan/presentation/widgets/medicine_card.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';

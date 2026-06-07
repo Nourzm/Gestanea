@@ -1,6 +1,7 @@
 // lib/features/pregnancy/presentation/pages/week_tracker_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancy/data/repositories/pregnancy_repository.dart';
@@ -45,19 +46,19 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
     super.dispose();
   }
 
-  int _getUserId() {
+  String _getUserId() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      return int.tryParse(authState.user.id) ?? 0;
+      return authState.user.id;
     }
-    return 0;
+    return '';
   }
 
   Future<void> _loadPregnancyData() async {
     final userId = _getUserId();
-    if (userId > 0) {
+    if (userId.isNotEmpty) {
       try {
-        final data = await _repository.getPregnancyInfo(userId);
+        final data = await _repository.getPregnancyInfoByStringId(userId);
         if (mounted) {
           setState(() {
             selectedWeek = data['currentWeek'] ?? 1;
@@ -94,6 +95,124 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
     final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return '${months[dueDate!.month - 1]} ${dueDate!.day.toString().padLeft(2, '0')}, ${dueDate!.year}';
+  }
+
+  // Weight/length estimates per gestational week. Approximate ACOG-style
+  // ranges — surfaced as a quick reference, not a medical claim.
+  static const Map<int, (String weight, String length)> _fetalMetrics = {
+    4: ('< 1 g', '0.4 cm'),
+    8: ('1 g', '1.6 cm'),
+    12: ('14 g', '5.4 cm'),
+    16: ('100 g', '11.6 cm'),
+    20: ('300 g', '25.6 cm'),
+    24: ('600 g', '30 cm'),
+    28: ('1.0 kg', '37.6 cm'),
+    32: ('1.7 kg', '42.4 cm'),
+    36: ('2.6 kg', '47.4 cm'),
+    40: ('3.5 kg', '51.2 cm'),
+  };
+
+  (String, String) _metricsFor(int week) {
+    final keys = _fetalMetrics.keys.toList()..sort();
+    int closest = keys.first;
+    for (final k in keys) {
+      if ((k - week).abs() < (closest - week).abs()) closest = k;
+    }
+    return _fetalMetrics[closest]!;
+  }
+
+  Widget _buildWeightLengthRow() {
+    final m = _metricsFor(selectedWeek);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _metricColumn('Weight', m.$1, CrossAxisAlignment.start),
+        _metricColumn('Length', m.$2, CrossAxisAlignment.end),
+      ],
+    );
+  }
+
+  Widget _metricColumn(String label, String value, CrossAxisAlignment align) {
+    return Column(
+      crossAxisAlignment: align,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.main600,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppColors.main500,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeekPills() {
+    final weeks = List.generate(5, (i) => selectedWeek - 2 + i)
+        .where((w) => w >= 1 && w <= 42)
+        .toList();
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final w in weeks) ...[
+              _weekPill(w, w == selectedWeek),
+              const SizedBox(width: 10),
+            ],
+          ],
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Current Week',
+          style: TextStyle(
+            color: AppColors.main600,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _weekPill(int week, bool isCurrent) {
+    return GestureDetector(
+      onTap: () => setState(() => selectedWeek = week),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: isCurrent
+              ? const LinearGradient(
+                  colors: [AppColors.main500, AppColors.main600],
+                )
+              : null,
+          color: isCurrent ? null : Colors.white,
+          border: isCurrent
+              ? null
+              : Border.all(color: AppColors.main300, width: 1.5),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          '$week',
+          style: TextStyle(
+            color: isCurrent ? Colors.white : AppColors.main600,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildWeekInfoCard() {
@@ -244,7 +363,11 @@ class _WeekTrackerPageState extends State<WeekTrackerPage> with RouteAware {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildWeightLengthRow(),
+              const SizedBox(height: 12),
               FetalVisualizationWidget(week: selectedWeek),
+              const SizedBox(height: 16),
+              _buildWeekPills(),
               const SizedBox(height: 24),
 
               // Display current week info (read-only, auto-calculated)

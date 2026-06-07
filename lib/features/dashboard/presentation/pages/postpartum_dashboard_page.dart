@@ -16,6 +16,7 @@ import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart'
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
     as tips;
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
+import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:intl/intl.dart';
 import 'postpartum_track_page.dart';
 
@@ -115,13 +116,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   void _navigateToPlanPage() {
-    // Navigate to Plan tab (index 3 in bottom nav) - this will be handled by parent
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Go to Plan tab to see all appointments and medicines'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    Navigator.pushNamed(context, AppRoutes.plan);
   }
 
   @override

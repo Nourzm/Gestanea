@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-import 'package:gestanea/core/constants/app_text_styles.dart';
 
+/// Legacy name preserved for backward compatibility — under the hood this now
+/// renders the flat purple-gradient pill from the Gestanéa design system, so
+/// every screen that referenced `NeumorphicButton` automatically picks up the
+/// new style without rewriting callsites.
 class NeumorphicButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
-
-  final dynamic prefixIcon; // IconData or SVG path
-  final dynamic suffixIcon; // IconData or SVG path
-
+  final dynamic prefixIcon; // IconData or SVG asset path
+  final dynamic suffixIcon; // IconData or SVG asset path
   final Color? color;
   final double? minHeight;
   final double? maxWidth;
@@ -25,21 +26,16 @@ class NeumorphicButton extends StatelessWidget {
     this.maxWidth,
   });
 
-  Widget? _buildIcon(dynamic icon, Color color) {
+  Widget? _renderIcon(dynamic icon) {
     if (icon == null) return null;
-
     if (icon is IconData) {
-      return Row(
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          SizedBox(width: 10),
-        ],
-      );
-    } else if (icon is String) {
+      return Icon(icon, color: Colors.white, size: 20);
+    }
+    if (icon is String) {
       return SvgPicture.asset(
         icon,
         width: 18,
-        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
       );
     }
     return null;
@@ -48,64 +44,64 @@ class NeumorphicButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final buttonHeight = minHeight ?? size.height * 0.08;
+    final height = minHeight ?? 56.0;
+    final prefix = _renderIcon(prefixIcon);
+    final suffix = _renderIcon(suffixIcon);
 
-    final verticalPadding = size.height * 0.012;
-    final horizontalPadding = size.width * 0.04;
+    final gradient = color == null
+        ? const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.main500, AppColors.main600],
+          )
+        : LinearGradient(colors: [color!, color!]);
 
-    final prefix = _buildIcon(prefixIcon, Colors.white);
-    final suffix = _buildIcon(suffixIcon, Colors.white);
-
-    return GestureDetector(
-      onTap: onPressed,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: maxWidth ?? size.width,
+        minHeight: height,
+      ),
       child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? double.infinity,
-          minHeight: buttonHeight,
-        ),
+        height: height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          gradient: color == null
-              ? AppColors.onboarding
-              : LinearGradient(colors: [?color, ?color]),
+          borderRadius: BorderRadius.circular(height / 2),
+          gradient: gradient,
           boxShadow: const [
             BoxShadow(
-              color: Color.fromARGB(100, 0, 0, 0),
+              color: Color(0x40000000),
               blurRadius: 10,
-              offset: Offset(5, 5),
+              offset: Offset(0, 4),
             ),
           ],
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: verticalPadding,
-            horizontal: horizontalPadding,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(width: 10),
-              Row(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(height / 2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  prefix ?? const SizedBox(width: 20, height: 20),
-
-                  Text(
-                    text,
-                    style: AppTextStyles.headline2.copyWith(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  if (prefix != null) ...[prefix, const SizedBox(width: 10)],
+                  Flexible(
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
+                  if (suffix != null) ...[const SizedBox(width: 10), suffix],
                 ],
               ),
-
-              suffix ?? const SizedBox(width: 20, height: 20),
-            ],
+            ),
           ),
         ),
       ),
