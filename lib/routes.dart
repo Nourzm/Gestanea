@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/features/auth/presentation/pages/auth_page.dart';
 import 'package:gestanea/features/auth/presentation/pages/personalize_1.dart';
+import 'package:gestanea/features/auth/presentation/pages/personalize_2.dart';
+import 'package:gestanea/features/auth/presentation/pages/personalize_3.dart';
 import 'package:gestanea/features/auth/presentation/pages/login_page.dart';
 import 'package:gestanea/features/auth/presentation/pages/signup_page.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -23,6 +25,8 @@ Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.auth: (context) => const AuthPage(),
   AppRoutes.personalize: (context) => const Personalize1(),
+  AppRoutes.personalizeWeeks: (context) => const Personalize2(),
+  AppRoutes.personalizeBaby: (context) => const Personalize3(),
   AppRoutes.track: (context) => const WeekTrackerPage(),
 
   AppRoutes.signup: (context) => const SignupScreen(),

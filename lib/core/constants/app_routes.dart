@@ -3,6 +3,8 @@ class AppRoutes {
   static const String login = '/login';
   static const String auth = '/auth';
   static const String personalize = '/personalize';
+  static const String personalizeWeeks = '/personalize/weeks';
+  static const String personalizeBaby = '/personalize/baby';
   static const String track = '/track';
   static const String signup = '/signup';
   static const String onboarding = '/onboarding';

@@ -43,7 +43,10 @@ class PregnancySelectionScreen extends StatelessWidget {
               'Track your pregnancy journey, get weekly insights, and prepare for your baby',
           icon: "assets/icons/babyy.svg",
           onTap: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            Navigator.pushReplacementNamed(
+              context,
+              AppRoutes.personalizeWeeks,
+            );
           },
         ),
         const SizedBox(height: 20),
@@ -59,7 +62,10 @@ class PregnancySelectionScreen extends StatelessWidget {
               'Postpartum care, baby development tracking, and parenting support',
           icon: "assets/icons/health.svg",
           onTap: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            Navigator.pushReplacementNamed(
+              context,
+              AppRoutes.personalizeBaby,
+            );
           },
         ),
 
