@@ -56,6 +56,18 @@ class AuthLocalDataSource {
     });
   }
 
+  /// Insert (or replace) a user row WITHOUT touching auth_credentials.
+  /// Used when Supabase Auth is the source of truth and the local row is
+  /// just a profile cache.
+  Future<void> createUserMirror(UserModel user) async {
+    final db = await _db;
+    await db.insert(
+      'users',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   Future<UserModel?> getUserByEmail(String email) async {
     final db = await _db;
     final maps = await db.query(
