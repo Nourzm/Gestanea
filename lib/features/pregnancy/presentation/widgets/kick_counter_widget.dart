@@ -18,12 +18,12 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
   DateTime? _startTime;
   final PregnancyRepository _repository = PregnancyRepository();
 
-  int _getUserId() {
+  String _getUserId() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      return int.tryParse(authState.user.id) ?? 0;
+      return authState.user.id;
     }
-    return 0;
+    return '';
   }
 
   void _startTracking() {
@@ -44,10 +44,10 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
     if (_startTime != null && kickCount > 0) {
       final duration = DateTime.now().difference(_startTime!).inMinutes;
       final userId = _getUserId();
-      
-      if (userId > 0) {
+
+      if (userId.isNotEmpty) {
         try {
-          await _repository.saveKickSession(
+          await _repository.saveKickSessionByStringId(
             userId,
             kickCount,
             duration > 0 ? duration : 1, // At least 1 minute

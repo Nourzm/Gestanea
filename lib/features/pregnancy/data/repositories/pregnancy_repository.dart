@@ -9,6 +9,15 @@ abstract class IPregnancyRepository {
   Future<void> deactivatePregnancy(int userId);
   Future<List<KickCountModel>> getKickHistory(int userId, {int? limit});
   Future<void> saveKickSession(int userId, int kickCount, int durationMinutes, String? notes);
+
+  // String-id overloads for UUID user ids (the actual schema).
+  Future<Map<String, dynamic>> getPregnancyInfoByStringId(String userId);
+  Future<void> saveKickSessionByStringId(
+    String userId,
+    int kickCount,
+    int durationMinutes,
+    String? notes,
+  );
 }
 
 class PregnancyRepository implements IPregnancyRepository {
@@ -46,6 +55,31 @@ class PregnancyRepository implements IPregnancyRepository {
     final kickSession = KickCountModel(
       id: now.millisecondsSinceEpoch.toString(),
       userId: userId.toString(),
+      kickCount: kickCount,
+      durationMinutes: durationMinutes,
+      recordedAt: now,
+      notes: notes,
+      createdAt: now,
+    );
+    await _dataSource.saveKickSession(kickSession);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPregnancyInfoByStringId(String userId) async {
+    return await _dataSource.calculatePregnancyWeekByStringId(userId);
+  }
+
+  @override
+  Future<void> saveKickSessionByStringId(
+    String userId,
+    int kickCount,
+    int durationMinutes,
+    String? notes,
+  ) async {
+    final now = DateTime.now();
+    final kickSession = KickCountModel(
+      id: now.millisecondsSinceEpoch.toString(),
+      userId: userId,
       kickCount: kickCount,
       durationMinutes: durationMinutes,
       recordedAt: now,

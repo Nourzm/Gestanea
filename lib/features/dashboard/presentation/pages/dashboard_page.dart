@@ -69,9 +69,9 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   void _refreshDashboard() {
-    final userIdInt = int.tryParse(_userId ?? '0') ?? 0;
-    if (userIdInt > 0 && _dashboardCubit != null) {
-      _dashboardCubit!.loadDashboard(userIdInt);
+    final id = _userId;
+    if (id != null && id.isNotEmpty && _dashboardCubit != null) {
+      _dashboardCubit!.loadDashboardByStringId(id);
     }
   }
 
@@ -101,10 +101,9 @@ class _DashboardPageState extends State<DashboardPage>
           create: (context) {
             final cubit = DashboardCubit();
             _dashboardCubit = cubit;
-            // Load dashboard with user ID
-            final userIdInt = int.tryParse(_userId ?? '0') ?? 0;
-            if (userIdInt > 0) {
-              cubit.loadDashboard(userIdInt);
+            final id = _userId;
+            if (id != null && id.isNotEmpty) {
+              cubit.loadDashboardByStringId(id);
             }
             return cubit;
           },

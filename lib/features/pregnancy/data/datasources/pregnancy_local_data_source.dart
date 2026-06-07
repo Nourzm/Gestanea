@@ -13,6 +13,11 @@ abstract class PregnancyLocalDataSource {
   Future<KickCountModel?> getTodayKickSession(int userId);
   Future<void> saveKickSession(KickCountModel kickCount);
   Future<void> updateKickSession(KickCountModel kickCount);
+
+  // String-id overloads — user_id is stored as TEXT (UUID) in the schema, so
+  // these are the variants that actually match real rows.
+  Future<PregnancyModel?> getActivePregnancyByStringId(String userId);
+  Future<Map<String, dynamic>> calculatePregnancyWeekByStringId(String userId);
 }
 
 class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
@@ -161,5 +166,60 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
       where: 'id = ?',
       whereArgs: [kickCount.id],
     );
+  }
+
+  @override
+  Future<PregnancyModel?> getActivePregnancyByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'pregnancies',
+      where: 'user_id = ? AND is_active = 1',
+      whereArgs: [userId],
+      limit: 1,
+    );
+    if (result.isEmpty) return null;
+    return PregnancyModel.fromMap(result.first);
+  }
+
+  @override
+  Future<Map<String, dynamic>> calculatePregnancyWeekByStringId(
+    String userId,
+  ) async {
+    final pregnancy = await getActivePregnancyByStringId(userId);
+    if (pregnancy == null) {
+      return {
+        'currentWeek': 0,
+        'currentDay': 0,
+        'trimester': 'N/A',
+        'daysLeft': 0,
+        'dueDate': null,
+        'progressPercentage': 0.0,
+      };
+    }
+    final lmpDate = pregnancy.lmpDate;
+    final now = DateTime.now();
+    final daysSinceLmp = now.difference(lmpDate).inDays;
+    final currentWeek = (daysSinceLmp ~/ 7) + 1;
+    final currentDay = daysSinceLmp % 7;
+    final String trimester;
+    if (currentWeek <= 12) {
+      trimester = '1st Trimester';
+    } else if (currentWeek <= 27) {
+      trimester = '2nd Trimester';
+    } else {
+      trimester = '3rd Trimester';
+    }
+    int daysLeft = 280 - daysSinceLmp;
+    if (daysLeft < 0) daysLeft = 0;
+    double progressPercentage = (daysSinceLmp / 280) * 100;
+    if (progressPercentage > 100) progressPercentage = 100;
+    return {
+      'currentWeek': currentWeek,
+      'currentDay': currentDay,
+      'trimester': trimester,
+      'daysLeft': daysLeft,
+      'dueDate': pregnancy.dueDate,
+      'progressPercentage': progressPercentage,
+    };
   }
 }
