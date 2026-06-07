@@ -47,6 +47,10 @@ lib/.dart_tool/flutter_gen/
 .env.local
 .env.*.local
 
+# Per-developer secrets (Supabase anon key, PowerSync URL).
+# Copy env.example.json to env.json and fill in your own values.
+env.json
+
 # Local storage
 *.db
 *.sqlite
