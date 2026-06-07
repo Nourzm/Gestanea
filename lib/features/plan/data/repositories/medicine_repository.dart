@@ -1,6 +1,7 @@
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/core/database/models/medicine_logged_model.dart';
 import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/core/services/notifications_service.dart';
 
 class ReturnResult {
   final bool state;
@@ -16,6 +17,7 @@ abstract class MedicineRepository {
     String userId,
     DateTime date,
   );
+  // (No interface change — notifications are an internal side-effect of insert.)
   Future<ReturnResult> insertMedicine(MedicineModel medicine);
   Future<ReturnResult> updateMedicine(MedicineModel medicine);
   Future<ReturnResult> deleteMedicine(String id);
@@ -117,11 +119,54 @@ class MedicineDB extends MedicineRepository {
       final dbHelper = DatabaseHelper.instance;
       final db = await dbHelper.database;
       await db.insert('medicines', medicine.toMap());
-
+      await _scheduleNotificationsFor(medicine);
       return ReturnResult(state: true, message: 'Medicine added successfully');
     } catch (e) {
       return ReturnResult(state: false, message: 'Error adding medicine: $e');
     }
+  }
+
+  /// Schedule one local-notification per `scheduled_times` entry, anchored to
+  /// today (or `startDate` if it's in the future). The plugin's
+  /// `matchDateTimeComponents: time` makes it recur daily.
+  Future<void> _scheduleNotificationsFor(MedicineModel medicine) async {
+    final times = medicine.scheduledTimes;
+    if (times == null || times.isEmpty) return;
+    final now = DateTime.now();
+    final base = medicine.startDate.isAfter(now) ? medicine.startDate : now;
+    for (var i = 0; i < times.length; i++) {
+      final parsed = _parseTimeOfDay(times[i]);
+      if (parsed == null) continue;
+      final when = DateTime(
+        base.year,
+        base.month,
+        base.day,
+        parsed.hour,
+        parsed.minute,
+      );
+      // If today's time already passed, push to tomorrow.
+      final fireAt = when.isAfter(now) ? when : when.add(const Duration(days: 1));
+      try {
+        await NotificationsService.instance.scheduleMedicineReminder(
+          key: '${medicine.id}#$i',
+          medicineName: medicine.medicineName,
+          dose: medicine.dosage,
+          when: fireAt,
+        );
+      } catch (_) {
+        // Best-effort — never block a DB insert on notification failures.
+      }
+    }
+  }
+
+  ({int hour, int minute})? _parseTimeOfDay(String raw) {
+    final parts = raw.trim().split(':');
+    if (parts.length < 2) return null;
+    final h = int.tryParse(parts[0]);
+    final m = int.tryParse(parts[1].split(' ').first);
+    if (h == null || m == null) return null;
+    if (h < 0 || h > 23 || m < 0 || m > 59) return null;
+    return (hour: h, minute: m);
   }
 
   @override

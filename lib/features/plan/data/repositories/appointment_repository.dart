@@ -1,5 +1,6 @@
 import 'package:gestanea/core/database/models/appointment_model.dart';
 import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/core/services/notifications_service.dart';
 
 class ReturnResult {
   final bool state;
@@ -110,6 +111,24 @@ class AppointmentDB extends AppointmentRepository {
       final dbHelper = DatabaseHelper.instance;
       final db = await dbHelper.database;
       await db.insert('appointments', appointment.toMap());
+
+      // Fire-and-forget: schedule a heads-up 1 hour before the appointment.
+      final reminderAt =
+          appointment.appointmentDate.subtract(const Duration(hours: 1));
+      if (reminderAt.isAfter(DateTime.now())) {
+        try {
+          await NotificationsService.instance.scheduleAppointmentAlert(
+            key: 'appt-${appointment.id}',
+            title: 'Upcoming: ${appointment.title}',
+            body: appointment.doctorName == null
+                ? 'Starts in 1 hour'
+                : 'with ${appointment.doctorName} — starts in 1 hour',
+            when: reminderAt,
+          );
+        } catch (_) {
+          // Best-effort.
+        }
+      }
 
       return ReturnResult(
         state: true,
