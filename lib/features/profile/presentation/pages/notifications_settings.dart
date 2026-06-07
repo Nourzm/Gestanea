@@ -94,7 +94,7 @@ class _NotificationSwitchTileState extends State<NotificationSwitchTile> {
                 Text(
                   widget.subtitle,
                   style: TextStyle(
-                    color: AppColors.main400.withOpacity(0.8),
+                    color: AppColors.main400.withValues(alpha: 0.8),
                     fontSize: 13,
                   ),
                 ),
@@ -179,7 +179,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
               child: Text(
                 'Manage your notification preferences',
                 style: TextStyle(
-                  color: AppColors.main700.withOpacity(0.7),
+                  color: AppColors.main700.withValues(alpha: 0.7),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

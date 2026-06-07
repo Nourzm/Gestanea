@@ -74,7 +74,7 @@ class MedicineCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF000000).withOpacity(0.15),
+                      color: const Color(0xFF000000).withValues(alpha: 0.15),
                       blurRadius: 6,
                       offset: const Offset(3, 3),
                       spreadRadius: -2,
@@ -150,7 +150,7 @@ class MedicineCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: buttonColor.withOpacity(0.3),
+                              color: buttonColor.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -183,7 +183,7 @@ class MedicineCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.error1.withOpacity(0.4),
+                      color: AppColors.error1.withValues(alpha: 0.4),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),

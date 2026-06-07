@@ -274,7 +274,7 @@ class _Personalize2State extends State<Personalize2> {
               activeTrackColor: AppColors.main500,
               inactiveTrackColor: AppColors.main300,
               thumbColor: AppColors.main600,
-              overlayColor: AppColors.main500.withOpacity(0.2),
+              overlayColor: AppColors.main500.withValues(alpha: 0.2),
             ),
             child: Slider(
               min: 1,

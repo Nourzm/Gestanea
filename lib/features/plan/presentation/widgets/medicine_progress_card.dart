@@ -76,7 +76,7 @@ class MedicineProgressCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: AppColors.purpleGrey.withOpacity(0.3),
+              backgroundColor: AppColors.purpleGrey.withValues(alpha: 0.3),
               color: AppColors.main600,
               minHeight: 8,
             ),

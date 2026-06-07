@@ -92,7 +92,7 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.alerts.withOpacity(0.1),
+                        color: AppColors.alerts.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -210,7 +210,7 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(
                             color: _gender == 'girl'
-                                ? const Color(0xFFFFB6D9).withOpacity(0.2)
+                                ? const Color(0xFFFFB6D9).withValues(alpha: 0.2)
                                 : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -252,7 +252,7 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(
                             color: _gender == 'boy'
-                                ? const Color(0xFF87CEEB).withOpacity(0.2)
+                                ? const Color(0xFF87CEEB).withValues(alpha: 0.2)
                                 : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(

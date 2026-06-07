@@ -30,7 +30,7 @@ class WeekProgressCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFD4B5E8).withOpacity(0.3),
+            color: const Color(0xFFD4B5E8).withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

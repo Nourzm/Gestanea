@@ -73,7 +73,7 @@ class NeumorphicTextField extends StatelessWidget {
             inset: true,
           ),
           BoxShadow(
-            color: const Color(0xFF000000).withOpacity(0.25),
+            color: const Color(0xFF000000).withValues(alpha: 0.25),
             offset: const Offset(2.5, 2.5),
             blurRadius: 5,
             inset: true,
@@ -97,7 +97,7 @@ class NeumorphicTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.main400.withOpacity(0.5),
+                color: AppColors.main400.withValues(alpha: 0.5),
                 fontStyle: FontStyle.italic,
               ),
               border: InputBorder.none, // Removes the default underline
@@ -173,7 +173,7 @@ class ContactUsScreen extends StatelessWidget {
                   Text(
                     "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
                     style: TextStyle(
-                      color: AppColors.main700.withOpacity(0.7),
+                      color: AppColors.main700.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                   ),

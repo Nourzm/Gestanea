@@ -118,7 +118,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade600.withOpacity(0.3),
+                      color: Colors.grey.shade600.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -151,7 +151,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.15),
+                                    color: Colors.black.withValues(alpha: 0.15),
                                     blurRadius: 4,
                                     offset: const Offset(2, 2),
                                     spreadRadius: -2,

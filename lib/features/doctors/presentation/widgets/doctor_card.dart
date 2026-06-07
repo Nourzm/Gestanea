@@ -23,13 +23,13 @@ class DoctorCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               offset: const Offset(-4, -4),
               blurRadius: 8,
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: AppColors.main400.withOpacity(0.3),
+              color: AppColors.main400.withValues(alpha: 0.3),
               offset: const Offset(4, 4),
               blurRadius: 8,
               spreadRadius: 0,
@@ -61,7 +61,7 @@ class DoctorCard extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.main600.withOpacity(0.4),
+            color: AppColors.main600.withValues(alpha: 0.4),
             offset: const Offset(2, 2),
             blurRadius: 6,
             spreadRadius: 0,

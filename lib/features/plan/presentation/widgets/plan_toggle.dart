@@ -27,7 +27,7 @@ class PlanToggle extends StatelessWidget {
         color: AppColors.bg_1,
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: AppColors.purpleGrey.withOpacity(0.3),
+          color: AppColors.purpleGrey.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [

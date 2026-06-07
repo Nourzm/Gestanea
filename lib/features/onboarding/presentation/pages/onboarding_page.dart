@@ -170,7 +170,7 @@ class _FeatureCard extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xff000000).withOpacity(0.2),
+                  color: Color(0xff000000).withValues(alpha: 0.2),
                   blurRadius: 6,
                   offset: Offset(0, 3),
                   spreadRadius: 0,

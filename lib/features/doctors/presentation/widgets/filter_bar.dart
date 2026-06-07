@@ -47,13 +47,13 @@ class DoctorsFilterBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     offset: const Offset(-3, -3),
                     blurRadius: 6,
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: AppColors.main400.withOpacity(0.3),
+                    color: AppColors.main400.withValues(alpha: 0.3),
                     offset: const Offset(3, 3),
                     blurRadius: 6,
                     spreadRadius: 0,

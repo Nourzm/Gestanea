@@ -92,7 +92,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -123,7 +123,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -147,7 +147,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFE8A5C8).withOpacity(0.3),
+                    color: const Color(0xFFE8A5C8).withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),

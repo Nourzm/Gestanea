@@ -65,7 +65,7 @@ class FancyNavBar extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.main500.withOpacity(0.25),
+                    color: AppColors.main500.withValues(alpha: 0.25),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),

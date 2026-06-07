@@ -75,7 +75,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: AppColors.textSecondary.withOpacity(0.3),
+        color: AppColors.textSecondary.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -141,9 +141,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         SliderTheme(
           data: SliderThemeData(
             activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
+            inactiveTrackColor: AppColors.main400.withValues(alpha: 0.3),
             thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            overlayColor: AppColors.main500.withValues(alpha: 0.2),
             trackHeight: 4,
           ),
           child: Slider(
@@ -195,9 +195,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         SliderTheme(
           data: SliderThemeData(
             activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
+            inactiveTrackColor: AppColors.main400.withValues(alpha: 0.3),
             thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            overlayColor: AppColors.main500.withValues(alpha: 0.2),
             trackHeight: 4,
           ),
           child: Slider(
@@ -258,13 +258,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               offset: const Offset(-2, -2),
               blurRadius: 4,
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: AppColors.main400.withOpacity(0.3),
+              color: AppColors.main400.withValues(alpha: 0.3),
               offset: const Offset(2, 2),
               blurRadius: 4,
               spreadRadius: 0,
@@ -311,9 +311,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         SliderTheme(
           data: SliderThemeData(
             activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
+            inactiveTrackColor: AppColors.main400.withValues(alpha: 0.3),
             thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            overlayColor: AppColors.main500.withValues(alpha: 0.2),
             trackHeight: 4,
           ),
           child: Slider(

@@ -162,7 +162,7 @@ class HelpSupportScreen extends StatelessWidget {
                   Text(
                     'Choose the support option that works best for you. Our team is available 24/7 to assist you.',
                     style: TextStyle(
-                      color: AppColors.main700.withOpacity(0.7),
+                      color: AppColors.main700.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                   ),

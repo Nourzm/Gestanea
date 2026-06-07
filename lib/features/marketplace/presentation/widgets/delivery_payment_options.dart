@@ -79,7 +79,7 @@ class PaymentOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.main500
-              : AppColors.bg_1.withOpacity(0.5),
+              : AppColors.bg_1.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? AppColors.main500 : const Color(0xFFD0C0E0),

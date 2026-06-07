@@ -75,7 +75,7 @@ Widget NeumorphicAlertDialog({
           Text(
             content,
             style: TextStyle(
-              color: AppColors.main700.withOpacity(0.8),
+              color: AppColors.main700.withValues(alpha: 0.8),
               fontSize: 16,
             ),
             textAlign: TextAlign.center,

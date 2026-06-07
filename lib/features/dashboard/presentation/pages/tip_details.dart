@@ -55,11 +55,11 @@ class WavyShadowAndFillPainter extends CustomPainter {
     canvas.drawPath(path, mainGradient);
 
     // ---- NORMAL SHADOW ---- (0px -4px 10px rgba(0,0,0,0.3))
-    canvas.drawShadow(path, Colors.black.withOpacity(0.3), 10, false);
+    canvas.drawShadow(path, Colors.black.withValues(alpha: 0.3), 10, false);
 
     // ---- INSET SHADOW ---- (inset 0px 2px 10px rgba(255,255,255,0.3))
     final Paint insetShadow = Paint()
-      ..color = Colors.white.withOpacity(0.3)
+      ..color = Colors.white.withValues(alpha: 0.3)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
 
     canvas.saveLayer(Rect.largest, Paint());
@@ -100,7 +100,7 @@ class CustomCurvedPage extends StatelessWidget {
                   Container(
                     color: const Color(
                       0xFF8A2BE2,
-                    ).withOpacity(0.3), // Purple overlay
+                    ).withValues(alpha: 0.3), // Purple overlay
                   ),
                   Positioned(
                     top:

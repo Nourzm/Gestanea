@@ -77,7 +77,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.textSecondary.withOpacity(0.3),
+                color: AppColors.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -219,7 +219,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                   ? Icons.search_off
                   : Icons.medical_services_outlined,
               size: 64,
-              color: AppColors.textSecondary.withOpacity(0.5),
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(

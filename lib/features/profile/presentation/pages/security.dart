@@ -83,7 +83,7 @@ class _SecurityPageState extends State<SecurityPage> {
                     Text(
                       'Enable additional security features to protect your personal health information',
                       style: TextStyle(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         fontSize: 14,
                       ),
                     ),
@@ -172,7 +172,7 @@ class _SecurityPageState extends State<SecurityPage> {
         ),
         subtitle: Text(
           subtitle,
-          style: TextStyle(color: Colors.black.withOpacity(0.5), fontSize: 13),
+          style: TextStyle(color: Colors.black.withValues(alpha: 0.5), fontSize: 13),
         ),
         trailing: trailing,
         onTap: onTap,
@@ -210,7 +210,7 @@ class _SecurityPageState extends State<SecurityPage> {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     fontSize: 13,
                   ),
                 ),

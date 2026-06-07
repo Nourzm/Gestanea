@@ -116,7 +116,7 @@ class _SelectionCard extends StatelessWidget {
               offset: const Offset(-5, -5),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Colors.black.withValues(alpha: 0.25),
               spreadRadius: 0,
               blurRadius: 12,
               offset: const Offset(5, 5),
@@ -133,7 +133,7 @@ class _SelectionCard extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.main500.withOpacity(0.15),
+                  color: AppColors.main500.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -165,7 +165,7 @@ class _SelectionCard extends StatelessWidget {
                           gradient: AppColors.onboarding,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withValues(alpha: 0.3),
                               blurRadius: 12,
                               offset: Offset(0, 6),
                             ),

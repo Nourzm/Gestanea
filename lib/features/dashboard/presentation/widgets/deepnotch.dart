@@ -38,7 +38,7 @@ class DeepNotchPainter extends CustomPainter {
     path.close();
 
     // Soft shadow under bar
-    canvas.drawShadow(path, Colors.black.withOpacity(0.15), 10, true);
+    canvas.drawShadow(path, Colors.black.withValues(alpha: 0.15), 10, true);
 
     // Draw actual bar
     canvas.drawPath(path, paint);

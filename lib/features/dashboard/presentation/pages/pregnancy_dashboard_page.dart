@@ -86,7 +86,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -200,7 +200,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                               dashboard.tipOfTheDay,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                           ],
@@ -234,7 +234,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

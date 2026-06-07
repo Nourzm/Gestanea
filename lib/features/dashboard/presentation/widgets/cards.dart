@@ -44,12 +44,12 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
               ? [
                   // Pressed shadow → smaller blur & offset
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 4,
                     offset: const Offset(2, 1),
                   ),
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     blurRadius: 5,
                     offset: const Offset(-2, -2),
                   ),
@@ -57,7 +57,7 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
               : [
                   // Default floating shadow
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: Colors.black.withValues(alpha: 0.25),
                     blurRadius: 8,
                     offset: const Offset(5, 3),
                   ),
@@ -86,7 +86,7 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
               'follow best practices',
               style: TextStyle(
                 fontSize: screenWidth * 0.032,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             ),
           ],

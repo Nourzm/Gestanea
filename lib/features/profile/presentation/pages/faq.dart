@@ -124,7 +124,7 @@ class _FaqTileState extends State<FaqTile> {
                   child: Text(
                     widget.answer,
                     style: TextStyle(
-                      color: AppColors.main700.withOpacity(0.8),
+                      color: AppColors.main700.withValues(alpha: 0.8),
                       fontSize: 14,
                       height: 1.5,
                     ),

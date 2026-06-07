@@ -153,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                               BoxShadow(
                                 color: const Color(
                                   0xFF000000,
-                                ).withOpacity(0.25),
+                                ).withValues(alpha: 0.25),
                                 blurRadius: 8,
                                 offset: const Offset(5, 3),
                               ),

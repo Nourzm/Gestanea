@@ -63,7 +63,7 @@ class HeroSection extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       fontSize: screenWidth * 0.04,
-                      color: AppColors.white.withOpacity(0.8),
+                      color: AppColors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],

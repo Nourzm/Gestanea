@@ -79,7 +79,7 @@ class PrivacySectionCard extends StatelessWidget {
           Text(
             content,
             style: TextStyle(
-              color: AppColors.main700.withOpacity(0.8),
+              color: AppColors.main700.withValues(alpha: 0.8),
               fontSize: 15,
               height: 1.4,
             ),
@@ -159,7 +159,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   Text(
                     'We are committed to protecting your personal information and ensuring transparency about how we use your data.',
                     style: TextStyle(
-                      color: AppColors.main700.withOpacity(0.7),
+                      color: AppColors.main700.withValues(alpha: 0.7),
                       fontSize: 15,
                       height: 1.4,
                     ),

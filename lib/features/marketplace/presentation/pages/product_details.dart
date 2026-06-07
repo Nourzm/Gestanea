@@ -372,7 +372,7 @@ class ProductDetailPage extends StatelessWidget {
                                         BoxShadow(
                                           color: const Color(
                                             0xFF000000,
-                                          ).withOpacity(0.15),
+                                          ).withValues(alpha: 0.15),
                                           blurRadius: 4,
                                           offset: const Offset(2, 2),
                                         ),

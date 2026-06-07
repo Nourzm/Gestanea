@@ -522,7 +522,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: AppColors.main500.withOpacity(0.2),
+                            color: AppColors.main500.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
@@ -536,7 +536,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           AppLocalizations.of(context)!.yourInformationIsSecure,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary.withOpacity(0.7),
+                            color: AppColors.textSecondary.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -572,7 +572,7 @@ class _NeumorphicButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF000000).withOpacity(0.25),
+              color: const Color(0xFF000000).withValues(alpha: 0.25),
               blurRadius: 8,
               offset: const Offset(5, 3),
             ),

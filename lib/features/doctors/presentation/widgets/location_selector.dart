@@ -35,7 +35,7 @@ class LocationSelector extends StatelessWidget {
                 inset: true,
               ),
               BoxShadow(
-                color: const Color(0xFF000000).withOpacity(0.25),
+                color: const Color(0xFF000000).withValues(alpha: 0.25),
                 offset: const Offset(2.5, 2.5),
                 blurRadius: 5,
                 inset: true,

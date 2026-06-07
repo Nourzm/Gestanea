@@ -35,7 +35,7 @@ class _ProductCardState extends State<ProductCard> {
     ),
     BoxShadow(
       offset: const Offset(2, 2),
-      color: const Color(0xFFAEAEC0).withOpacity(0.4),
+      color: const Color(0xFFAEAEC0).withValues(alpha: 0.4),
       blurRadius: 3,
     ),
   ];

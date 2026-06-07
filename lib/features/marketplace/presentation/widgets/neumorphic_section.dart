@@ -16,7 +16,7 @@ class NeumorphicSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF000000).withOpacity(0.25),
+            color: const Color(0xFF000000).withValues(alpha: 0.25),
             blurRadius: 8,
             offset: const Offset(5, 3),
           ),
