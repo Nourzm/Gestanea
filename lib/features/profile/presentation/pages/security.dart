@@ -219,19 +219,19 @@ class _SecurityPageState extends State<SecurityPage> {
           ),
           Switch(
             value: value,
-            trackOutlineColor: MaterialStateProperty.resolveWith<Color?>((
-              Set<MaterialState> states,
+            trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+              Set<WidgetState> states,
             ) {
               return AppColors.main500; // Greyish thumb when inactive
             }),
             onChanged: onChanged,
-            activeColor: Colors.white,
+            activeThumbColor: Colors.white,
             activeTrackColor: AppColors.main500,
             inactiveTrackColor: AppColors.white,
-            thumbColor: MaterialStateProperty.resolveWith<Color?>((
-              Set<MaterialState> states,
+            thumbColor: WidgetStateProperty.resolveWith<Color?>((
+              Set<WidgetState> states,
             ) {
-              if (states.contains(MaterialState.selected)) {
+              if (states.contains(WidgetState.selected)) {
                 return Colors.white; // White thumb when active
               }
               return AppColors.main500; // Greyish thumb when inactive

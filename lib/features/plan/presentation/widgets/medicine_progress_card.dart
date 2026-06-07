@@ -9,12 +9,12 @@ class MedicineProgressCard extends StatelessWidget {
   final String takenText;
 
   const MedicineProgressCard({
-    Key? key,
+    super.key,
     required this.screenWidth,
     required this.screenHeight,
     required this.progress,
     required this.takenText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

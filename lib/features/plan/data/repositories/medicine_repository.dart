@@ -27,9 +27,7 @@ abstract class MedicineRepository {
   static MedicineRepository? _instance;
 
   static MedicineRepository getInstance() {
-    if (_instance == null) {
-      _instance = MedicineDB();
-    }
+    _instance ??= MedicineDB();
     return _instance!;
   }
 }

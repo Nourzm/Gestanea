@@ -164,7 +164,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         'assets/icons/Delete.svg',
                         width: 24,
                         height: 24,
-                        color: AppColors.white,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       SizedBox(height: 4),
                       Text(

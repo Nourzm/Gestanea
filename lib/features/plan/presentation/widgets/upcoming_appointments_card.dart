@@ -8,11 +8,11 @@ class UpcomingAppointmentsCard extends StatelessWidget {
   final int scheduledCount;
 
   const UpcomingAppointmentsCard({
-    Key? key,
+    super.key,
     required this.screenWidth,
     required this.screenHeight,
     required this.scheduledCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

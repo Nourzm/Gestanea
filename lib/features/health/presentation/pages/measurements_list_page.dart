@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/measurement_model.dart';
 import '../../logic/bloc/measurements_bloc.dart';
-import '../../logic/bloc/measurements_event.dart';
 import '../../logic/bloc/measurements_state.dart';
 
 class MeasurementsListPage extends StatelessWidget {

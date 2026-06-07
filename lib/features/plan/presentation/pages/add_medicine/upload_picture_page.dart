@@ -75,7 +75,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                   Icons.photo_camera,
                   color: Color(0xFFA67FF5),
                 ),
-                title: Text(AppLocalizations.of(context)!.camera ?? 'Camera'),
+                title: Text(AppLocalizations.of(context)!.camera),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.camera);
@@ -86,7 +86,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                   Icons.photo_library,
                   color: Color(0xFFA67FF5),
                 ),
-                title: Text(AppLocalizations.of(context)!.gallery ?? 'Gallery'),
+                title: Text(AppLocalizations.of(context)!.gallery),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.gallery);
@@ -95,9 +95,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
               if (_imagePath != null)
                 ListTile(
                   leading: const Icon(Icons.delete, color: Colors.red),
-                  title: Text(
-                    AppLocalizations.of(context)!.removeImage ?? 'Remove Image',
-                  ),
+                  title: Text(AppLocalizations.of(context)!.removeImage),
                   onTap: () {
                     Navigator.pop(context);
                     setState(() {
@@ -192,8 +190,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            AppLocalizations.of(context)!.tapToAddPicture ??
-                                'Tap to add picture',
+                            AppLocalizations.of(context)!.tapToAddPicture,
                             style: const TextStyle(
                               color: Colors.black38,
                               fontSize: 14,
@@ -213,8 +210,7 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
-                    AppLocalizations.of(context)!.optionalImageNote ??
-                        'Adding a picture is optional. You can skip this step.',
+                    AppLocalizations.of(context)!.optionalImageNote,
                     style: const TextStyle(color: Colors.black54, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),

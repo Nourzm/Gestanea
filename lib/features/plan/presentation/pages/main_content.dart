@@ -16,12 +16,12 @@ class MainContent extends StatefulWidget {
   final bool showMedicine;
 
   const MainContent({
-    Key? key,
+    super.key,
     required this.userId,
     required this.screenWidth,
     required this.screenHeight,
     required this.showMedicine,
-  }) : super(key: key);
+  });
 
   @override
   State<MainContent> createState() => _MainContentState();

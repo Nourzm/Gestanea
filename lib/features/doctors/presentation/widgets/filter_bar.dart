@@ -9,11 +9,11 @@ class DoctorsFilterBar extends StatelessWidget {
   final bool hasActiveFilters;
 
   const DoctorsFilterBar({
-    Key? key,
+    super.key,
     required this.doctorCount,
     this.onFilterTap,
     this.hasActiveFilters = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

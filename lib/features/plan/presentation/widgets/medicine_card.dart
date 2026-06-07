@@ -14,14 +14,14 @@ class MedicineCard extends StatelessWidget {
   final VoidCallback? onTakeMedicine;
 
   const MedicineCard({
-    Key? key,
+    super.key,
     required this.medicine,
     this.log,
     required this.scheduledTime,
     required this.screenWidth,
     required this.screenHeight,
     this.onTakeMedicine,
-  }) : super(key: key);
+  });
 
   bool get isTaken => log?.status == 'taken';
   bool get isMissed => log?.status == 'missed';

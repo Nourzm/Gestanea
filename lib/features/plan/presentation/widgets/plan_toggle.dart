@@ -11,12 +11,12 @@ class PlanToggle extends StatelessWidget {
   final double screenHeight;
 
   const PlanToggle({
-    Key? key,
+    super.key,
     required this.selectedSection,
     required this.onToggle,
     required this.screenWidth,
     required this.screenHeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +65,12 @@ class PlanToggle extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/pills.svg",
-                      color: selectedSection == PlanSection.medicines
-                          ? Colors.white
-                          : Colors.black87,
+                      colorFilter: ColorFilter.mode(
+                        selectedSection == PlanSection.medicines
+                            ? Colors.white
+                            : Colors.black87,
+                        BlendMode.srcIn,
+                      ),
                       width: 20,
                       height: 20,
                     ),

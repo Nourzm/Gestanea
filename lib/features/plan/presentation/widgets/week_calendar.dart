@@ -10,13 +10,13 @@ class WeekCalendar extends StatelessWidget {
   final double screenHeight;
 
   const WeekCalendar({
-    Key? key,
+    super.key,
     required this.weekDays,
     required this.selectedDate,
     required this.onDateSelected,
     required this.screenWidth,
     required this.screenHeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

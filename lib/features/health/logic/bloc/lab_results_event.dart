@@ -1,5 +1,4 @@
 import '../../../../core/database/models/lab_result_model.dart';
-import 'dart:io';
 
 abstract class LabResultsEvent {}
 

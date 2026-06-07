@@ -8,11 +8,13 @@
 ///   flutter run --dart-define-from-file=env.json
 ///
 /// Where env.json looks like:
-///   {
-///     "SUPABASE_URL": "https://<project_ref>.supabase.co",
-///     "SUPABASE_ANON_KEY": "<publishable anon key>",
-///     "POWERSYNC_URL": "https://<instance>.powersync.journeyapps.com"
-///   }
+/// ```
+/// {
+///   "SUPABASE_URL": "https://PROJECT_REF.supabase.co",
+///   "SUPABASE_ANON_KEY": "PUBLISHABLE_ANON_KEY",
+///   "POWERSYNC_URL": "https://INSTANCE.powersync.journeyapps.com"
+/// }
+/// ```
 class AppConfig {
   AppConfig._();
 
@@ -23,7 +25,7 @@ class AppConfig {
     defaultValue: 'https://clreowcinwmwajzlysem.supabase.co',
   );
 
-  /// Supabase anon / publishable key. **Required** — there is no safe
+  /// Supabase anon / publishable key. **Required** &mdash; there is no safe
   /// default. Build will run but every Supabase call will fail with 401
   /// until this is supplied.
   static const String supabaseAnonKey = String.fromEnvironment(

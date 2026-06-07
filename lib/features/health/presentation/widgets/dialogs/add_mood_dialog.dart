@@ -47,11 +47,11 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       return;
     }
 
-    print('Mood: $_selectedMood');
-    print('Energy Level: $_energyLevel');
-    print('Sleep Quality: $_sleepQuality');
-    print('Notes: ${_notesController.text}');
-    print('Date: $_selectedDate');
+    debugPrint('Mood: $_selectedMood');
+    debugPrint('Energy Level: $_energyLevel');
+    debugPrint('Sleep Quality: $_sleepQuality');
+    debugPrint('Notes: ${_notesController.text}');
+    debugPrint('Date: $_selectedDate');
     
     Navigator.pop(context);
     
@@ -72,9 +72,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
     );
     
     if (date != null) {
+      if (!mounted) return;
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay. fromDateTime(_selectedDate),
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
       );
       
       if (time != null) {
@@ -242,7 +243,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                           activeTrackColor: AppColors.main500,
                           inactiveTrackColor: AppColors.main300,
                           thumbColor: AppColors.main600,
-                          overlayColor: AppColors.main500. withOpacity(0.2),
+                          overlayColor: AppColors.main500.withValues(alpha: 0.2),
                         ),
                         child: Slider(
                           value: _energyLevel,

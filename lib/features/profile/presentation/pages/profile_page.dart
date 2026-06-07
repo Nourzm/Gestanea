@@ -7,7 +7,6 @@ import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/profile/presentation/pages/about_app.dart';
 import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
 import 'package:gestanea/features/profile/presentation/pages/faq.dart';
@@ -499,7 +498,10 @@ class _SettingsTile extends StatelessWidget {
             width: 30,
             child: SvgPicture.asset(
               icon,
-              color: AppColors.main500,
+              colorFilter: const ColorFilter.mode(
+                AppColors.main500,
+                BlendMode.srcIn,
+              ),
               width: 20,
               height: 20,
             ),
@@ -583,7 +585,7 @@ class _LogoutButton extends StatelessWidget {
     );
 
     if (confirm == true) {
-      // Original logic remains the same
+      if (!context.mounted) return;
       context.read<AuthBloc>().add(LogoutRequested());
     }
   }

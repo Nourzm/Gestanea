@@ -25,6 +25,11 @@ class SupabaseService {
     }
     await Supabase.initialize(
       url: AppConfig.supabaseUrl,
+      // `anonKey` is the legacy name for what Supabase now calls
+      // `publishableKey`; the SDK accepts either at runtime but only
+      // exposes the new field in newer minor versions. Suppressing the
+      // deprecation until we bump the package.
+      // ignore: deprecated_member_use
       anonKey: AppConfig.supabaseAnonKey,
       authOptions: const FlutterAuthClientOptions(
         authFlowType: AuthFlowType.pkce,

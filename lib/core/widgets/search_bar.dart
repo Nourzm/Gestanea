@@ -2,13 +2,13 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
-class searchBar extends StatelessWidget {
+class AppSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onSearchTapped;
   final String hintText;
 
-  const searchBar({
+  const AppSearchBar({
     super.key,
     required this.controller,
     this.onChanged,

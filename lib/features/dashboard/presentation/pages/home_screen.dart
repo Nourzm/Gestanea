@@ -7,11 +7,11 @@ import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/pregnancy_dashboard.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/notifications_page.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
-import 'package:gestanea/core/widgets/notificationsCard.dart';
+import 'package:gestanea/core/widgets/notifications_card.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
@@ -169,7 +169,10 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               SvgPicture.asset(
                                 "assets/icons/Stethoscope.svg",
-                                color: AppColors.main500,
+                                colorFilter: const ColorFilter.mode(
+                                  AppColors.main500,
+                                  BlendMode.srcIn,
+                                ),
                                 width: 32,
                               ),
                               SizedBox(height: screenHeight * 0.015),

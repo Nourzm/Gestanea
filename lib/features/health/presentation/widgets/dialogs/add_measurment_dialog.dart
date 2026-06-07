@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
@@ -80,6 +79,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
     );
     
     if (date != null) {
+      if (!mounted) return;
       final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_selectedDate),
@@ -123,7 +123,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey. shade600. withOpacity(0.3),
+                    color: Colors.grey. shade600.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),

@@ -252,7 +252,7 @@ void _saveResults() {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
 
                   const SizedBox(height: 20),
 

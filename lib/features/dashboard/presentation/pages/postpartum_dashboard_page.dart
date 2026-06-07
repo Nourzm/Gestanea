@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/db_helper.dart';
-import 'package:gestanea/core/widgets/notificationsCard.dart';
+import 'package:gestanea/core/widgets/notifications_card.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
@@ -10,7 +10,7 @@ import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/repositories/baby_repository.dart';
 import 'package:gestanea/features/dashboard/domain/entities/postpartum_dashboard.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/notifications_page.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart'
     show DoctorsScreen;
 import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
@@ -127,9 +127,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     final babyWeight = dashboard?.babyWeight ?? 0.0;
     final babyHeight = dashboard?.babyHeight ?? 0.0;
     final growthStatus = dashboard?.growthStatus ?? 'On Track';
-    final userName = dashboard?.userName ?? 'Mama';
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF8FF),

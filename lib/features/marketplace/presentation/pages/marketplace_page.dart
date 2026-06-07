@@ -48,7 +48,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
             // Search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: searchBar(
+              child: AppSearchBar(
                 controller: _searchController,
                 hintText: l10n.searchHint,
                 onSearchTapped: () {
@@ -120,7 +120,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                       right: 90,
                       child: Container(
                         transform: Matrix4.identity()
-                          ..translate(0.0, 0.0)
+                          ..translateByDouble(0.0, 0.0, 0.0, 1.0)
                           ..rotateZ(0.18),
                         width: 43.42,
                         height: 49.75,

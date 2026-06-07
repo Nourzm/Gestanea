@@ -31,7 +31,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
   String _frequencyType = 'daily';
-  List<String> _scheduledTimes = [];
+  final List<String> _scheduledTimes = [];
 
   @override
   void dispose() {
@@ -149,7 +149,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: _frequencyType,
+                  initialValue: _frequencyType,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),

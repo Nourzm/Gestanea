@@ -129,8 +129,7 @@ class _DashboardPageState extends State<DashboardPage>
           PostpartumDashboard? postpartumDashboard;
           String currentBabyGender = babyGender;
           if (isPostpartum) {
-            postpartumDashboard =
-                (dashboardState as PostpartumDashboardLoaded).dashboard;
+            postpartumDashboard = dashboardState.dashboard;
             // TODO: Extract baby gender from dashboard if available
           }
 

@@ -39,6 +39,7 @@ Widget buildDialogButton({
 }
 
 // Custom Neumorphic Dialog Structure
+// ignore: non_constant_identifier_names
 Widget NeumorphicAlertDialog({
   required BuildContext context,
   required String title,

@@ -7,7 +7,7 @@ import 'package:gestanea/l10n/app_localizations.dart';
 class DoctorInfo extends StatelessWidget {
   final DoctorModel doctor;
 
-  const DoctorInfo({Key? key, required this.doctor}) : super(key: key);
+  const DoctorInfo({super.key, required this.doctor});
 
   @override
   Widget build(BuildContext context) {

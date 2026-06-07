@@ -214,7 +214,7 @@ _buildOptionButton(
         decoration: BoxDecoration(
           color: AppColors. main300,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.main500. withOpacity(0.3)),
+          border: Border.all(color: AppColors.main500.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [

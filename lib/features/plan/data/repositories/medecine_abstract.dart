@@ -26,9 +26,7 @@ abstract class MedicineRepo {
   static MedicineRepo? _instance;
 
   static MedicineRepo getInstance() {
-    if (_instance == null) {
-      _instance = MedicineDatabase();
-    }
+    _instance ??= MedicineDatabase();
     return _instance!;
   }
 }

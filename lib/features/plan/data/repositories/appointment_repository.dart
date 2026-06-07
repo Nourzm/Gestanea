@@ -25,9 +25,7 @@ abstract class AppointmentRepository {
   static AppointmentRepository? _instance;
 
   static AppointmentRepository getInstance() {
-    if (_instance == null) {
-      _instance = AppointmentDB();
-    }
+    _instance ??= AppointmentDB();
     return _instance!;
   }
 }

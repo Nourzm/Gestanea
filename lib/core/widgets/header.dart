@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/core/widgets/notificationsCard.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/notifications_page.dart';
+import 'package:gestanea/core/widgets/notifications_card.dart';
 
 class Header extends StatelessWidget {
   final String title;

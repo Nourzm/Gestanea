@@ -17,7 +17,7 @@ import 'package:gestanea/features/doctors/logic/bloc/doctor_detail_bloc.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class DoctorsScreen extends StatefulWidget {
-  const DoctorsScreen({Key? key}) : super(key: key);
+  const DoctorsScreen({super.key});
 
   @override
   State<DoctorsScreen> createState() => _DoctorsScreenState();
@@ -98,7 +98,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                   Navigator.pop(modalContext);
                 },
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -154,7 +154,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20.0,
                             ),
-                            child: searchBar(
+                            child: AppSearchBar(
                               controller: _searchController,
                               hintText: l10n.findDoctors,
                             ),

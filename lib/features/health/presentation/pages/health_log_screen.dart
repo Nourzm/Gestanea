@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/notifications_page.dart';
 import '../widgets/health_tab_sidebar.dart';
 import '../widgets/vitals_tab_content.dart';
 import '../widgets/symptoms_tab_content.dart';

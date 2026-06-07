@@ -370,7 +370,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      value: feedingType,
+                      initialValue: feedingType,
                       decoration: InputDecoration(
                         labelText: 'Feeding Type',
                         labelStyle: AppTextStyles.body1.copyWith(
@@ -422,7 +422,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     if (feedingType == 'Breastfeed') ...[
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        value: selectedSide,
+                        initialValue: selectedSide,
                         decoration: InputDecoration(
                           labelText: 'Side (optional)',
                           labelStyle: AppTextStyles.body1.copyWith(

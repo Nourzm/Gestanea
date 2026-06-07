@@ -100,7 +100,7 @@ class _TipsState extends State<Tips> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            searchBar(
+            AppSearchBar(
               controller: _searchController,
               hintText: l10n.searchHint,
               onSearchTapped: () {},

@@ -103,6 +103,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
     );
     
     if (date != null) {
+      if (!mounted) return;
       final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_selectedDate),
@@ -149,7 +150,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey. shade600. withOpacity(0.3),
+                      color: Colors.grey. shade600.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

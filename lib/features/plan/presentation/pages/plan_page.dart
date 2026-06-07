@@ -73,7 +73,7 @@ class _PlanMainPageState extends State<PlanMainPage> {
 class _PlanMainPageContent extends StatefulWidget {
   final String userId;
 
-  const _PlanMainPageContent({super.key, required this.userId});
+  const _PlanMainPageContent({required this.userId});
 
   @override
   State<_PlanMainPageContent> createState() => _PlanMainPageContentState();
