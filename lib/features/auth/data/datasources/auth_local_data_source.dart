@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:gestanea/core/database/db_helper.dart';
@@ -6,7 +7,11 @@ import 'package:gestanea/core/database/models/user_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AuthLocalDataSource {
+  static const int _iterations = 10000;
+  static const int _saltBytes = 16;
+
   final DatabaseHelper _dbHelper;
+  final Random _rng = Random.secure();
 
   AuthLocalDataSource(this._dbHelper);
 
@@ -18,6 +23,7 @@ class AuthLocalDataSource {
       CREATE TABLE IF NOT EXISTS auth_credentials (
         user_id TEXT PRIMARY KEY,
         password TEXT NOT NULL,
+        salt TEXT NOT NULL DEFAULT '',
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
@@ -30,7 +36,8 @@ class AuthLocalDataSource {
     final db = await _db;
     await ensureAuthTableExists();
 
-    final passwordHash = _hashPassword(password);
+    final salt = _generateSalt();
+    final passwordHash = _hashPassword(password, salt);
 
     await db.transaction((txn) async {
       // Insert user
@@ -44,6 +51,7 @@ class AuthLocalDataSource {
       await txn.insert('auth_credentials', {
         'user_id': user.id,
         'password': passwordHash,
+        'salt': salt,
       }, conflictAlgorithm: ConflictAlgorithm.abort);
     });
   }
@@ -67,21 +75,36 @@ class AuthLocalDataSource {
     final db = await _db;
     await ensureAuthTableExists();
 
-    final passwordHash = _hashPassword(password);
-
+    // Fetch the user + their salt, then verify the hash in Dart to avoid
+    // leaking timing info that a raw SQL equality comparison would expose.
     final result = await db.rawQuery(
       '''
-      SELECT u.*
+      SELECT u.*, a.password AS _stored_hash, a.salt AS _stored_salt
       FROM users u
       INNER JOIN auth_credentials a ON u.id = a.user_id
-      WHERE u.email = ? AND a.password = ?
+      WHERE u.email = ?
       LIMIT 1
     ''',
-      [email, passwordHash],
+      [email],
     );
 
     if (result.isEmpty) return null;
-    return UserModel.fromMap(result.first);
+
+    final row = result.first;
+    final storedHash = row['_stored_hash'] as String? ?? '';
+    final storedSalt = row['_stored_salt'] as String? ?? '';
+    if (storedSalt.isEmpty) {
+      // Legacy/empty-salt account from older schema — refuse login so the
+      // user re-registers under the new hashing scheme.
+      return null;
+    }
+    final candidateHash = _hashPassword(password, storedSalt);
+    if (!_constantTimeEquals(candidateHash, storedHash)) return null;
+
+    final userMap = Map<String, Object?>.from(row)
+      ..remove('_stored_hash')
+      ..remove('_stored_salt');
+    return UserModel.fromMap(userMap);
   }
 
   Future<UserModel?> getUserById(String id) async {
@@ -127,9 +150,28 @@ class AuthLocalDataSource {
     );
   }
 
-  String _hashPassword(String password) {
-    final bytes = utf8.encode(password);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+  String _generateSalt() {
+    final bytes = List<int>.generate(_saltBytes, (_) => _rng.nextInt(256));
+    return base64Url.encode(bytes);
+  }
+
+  String _hashPassword(String password, String salt) {
+    // Iterated SHA-256 with salt. Not as strong as bcrypt/argon2, but a
+    // significant upgrade over single-round unsalted SHA-256 and uses only
+    // the `crypto` package already in pubspec.
+    List<int> current = utf8.encode('$salt:$password');
+    for (var i = 0; i < _iterations; i++) {
+      current = sha256.convert(current).bytes;
+    }
+    return base64Url.encode(current);
+  }
+
+  bool _constantTimeEquals(String a, String b) {
+    if (a.length != b.length) return false;
+    var diff = 0;
+    for (var i = 0; i < a.length; i++) {
+      diff |= a.codeUnitAt(i) ^ b.codeUnitAt(i);
+    }
+    return diff == 0;
   }
 }

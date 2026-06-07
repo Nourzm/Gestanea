@@ -9,7 +9,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('gestanea. db');
+    _database = await _initDB('gestanea.db');
     return _database!;
   }
 
@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -89,6 +89,13 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     )
   ''');
 }
+  if (oldVersion < 7) {
+    // Add salt column for password hashing. Existing rows get an empty salt
+    // which will fail to verify — users must re-register.
+    await db.execute(
+      "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+    );
+  }
 }
   Future<void> _createDB(Database db, int version) async {
     // Users table

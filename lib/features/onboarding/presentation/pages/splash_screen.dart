@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateNext() async {
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(milliseconds: 2500));
     if (!mounted) return;
     //onboarding logic to be uncommented don't touch :)
     // final prefs = await SharedPreferences.getInstance();
@@ -50,7 +54,20 @@ class _SplashScreenState extends State<SplashScreen>
     //   nextRoute = AppRoutes.dashboard;
     // }
 
-    Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+    final authState = context.read<AuthBloc>().state;
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingDone = prefs.getBool('onboardingCompleted') ?? false;
+    if (!mounted) return;
+
+    final String nextRoute;
+    if (authState is AuthAuthenticated) {
+      nextRoute = AppRoutes.dashboard;
+    } else if (!onboardingDone) {
+      nextRoute = AppRoutes.onboarding;
+    } else {
+      nextRoute = AppRoutes.login;
+    }
+    Navigator.pushReplacementNamed(context, nextRoute);
   }
 
   // --- Widget for the Animated Loading Dots (Pulsing Effect) ---
@@ -113,11 +130,11 @@ class _SplashScreenState extends State<SplashScreen>
       // replace with AppColors.splashGradient if that's the desired purple look
       body: Container(
         decoration: const BoxDecoration(
-          // Assuming AppColors.splashGradient is the desired purple gradient
+          // Purple gradient matching the Figma splash design.
           gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [Color(0xFFF1C0F2), Color(0xFFF8D9F8), Color(0xFFF1C0F2)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFB077E5), Color(0xFF9A77BE)],
           ),
         ),
         child: Center(
