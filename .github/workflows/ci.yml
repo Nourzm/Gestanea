@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  flutter:
+    name: Analyze + Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify generated localizations are up to date
+        run: |
+          flutter gen-l10n
+          if [ -n "$(git status --porcelain lib/l10n)" ]; then
+            echo "::error::Generated l10n files are out of date. Run `flutter gen-l10n` and commit."
+            git --no-pager diff lib/l10n
+            exit 1
+          fi
+
+      - name: Analyze
+        # The repo has a backlog of pre-existing infos/warnings; fail the
+        # build only on real errors.
+        run: |
+          set +e
+          flutter analyze lib test 2>&1 | tee analyze.log
+          status=$?
+          set -e
+          if grep -Eq '^\s*error\s' analyze.log; then
+            echo "::error::flutter analyze reported one or more errors"
+            exit 1
+          fi
+          exit 0
+
+      - name: Test
+        run: flutter test --reporter expanded
