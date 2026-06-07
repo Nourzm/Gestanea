@@ -89,3 +89,8 @@ linux/flutter/CMakeLists.txt
 windows/flutter/CMakeLists.txt
 
 .flutter-plugins-dependencies
+# Claude Code local settings (machine-specific)
+.claude/
+
+# Locally-installed skill bundles (re-installable via skills-lock.json)
+.agents/skills/
