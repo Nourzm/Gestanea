@@ -1,7 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
+  /// Single source of truth for the schema version. Tests reference this so
+  /// they can never drift from what the app actually opens.
+  @visibleForTesting
+  static const int schemaVersion = 7;
+
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
@@ -19,9 +25,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 7,
-      onCreate: _createDB,
-      onUpgrade: _onUpgrade,
+      version: schemaVersion,
+      onCreate: createSchema,
+      onUpgrade: upgradeSchema,
       onConfigure: _onConfigure,
     );
   }
@@ -30,7 +36,11 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+/// Static so the migration path can be exercised against an in-memory
+/// database in tests without touching the singleton.
+@visibleForTesting
+static Future<void> upgradeSchema(
+    Database db, int oldVersion, int newVersion) async {
   if (oldVersion < 2) {
     await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
   }
@@ -90,14 +100,35 @@ Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
   ''');
 }
   if (oldVersion < 7) {
-    // Add salt column for password hashing. Existing rows get an empty salt
-    // which will fail to verify — users must re-register.
-    await db.execute(
-      "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+    // auth_credentials is created lazily on first signup, so on some
+    // devices it doesn't exist yet at upgrade time. Create it (already
+    // carrying the new salt column) and only ALTER when an old copy
+    // without the column is present — otherwise openDatabase would throw
+    // "no such table" / "duplicate column" and brick every DB call.
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS auth_credentials (
+        user_id TEXT PRIMARY KEY,
+        password TEXT NOT NULL,
+        salt TEXT NOT NULL DEFAULT '',
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+    final columns = await db.rawQuery(
+      "PRAGMA table_info('auth_credentials')",
     );
+    final hasSalt = columns.any((c) => c['name'] == 'salt');
+    if (!hasSalt) {
+      // Pre-existing table from the unsalted era. Existing rows get an
+      // empty salt, which fails verification — users must re-register.
+      await db.execute(
+        "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+      );
+    }
   }
 }
-  Future<void> _createDB(Database db, int version) async {
+  /// Static + visible for the same reason as [upgradeSchema].
+  @visibleForTesting
+  static Future<void> createSchema(Database db, int version) async {
     // Users table
     await db.execute('''
       CREATE TABLE users (
@@ -568,7 +599,10 @@ await db.execute('''
   }
 
   Future<void> close() async {
-    final db = await instance.database;
-    db.close();
+    final db = _database;
+    if (db != null) {
+      _database = null;
+      await db.close();
+    }
   }
 }
