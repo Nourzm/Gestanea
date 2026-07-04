@@ -8,7 +8,7 @@ class ProductModel {
   final String? targetAudience;
   final double price;
   final double? originalPrice;
-  final int?  discountPercentage;
+  final int? discountPercentage;
   final String currency;
   final double rating;
   final int reviewsCount;
@@ -19,7 +19,7 @@ class ProductModel {
 
   ProductModel({
     required this.id,
-    required this. productName,
+    required this.productName,
     this.description,
     required this.categoryId,
     this.targetAudience,
@@ -67,9 +67,9 @@ class ProductModel {
           ? (map['original_price'] as num).toDouble()
           : null,
       discountPercentage: map['discount_percentage'] as int?,
-      currency: map['currency'] as String?  ?? 'USD',
+      currency: map['currency'] as String? ?? 'USD',
       rating: (map['rating'] as num?)?.toDouble() ?? 0,
-      reviewsCount: map['reviews_count'] as int? ??  0,
+      reviewsCount: map['reviews_count'] as int? ?? 0,
       imageUrls: List<String>.from(jsonDecode(map['image_urls'] as String)),
       vendorName: map['vendor_name'] as String?,
       isAvailable: (map['is_available'] as int) == 1,
@@ -78,16 +78,16 @@ class ProductModel {
   }
 
   ProductModel copyWith({
-    String?  id,
+    String? id,
     String? productName,
     String? description,
     String? categoryId,
     String? targetAudience,
     double? price,
     double? originalPrice,
-    int?  discountPercentage,
+    int? discountPercentage,
     String? currency,
-    double?  rating,
+    double? rating,
     int? reviewsCount,
     List<String>? imageUrls,
     String? vendorName,
@@ -98,9 +98,9 @@ class ProductModel {
       id: id ?? this.id,
       productName: productName ?? this.productName,
       description: description ?? this.description,
-      categoryId: categoryId ??  this.categoryId,
+      categoryId: categoryId ?? this.categoryId,
       targetAudience: targetAudience ?? this.targetAudience,
-      price: price ?? this. price,
+      price: price ?? this.price,
       originalPrice: originalPrice ?? this.originalPrice,
       discountPercentage: discountPercentage ?? this.discountPercentage,
       currency: currency ?? this.currency,

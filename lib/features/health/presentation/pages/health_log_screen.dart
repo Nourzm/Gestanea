@@ -10,12 +10,16 @@ import '../widgets/lab_results_tab_content.dart';
 import '../widgets/risk_alerts_tab_content.dart';
 import '../widgets/mood_tab_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_event.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_event.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
+import '../../logic/bloc/mood_bloc.dart';
+import '../../logic/bloc/mood_event.dart';
 
 class HealthLogScreen extends StatefulWidget {
   const HealthLogScreen({super.key});
@@ -34,6 +38,15 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
     {'icon': Icons.warning_amber_rounded, 'labelKey': 'riskAlerts'},
     {'icon': Icons.sentiment_satisfied_alt, 'labelKey': 'mood'},
   ];
+
+  /// The authenticated user's id, used to scope all health records.
+  String _currentUserId(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      return authState.user.id;
+    }
+    return '0'; // Fallback when not authenticated.
+  }
 
   Widget _getTabContent() {
     switch (_selectedTabIndex) {
@@ -55,17 +68,24 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final userId = _currentUserId(context);
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => MeasurementsBloc().. add(LoadMeasurements()),
+          create: (context) =>
+              MeasurementsBloc(userId: userId)..add(LoadMeasurements()),
         ),
         BlocProvider(
-          create: (context) => SymptomsBloc()..add(LoadSymptoms()),
+          create: (context) =>
+              SymptomsBloc(userId: userId)..add(LoadSymptoms()),
         ),
         BlocProvider(
-          create: (context) => LabResultsBloc()..add(LoadLabResults()),
+          create: (context) =>
+              LabResultsBloc(userId: userId)..add(LoadLabResults()),
+        ),
+        BlocProvider(
+          create: (context) => MoodBloc(userId: userId)..add(const LoadMoods()),
         ),
       ],
       child: Scaffold(
@@ -77,7 +97,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
               Header(
                 title: localizations.healthLog,
                 onNotificationTapped: () {
-                  Navigator. push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const NotificationsPage(),
@@ -105,7 +125,10 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
               // Main content with sidebar and tab content
               Expanded(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // Stretch so the tab-content panel fills the full height and
+                  // its background reaches the bottom — otherwise it shrink-wraps
+                  // to its content and leaves an empty gap below.
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Left Sidebar Navigation
                     HealthTabSidebar(
@@ -117,9 +140,7 @@ class _HealthLogScreenState extends State<HealthLogScreen> {
                     ),
 
                     // Tab Content Area
-                    Expanded(
-                      child: _getTabContent(),
-                    ),
+                    Expanded(child: _getTabContent()),
                   ],
                 ),
               ),

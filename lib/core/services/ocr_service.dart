@@ -15,27 +15,56 @@ class OcrService {
     }
   }
 
-  // Parse lab results from extracted text
+  // Parse lab results from extracted text.
+  //
+  // This is a best-effort on-device heuristic — OCR layouts vary wildly, so it
+  // only captures the first number that appears after a known label on the same
+  // line (`[^\n\d]*` skips words like "Count" but never crosses a line break or
+  // an earlier number). Tests whose value can't be read are dropped rather than
+  // surfaced as "null". For robust extraction across messy reports, use the AI
+  // analysis path.
   Map<String, dynamic> parseLabResults(String text) {
     final results = <String, dynamic>{};
-    
-    // Common patterns for lab results
+
+    // Each label alternation is a NON-capturing group so group(1) is always the
+    // numeric value (the previous version's `wbc|white blood cell(...)` matched
+    // the bare name and captured nothing → null).
     final patterns = {
-      'hemoglobin': RegExp(r'h[ae]moglobin[\s:]*(\d+\. ?\d*)\s*(g/dl|mg/dl)? ', caseSensitive: false),
-      'glucose': RegExp(r'glucose[\s:]*(\d+\. ?\d*)\s*(mg/dl)? ', caseSensitive: false),
-      'wbc': RegExp(r'wbc|white blood cell[\s:]*(\d+\.?\d*)', caseSensitive: false),
-      'rbc': RegExp(r'rbc|red blood cell[\s:]*(\d+\.?\d*)', caseSensitive: false),
-      'platelets': RegExp(r'platelet[\s:]*(\d+\.?\d*)', caseSensitive: false),
+      'hemoglobin': RegExp(
+        r'h[ae]moglobin[^\n\d]*(\d+\.?\d*)\s*(g/dl|mg/dl|g/l)?',
+        caseSensitive: false,
+      ),
+      'glucose': RegExp(
+        r'glucose[^\n\d]*(\d+\.?\d*)\s*(mg/dl|g/l|mmol/l)?',
+        caseSensitive: false,
+      ),
+      'wbc': RegExp(
+        r'(?:wbc|white blood cells?)[^\n\d]*(\d+\.?\d*)',
+        caseSensitive: false,
+      ),
+      'rbc': RegExp(
+        r'(?:rbc|red blood cells?)[^\n\d]*(\d+\.?\d*)',
+        caseSensitive: false,
+      ),
+      'platelets': RegExp(
+        r'platelets?[^\n\d]*(\d+\.?\d*)',
+        caseSensitive: false,
+      ),
+      'hematocrit': RegExp(
+        r'(?:h[ae]matocrit|pcv)[^\n\d]*(\d+\.?\d*)\s*(%)?',
+        caseSensitive: false,
+      ),
     };
 
     for (final entry in patterns.entries) {
       final match = entry.value.firstMatch(text);
-      if (match != null && match.groupCount >= 1) {
-        results[entry. key] = {
-          'value': double.tryParse(match.group(1) ?? ''),
-          'unit': match.groupCount >= 2 ? match. group(2) : null,
-        };
-      }
+      if (match == null) continue;
+      final value = double.tryParse(match.group(1) ?? '');
+      if (value == null) continue; // skip name-only matches with no number
+      results[entry.key] = {
+        'value': value,
+        'unit': match.groupCount >= 2 ? match.group(2) : null,
+      };
     }
 
     return results;

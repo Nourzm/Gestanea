@@ -1,5 +1,6 @@
 // lib/features/dashboard/presentation/widgets/health_alerts_widget.dart
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../domain/entities/pregnancy_dashboard.dart';
 
 class HealthAlertsWidget extends StatelessWidget {
@@ -38,10 +39,13 @@ class HealthAlertsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            const Expanded(
+            Expanded(
               child: Text(
-                'All good! No health alerts at the moment.',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                AppLocalizations.of(context)!.allGoodNoAlerts,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

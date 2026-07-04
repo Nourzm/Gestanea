@@ -15,7 +15,7 @@ class FeedingLogModel {
     required this.feedingType,
     this.durationMinutes,
     this.amountMl,
-    this. breastSide,
+    this.breastSide,
     required this.loggedAt,
     this.notes,
     required this.createdAt,

@@ -1,26 +1,26 @@
 class AppointmentModel {
   final String id;
   final String userId;
-  final String?  babyId;
+  final String? babyId;
   final String title;
   final String? doctorName;
   final String? appointmentType;
   final DateTime appointmentDate;
-  final String?  location;
+  final String? location;
   final String? notes;
-  final DateTime?  reminderTime;
+  final DateTime? reminderTime;
   final bool isCompleted;
   final DateTime createdAt;
 
   AppointmentModel({
     required this.id,
     required this.userId,
-    this. babyId,
+    this.babyId,
     required this.title,
     this.doctorName,
     this.appointmentType,
-    required this. appointmentDate,
-    this. location,
+    required this.appointmentDate,
+    this.location,
     this.notes,
     this.reminderTime,
     this.isCompleted = false,
@@ -39,7 +39,7 @@ class AppointmentModel {
       'location': location,
       'notes': notes,
       'reminder_time': reminderTime?.toIso8601String(),
-      'is_completed': isCompleted ?  1 : 0,
+      'is_completed': isCompleted ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
     };
   }

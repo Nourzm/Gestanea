@@ -4,6 +4,7 @@ import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -114,9 +115,9 @@ class _SplashScreenState extends State<SplashScreen>
           }),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Loading your experience...',
-          style: TextStyle(color: Colors.white, fontSize: 14),
+        Text(
+          AppLocalizations.of(context)!.loadingExperience,
+          style: const TextStyle(color: Colors.white, fontSize: 14),
         ),
       ],
     );
@@ -162,10 +163,12 @@ class _SplashScreenState extends State<SplashScreen>
                     color: Colors.white,
                   ),
                   child: Center(
-                    child: Image.asset(
-                      'assets/images/fetus.png',
-                      height: 100, // Adjust size to fit the circle
-                      // If your icon is a single color, you can use color and colorBlendMode here
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -193,9 +196,9 @@ class _SplashScreenState extends State<SplashScreen>
               const SizedBox(height: 8),
 
               // Tagline
-              const Text(
-                'Your Journey, Our Care',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.appTagline,
+                style: const TextStyle(
                   color: Colors.white,
                   shadows: [
                     BoxShadow(

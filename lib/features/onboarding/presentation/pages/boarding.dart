@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -15,31 +16,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<Map<String, String>> onboardingData = [
+  List<Map<String, String>> _onboardingData(AppLocalizations t) => [
     {
-      'title': 'Track',
-      'subtitle': 'Your Journey',
-      'description':
-          'Monitor your pregnancy week by week with personalized tips and insights',
+      'title': t.obTrack,
+      'subtitle': t.obYourJourney,
+      'description': t.obDesc1,
       'image': 'assets/images/onboarding1.png',
     },
     {
-      'title': 'Baby Grouth',
-      'subtitle': 'Monitor',
-      'description': 'Follow your baby\'s ......',
+      'title': t.obBabyGrowth,
+      'subtitle': t.obMonitor,
+      'description': t.obDesc2,
       'image': 'assets/images/onboarding2.png',
     },
     {
-      'title': 'Never Miss a',
-      'subtitle': 'Moment',
-      'description':
-          'Set reminders for appointments, vaccines, and important checkups',
+      'title': t.obNeverMiss,
+      'subtitle': t.obMoment,
+      'description': t.obDesc3,
       'image': 'assets/images/onboarding3.png',
     },
     {
-      'title': 'Mom & Baby',
-      'subtitle': 'Marketplace',
-      'description': '...............',
+      'title': t.obMomBaby,
+      'subtitle': t.obMarketplace,
+      'description': t.obDesc4,
       'image': 'assets/images/onboarding4.png',
     },
   ];
@@ -92,6 +91,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final onboardingData = _onboardingData(t);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -157,7 +158,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     _currentPage == onboardingData.length - 1
                         ? AppButton(
                             onPressed: _completeOnboarding,
-                            text: 'Get Started',
+                            text: t.getStarted,
                           )
                         : AppButton(
                             onPressed: () {
@@ -166,7 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 curve: Curves.easeInOut,
                               );
                             },
-                            text: 'Next',
+                            text: t.next,
                             suffixIcon: "assets/icons/next-arrow.svg",
                           ),
                   ],

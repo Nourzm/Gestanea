@@ -10,11 +10,11 @@ class ImageStorageService {
   Future<Directory> get _labResultsDirectory async {
     final appDir = await getApplicationDocumentsDirectory();
     final labDir = Directory('${appDir.path}/$_folderName');
-    
+
     if (!await labDir.exists()) {
       await labDir.create(recursive: true);
     }
-    
+
     return labDir;
   }
 
@@ -24,7 +24,7 @@ class ImageStorageService {
       final directory = await _labResultsDirectory;
       final fileName = 'lab_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final savedPath = '${directory.path}/$fileName';
-      
+
       await imageFile.copy(savedPath);
       return savedPath;
     } catch (e) {
@@ -60,7 +60,7 @@ class ImageStorageService {
           .where((item) => item is File && item.path.endsWith('.jpg'))
           .map((item) => item as File)
           .toList();
-      
+
       files.sort((a, b) => b.path.compareTo(a.path)); // Sort by newest first
       return files;
     } catch (e) {
@@ -72,14 +72,14 @@ class ImageStorageService {
   Future<String?> exportAsZip() async {
     try {
       final images = await getAllImages();
-      
+
       if (images.isEmpty) {
         return null;
       }
 
       // Create archive
       final archive = Archive();
-      
+
       // Add all images to archive
       for (final image in images) {
         final bytes = await image.readAsBytes();
@@ -91,16 +91,17 @@ class ImageStorageService {
       // Encode to ZIP
       final zipEncoder = ZipEncoder();
       final zipBytes = zipEncoder.encode(archive);
-      
+
       if (zipBytes == null) {
         throw Exception('Failed to create ZIP');
       }
 
       // Save ZIP to temp directory
       final tempDir = await getTemporaryDirectory();
-      final zipPath = '${tempDir. path}/lab_results_${DateTime.now().millisecondsSinceEpoch}.zip';
+      final zipPath =
+          '${tempDir.path}/lab_results_${DateTime.now().millisecondsSinceEpoch}.zip';
       final zipFile = File(zipPath);
-      await zipFile. writeAsBytes(zipBytes);
+      await zipFile.writeAsBytes(zipBytes);
 
       return zipPath;
     } catch (e) {
@@ -112,12 +113,12 @@ class ImageStorageService {
   Future<void> shareZip() async {
     try {
       final zipPath = await exportAsZip();
-      
+
       if (zipPath == null) {
         throw Exception('No images to export');
       }
 
-      await Share. shareXFiles(
+      await Share.shareXFiles(
         [XFile(zipPath)],
         subject: 'Lab Results',
         text: 'My lab results archive',

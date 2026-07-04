@@ -3,7 +3,7 @@ class VitalModel {
   final String userId;
   final String vitalType;
   final double value;
-  final String?  unit;
+  final String? unit;
   final DateTime recordedAt;
   final String? notes;
   final DateTime createdAt;
@@ -14,8 +14,8 @@ class VitalModel {
     required this.vitalType,
     required this.value,
     this.unit,
-    required this. recordedAt,
-    this. notes,
+    required this.recordedAt,
+    this.notes,
     required this.createdAt,
   });
 
@@ -46,13 +46,13 @@ class VitalModel {
   }
 
   VitalModel copyWith({
-    String?  id,
+    String? id,
     String? userId,
     String? vitalType,
     double? value,
     String? unit,
-    DateTime?  recordedAt,
-    String?  notes,
+    DateTime? recordedAt,
+    String? notes,
     DateTime? createdAt,
   }) {
     return VitalModel(

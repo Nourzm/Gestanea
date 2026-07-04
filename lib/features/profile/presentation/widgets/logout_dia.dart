@@ -12,8 +12,6 @@ Widget buildDialogButton({
   required VoidCallback onPressed,
   required bool isPrimary,
 }) {
-
-
   return GestureDetector(
     onTap: onPressed,
     child: NeumorphicContainer(

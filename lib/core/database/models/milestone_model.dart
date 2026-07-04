@@ -3,7 +3,7 @@ class MilestoneModel {
   final String babyId;
   final String milestoneName;
   final int? expectedAgeMonths;
-  final DateTime?  achievedDate;
+  final DateTime? achievedDate;
   final String? notes;
   final DateTime createdAt;
 
@@ -12,8 +12,8 @@ class MilestoneModel {
     required this.babyId,
     required this.milestoneName,
     this.expectedAgeMonths,
-    this. achievedDate,
-    this. notes,
+    this.achievedDate,
+    this.notes,
     required this.createdAt,
   });
 
@@ -23,9 +23,9 @@ class MilestoneModel {
       'baby_id': babyId,
       'milestone_name': milestoneName,
       'expected_age_months': expectedAgeMonths,
-      'achieved_date': achievedDate?.toIso8601String(). split('T')[0],
+      'achieved_date': achievedDate?.toIso8601String().split('T')[0],
       'notes': notes,
-      'created_at': createdAt. toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
@@ -56,9 +56,9 @@ class MilestoneModel {
       id: id ?? this.id,
       babyId: babyId ?? this.babyId,
       milestoneName: milestoneName ?? this.milestoneName,
-      expectedAgeMonths: expectedAgeMonths ??  this.expectedAgeMonths,
+      expectedAgeMonths: expectedAgeMonths ?? this.expectedAgeMonths,
       achievedDate: achievedDate ?? this.achievedDate,
-      notes: notes ?? this. notes,
+      notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
     );
   }

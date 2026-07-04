@@ -60,15 +60,20 @@ class PregnancyProgressBar extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Progress bar
+          // Progress bar (animates fill on load / change)
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: progress.clamp(0.0, 1.0),
-              minHeight: 6,
-              backgroundColor: Colors.white.withValues(alpha: 0.3),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF8A4DC3),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, _) => LinearProgressIndicator(
+                value: value,
+                minHeight: 8,
+                backgroundColor: Colors.white.withValues(alpha: 0.3),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF8A4DC3),
+                ),
               ),
             ),
           ),

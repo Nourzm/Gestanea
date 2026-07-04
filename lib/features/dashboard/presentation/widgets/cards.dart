@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
-
-
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class ClickableTipsCard extends StatefulWidget {
   final Widget targetPage;
 
-  const ClickableTipsCard({
-    super.key,
-    required this.targetPage,
-  });
+  const ClickableTipsCard({super.key, required this.targetPage});
 
   @override
   State<ClickableTipsCard> createState() => _ClickableTipsCardState();
@@ -21,6 +17,7 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -74,7 +71,7 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
             SvgPicture.asset("assets/icons/stars.svg", width: 32),
             SizedBox(height: screenHeight * 0.015),
             Text(
-              'Our Tips',
+              t.ourTips,
               style: TextStyle(
                 fontSize: screenWidth * 0.045,
                 fontWeight: FontWeight.bold,
@@ -83,7 +80,7 @@ class _ClickableTipsCardState extends State<ClickableTipsCard> {
             ),
             SizedBox(height: screenHeight * 0.005),
             Text(
-              'follow best practices',
+              t.followBestPractices,
               style: TextStyle(
                 fontSize: screenWidth * 0.032,
                 color: Colors.white.withValues(alpha: 0.9),

@@ -22,5 +22,5 @@ class LabResultsExporting extends LabResultsState {}
 
 class LabResultsExported extends LabResultsState {
   final String zipPath;
-  LabResultsExported(this. zipPath);
+  LabResultsExported(this.zipPath);
 }

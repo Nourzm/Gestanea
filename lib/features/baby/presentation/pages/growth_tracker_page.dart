@@ -6,11 +6,12 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/baby_growth_model.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class GrowthTrackerPage extends StatefulWidget {
   final String? babyId;
-  
+
   const GrowthTrackerPage({super.key, this.babyId});
 
   @override
@@ -42,7 +43,8 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -59,63 +61,75 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
             if (state is BabyLoading || state is GrowthLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (state is BabyError) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(state.message, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => context.read<BabyCubit>().loadBabyProfile(),
-                      child: const Text('Retry'),
+                      onPressed: () =>
+                          context.read<BabyCubit>().loadBabyProfile(),
+                      child: Text(t.retry),
                     ),
                   ],
                 ),
               );
             }
-            
+
             if (state is NoBabyProfile) {
-              return const Center(
-                child: Text('No baby profile found. Please add your baby first.'),
-              );
+              return Center(child: Text(t.noBabyProfileFound));
             }
-            
+
             List<BabyGrowthModel> growthRecords = [];
             if (state is GrowthLoaded) {
               growthRecords = state.growthRecords;
             }
-            
+
             // Filter records based on current view (weight only - model has no height)
-            final filteredRecords = growthRecords
-                .where((r) => r.weight != null)
-                .toList()
-              ..sort((a, b) => b.recordedDate.compareTo(a.recordedDate));
-            
+            final filteredRecords =
+                growthRecords.where((r) => r.weight != null).toList()
+                  ..sort((a, b) => b.recordedDate.compareTo(a.recordedDate));
+
             // Get latest record
             final latestValue = filteredRecords.isNotEmpty
                 ? filteredRecords.first.weight
                 : null;
-            final latestDate = filteredRecords.isNotEmpty ? filteredRecords.first.recordedDate : null;
+            final latestDate = filteredRecords.isNotEmpty
+                ? filteredRecords.first.recordedDate
+                : null;
 
             return Column(
               children: [
                 // Header
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.main500,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
-                            'Growth Tracker',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            t.growthTrackerTitle,
+                            style: AppTextStyles.headline1.copyWith(
+                              color: AppColors.main500,
+                            ),
                           ),
                         ),
                       ),
@@ -145,22 +159,37 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                             child: Column(
                               children: [
                                 Text(
-                                  'Current Weight',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                  t.currentWeight,
+                                  style: AppTextStyles.body1.copyWith(
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.7,
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  latestValue != null 
-                                      ? '$latestValue kg'
-                                      : 'No data',
-                                  style: AppTextStyles.numberHighlight.copyWith(fontSize: 36),
+                                  latestValue != null
+                                      ? t.kgValue('$latestValue')
+                                      : t.noData,
+                                  style: AppTextStyles.numberHighlight.copyWith(
+                                    fontSize: 36,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  latestDate != null 
-                                      ? 'Last updated: ${DateFormat('MMM d, yyyy').format(latestDate)}'
-                                      : 'No records yet',
-                                  style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                  latestDate != null
+                                      ? t.lastUpdated(
+                                          DateFormat(
+                                            'MMM d, yyyy',
+                                            locale,
+                                          ).format(latestDate),
+                                        )
+                                      : t.noRecordsYet,
+                                  style: AppTextStyles.smallLabel.copyWith(
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.7,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -179,7 +208,7 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                             child: Column(
                               children: [
                                 Text(
-                                  'Weight Progress Chart',
+                                  t.weightProgressChart,
                                   style: AppTextStyles.subtitle1.copyWith(
                                     color: AppColors.textPrimary,
                                     fontWeight: FontWeight.w600,
@@ -188,11 +217,15 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                                 const SizedBox(height: 20),
                                 Expanded(
                                   child: Center(
-                                    child: Icon(Icons.show_chart, size: 80, color: AppColors.textSecondary),
+                                    child: Icon(
+                                      Icons.show_chart,
+                                      size: 80,
+                                      color: AppColors.textSecondary,
+                                    ),
                                   ),
                                 ),
                                 Text(
-                                  'Chart visualization would go here',
+                                  t.chartPlaceholder,
                                   style: AppTextStyles.smallLabel,
                                 ),
                               ],
@@ -201,27 +234,33 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                           const SizedBox(height: 24),
 
                           // Recent Logs
-                          Text(
-                            'Recent Logs',
-                            style: AppTextStyles.headline2,
-                          ),
+                          Text(t.recentLogs, style: AppTextStyles.headline2),
                           const SizedBox(height: 12),
                           if (filteredRecords.isEmpty)
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'No weight records yet',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
+                                  t.noWeightRecords,
+                                  style: AppTextStyles.body1.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ),
                             )
                           else
-                            ...filteredRecords.take(5).map((record) => _buildLogItem(
-                              '${record.weight} kg',
-                              DateFormat('MMM d, yyyy').format(record.recordedDate),
-                              record == filteredRecords.first,
-                            )),
+                            ...filteredRecords
+                                .take(5)
+                                .map(
+                                  (record) => _buildLogItem(
+                                    t.kgValue('${record.weight}'),
+                                    DateFormat(
+                                      'MMM d, yyyy',
+                                      locale,
+                                    ).format(record.recordedDate),
+                                    record == filteredRecords.first,
+                                  ),
+                                ),
                           const SizedBox(height: 24),
 
                           // Add Log Button
@@ -230,12 +269,16 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                             child: ElevatedButton.icon(
                               onPressed: () => _showAddLogDialog(context),
                               icon: const Icon(Icons.add),
-                              label: const Text('Add Weight Log'),
+                              label: Text(t.addWeightLog),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.main500,
                                 foregroundColor: AppColors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
                               ),
                             ),
                           ),
@@ -257,7 +300,9 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isLatest ? AppColors.pink300.withValues(alpha: 0.3) : AppColors.white,
+        color: isLatest
+            ? AppColors.pink300.withValues(alpha: 0.3)
+            : AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isLatest ? AppColors.pink500 : Colors.transparent,
@@ -292,9 +337,11 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
   }
 
   void _showAddLogDialog(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     _valueController.clear();
     _selectedDate = DateTime.now();
-    
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -302,11 +349,10 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: AppColors.bg_1,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              title: Text(
-                'Add Weight Log',
-                style: AppTextStyles.headline2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
+              title: Text(t.addWeightLog, style: AppTextStyles.headline2),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -314,12 +360,17 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                     controller: _valueController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Weight (kg)',
+                      labelText: t.weightKg,
                       labelStyle: AppTextStyles.body1,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                        borderSide: const BorderSide(
+                          color: AppColors.main500,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -339,14 +390,25 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                     child: AbsorbPointer(
                       child: TextField(
                         decoration: InputDecoration(
-                          labelText: 'Date',
+                          labelText: t.dateLabel,
                           labelStyle: AppTextStyles.body1,
-                          hintText: DateFormat('MMM d, yyyy').format(_selectedDate),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                          suffixIcon: const Icon(Icons.calendar_today, color: AppColors.main500),
+                          hintText: DateFormat(
+                            'MMM d, yyyy',
+                            locale,
+                          ).format(_selectedDate),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          suffixIcon: const Icon(
+                            Icons.calendar_today,
+                            color: AppColors.main500,
+                          ),
                         ),
                         controller: TextEditingController(
-                          text: DateFormat('MMM d, yyyy').format(_selectedDate),
+                          text: DateFormat(
+                            'MMM d, yyyy',
+                            locale,
+                          ).format(_selectedDate),
                         ),
                       ),
                     ),
@@ -356,7 +418,10 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                  child: Text(
+                    t.cancel,
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -372,9 +437,11 @@ class _GrowthTrackerPageState extends State<GrowthTrackerPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.main500,
                     foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: const Text('Save'),
+                  child: Text(t.save),
                 ),
               ],
             );

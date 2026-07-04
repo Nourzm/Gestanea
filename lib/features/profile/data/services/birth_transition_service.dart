@@ -6,7 +6,7 @@ class BirthTransitionService {
   final DatabaseHelper _dbHelper;
 
   BirthTransitionService({DatabaseHelper? dbHelper})
-      : _dbHelper = dbHelper ?? DatabaseHelper.instance;
+    : _dbHelper = dbHelper ?? DatabaseHelper.instance;
 
   /// Transitions user from pregnancy to postpartum mode
   /// 1. Deactivates active pregnancy

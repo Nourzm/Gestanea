@@ -53,13 +53,17 @@ class AuthPage extends StatelessWidget {
                                 height: imageSize,
                                 width: imageSize,
                                 decoration: BoxDecoration(
-                                  color: AppColors.main700.withValues(alpha: 0.1),
+                                  color: AppColors.main700.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Icon(
                                   Icons.image,
                                   size: imageSize * 0.5,
-                                  color: AppColors.main700.withValues(alpha: 0.3),
+                                  color: AppColors.main700.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                               );
                             },
@@ -111,7 +115,7 @@ class AuthPage extends StatelessWidget {
 
                           // Login button
                           AppButton(
-                            text: "Login",
+                            text: t.login,
                             onPressed: () {
                               Navigator.pushNamed(context, AppRoutes.login);
                             },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class CustomColors {
   // A primary purple for gradients/icons
@@ -17,14 +18,15 @@ class PregnancySelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Title
-        const Text(
-          'What best describes you',
+        Text(
+          t.whatBestDescribes,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -38,15 +40,11 @@ class PregnancySelectionScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [Color(0xffF5D4FB), Color(0xffFBECFF)],
           ),
-          title: "I'm Pregnant",
-          subtitle:
-              'Track your pregnancy journey, get weekly insights, and prepare for your baby',
+          title: t.imPregnant,
+          subtitle: t.pregnantOptionDesc,
           icon: "assets/icons/babyy.svg",
           onTap: () {
-            Navigator.pushReplacementNamed(
-              context,
-              AppRoutes.personalizeWeeks,
-            );
+            Navigator.pushReplacementNamed(context, AppRoutes.personalizeWeeks);
           },
         ),
         const SizedBox(height: 20),
@@ -57,25 +55,21 @@ class PregnancySelectionScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [Color(0xffFBECFF), Color(0xffFDF5FF)],
           ),
-          title: "I have a baby",
-          subtitle:
-              'Postpartum care, baby development tracking, and parenting support',
+          title: t.iHaveBaby,
+          subtitle: t.babyOptionDesc,
           icon: "assets/icons/health.svg",
           onTap: () {
-            Navigator.pushReplacementNamed(
-              context,
-              AppRoutes.personalizeBaby,
-            );
+            Navigator.pushReplacementNamed(context, AppRoutes.personalizeBaby);
           },
         ),
 
         const SizedBox(height: 20),
 
         // Bottom note
-        const Center(
+        Center(
           child: Text(
-            "Don't worry, you can change this anytime in settings",
-            style: TextStyle(color: Colors.black54, fontSize: 12),
+            t.canChangeAnytime,
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
             textAlign: TextAlign.center,
           ),
         ),

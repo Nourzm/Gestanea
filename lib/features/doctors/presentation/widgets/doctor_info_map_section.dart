@@ -106,9 +106,9 @@ class DoctorInfoMapSection extends StatelessWidget {
                             color: AppColors.blue200,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Text(
-                            'Open Now',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.openNow,
+                            style: const TextStyle(
                               fontSize: 11,
                               color: Color(0xFF059669),
                               fontWeight: FontWeight.w500,

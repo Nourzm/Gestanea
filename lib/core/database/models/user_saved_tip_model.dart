@@ -36,8 +36,8 @@ class UserSavedTipModel {
     DateTime? savedAt,
   }) {
     return UserSavedTipModel(
-      id: id ?? this. id,
-      userId: userId ??  this.userId,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
       tipId: tipId ?? this.tipId,
       savedAt: savedAt ?? this.savedAt,
     );

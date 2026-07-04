@@ -67,7 +67,7 @@ class AppButton extends StatelessWidget {
               color: Color(0x3F000000),
               blurRadius: 4,
               offset: Offset(4, 4),
-            )
+            ),
           ],
         ),
         child: Container(
@@ -113,11 +113,7 @@ class AppButton extends StatelessWidget {
                 ),
               ),
 
-              iconWidget ??
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                  ),
+              iconWidget ?? const SizedBox(width: 20, height: 20),
             ],
           ),
         ),

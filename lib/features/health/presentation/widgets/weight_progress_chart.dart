@@ -2,14 +2,33 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/measurement_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class WeightProgressChart extends StatelessWidget {
-  const WeightProgressChart({super.key});
+  /// Measurements newest-first (as returned by [MeasurementsBloc]).
+  final List<MeasurementModel> measurements;
+
+  const WeightProgressChart({super.key, this.measurements = const []});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final localeCode = Localizations.localeOf(context).languageCode;
+
+    // Oldest-first weight points only (a measurement may omit weight).
+    final weighed = measurements
+        .where((m) => m.weight != null)
+        .toList()
+        .reversed
+        .toList();
+    final hasEnough = weighed.length >= 2;
+
+    final spots = <FlSpot>[
+      for (var i = 0; i < weighed.length; i++)
+        FlSpot(i.toDouble(), weighed[i].weight!),
+    ];
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -24,7 +43,7 @@ class WeightProgressChart extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -45,90 +64,113 @@ class WeightProgressChart extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFB8E6B8),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  l10n.onTrack,
-                  style: AppTextStyles.smallLabel.copyWith(
-                    color: const Color(0xFF2D5F2D),
-                    fontSize: 11,
+              if (hasEnough)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFB8E6B8),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    l10n.onTrack,
+                    style: AppTextStyles.smallLabel.copyWith(
+                      color: const Color(0xFF2D5F2D),
+                      fontSize: 11,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 120,
-            child: LineChart(
-              LineChartData(
-                gridData: const FlGridData(show: false),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 25,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          '${value.toInt()}',
-                          style: AppTextStyles.smallLabel.copyWith(
-                            fontSize: 9,
-                            color: AppColors.textDark,
-                          ),
-                        );
-                      },
-                    ),
+          if (!hasEnough)
+            SizedBox(
+              height: 120,
+              child: Center(
+                child: Text(
+                  l10n.noMeasurementsYet,
+                  style: AppTextStyles.smallLabel.copyWith(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
                   ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          'W${value.toInt()}',
-                          style: AppTextStyles.smallLabel.copyWith(
-                            fontSize: 9,
-                            color: AppColors.textDark,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
-                borderData: FlBorderData(show: false),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: const [
-                      FlSpot(20, 60),
-                      FlSpot(21, 65),
-                      FlSpot(22, 68),
-                      FlSpot(23, 70),
-                      FlSpot(24, 72),
-                    ],
-                    isCurved: true,
-                    color: AppColors.main500,
-                    barWidth: 2.5,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) {
-                        return FlDotCirclePainter(
-                          radius: 3,
-                          color: AppColors.main500,
-                          strokeWidth: 1.5,
-                          strokeColor: Colors.white,
-                        );
-                      },
+              ),
+            )
+          else
+            SizedBox(
+              height: 120,
+              child: LineChart(
+                LineChartData(
+                  gridData: const FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 25,
+                        getTitlesWidget: (value, meta) {
+                          return Text(
+                            '${value.toInt()}',
+                            style: AppTextStyles.smallLabel.copyWith(
+                              fontSize: 9,
+                              color: AppColors.textDark,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          final i = value.toInt();
+                          if (i < 0 || i >= weighed.length) {
+                            return const SizedBox.shrink();
+                          }
+                          return Text(
+                            DateFormat(
+                              'd/M',
+                              localeCode,
+                            ).format(weighed[i].recordedAt),
+                            style: AppTextStyles.smallLabel.copyWith(
+                              fontSize: 9,
+                              color: AppColors.textDark,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                ],
+                  borderData: FlBorderData(show: false),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: spots,
+                      isCurved: true,
+                      color: AppColors.main500,
+                      barWidth: 2.5,
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) {
+                          return FlDotCirclePainter(
+                            radius: 3,
+                            color: AppColors.main500,
+                            strokeWidth: 1.5,
+                            strokeColor: Colors.white,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -2,13 +2,13 @@ class ReminderModel {
   final String id;
   final String userId;
   final String reminderType;
-  final String?  referenceId;
+  final String? referenceId;
   final String title;
-  final String?  description;
+  final String? description;
   final DateTime reminderTime;
   final String? repeatPattern;
   final bool isCompleted;
-  final DateTime?  completedAt;
+  final DateTime? completedAt;
   final DateTime createdAt;
 
   ReminderModel({
@@ -36,7 +36,7 @@ class ReminderModel {
       'reminder_time': reminderTime.toIso8601String(),
       'repeat_pattern': repeatPattern,
       'is_completed': isCompleted ? 1 : 0,
-      'completed_at': completedAt?. toIso8601String(),
+      'completed_at': completedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -77,9 +77,9 @@ class ReminderModel {
       userId: userId ?? this.userId,
       reminderType: reminderType ?? this.reminderType,
       referenceId: referenceId ?? this.referenceId,
-      title: title ?? this. title,
-      description: description ??  this.description,
-      reminderTime: reminderTime ?? this. reminderTime,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      reminderTime: reminderTime ?? this.reminderTime,
       repeatPattern: repeatPattern ?? this.repeatPattern,
       isCompleted: isCompleted ?? this.isCompleted,
       completedAt: completedAt ?? this.completedAt,

@@ -7,12 +7,12 @@ class RiskAlertModel {
   final String? recommendation;
   final bool isResolved;
   final DateTime detectedAt;
-  final DateTime?  resolvedAt;
+  final DateTime? resolvedAt;
   final DateTime createdAt;
 
   RiskAlertModel({
     required this.id,
-    required this. userId,
+    required this.userId,
     required this.alertType,
     required this.severity,
     required this.message,
@@ -32,7 +32,7 @@ class RiskAlertModel {
       'message': message,
       'recommendation': recommendation,
       'is_resolved': isResolved ? 1 : 0,
-      'detected_at': detectedAt. toIso8601String(),
+      'detected_at': detectedAt.toIso8601String(),
       'resolved_at': resolvedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
     };
@@ -62,16 +62,16 @@ class RiskAlertModel {
     String? severity,
     String? message,
     String? recommendation,
-    bool?  isResolved,
-    DateTime?  detectedAt,
-    DateTime?  resolvedAt,
-    DateTime?  createdAt,
+    bool? isResolved,
+    DateTime? detectedAt,
+    DateTime? resolvedAt,
+    DateTime? createdAt,
   }) {
     return RiskAlertModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       alertType: alertType ?? this.alertType,
-      severity: severity ??  this.severity,
+      severity: severity ?? this.severity,
       message: message ?? this.message,
       recommendation: recommendation ?? this.recommendation,
       isResolved: isResolved ?? this.isResolved,

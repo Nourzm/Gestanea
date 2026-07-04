@@ -11,7 +11,8 @@ class FancyNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTap,
-    required this.items, required this.barHeight,
+    required this.items,
+    required this.barHeight,
   });
 
   @override
@@ -27,116 +28,122 @@ class FancyNavBar extends StatelessWidget {
     final itemWidth = w / items.length;
     final bottomPadding = h * 0.015; // space for labels
 
-    return SizedBox(
-      height: barHeight + circleSize * 0.6,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          // -------------------------
-          // WHITE BAR WITH NOTCH
-          // -------------------------
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: CustomPaint(
-              painter: _NotchedBarPainter(
-                notchCenterX: itemWidth * currentIndex + itemWidth / 2,
-                notchRadius: notchSize,
-                borderRadius: 20,
+    // Force LTR layout so the custom-painted notch + floating circle (which are
+    // positioned by left-edge index math) stay aligned with the item row even
+    // in RTL locales like Arabic. Labels still render translated.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: SizedBox(
+        height: barHeight + circleSize * 0.6,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // -------------------------
+            // WHITE BAR WITH NOTCH
+            // -------------------------
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: CustomPaint(
+                painter: _NotchedBarPainter(
+                  notchCenterX: itemWidth * currentIndex + itemWidth / 2,
+                  notchRadius: notchSize,
+                  borderRadius: 20,
+                ),
+                child: Container(height: barHeight),
               ),
-              child: Container(height: barHeight),
             ),
-          ),
 
-          // -------------------------
-          // FLOATING CIRCLE
-          // -------------------------
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            bottom: barHeight - circleSize * 0.40,
-            left: itemWidth * currentIndex + (itemWidth - circleSize) / 2,
-            child: Container(
-              width: circleSize,
-              height: circleSize,
-              decoration: BoxDecoration(
-                color: AppColors.main500,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.main500.withValues(alpha: 0.25),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  items[currentIndex].icon,
-                  width: iconSizeActive,
-                  height: iconSizeActive,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
+            // -------------------------
+            // FLOATING CIRCLE
+            // -------------------------
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              bottom: barHeight - circleSize * 0.40,
+              left: itemWidth * currentIndex + (itemWidth - circleSize) / 2,
+              child: Container(
+                width: circleSize,
+                height: circleSize,
+                decoration: BoxDecoration(
+                  color: AppColors.main500,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.main500.withValues(alpha: 0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    items[currentIndex].icon,
+                    width: iconSizeActive,
+                    height: iconSizeActive,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // -------------------------
-          // ICONS & LABELS
-          // -------------------------
-          Positioned(
-            bottom: bottomPadding,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(items.length, (i) {
-                final active = i == currentIndex;
+            // -------------------------
+            // ICONS & LABELS
+            // -------------------------
+            Positioned(
+              bottom: bottomPadding,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(items.length, (i) {
+                  final active = i == currentIndex;
 
-                return GestureDetector(
-                  onTap: () => onTap(i),
-                  child: SizedBox(
-                    width: itemWidth,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (!active)
-                          SvgPicture.asset(
-                            items[i].icon,
-                            width: iconSizeInactive,
-                            height: iconSizeInactive,
-                            colorFilter: ColorFilter.mode(
-                              Colors.grey.shade500,
-                              BlendMode.srcIn,
+                  return GestureDetector(
+                    onTap: () => onTap(i),
+                    child: SizedBox(
+                      width: itemWidth,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (!active)
+                            SvgPicture.asset(
+                              items[i].icon,
+                              width: iconSizeInactive,
+                              height: iconSizeInactive,
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.shade500,
+                                BlendMode.srcIn,
+                              ),
+                            )
+                          else
+                            SizedBox(height: iconSizeInactive),
+
+                          SizedBox(height: h * 0.005),
+
+                          Text(
+                            items[i].label,
+                            style: TextStyle(
+                              fontSize: w * 0.033, // responsive
+                              fontWeight: FontWeight.w600,
+                              color: active
+                                  ? AppColors.main500
+                                  : Colors.grey.shade500,
                             ),
-                          )
-                        else
-                          SizedBox(height: iconSizeInactive),
-
-                        SizedBox(height: h * 0.005),
-
-                        Text(
-                          items[i].label,
-                          style: TextStyle(
-                            fontSize: w * 0.033, // responsive
-                            fontWeight: FontWeight.w600,
-                            color: active
-                                ? AppColors.main500
-                                : Colors.grey.shade500,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

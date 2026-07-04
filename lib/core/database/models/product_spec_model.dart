@@ -34,14 +34,14 @@ class ProductSpecModel {
   }
 
   ProductSpecModel copyWith({
-    String?  id,
+    String? id,
     String? productId,
     String? name,
     String? value,
     DateTime? createdAt,
   }) {
     return ProductSpecModel(
-      id: id ?? this. id,
+      id: id ?? this.id,
       productId: productId ?? this.productId,
       name: name ?? this.name,
       value: value ?? this.value,

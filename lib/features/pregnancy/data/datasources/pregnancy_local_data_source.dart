@@ -18,6 +18,11 @@ abstract class PregnancyLocalDataSource {
   // these are the variants that actually match real rows.
   Future<PregnancyModel?> getActivePregnancyByStringId(String userId);
   Future<Map<String, dynamic>> calculatePregnancyWeekByStringId(String userId);
+  Future<List<KickCountModel>> getKickCountsByStringId(
+    String userId, {
+    int? limit,
+  });
+  Future<int> getTodayKickTotalByStringId(String userId);
 }
 
 class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
@@ -221,5 +226,40 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
       'dueDate': pregnancy.dueDate,
       'progressPercentage': progressPercentage,
     };
+  }
+
+  @override
+  Future<List<KickCountModel>> getKickCountsByStringId(
+    String userId, {
+    int? limit,
+  }) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'kick_counts',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      orderBy: 'recorded_at DESC',
+      limit: limit,
+    );
+    return result.map((map) => KickCountModel.fromMap(map)).toList();
+  }
+
+  @override
+  Future<int> getTodayKickTotalByStringId(String userId) async {
+    final db = await _dbHelper.database;
+    final today = DateTime.now();
+    final startOfDay = DateTime(today.year, today.month, today.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    final result = await db.rawQuery(
+      '''
+      SELECT COALESCE(SUM(kick_count), 0) AS total
+      FROM kick_counts
+      WHERE user_id = ? AND recorded_at >= ? AND recorded_at < ?
+      ''',
+      [userId, startOfDay.toIso8601String(), endOfDay.toIso8601String()],
+    );
+    final total = result.first['total'];
+    return (total is int) ? total : (total as num).toInt();
   }
 }

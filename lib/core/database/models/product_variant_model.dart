@@ -8,7 +8,7 @@ class ProductVariantModel {
   final DateTime createdAt;
 
   ProductVariantModel({
-    required this. id,
+    required this.id,
     required this.productId,
     required this.type,
     required this.value,
@@ -36,14 +36,14 @@ class ProductVariantModel {
       type: map['type'] as String,
       value: map['value'] as String,
       colorHex: map['color_hex'] as String?,
-      stock: map['stock'] as int?  ?? 0,
+      stock: map['stock'] as int? ?? 0,
       createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
 
   ProductVariantModel copyWith({
     String? id,
-    String?  productId,
+    String? productId,
     String? type,
     String? value,
     String? colorHex,
@@ -53,11 +53,11 @@ class ProductVariantModel {
     return ProductVariantModel(
       id: id ?? this.id,
       productId: productId ?? this.productId,
-      type: type ?? this. type,
-      value: value ??  this.value,
-      colorHex: colorHex ?? this. colorHex,
+      type: type ?? this.type,
+      value: value ?? this.value,
+      colorHex: colorHex ?? this.colorHex,
       stock: stock ?? this.stock,
-      createdAt: createdAt ??  this.createdAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

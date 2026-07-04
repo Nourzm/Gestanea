@@ -9,6 +9,7 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/pregnancy/data/datasources/pregnancy_local_data_source.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 /// Onboarding step "How Far Along?" — week + extra-days picker, then writes an
@@ -32,6 +33,12 @@ class _Personalize2State extends State<Personalize2> {
     if (week <= 12) return '1st Trimester';
     if (week <= 27) return '2nd Trimester';
     return '3rd Trimester';
+  }
+
+  String _localizedTrimester(AppLocalizations t, int week) {
+    if (week <= 12) return t.firstTrimester;
+    if (week <= 27) return t.secondTrimester;
+    return t.thirdTrimester;
   }
 
   Future<void> _pickDate() async {
@@ -75,7 +82,9 @@ class _Personalize2State extends State<Personalize2> {
     );
 
     try {
-      final ds = PregnancyLocalDataSourceImpl(dbHelper: DatabaseHelper.instance);
+      final ds = PregnancyLocalDataSourceImpl(
+        dbHelper: DatabaseHelper.instance,
+      );
       await ds.createPregnancy(pregnancy);
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(
@@ -86,7 +95,11 @@ class _Personalize2State extends State<Personalize2> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save pregnancy: $e')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.couldNotSavePregnancy('$e'),
+          ),
+        ),
       );
       setState(() => _saving = false);
     }
@@ -94,6 +107,7 @@ class _Personalize2State extends State<Personalize2> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -101,10 +115,7 @@ class _Personalize2State extends State<Personalize2> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HeroSection(
-              title: 'How Far Along?',
-              subtitle: "We'll calculate your due date",
-            ),
+            HeroSection(title: t.howFarAlong, subtitle: t.wellCalculateDueDate),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.06,
@@ -122,15 +133,18 @@ class _Personalize2State extends State<Personalize2> {
                   _buildDayChips(),
                   const SizedBox(height: 28),
                   GradientPillButton(
-                    label: 'Complete Setup',
+                    label: t.completeSetup,
                     isLoading: _saving,
                     onPressed: _saving ? null : _completeSetup,
                   ),
                   const SizedBox(height: 10),
-                  const Center(
+                  Center(
                     child: Text(
-                      'You can update this information anytime',
-                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                      t.canUpdateAnytime,
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -143,6 +157,7 @@ class _Personalize2State extends State<Personalize2> {
   }
 
   Widget _buildToggle() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -152,8 +167,16 @@ class _Personalize2State extends State<Personalize2> {
       ),
       child: Row(
         children: [
-          _toggleOption('By Weeks', _byWeeks, () => setState(() => _byWeeks = true)),
-          _toggleOption('By Date', !_byWeeks, () => setState(() => _byWeeks = false)),
+          _toggleOption(
+            t.byWeeks,
+            _byWeeks,
+            () => setState(() => _byWeeks = true),
+          ),
+          _toggleOption(
+            t.byDate,
+            !_byWeeks,
+            () => setState(() => _byWeeks = false),
+          ),
         ],
       ),
     );
@@ -187,6 +210,7 @@ class _Personalize2State extends State<Personalize2> {
   }
 
   Widget _buildTrimesterCard() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -206,15 +230,15 @@ class _Personalize2State extends State<Personalize2> {
               const Icon(Icons.auto_awesome, color: Colors.white, size: 18),
               const SizedBox(width: 6),
               Text(
-                _trimesterFor(_selectedWeek),
+                _localizedTrimester(t, _selectedWeek),
                 style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Text(
-            'You are',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+          Text(
+            t.youAre,
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
           ),
           const SizedBox(height: 4),
           Row(
@@ -230,11 +254,11 @@ class _Personalize2State extends State<Personalize2> {
                 ),
               ),
               const SizedBox(width: 8),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  'weeks',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  t.weeksUnit,
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
               if (_selectedExtraDays > 0) ...[
@@ -242,7 +266,7 @@ class _Personalize2State extends State<Personalize2> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    '+$_selectedExtraDays day${_selectedExtraDays == 1 ? '' : 's'}',
+                    t.plusDays(_selectedExtraDays),
                     style: const TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ),
@@ -255,6 +279,7 @@ class _Personalize2State extends State<Personalize2> {
   }
 
   Widget _buildWeekSlider() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
@@ -265,9 +290,9 @@ class _Personalize2State extends State<Personalize2> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Select Weeks',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          Text(
+            t.selectWeeks,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
           SliderTheme(
             data: SliderThemeData(
@@ -284,13 +309,19 @@ class _Personalize2State extends State<Personalize2> {
               onChanged: (v) => setState(() => _selectedWeek = v.round()),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Week 1', style: TextStyle(color: Colors.black54, fontSize: 12)),
-                Text('Week 42', style: TextStyle(color: Colors.black54, fontSize: 12)),
+                Text(
+                  t.weekShort(1),
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                ),
+                Text(
+                  t.weekShort(_maxWeeks),
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -300,8 +331,9 @@ class _Personalize2State extends State<Personalize2> {
   }
 
   Widget _buildDatePicker() {
+    final t = AppLocalizations.of(context)!;
     final label = _byDateValue == null
-        ? 'Pick the first day of your last period'
+        ? t.pickFirstDayLastPeriod
         : '${_byDateValue!.year}-${_byDateValue!.month.toString().padLeft(2, '0')}-${_byDateValue!.day.toString().padLeft(2, '0')}';
     return GestureDetector(
       onTap: _pickDate,
@@ -319,7 +351,10 @@ class _Personalize2State extends State<Personalize2> {
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const Icon(Icons.chevron_right, color: AppColors.main500),
@@ -330,6 +365,7 @@ class _Personalize2State extends State<Personalize2> {
   }
 
   Widget _buildDayChips() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -340,9 +376,9 @@ class _Personalize2State extends State<Personalize2> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Additional Days',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          Text(
+            t.additionalDays,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           Wrap(

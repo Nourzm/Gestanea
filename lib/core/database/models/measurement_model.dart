@@ -1,7 +1,7 @@
 class MeasurementModel {
   final String id;
   final String userId;
-  final double?  weight; // in kg
+  final double? weight; // in kg
   final int? heartRate; // in bpm
   final int? systolic; // blood pressure
   final int? diastolic; // blood pressure
@@ -11,7 +11,7 @@ class MeasurementModel {
 
   MeasurementModel({
     required this.id,
-    required this. userId,
+    required this.userId,
     this.weight,
     this.heartRate,
     this.systolic,
@@ -22,9 +22,8 @@ class MeasurementModel {
   });
 
   // Helper getters
-  String get bloodPressure => systolic != null && diastolic != null 
-      ? '$systolic/$diastolic' 
-      : 'N/A';
+  String get bloodPressure =>
+      systolic != null && diastolic != null ? '$systolic/$diastolic' : 'N/A';
 
   String get weightStatus {
     if (weight == null) return 'N/A';
@@ -41,7 +40,7 @@ class MeasurementModel {
   String get bloodPressureStatus {
     if (systolic == null || diastolic == null) return 'N/A';
     if (systolic! < 120 && diastolic! < 80) return 'Normal';
-    if (systolic! < 130 && diastolic!  < 80) return 'Elevated';
+    if (systolic! < 130 && diastolic! < 80) return 'Elevated';
     return 'High';
   }
 
@@ -69,7 +68,7 @@ class MeasurementModel {
       heartRate: map['heart_rate'] as int?,
       systolic: map['systolic'] as int?,
       diastolic: map['diastolic'] as int?,
-      recordedAt: DateTime. parse(map['recorded_at'] as String),
+      recordedAt: DateTime.parse(map['recorded_at'] as String),
       notes: map['notes'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
     );
@@ -87,15 +86,15 @@ class MeasurementModel {
     DateTime? createdAt,
   }) {
     return MeasurementModel(
-      id: id ??  this.id,
+      id: id ?? this.id,
       userId: userId ?? this.userId,
       weight: weight ?? this.weight,
-      heartRate: heartRate ??  this.heartRate,
+      heartRate: heartRate ?? this.heartRate,
       systolic: systolic ?? this.systolic,
       diastolic: diastolic ?? this.diastolic,
       recordedAt: recordedAt ?? this.recordedAt,
-      notes: notes ??  this.notes,
-      createdAt: createdAt ?? this. createdAt,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

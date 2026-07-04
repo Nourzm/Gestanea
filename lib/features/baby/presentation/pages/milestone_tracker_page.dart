@@ -9,11 +9,12 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/milestone_model.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class MilestoneTrackerPage extends StatefulWidget {
   final String? babyId;
-  
+
   const MilestoneTrackerPage({super.key, this.babyId});
 
   @override
@@ -33,6 +34,25 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
 
   bool _hasLoadedData = false;
 
+  String _msTitle(AppLocalizations t, String title) {
+    switch (title) {
+      case 'First Smile':
+        return t.msFirstSmile;
+      case 'Holds Head Up':
+        return t.msHoldsHeadUp;
+      case 'Rolls Over':
+        return t.msRollsOver;
+      case 'Sits Without Support':
+        return t.msSitsWithoutSupport;
+      case 'Crawls':
+        return t.msCrawls;
+      case 'First Words':
+        return t.msFirstWords;
+      default:
+        return title;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +66,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -62,61 +83,82 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
             if (state is BabyLoading || state is MilestoneLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (state is BabyError) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(state.message, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => context.read<BabyCubit>().loadBabyProfile(),
-                      child: const Text('Retry'),
+                      onPressed: () =>
+                          context.read<BabyCubit>().loadBabyProfile(),
+                      child: Text(t.retry),
                     ),
                   ],
                 ),
               );
             }
-            
+
             if (state is NoBabyProfile) {
-              return const Center(
-                child: Text('No baby profile found. Please add your baby first.'),
-              );
+              return Center(child: Text(t.noBabyProfileFound));
             }
-            
+
             List<MilestoneModel> milestones = [];
             if (state is MilestoneLoaded) {
               milestones = state.allMilestones;
             }
-            
+
             // Calculate progress
-            int completedCount = milestones.where((m) => m.achievedDate != null).length;
-            int totalCount = milestones.isEmpty ? defaultMilestones.length : milestones.length;
-            double percentage = totalCount > 0 ? (completedCount / totalCount * 100) : 0;
+            int completedCount = milestones
+                .where((m) => m.achievedDate != null)
+                .length;
+            int totalCount = milestones.isEmpty
+                ? defaultMilestones.length
+                : milestones.length;
+            double percentage = totalCount > 0
+                ? (completedCount / totalCount * 100)
+                : 0;
 
             return Column(
               children: [
                 // Header
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.main500,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
-                            'Milestones',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            t.milestonesLabel,
+                            style: AppTextStyles.headline1.copyWith(
+                              color: AppColors.main500,
+                            ),
                           ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add, color: AppColors.main500, size: 24),
+                        icon: Icon(
+                          Icons.add,
+                          color: AppColors.main500,
+                          size: 24,
+                        ),
                         onPressed: () => _showAddMilestoneDialog(context),
                       ),
                     ],
@@ -148,12 +190,17 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                                   children: [
                                     Text(
                                       '$completedCount/$totalCount',
-                                      style: AppTextStyles.numberHighlight.copyWith(fontSize: 32),
+                                      style: AppTextStyles.numberHighlight
+                                          .copyWith(fontSize: 32),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'Completed',
-                                      style: AppTextStyles.body1.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                      t.completedLabel,
+                                      style: AppTextStyles.body1.copyWith(
+                                        color: AppColors.white.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -161,13 +208,16 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                                   width: 100,
                                   height: 100,
                                   decoration: BoxDecoration(
-                                    color: AppColors.white.withValues(alpha: 0.2),
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.2,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Center(
                                     child: Text(
                                       '${percentage.toInt()}%',
-                                      style: AppTextStyles.numberHighlight.copyWith(fontSize: 24),
+                                      style: AppTextStyles.numberHighlight
+                                          .copyWith(fontSize: 24),
                                     ),
                                   ),
                                 ),
@@ -178,19 +228,21 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
 
                           // Milestones List
                           Text(
-                            'Developmental Milestones',
+                            t.developmentalMilestones,
                             style: AppTextStyles.headline2,
                           ),
                           const SizedBox(height: 12),
                           if (milestones.isEmpty)
-                            ...defaultMilestones.map((m) => _buildDefaultMilestoneItem(
-                              m['title'] as String,
-                              m['age'] as int,
-                            ))
+                            ...defaultMilestones.map(
+                              (m) => _buildDefaultMilestoneItem(
+                                m['title'] as String,
+                                m['age'] as int,
+                              ),
+                            )
                           else
-                            ...milestones.map((milestone) => _buildMilestoneItem(
-                              milestone,
-                            )),
+                            ...milestones.map(
+                              (milestone) => _buildMilestoneItem(milestone),
+                            ),
                         ],
                       ),
                     ),
@@ -205,6 +257,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
   }
 
   Widget _buildDefaultMilestoneItem(String title, int ageMonths) {
+    final t = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -234,7 +287,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  _msTitle(t, title),
                   style: AppTextStyles.subtitle1.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
@@ -242,7 +295,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Expected at $ageMonths months',
+                  t.expectedAtMonths('$ageMonths'),
                   style: AppTextStyles.smallLabel,
                 ),
               ],
@@ -265,6 +318,8 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
   }
 
   Widget _buildMilestoneItem(MilestoneModel milestone) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final isCompleted = milestone.achievedDate != null;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -299,7 +354,7 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  milestone.milestoneName,
+                  _msTitle(t, milestone.milestoneName),
                   style: AppTextStyles.subtitle1.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
@@ -309,8 +364,15 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                 const SizedBox(height: 4),
                 Text(
                   isCompleted && milestone.achievedDate != null
-                      ? 'Completed: ${DateFormat('MMM d, yyyy').format(milestone.achievedDate!)}'
-                      : 'Expected at ${milestone.expectedAgeMonths ?? 'N/A'} months',
+                      ? t.completedOn(
+                          DateFormat(
+                            'MMM d, yyyy',
+                            locale,
+                          ).format(milestone.achievedDate!),
+                        )
+                      : t.expectedAtMonths(
+                          '${milestone.expectedAgeMonths ?? t.notAvailable}',
+                        ),
                   style: AppTextStyles.smallLabel,
                 ),
               ],
@@ -330,28 +392,36 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
   }
 
   void _showAddMilestoneDialog(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final titleController = TextEditingController();
     final ageController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.bg_1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text('Add Milestone', style: AppTextStyles.headline2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(t.addMilestoneTitle, style: AppTextStyles.headline2),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
                 decoration: InputDecoration(
-                  labelText: 'Milestone Title',
+                  labelText: t.milestoneTitle,
                   labelStyle: AppTextStyles.body1,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.main500,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -360,12 +430,17 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
                 controller: ageController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: 'Expected Age (months)',
+                  labelText: t.expectedAgeMonthsLabel,
                   labelStyle: AppTextStyles.body1,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.main500, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.main500,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -374,7 +449,10 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+              child: Text(
+                t.cancel,
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -389,9 +467,11 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.main500,
                 foregroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Add'),
+              child: Text(t.addLabel),
             ),
           ],
         );
@@ -399,4 +479,3 @@ class _MilestoneTrackerPageState extends State<MilestoneTrackerPage> {
     );
   }
 }
-

@@ -61,14 +61,14 @@ class _MainContentState extends State<MainContent> {
         if (state is PlanError) {
           return Center(
             child: Text(
-              'Error: ${state.message}',
+              '${AppLocalizations.of(context)!.error}: ${state.message}',
               style: const TextStyle(color: Colors.red),
             ),
           );
         }
 
         if (state is! PlanLoaded) {
-          return const Center(child: Text('No data available'));
+          return Center(child: Text(AppLocalizations.of(context)!.noData));
         }
 
         final stats = _getMedicineStats(state.medicines, state.medicineLogs);

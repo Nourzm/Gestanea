@@ -16,16 +16,16 @@ class SupabaseConnector extends PowerSyncBackendConnector {
   final SupabaseService _supabase;
   final String powerSyncUrl;
 
-  SupabaseConnector({
-    required this.powerSyncUrl,
-    SupabaseService? supabase,
-  }) : _supabase = supabase ?? SupabaseService.instance;
+  SupabaseConnector({required this.powerSyncUrl, SupabaseService? supabase})
+    : _supabase = supabase ?? SupabaseService.instance;
 
   @override
   Future<PowerSyncCredentials?> fetchCredentials() async {
     final session = _supabase.currentSession;
     if (session == null) {
-      throw Exception('Supabase user is not signed in — cannot fetch sync token');
+      throw Exception(
+        'Supabase user is not signed in — cannot fetch sync token',
+      );
     }
     return PowerSyncCredentials(
       endpoint: powerSyncUrl,
@@ -66,7 +66,9 @@ class SupabaseConnector extends PowerSyncBackendConnector {
       // mark complete, and surface to the user via UI elsewhere.
       final fatal = const {'23505', '42501', '23503'}.contains(e.code);
       if (fatal) {
-        debugPrint('SupabaseConnector: dropping fatal CRUD op: ${e.code} ${e.message}');
+        debugPrint(
+          'SupabaseConnector: dropping fatal CRUD op: ${e.code} ${e.message}',
+        );
         await batch.complete();
       } else {
         rethrow;

@@ -2,7 +2,7 @@ class KickCountModel {
   final String id;
   final String userId;
   final int kickCount;
-  final int?  durationMinutes;
+  final int? durationMinutes;
   final DateTime recordedAt;
   final String? notes;
   final DateTime createdAt;
@@ -11,7 +11,7 @@ class KickCountModel {
     required this.id,
     required this.userId,
     required this.kickCount,
-    this. durationMinutes,
+    this.durationMinutes,
     required this.recordedAt,
     this.notes,
     required this.createdAt,
@@ -43,7 +43,7 @@ class KickCountModel {
 
   KickCountModel copyWith({
     String? id,
-    String?  userId,
+    String? userId,
     int? kickCount,
     int? durationMinutes,
     DateTime? recordedAt,
@@ -51,11 +51,11 @@ class KickCountModel {
     DateTime? createdAt,
   }) {
     return KickCountModel(
-      id: id ??  this.id,
+      id: id ?? this.id,
       userId: userId ?? this.userId,
-      kickCount: kickCount ?? this. kickCount,
+      kickCount: kickCount ?? this.kickCount,
       durationMinutes: durationMinutes ?? this.durationMinutes,
-      recordedAt: recordedAt ??  this.recordedAt,
+      recordedAt: recordedAt ?? this.recordedAt,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
     );

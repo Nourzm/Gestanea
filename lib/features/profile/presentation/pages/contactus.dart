@@ -3,6 +3,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -117,6 +118,7 @@ class ContactUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -131,7 +133,7 @@ class ContactUsScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          'Contacts',
+          t.contactsTitle,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -162,7 +164,7 @@ class ContactUsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Get in Touch",
+                    t.getInTouch,
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 20,
@@ -171,7 +173,7 @@ class ContactUsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
+                    t.getInTouchDesc,
                     style: TextStyle(
                       color: AppColors.main700.withValues(alpha: 0.7),
                       fontSize: 14,
@@ -194,27 +196,31 @@ class ContactUsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // 2. Contact Form Fields
-            NeumorphicTextField(label: 'Your Name', hint: 'Enter your name'),
+            NeumorphicTextField(label: t.yourName, hint: t.enterYourName),
             const SizedBox(height: 15),
             NeumorphicTextField(
-              label: 'Email Address',
+              label: t.emailAddress,
               hint: 'your.email@example.com',
             ),
             const SizedBox(height: 15),
-            NeumorphicTextField(label: 'Subject', hint: 'What is this about?'),
+            NeumorphicTextField(label: t.subjectLabel, hint: t.subjectHint),
             const SizedBox(height: 15),
             NeumorphicTextField(
-              label: 'Message',
-              hint: 'Tell us how we can help...',
+              label: t.messageLabel,
+              hint: t.messageHint,
               maxLines: 6,
             ),
             const SizedBox(height: 30),
 
             // 3. Submit Button
             NeumorphicButton(
-              text: "Send Message",
+              text: t.sendMessage,
               onPressed: () {},
-              prefixIcon: const Icon(Icons.send, color: AppColors.white, size: 24),
+              prefixIcon: const Icon(
+                Icons.send,
+                color: AppColors.white,
+                size: 24,
+              ),
               color: AppColors.main500,
             ),
             const SizedBox(height: 30),

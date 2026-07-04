@@ -143,7 +143,9 @@ class MedicineDB extends MedicineRepository {
         parsed.minute,
       );
       // If today's time already passed, push to tomorrow.
-      final fireAt = when.isAfter(now) ? when : when.add(const Duration(days: 1));
+      final fireAt = when.isAfter(now)
+          ? when
+          : when.add(const Duration(days: 1));
       try {
         await NotificationsService.instance.scheduleMedicineReminder(
           key: '${medicine.id}#$i',

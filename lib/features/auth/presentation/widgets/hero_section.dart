@@ -39,6 +39,34 @@ class HeroSection extends StatelessWidget {
             ),
           ),
 
+          // Logo badge (top-left)
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, top: 50),
+              child: Container(
+                width: 58,
+                height: 58,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(

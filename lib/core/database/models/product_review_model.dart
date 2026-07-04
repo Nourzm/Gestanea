@@ -4,7 +4,7 @@ class ProductReviewModel {
   final String userId;
   final String reviewerName;
   final int rating;
-  final String?  reviewText;
+  final String? reviewText;
   final DateTime createdAt;
 
   ProductReviewModel({
@@ -29,7 +29,7 @@ class ProductReviewModel {
     };
   }
 
-  factory ProductReviewModel. fromMap(Map<String, dynamic> map) {
+  factory ProductReviewModel.fromMap(Map<String, dynamic> map) {
     return ProductReviewModel(
       id: map['id'] as String,
       productId: map['product_id'] as String,
@@ -42,16 +42,16 @@ class ProductReviewModel {
   }
 
   ProductReviewModel copyWith({
-    String?  id,
+    String? id,
     String? productId,
     String? userId,
     String? reviewerName,
     int? rating,
     String? reviewText,
-    DateTime?  createdAt,
+    DateTime? createdAt,
   }) {
     return ProductReviewModel(
-      id: id ?? this. id,
+      id: id ?? this.id,
       productId: productId ?? this.productId,
       userId: userId ?? this.userId,
       reviewerName: reviewerName ?? this.reviewerName,

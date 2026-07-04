@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
-
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,6 +13,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SingleChildScrollView(
@@ -27,10 +28,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   const SizedBox(height: 20),
                   // Main Description Text
-                  const Text(
-                    'Everything you need for pregnancy, baby care, and beyond — all in one place',
+                  Text(
+                    t.everythingYouNeed,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.textPrimary,
                       height: 1.4,
@@ -39,24 +40,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: 32),
 
                   // Feature Cards
-                  const _FeatureCard(
+                  _FeatureCard(
                     icon: Icons.access_time_filled,
-                    title: 'Track Your Pregnancy',
-                    subtitle: 'Week-by-week insights',
+                    title: t.trackYourPregnancy,
+                    subtitle: t.weekByWeekInsights,
                     iconColor: AppColors.main600,
                   ),
                   const SizedBox(height: 16),
-                  const _FeatureCard(
+                  _FeatureCard(
                     icon: Icons.calendar_today,
-                    title: 'Health & Appointments',
-                    subtitle: 'Never miss a checkup',
+                    title: t.healthAppointments,
+                    subtitle: t.neverMissCheckup,
                     iconColor: AppColors.main600,
                   ),
                   const SizedBox(height: 16),
-                  const _FeatureCard(
+                  _FeatureCard(
                     icon: Icons.people,
-                    title: 'Community Support',
-                    subtitle: 'Connect with others',
+                    title: t.communitySupport,
+                    subtitle: t.connectWithOthers,
                     iconColor: AppColors.main600,
                   ),
                   const SizedBox(height: 40),
@@ -64,9 +65,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const _PrimaryButton(),
                   const SizedBox(height: 12),
 
-                  const Text(
-                    'Takes less than a minute',
-                    style: TextStyle(
+                  Text(
+                    t.takesLessMinute,
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textPrimary,
                     ),
@@ -118,11 +119,38 @@ class _HeroSection extends StatelessWidget {
           ),
 
           Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 50),
+              child: Container(
+                width: 58,
+                height: 58,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+
+          Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 24, bottom: 24),
               child: Text(
-                'Your Journey,\nOur Support',
+                AppLocalizations.of(context)!.yourJourneyOurSupport,
                 style: TextStyle(
                   fontSize: screenWidth * 0.1,
                   fontWeight: FontWeight.bold,
@@ -250,19 +278,19 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
         child: InkWell(
           onTap: _completeOnboarding,
           borderRadius: BorderRadius.circular(30),
-          child: const Center(
+          child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Let's Get Started",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.letsGetStarted,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.white,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Icon(Icons.arrow_forward, color: AppColors.white, size: 20),
               ],
             ),

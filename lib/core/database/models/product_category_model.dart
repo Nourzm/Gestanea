@@ -1,6 +1,6 @@
 class ProductCategoryModel {
   final String id;
-  final String?  name;
+  final String? name;
   final String? imageUrl;
   final int? displayOrder;
   final DateTime createdAt;
@@ -44,7 +44,7 @@ class ProductCategoryModel {
       id: id ?? this.id,
       name: name ?? this.name,
       imageUrl: imageUrl ?? this.imageUrl,
-      displayOrder: displayOrder ?? this. displayOrder,
+      displayOrder: displayOrder ?? this.displayOrder,
       createdAt: createdAt ?? this.createdAt,
     );
   }

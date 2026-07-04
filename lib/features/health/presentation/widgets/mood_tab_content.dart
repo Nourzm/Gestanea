@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/mood_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import '../../logic/bloc/mood_bloc.dart';
+import '../../logic/bloc/mood_state.dart';
 import 'dialogs/add_mood_dialog.dart';
 
 class MoodTabContent extends StatelessWidget {
   const MoodTabContent({super.key});
+
+  /// Localized display label for a canonical mood key.
+  String _moodLabel(String key, AppLocalizations l10n) {
+    switch (key) {
+      case 'very_happy':
+        return l10n.veryHappy;
+      case 'happy':
+        return l10n.happy;
+      case 'neutral':
+        return l10n.neutral;
+      case 'sad':
+        return l10n.sad;
+      case 'very_sad':
+        return l10n.verySad;
+      default:
+        return key;
+    }
+  }
+
+  Color _moodColor(String key) {
+    switch (key) {
+      case 'very_happy':
+        return const Color(0xFFFFF9C4);
+      case 'happy':
+        return const Color(0xFFE8F5E9);
+      case 'neutral':
+        return const Color(0xFFE1F5FE);
+      case 'sad':
+        return const Color(0xFFE8EAF6);
+      case 'very_sad':
+        return const Color(0xFFFCE4EC);
+      default:
+        return const Color(0xFFE1F5FE);
+    }
+  }
+
+  String _relativeTime(DateTime when, AppLocalizations l10n) {
+    final diff = DateTime.now().difference(when);
+    if (diff.inMinutes < 60) {
+      return l10n.minutesAgo(diff.inMinutes < 1 ? 1 : diff.inMinutes);
+    }
+    if (diff.inHours < 24) return l10n.hoursAgo(diff.inHours);
+    if (diff.inDays == 1) return l10n.yesterday;
+    return l10n.daysAgo(diff.inDays);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,78 +67,73 @@ class MoodTabContent extends StatelessWidget {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Current Mood
-                Text(
-                  l10n. howAreYouFeelingToday,
-                  style: AppTextStyles.headline2.copyWith(
-                    fontSize: 18,
-                    color: AppColors.textDark,
-                  ),
+          child: BlocBuilder<MoodBloc, MoodState>(
+            builder: (context, state) {
+              final moods = state is MoodLoaded
+                  ? state.moods
+                  : const <MoodModel>[];
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Current Mood
+                    Text(
+                      l10n.howAreYouFeelingToday,
+                      style: AppTextStyles.headline2.copyWith(
+                        fontSize: 18,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Mood Selector (opens the logging dialog)
+                    _buildMoodSelector(context),
+                    const SizedBox(height: 20),
+
+                    // Recent Mood Entries
+                    Text(
+                      l10n.recentEntries,
+                      style: AppTextStyles.subtitle1.copyWith(
+                        fontSize: 16,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    if (moods.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: Text(
+                            l10n.noEntriesYet,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      )
+                    else
+                      ...moods
+                          .take(3)
+                          .map((m) => _buildMoodEntryCard(context, m, l10n)),
+
+                    const SizedBox(height: 20),
+
+                    // Mood Trends (last 7 days)
+                    _buildMoodTrendsCard(context, moods),
+
+                    const SizedBox(height: 20),
+
+                    // Self-Care Suggestions
+                    _buildSelfCareCard(context),
+
+                    const SizedBox(height: 16),
+
+                    // Tip Card
+                    _buildTipCard(l10n.trackingMoodHelps),
+                  ],
                 ),
-                const SizedBox(height: 16),
-
-                // Mood Selector
-                _buildMoodSelector(context),
-                const SizedBox(height: 20),
-
-                // Recent Mood Entries
-                Text(
-                  l10n. recentEntries,
-                  style: AppTextStyles.subtitle1.copyWith(
-                    fontSize: 16,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                _buildMoodEntryCard(
-                  context,
-                  emoji: '😊',
-                  mood: l10n.happy,
-                  note: l10n.feltEnergeticToday,
-                  time: l10n.hoursAgo(2),
-                  color: const Color(0xFFFFF9C4),
-                ),
-                const SizedBox(height: 12),
-                _buildMoodEntryCard(
-                  context,
-                  emoji: '😌',
-                  mood: l10n.calm,
-                  note: l10n.relaxingEvening,
-                  time: l10n.yesterday,
-                  color: const Color(0xFFE1F5FE),
-                ),
-                const SizedBox(height: 12),
-                _buildMoodEntryCard(
-                  context,
-                  emoji: '😴',
-                  mood: l10n.tired,
-                  note: l10n.needMoreSleep,
-                  time: l10n. daysAgo(2),
-                  color: const Color(0xFFE8EAF6),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Mood Trends
-                _buildMoodTrendsCard(context),
-
-                const SizedBox(height: 20),
-
-                // Self-Care Suggestions
-                _buildSelfCareCard(context),
-
-                const SizedBox(height: 16),
-
-                // Tip Card
-                _buildTipCard(l10n.trackingMoodHelps),
-              ],
-            ),
+              );
+            },
           ),
         ),
 
@@ -102,7 +146,9 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -125,12 +171,14 @@ class MoodTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors. black.withValues(alpha: 0.12),
+                    Colors.black.withValues(alpha: 0.12),
                     Colors.transparent,
                   ],
                 ),
@@ -143,8 +191,8 @@ class MoodTabContent extends StatelessWidget {
   }
 
   Widget _buildMoodSelector(BuildContext context) {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     final moods = [
       {'emoji': '😄', 'label': l10n.great},
       {'emoji': '😊', 'label': l10n.good},
@@ -155,11 +203,12 @@ class MoodTabContent extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        final bloc = context.read<MoodBloc>();
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const AddMoodDialog(),
+          builder: (_) => AddMoodDialog(bloc: bloc),
         );
       },
       child: Container(
@@ -187,10 +236,7 @@ class MoodTabContent extends StatelessWidget {
           children: moods.map((mood) {
             return Column(
               children: [
-                Text(
-                  mood['emoji']!,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                Text(mood['emoji']!, style: const TextStyle(fontSize: 32)),
                 const SizedBox(height: 4),
                 Text(
                   mood['label']!,
@@ -208,18 +254,16 @@ class MoodTabContent extends StatelessWidget {
   }
 
   Widget _buildMoodEntryCard(
-    BuildContext context, {
-    required String emoji,
-    required String mood,
-    required String note,
-    required String time,
-    required Color color,
-  }) {
+    BuildContext context,
+    MoodModel mood,
+    AppLocalizations l10n,
+  ) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius. circular(16),
+        color: _moodColor(mood.mood),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Color(0x3F000000),
@@ -237,36 +281,37 @@ class MoodTabContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 40),
-          ),
+          Text(mood.emoji, style: const TextStyle(fontSize: 40)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  mood,
-                  style: AppTextStyles.subtitle1. copyWith(
+                  _moodLabel(mood.mood, l10n),
+                  style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  note,
-                  style: AppTextStyles.body1.copyWith(
-                    fontSize: 12,
-                    color: AppColors.textDark,
+                if (mood.notes != null && mood.notes!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    mood.notes!,
+                    style: AppTextStyles.body1.copyWith(
+                      fontSize: 12,
+                      color: AppColors.textDark,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ],
               ],
             ),
           ),
           Text(
-            time,
+            _relativeTime(mood.recordedAt, l10n),
             style: AppTextStyles.smallLabel.copyWith(
               fontSize: 11,
               color: AppColors.textDark,
@@ -277,9 +322,25 @@ class MoodTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodTrendsCard(BuildContext context) {
+  Widget _buildMoodTrendsCard(BuildContext context, List<MoodModel> moods) {
     final l10n = AppLocalizations.of(context)!;
-    
+
+    // Count entries per mood over the last 7 days.
+    final cutoff = DateTime.now().subtract(const Duration(days: 7));
+    final recent = moods.where((m) => m.recordedAt.isAfter(cutoff)).toList();
+    final counts = <String, int>{for (final k in MoodModel.keys) k: 0};
+    for (final m in recent) {
+      if (counts.containsKey(m.mood)) counts[m.mood] = counts[m.mood]! + 1;
+    }
+
+    final positive = counts['very_happy']! + counts['happy']!;
+    final negative = counts['sad']! + counts['very_sad']!;
+    final caption = recent.isEmpty
+        ? l10n.logMoodToSeeTrends
+        : (positive >= negative
+              ? l10n.mostlyPositiveMoods
+              : l10n.takeCareYourself);
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -295,7 +356,7 @@ class MoodTabContent extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -303,7 +364,7 @@ class MoodTabContent extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment. start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.moodTrendsLast7Days,
@@ -315,19 +376,20 @@ class MoodTabContent extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildMoodTrendItem('😄', '2'),
-              _buildMoodTrendItem('😊', '3'),
-              _buildMoodTrendItem('😐', '1'),
-              _buildMoodTrendItem('😔', '1'),
-              _buildMoodTrendItem('😢', '0'),
-            ],
+            children: MoodModel.keys
+                .map(
+                  (k) => _buildMoodTrendItem(
+                    MoodModel.emojis[k]!,
+                    counts[k].toString(),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.mostlyPositiveMoods,
+            caption,
             style: AppTextStyles.smallLabel.copyWith(
-              color: Colors.white. withValues(alpha: 0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontSize: 12,
             ),
           ),
@@ -339,15 +401,12 @@ class MoodTabContent extends StatelessWidget {
   Widget _buildMoodTrendItem(String emoji, String count) {
     return Column(
       children: [
-        Text(
-          emoji,
-          style: const TextStyle(fontSize: 24),
-        ),
+        Text(emoji, style: const TextStyle(fontSize: 24)),
         const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: Colors.white. withValues(alpha: 0.3),
+            color: Colors.white.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -364,7 +423,7 @@ class MoodTabContent extends StatelessWidget {
 
   Widget _buildSelfCareCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -394,7 +453,7 @@ class MoodTabContent extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 l10n.selfCareSuggestions,
-                style: AppTextStyles.subtitle1. copyWith(
+                style: AppTextStyles.subtitle1.copyWith(
                   fontSize: 14,
                   color: const Color(0xFF2E7D32),
                   fontWeight: FontWeight.w600,
@@ -454,7 +513,7 @@ class MoodTabContent extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: AppTextStyles.body1. copyWith(
+        style: AppTextStyles.body1.copyWith(
           color: const Color(0xFF7B4BA6),
           fontSize: 12,
         ),

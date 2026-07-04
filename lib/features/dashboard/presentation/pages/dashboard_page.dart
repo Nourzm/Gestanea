@@ -20,6 +20,7 @@ import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
 import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 import '../../../../main.dart' show routeObserver;
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -183,19 +184,25 @@ class _DashboardPageState extends State<DashboardPage>
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
                     items: [
-                      NavBarItem(icon: "assets/icons/home.svg", label: "Home"),
+                      NavBarItem(
+                        icon: "assets/icons/home.svg",
+                        label: AppLocalizations.of(context)!.navHome,
+                      ),
                       NavBarItem(
                         icon: "assets/icons/track.svg",
-                        label: "Track",
+                        label: AppLocalizations.of(context)!.navTrack,
                       ),
                       NavBarItem(
                         icon: "assets/icons/health.svg",
-                        label: "Health",
+                        label: AppLocalizations.of(context)!.navHealth,
                       ),
-                      NavBarItem(icon: "assets/icons/plan.svg", label: "Plan"),
+                      NavBarItem(
+                        icon: "assets/icons/plan.svg",
+                        label: AppLocalizations.of(context)!.navPlan,
+                      ),
                       NavBarItem(
                         icon: "assets/icons/market.svg",
-                        label: "Market",
+                        label: AppLocalizations.of(context)!.navMarket,
                       ),
                     ],
                   ),

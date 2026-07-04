@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'add_appointment/appointment_name_page.dart';
 import 'add_appointment/appointment_location_page.dart';
 import 'add_appointment/appointment_date_time.dart';
@@ -47,18 +48,19 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   }
 
   Future<void> _saveAppointment() async {
+    final t = AppLocalizations.of(context)!;
     if (appointmentName.isEmpty) {
-      _showError('Please enter an appointment name');
+      _showError(t.pleaseEnterAppointmentName);
       return;
     }
 
     if (appointmentDate == null) {
-      _showError('Please select a date');
+      _showError(t.pleaseSelectDate);
       return;
     }
 
     if (appointmentTime == null) {
-      _showError('Please select a time');
+      _showError(t.pleaseSelectTime);
       return;
     }
 

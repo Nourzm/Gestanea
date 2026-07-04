@@ -15,7 +15,7 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
   final _nameController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
-  
+
   DateTime _dateOfBirth = DateTime.now();
   String _gender = 'girl';
 
@@ -74,7 +74,7 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: SingleChildScrollView(
@@ -108,16 +108,17 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
                         children: [
                           Text(
                             'Congratulations! 🎉',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.alerts,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.alerts,
+                                ),
                           ),
                           Text(
                             'Tell us about your baby',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey,
-                            ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -138,7 +139,10 @@ class _GiveBirthDialogState extends State<GiveBirthDialog> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.main400, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.main400,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (value) {

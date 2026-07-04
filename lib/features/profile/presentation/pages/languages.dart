@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/profile/presentation/widgets/neuo_cards.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 // Assuming this is your root app file that contains MyApp.setAppLocale
 import 'package:gestanea/app.dart';
 
@@ -53,8 +54,20 @@ class _LanguagesPageState extends State<LanguagesPage> {
     MyApp.setAppLocale(context, newLocale);
   }
 
+  String _localizedName(AppLocalizations t, String code) {
+    switch (code) {
+      case 'fr':
+        return t.french;
+      case 'ar':
+        return t.arabic;
+      default:
+        return t.english;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     // Read the current locale from the MaterialApp widget itself
     final currentLocale = Localizations.localeOf(context);
 
@@ -69,7 +82,7 @@ class _LanguagesPageState extends State<LanguagesPage> {
           },
         ),
         title: Text(
-          'Languages',
+          t.languages,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -87,7 +100,7 @@ class _LanguagesPageState extends State<LanguagesPage> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                "Choose your preferred language",
+                t.chooseLanguage,
                 style: TextStyle(color: AppColors.textDark),
               ),
             ),
@@ -100,7 +113,10 @@ class _LanguagesPageState extends State<LanguagesPage> {
                       currentLocale.languageCode;
 
                   return buildNeumorphicTile(
-                    primaryText: langData.name,
+                    primaryText: _localizedName(
+                      t,
+                      langData.locale.languageCode,
+                    ),
                     secondaryText: langData.nativeName,
                     isSelected: isSelected,
                     onTap: () {

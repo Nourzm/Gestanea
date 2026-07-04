@@ -64,9 +64,7 @@ class PowerSyncService {
       debugPrint('PowerSyncService.connect: no Supabase session — skipping');
       return;
     }
-    final connector = SupabaseConnector(
-      powerSyncUrl: AppConfig.powerSyncUrl,
-    );
+    final connector = SupabaseConnector(powerSyncUrl: AppConfig.powerSyncUrl);
     await _db!.connect(connector: connector);
     _connected = true;
   }

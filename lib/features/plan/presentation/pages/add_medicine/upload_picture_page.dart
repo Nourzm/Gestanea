@@ -50,7 +50,9 @@ class _UploadPicturePageState extends State<UploadPicturePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error picking image: $e'),
+            content: Text(
+              AppLocalizations.of(context)!.failedToPickImage('$e'),
+            ),
             backgroundColor: Colors.red,
           ),
         );

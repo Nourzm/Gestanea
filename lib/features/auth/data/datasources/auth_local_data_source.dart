@@ -1,17 +1,11 @@
 import 'dart:async';
-import 'dart:math';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
+import 'package:bcrypt/bcrypt.dart';
 import 'package:gestanea/core/database/db_helper.dart';
 import 'package:gestanea/core/database/models/user_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AuthLocalDataSource {
-  static const int _iterations = 10000;
-  static const int _saltBytes = 16;
-
   final DatabaseHelper _dbHelper;
-  final Random _rng = Random.secure();
 
   AuthLocalDataSource(this._dbHelper);
 
@@ -27,6 +21,15 @@ class AuthLocalDataSource {
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
+    // If the table existed before the salt column was introduced, ALTER it.
+    // Mirrors the same guard in upgradeSchema (v7) for devices that bypassed it.
+    final columns = await db.rawQuery("PRAGMA table_info('auth_credentials')");
+    final hasSalt = columns.any((c) => c['name'] == 'salt');
+    if (!hasSalt) {
+      await db.execute(
+        "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+      );
+    }
   }
 
   Future<void> createUserWithPassword({
@@ -36,22 +39,22 @@ class AuthLocalDataSource {
     final db = await _db;
     await ensureAuthTableExists();
 
-    final salt = _generateSalt();
-    final passwordHash = _hashPassword(password, salt);
+    // BCrypt generates and embeds its own salt; cost factor 12 is the
+    // current recommended minimum for interactive logins.
+    final passwordHash = BCrypt.hashpw(password, BCrypt.gensalt(logRounds: 12));
 
     await db.transaction((txn) async {
-      // Insert user
       await txn.insert(
         'users',
         user.toMap(),
         conflictAlgorithm: ConflictAlgorithm.abort,
       );
-
-      // Insert credentials
+      // salt column is kept for schema compatibility but bcrypt embeds its salt
+      // in the hash, so we store an empty string there.
       await txn.insert('auth_credentials', {
         'user_id': user.id,
         'password': passwordHash,
-        'salt': salt,
+        'salt': '',
       }, conflictAlgorithm: ConflictAlgorithm.abort);
     });
   }
@@ -87,11 +90,9 @@ class AuthLocalDataSource {
     final db = await _db;
     await ensureAuthTableExists();
 
-    // Fetch the user + their salt, then verify the hash in Dart to avoid
-    // leaking timing info that a raw SQL equality comparison would expose.
     final result = await db.rawQuery(
       '''
-      SELECT u.*, a.password AS _stored_hash, a.salt AS _stored_salt
+      SELECT u.*, a.password AS _stored_hash
       FROM users u
       INNER JOIN auth_credentials a ON u.id = a.user_id
       WHERE u.email = ?
@@ -104,18 +105,14 @@ class AuthLocalDataSource {
 
     final row = result.first;
     final storedHash = row['_stored_hash'] as String? ?? '';
-    final storedSalt = row['_stored_salt'] as String? ?? '';
-    if (storedSalt.isEmpty) {
-      // Legacy/empty-salt account from older schema — refuse login so the
-      // user re-registers under the new hashing scheme.
-      return null;
-    }
-    final candidateHash = _hashPassword(password, storedSalt);
-    if (!_constantTimeEquals(candidateHash, storedHash)) return null;
 
-    final userMap = Map<String, Object?>.from(row)
-      ..remove('_stored_hash')
-      ..remove('_stored_salt');
+    // Only accept bcrypt hashes (start with $2). Accounts stored under the
+    // old SHA-256 or empty-salt scheme are rejected so users re-register.
+    if (!storedHash.startsWith('\$2')) return null;
+
+    if (!BCrypt.checkpw(password, storedHash)) return null;
+
+    final userMap = Map<String, Object?>.from(row)..remove('_stored_hash');
     return UserModel.fromMap(userMap);
   }
 
@@ -143,16 +140,12 @@ class AuthLocalDataSource {
     return maps.isNotEmpty;
   }
 
-  /// Update an existing user record in the users table.
-  /// This method guarantees updated_at is set to the provided value in the model.
   Future<void> updateUser(UserModel user) async {
     final db = await _db;
     final values = user.toMap();
-    // Ensure updated_at is present; user.toMap should include it.
     if (!values.containsKey('updated_at') || values['updated_at'] == null) {
       values['updated_at'] = DateTime.now().toIso8601String();
     }
-
     await db.update(
       'users',
       values,
@@ -160,30 +153,5 @@ class AuthLocalDataSource {
       whereArgs: [user.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-  }
-
-  String _generateSalt() {
-    final bytes = List<int>.generate(_saltBytes, (_) => _rng.nextInt(256));
-    return base64Url.encode(bytes);
-  }
-
-  String _hashPassword(String password, String salt) {
-    // Iterated SHA-256 with salt. Not as strong as bcrypt/argon2, but a
-    // significant upgrade over single-round unsalted SHA-256 and uses only
-    // the `crypto` package already in pubspec.
-    List<int> current = utf8.encode('$salt:$password');
-    for (var i = 0; i < _iterations; i++) {
-      current = sha256.convert(current).bytes;
-    }
-    return base64Url.encode(current);
-  }
-
-  bool _constantTimeEquals(String a, String b) {
-    if (a.length != b.length) return false;
-    var diff = 0;
-    for (var i = 0; i < a.length; i++) {
-      diff |= a.codeUnitAt(i) ^ b.codeUnitAt(i);
-    }
-    return diff == 0;
   }
 }

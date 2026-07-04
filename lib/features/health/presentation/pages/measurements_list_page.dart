@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/measurement_model.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_state.dart';
 
@@ -10,9 +11,10 @@ class MeasurementsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Measurements'),
+        title: Text(t.myMeasurements),
         backgroundColor: AppColors.main500,
         foregroundColor: Colors.white,
       ),
@@ -21,7 +23,7 @@ class MeasurementsListPage extends StatelessWidget {
           if (state is MeasurementsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (state is MeasurementsError) {
             return Center(
               child: Column(
@@ -29,54 +31,58 @@ class MeasurementsListPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${t.error}: ${state.message}'),
                 ],
               ),
             );
           }
-          
+
           if (state is MeasurementsLoaded) {
             if (state.measurements.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.inbox, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
+                    const Icon(Icons.inbox, size: 64, color: Colors.grey),
+                    const SizedBox(height: 16),
                     Text(
-                      'No measurements yet! ',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      t.noMeasurementsYet,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    SizedBox(height: 8),
-                    Text('Tap "Add Measurement" to start. '),
+                    const SizedBox(height: 8),
+                    Text(t.tapAddMeasurement),
                   ],
                 ),
               );
             }
-            
+
             return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: state.measurements.length,
               itemBuilder: (context, index) {
                 final measurement = state.measurements[index];
-                return _buildMeasurementCard(measurement);
+                return _buildMeasurementCard(t, measurement);
               },
             );
           }
-          
-          return const Center(child: Text('No data'));
+
+          return Center(child: Text(t.noData));
         },
       ),
     );
   }
 
-  Widget _buildMeasurementCard(MeasurementModel measurement) {
+  Widget _buildMeasurementCard(
+    AppLocalizations t,
+    MeasurementModel measurement,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -84,25 +90,30 @@ class MeasurementsListPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 16, color: AppColors.main500),
+                const Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: AppColors.main500,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   '${measurement.recordedAt.day}/${measurement.recordedAt.month}/${measurement.recordedAt.year}',
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight. bold,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.main500,
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Icon(Icons.access_time, size: 16, color: AppColors.main500),
+                const Icon(
+                  Icons.access_time,
+                  size: 16,
+                  color: AppColors.main500,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   '${measurement.recordedAt.hour}:${measurement.recordedAt.minute.toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ),
@@ -110,23 +121,23 @@ class MeasurementsListPage extends StatelessWidget {
             if (measurement.weight != null)
               _buildDetailRow(
                 Icons.monitor_weight_outlined,
-                'Weight',
+                t.weight,
                 '${measurement.weight} kg',
                 measurement.weightStatus,
               ),
             if (measurement.heartRate != null)
               _buildDetailRow(
                 Icons.favorite,
-                'Heart Rate',
+                t.heartRate,
                 '${measurement.heartRate} bpm',
                 measurement.heartRateStatus,
               ),
             if (measurement.systolic != null && measurement.diastolic != null)
               _buildDetailRow(
                 Icons.favorite_border,
-                'Blood Pressure',
+                t.bloodPressure,
                 measurement.bloodPressure,
-                measurement. bloodPressureStatus,
+                measurement.bloodPressureStatus,
               ),
           ],
         ),
@@ -134,11 +145,16 @@ class MeasurementsListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value, String status) {
+  Widget _buildDetailRow(
+    IconData icon,
+    String label,
+    String value,
+    String status,
+  ) {
     Color statusColor;
     Color textColor;
-    
-    switch (status. toLowerCase()) {
+
+    switch (status.toLowerCase()) {
       case 'normal':
         statusColor = const Color(0xFFB8E6B8);
         textColor = const Color(0xFF2D5F2D);
@@ -156,7 +172,7 @@ class MeasurementsListPage extends StatelessWidget {
         textColor = const Color(0xFF8B6914);
         break;
       default:
-        statusColor = Colors.grey. shade300;
+        statusColor = Colors.grey.shade300;
         textColor = Colors.grey.shade700;
     }
 
@@ -172,10 +188,7 @@ class MeasurementsListPage extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 Text(
                   value,

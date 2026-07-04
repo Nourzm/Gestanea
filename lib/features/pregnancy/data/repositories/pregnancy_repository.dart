@@ -18,6 +18,11 @@ abstract class IPregnancyRepository {
     int durationMinutes,
     String? notes,
   );
+  Future<List<KickCountModel>> getKickHistoryByStringId(
+    String userId, {
+    int? limit,
+  });
+  Future<int> getTodayKickTotalByStringId(String userId);
 }
 
 class PregnancyRepository implements IPregnancyRepository {
@@ -62,6 +67,19 @@ class PregnancyRepository implements IPregnancyRepository {
       createdAt: now,
     );
     await _dataSource.saveKickSession(kickSession);
+  }
+
+  @override
+  Future<List<KickCountModel>> getKickHistoryByStringId(
+    String userId, {
+    int? limit,
+  }) async {
+    return await _dataSource.getKickCountsByStringId(userId, limit: limit);
+  }
+
+  @override
+  Future<int> getTodayKickTotalByStringId(String userId) async {
+    return await _dataSource.getTodayKickTotalByStringId(userId);
   }
 
   @override

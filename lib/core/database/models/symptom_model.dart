@@ -25,7 +25,7 @@ class SymptomModel {
       'severity': severity,
       'notes': notes,
       'recorded_at': recordedAt.toIso8601String(),
-      'created_at': createdAt. toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
@@ -54,10 +54,10 @@ class SymptomModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       symptomName: symptomName ?? this.symptomName,
-      severity: severity ?? this. severity,
-      notes: notes ??  this.notes,
-      recordedAt: recordedAt ?? this. recordedAt,
-      createdAt: createdAt ?? this. createdAt,
+      severity: severity ?? this.severity,
+      notes: notes ?? this.notes,
+      recordedAt: recordedAt ?? this.recordedAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

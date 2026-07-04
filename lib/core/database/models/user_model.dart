@@ -2,7 +2,7 @@ class UserModel {
   final String id;
   final String email;
   final String name;
-  final String?  phone;
+  final String? phone;
   final String? country;
   final String? language;
   final String? theme;
@@ -15,7 +15,7 @@ class UserModel {
     required this.email,
     required this.name,
     this.phone,
-    this. country,
+    this.country,
     this.language,
     this.theme,
     this.notificationsEnabled = true,
@@ -32,7 +32,7 @@ class UserModel {
       'country': country,
       'language': language,
       'theme': theme,
-      'notifications_enabled': notificationsEnabled ?  1 : 0,
+      'notifications_enabled': notificationsEnabled ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -49,16 +49,16 @@ class UserModel {
       theme: map['theme'] as String?,
       notificationsEnabled: (map['notifications_enabled'] as int) == 1,
       createdAt: DateTime.parse(map['created_at'] as String),
-      updatedAt: DateTime. parse(map['updated_at'] as String),
+      updatedAt: DateTime.parse(map['updated_at'] as String),
     );
   }
 
   UserModel copyWith({
-    String?  id,
+    String? id,
     String? email,
     String? name,
     String? phone,
-    String?  country,
+    String? country,
     String? language,
     String? theme,
     bool? notificationsEnabled,

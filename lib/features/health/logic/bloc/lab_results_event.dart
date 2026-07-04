@@ -11,7 +11,7 @@ class AddLabResult extends LabResultsEvent {
 
 class DeleteLabResult extends LabResultsEvent {
   final String id;
-  final String?  imagePath;
+  final String? imagePath;
   DeleteLabResult(this.id, this.imagePath);
 }
 

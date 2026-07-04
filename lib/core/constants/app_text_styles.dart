@@ -12,7 +12,7 @@ class AppTextStyles {
     bodyMedium: const TextStyle(fontSize: 14),
     titleLarge: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
   );
-  
+
   static const TextStyle headline1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
@@ -53,7 +53,5 @@ class AppTextStyles {
     color: AppColors.textSecondary,
   );
 
-  static const TextStyle title = TextStyle(
-    fontWeight: FontWeight.w500,
-  );
+  static const TextStyle title = TextStyle(fontWeight: FontWeight.w500);
 }

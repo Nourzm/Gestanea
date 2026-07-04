@@ -2,7 +2,7 @@ class BabyGrowthModel {
   final String id;
   final String babyId;
   final DateTime recordedDate;
-  final double?  weight;
+  final double? weight;
   final int? weightPercentile;
   final int? heightPercentile;
   final String? growthStatus;
@@ -25,7 +25,7 @@ class BabyGrowthModel {
     return {
       'id': id,
       'baby_id': babyId,
-      'recorded_date': recordedDate.toIso8601String(). split('T')[0],
+      'recorded_date': recordedDate.toIso8601String().split('T')[0],
       'weight': weight,
       'weight_percentile': weightPercentile,
       'height_percentile': heightPercentile,
@@ -50,7 +50,7 @@ class BabyGrowthModel {
   }
 
   BabyGrowthModel copyWith({
-    String?  id,
+    String? id,
     String? babyId,
     DateTime? recordedDate,
     double? weight,

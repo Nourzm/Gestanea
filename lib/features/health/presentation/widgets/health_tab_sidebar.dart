@@ -15,7 +15,7 @@ class HealthTabSidebar extends StatelessWidget {
   });
 
   String _getLocalizedLabel(BuildContext context, String labelKey) {
-    final localizations = AppLocalizations. of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     switch (labelKey) {
       case 'vitals':
         return localizations.vitals;
@@ -42,20 +42,17 @@ class HealthTabSidebar extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          tabs.length,
-          (index) {
-            final tab = tabs[index];
-            final isSelected = selectedIndex == index;
-            return _buildTabItem(
-              context: context,
-              icon: tab['icon'],
-              labelKey: tab['labelKey'],
-              isSelected: isSelected,
-              onTap: () => onTabSelected(index),
-            );
-          },
-        ),
+        children: List.generate(tabs.length, (index) {
+          final tab = tabs[index];
+          final isSelected = selectedIndex == index;
+          return _buildTabItem(
+            context: context,
+            icon: tab['icon'],
+            labelKey: tab['labelKey'],
+            isSelected: isSelected,
+            onTap: () => onTabSelected(index),
+          );
+        }),
       ),
     );
   }
@@ -73,13 +70,13 @@ class HealthTabSidebar extends StatelessWidget {
         width: 50,
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize. min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isSelected ?  AppColors.main500 : Colors.transparent,
+                color: isSelected ? AppColors.main500 : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -91,11 +88,11 @@ class HealthTabSidebar extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               _getLocalizedLabel(context, labelKey),
-              textAlign: TextAlign. center,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: isSelected ?  AppColors.main500 : AppColors.textDark,
+                color: isSelected ? AppColors.main500 : AppColors.textDark,
                 fontSize: 8,
-                fontWeight: isSelected ? FontWeight. w600 : FontWeight.w400,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 height: 1.2,
               ),
             ),

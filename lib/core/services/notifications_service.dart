@@ -33,33 +33,34 @@ class NotificationsService {
     // Android 13+ requires explicit runtime permission.
     final androidImpl = _plugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     await androidImpl?.requestNotificationsPermission();
 
     _initialized = true;
   }
 
   NotificationDetails get _medicineDetails => const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'gestanea_medicine',
-          'Medicine reminders',
-          channelDescription: 'Reminders to take prescribed medication',
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      );
+    android: AndroidNotificationDetails(
+      'gestanea_medicine',
+      'Medicine reminders',
+      channelDescription: 'Reminders to take prescribed medication',
+      importance: Importance.high,
+      priority: Priority.high,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
 
   NotificationDetails get _appointmentDetails => const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'gestanea_appointments',
-          'Appointment alerts',
-          channelDescription: 'Reminders about upcoming appointments',
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      );
+    android: AndroidNotificationDetails(
+      'gestanea_appointments',
+      'Appointment alerts',
+      channelDescription: 'Reminders about upcoming appointments',
+      importance: Importance.high,
+      priority: Priority.high,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
 
   /// Stable integer id derived from a string identifier (UUID, etc.) so the
   /// caller can later cancel/replace the same notification.

@@ -43,17 +43,17 @@ class SymptomsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is SymptomsLoaded) {
                       if (state.symptoms.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No symptoms logged yet',
-                              style: TextStyle(color: Colors.grey),
+                              localizations.noSymptomsYet,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
                       }
-                      
+
                       // Show only the 4 most recent symptoms
                       final recentSymptoms = state.symptoms.take(4).toList();
                       return Column(
@@ -62,11 +62,18 @@ class SymptomsTabContent extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 12),
                             child: _buildSymptomCard(
                               context,
-                              icon: _getSymptomIcon(symptom. symptomName),
-                              symptom: symptom. symptomName,
-                              severity: symptom.severity ??  'N/A',
-                              severityColor: _getSeverityColor(symptom. severity),
-                              time: _formatTime(symptom.recordedAt),
+                              icon: _getSymptomIcon(symptom.symptomName),
+                              symptom: symptom.symptomName,
+                              severity:
+                                  symptom.severity ??
+                                  localizations.notAvailable,
+                              severityColor: _getSeverityColor(
+                                symptom.severity,
+                              ),
+                              time: _formatTime(
+                                localizations,
+                                symptom.recordedAt,
+                              ),
                             ),
                           );
                         }).toList(),
@@ -88,7 +95,7 @@ class SymptomsTabContent extends StatelessWidget {
                   builder: (btnContext) {
                     return SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton. icon(
+                      child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
                             btnContext,
@@ -101,18 +108,23 @@ class SymptomsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Symptoms'),
-                        style: ElevatedButton. styleFrom(
+                        label: Text(
+                          AppLocalizations.of(context)!.viewAllSymptoms,
+                        ),
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.main500,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                     );
-                  }
+                  },
                 ),
 
                 const SizedBox(height: 20),
@@ -123,7 +135,7 @@ class SymptomsTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Tip Card
-                _buildTipCard(localizations. commonSymptomsWeek24),
+                _buildTipCard(localizations.commonSymptomsWeek24),
               ],
             ),
           ),
@@ -138,7 +150,9 @@ class SymptomsTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -161,7 +175,9 @@ class SymptomsTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
@@ -184,7 +200,8 @@ class SymptomsTabContent extends StatelessWidget {
       return Icons.airline_seat_flat;
     } else if (lowerSymptom.contains('sleep')) {
       return Icons.nights_stay;
-    } else if (lowerSymptom.contains('swell') || lowerSymptom.contains('feet')) {
+    } else if (lowerSymptom.contains('swell') ||
+        lowerSymptom.contains('feet')) {
       return Icons.water_drop;
     } else if (lowerSymptom.contains('heart')) {
       return Icons.food_bank;
@@ -196,8 +213,8 @@ class SymptomsTabContent extends StatelessWidget {
     return Icons.health_and_safety;
   }
 
-  Color _getSeverityColor(String?  severity) {
-    switch (severity?. toLowerCase()) {
+  Color _getSeverityColor(String? severity) {
+    switch (severity?.toLowerCase()) {
       case 'mild':
         return const Color(0xFFFFF3CD);
       case 'moderate':
@@ -209,20 +226,20 @@ class SymptomsTabContent extends StatelessWidget {
     }
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(AppLocalizations t, DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inHours < 1) {
-      return '${difference.inMinutes} min ago';
+      return t.minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} hours ago';
+      return t.hoursAgo(difference.inHours);
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return t.yesterday;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return t.daysAgo(difference.inDays);
     } else {
-      return DateFormat('MMM dd'). format(dateTime);
+      return DateFormat('MMM dd').format(dateTime);
     }
   }
 
@@ -259,10 +276,10 @@ class SymptomsTabContent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors. main300,
+              color: AppColors.main300,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColors. main500, size: 24),
+            child: Icon(icon, color: AppColors.main500, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -308,7 +325,7 @@ class SymptomsTabContent extends StatelessWidget {
 
   Widget _buildAddSymptomButton(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Builder(
       builder: (ctx) {
         return GestureDetector(
@@ -322,7 +339,7 @@ class SymptomsTabContent extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets. all(16),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [AppColors.pink600, AppColors.pink500],
@@ -360,17 +377,17 @@ class SymptomsTabContent extends StatelessWidget {
             ),
           ),
         );
-      }
+      },
     );
   }
 
   Widget _buildFrequencyChart(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors. white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -394,11 +411,11 @@ class SymptomsTabContent extends StatelessWidget {
             localizations.symptomFrequency,
             style: AppTextStyles.subtitle1.copyWith(
               fontSize: 14,
-              color: AppColors. textDark,
+              color: AppColors.textDark,
             ),
           ),
           const SizedBox(height: 16),
-          _buildFrequencyBar(context, localizations. backPain, 0.85),
+          _buildFrequencyBar(context, localizations.backPain, 0.85),
           const SizedBox(height: 10),
           _buildFrequencyBar(context, localizations.swollenFeet, 0.6),
           const SizedBox(height: 10),
@@ -412,7 +429,7 @@ class SymptomsTabContent extends StatelessWidget {
 
   Widget _buildFrequencyBar(BuildContext context, String label, double value) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -430,7 +447,7 @@ class SymptomsTabContent extends StatelessWidget {
               '${(value * 7).toInt()} ${localizations.times}',
               style: AppTextStyles.smallLabel.copyWith(
                 fontSize: 11,
-                color: AppColors. textDark,
+                color: AppColors.textDark,
               ),
             ),
           ],
@@ -443,7 +460,9 @@ class SymptomsTabContent extends StatelessWidget {
             child: LinearProgressIndicator(
               value: value,
               backgroundColor: AppColors.main300,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.main500),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.main500,
+              ),
             ),
           ),
         ),

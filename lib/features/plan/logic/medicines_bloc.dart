@@ -15,10 +15,7 @@ class LoadMedicinesWithLogs extends MedicinesEvent {
   final List<MedicineModel> medicines;
   final List<MedicineLoggedModel> logs;
 
-  const LoadMedicinesWithLogs({
-    required this.medicines,
-    required this.logs,
-  });
+  const LoadMedicinesWithLogs({required this.medicines, required this.logs});
 
   @override
   List<Object?> get props => [medicines, logs];
@@ -75,15 +72,15 @@ class MedicinesDisplayState extends MedicinesState {
 
   @override
   List<Object?> get props => [
-        allMedicines,
-        logs,
-        filteredMedicines,
-        selectedFilter,
-        showFilters,
-        allCount,
-        takenCount,
-        missedCount,
-      ];
+    allMedicines,
+    logs,
+    filteredMedicines,
+    selectedFilter,
+    showFilters,
+    allCount,
+    takenCount,
+    missedCount,
+  ];
 
   MedicinesDisplayState copyWith({
     List<MedicineModel>? allMedicines,
@@ -124,22 +121,21 @@ class MedicinesBloc extends Bloc<MedicinesEvent, MedicinesState> {
     final takenCount = event.logs.where((l) => l.status == 'taken').length;
     final missedCount = event.logs.where((l) => l.status == 'missed').length;
 
-    emit(MedicinesDisplayState(
-      allMedicines: event.medicines,
-      logs: event.logs,
-      filteredMedicines: event.medicines,
-      selectedFilter: 'All',
-      showFilters: true,
-      allCount: allCount,
-      takenCount: takenCount,
-      missedCount: missedCount,
-    ));
+    emit(
+      MedicinesDisplayState(
+        allMedicines: event.medicines,
+        logs: event.logs,
+        filteredMedicines: event.medicines,
+        selectedFilter: 'All',
+        showFilters: true,
+        allCount: allCount,
+        takenCount: takenCount,
+        missedCount: missedCount,
+      ),
+    );
   }
 
-  void _onSelectFilter(
-    SelectFilter event,
-    Emitter<MedicinesState> emit,
-  ) {
+  void _onSelectFilter(SelectFilter event, Emitter<MedicinesState> emit) {
     if (state is MedicinesDisplayState) {
       final currentState = state as MedicinesDisplayState;
       final filtered = _filterMedicines(
@@ -148,10 +144,12 @@ class MedicinesBloc extends Bloc<MedicinesEvent, MedicinesState> {
         currentState.logs,
       );
 
-      emit(currentState.copyWith(
-        selectedFilter: event.filter,
-        filteredMedicines: filtered,
-      ));
+      emit(
+        currentState.copyWith(
+          selectedFilter: event.filter,
+          filteredMedicines: filtered,
+        ),
+      );
     }
   }
 

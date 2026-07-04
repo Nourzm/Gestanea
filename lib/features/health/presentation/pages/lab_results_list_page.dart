@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/database/models/lab_result_model.dart';
 import '../../../../core/services/image_storage_service.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 import '../../logic/bloc/lab_results_state.dart';
@@ -14,9 +15,10 @@ class LabResultsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Lab Results'),
+        title: Text(t.myLabResults),
         backgroundColor: AppColors.main500,
         foregroundColor: Colors.white,
         actions: [
@@ -25,65 +27,72 @@ class LabResultsListPage extends StatelessWidget {
             onPressed: () {
               _showExportDialog(context);
             },
-            tooltip: 'Export as ZIP',
+            tooltip: t.exportAsZip,
           ),
         ],
       ),
       body: BlocConsumer<LabResultsBloc, LabResultsState>(
         listener: (context, state) {
           if (state is LabResultsExporting) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Exporting.. .')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(t.exporting)));
           }
         },
         builder: (context, state) {
           if (state is LabResultsLoading || state is LabResultsExporting) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (state is LabResultsError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors. red),
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${t.error}: ${state.message}'),
                 ],
               ),
             );
           }
-          
+
           if (state is LabResultsLoaded) {
             if (state.labResults.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.science_outlined, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
-                    Text(
-                      'No lab results yet! ',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    const Icon(
+                      Icons.science_outlined,
+                      size: 64,
+                      color: Colors.grey,
                     ),
-                    SizedBox(height: 8),
-                    Text('Upload your first lab result to get started. '),
+                    const SizedBox(height: 16),
+                    Text(
+                      t.noLabResultsYet,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(t.uploadFirstLabResult),
                   ],
                 ),
               );
             }
-            
+
             // Group results by date
             final groupedResults = _groupByDate(state.labResults);
-            
+
             return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: groupedResults.length,
               itemBuilder: (context, index) {
-                final date = groupedResults. keys.elementAt(index);
+                final date = groupedResults.keys.elementAt(index);
                 final results = groupedResults[date]!;
-                
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -100,59 +109,68 @@ class LabResultsListPage extends StatelessWidget {
                       ),
                     ),
                     // Results for this date
-                    ... results.map((result) => _buildLabResultCard(context, result)),
+                    ...results.map(
+                      (result) => _buildLabResultCard(context, result),
+                    ),
                     const SizedBox(height: 16),
                   ],
                 );
               },
             );
           }
-          
-          return const Center(child: Text('No data'));
+
+          return Center(child: Text(t.noData));
         },
       ),
     );
   }
 
-  Map<DateTime, List<LabResultModel>> _groupByDate(List<LabResultModel> results) {
+  Map<DateTime, List<LabResultModel>> _groupByDate(
+    List<LabResultModel> results,
+  ) {
     final Map<DateTime, List<LabResultModel>> grouped = {};
-    
+
     for (final result in results) {
-      final dateOnly = DateTime(result.labDate.year, result.labDate.month, result.labDate. day);
-      
+      final dateOnly = DateTime(
+        result.labDate.year,
+        result.labDate.month,
+        result.labDate.day,
+      );
+
       if (!grouped.containsKey(dateOnly)) {
         grouped[dateOnly] = [];
       }
       grouped[dateOnly]!.add(result);
     }
-    
+
     return grouped;
   }
 
   Widget _buildLabResultCard(BuildContext context, LabResultModel result) {
+    final t = AppLocalizations.of(context)!;
     final imageStorage = ImageStorageService();
     final imageFile = imageStorage.getImage(result.reportImageUrl);
-    
+
     Color statusColor = const Color(0xFFB8E6B8);
-    String status = 'Normal';
-    
+    String status = t.normalLabel;
+
     // Simple interpretation based on ranges
-    if (result.normalRangeMin != null && result.normalRangeMax != null && result.value != null) {
-      if (result.value!  < result.normalRangeMin!) {
+    if (result.normalRangeMin != null &&
+        result.normalRangeMax != null &&
+        result.value != null) {
+      if (result.value! < result.normalRangeMin!) {
         statusColor = const Color(0xFFFFE0B2);
-        status = 'Low';
+        status = t.low;
       } else if (result.value! > result.normalRangeMax!) {
         statusColor = const Color(0xFFFFB8B8);
-        status = 'High';
+        status = t.high;
       }
     }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
           if (imageFile != null) {
@@ -177,7 +195,7 @@ class LabResultsListPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
               ],
-              
+
               // Result details
               Expanded(
                 child: Column(
@@ -195,7 +213,10 @@ class LabResultsListPage extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: statusColor,
                             borderRadius: BorderRadius.circular(8),
@@ -212,19 +233,24 @@ class LabResultsListPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      result. value != null
+                      result.value != null
                           ? '${result.value} ${result.unit ?? ''}'
-                          : 'N/A',
+                          : t.notAvailable,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.main500,
                       ),
                     ),
-                    if (result.normalRangeMin != null && result.normalRangeMax != null) ...[
+                    if (result.normalRangeMin != null &&
+                        result.normalRangeMax != null) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Normal: ${result.normalRangeMin}-${result.normalRangeMax} ${result.unit ?? ''}',
+                        t.normalRangeValue(
+                          '${result.normalRangeMin}',
+                          '${result.normalRangeMax}',
+                          result.unit ?? '',
+                        ),
                         style: const TextStyle(
                           fontSize: 11,
                           color: Colors.grey,
@@ -235,13 +261,17 @@ class LabResultsListPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.auto_awesome, size: 12, color: Colors.amber. shade700),
+                          Icon(
+                            Icons.auto_awesome,
+                            size: 12,
+                            color: Colors.amber.shade700,
+                          ),
                           const SizedBox(width: 4),
                           Text(
-                            'Auto-extracted',
+                            t.autoExtracted,
                             style: TextStyle(
                               fontSize: 10,
-                              color: Colors. amber.shade700,
+                              color: Colors.amber.shade700,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -251,7 +281,7 @@ class LabResultsListPage extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Delete button
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -274,14 +304,12 @@ class LabResultsListPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             AppBar(
-              title: const Text('Lab Result Image'),
+              title: Text(AppLocalizations.of(context)!.labResultImage),
               automaticallyImplyLeading: true,
-              backgroundColor: AppColors. main500,
+              backgroundColor: AppColors.main500,
               foregroundColor: Colors.white,
             ),
-            InteractiveViewer(
-              child: Image.file(imageFile),
-            ),
+            InteractiveViewer(child: Image.file(imageFile)),
           ],
         ),
       ),
@@ -289,15 +317,16 @@ class LabResultsListPage extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, LabResultModel result) {
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Result'),
-        content: Text('Are you sure you want to delete ${result.testName}?'),
+        title: Text(t.deleteResult),
+        content: Text(t.deleteResultConfirm(result.testName)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(t.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -307,7 +336,7 @@ class LabResultsListPage extends StatelessWidget {
               Navigator.pop(dialogContext);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(t.delete),
           ),
         ],
       ),
@@ -315,22 +344,23 @@ class LabResultsListPage extends StatelessWidget {
   }
 
   void _showExportDialog(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Export Lab Results'),
-        content: const Text('Export all lab result images as a ZIP file? '),
+        title: Text(t.exportLabResults),
+        content: Text(t.exportZipConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(t.cancel),
           ),
           TextButton(
             onPressed: () {
               context.read<LabResultsBloc>().add(ExportLabResultsAsZip());
               Navigator.pop(dialogContext);
             },
-            child: const Text('Export'),
+            child: Text(t.export),
           ),
         ],
       ),

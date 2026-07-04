@@ -186,7 +186,8 @@ class AuthRepositoryImpl implements AuthRepository {
     final model = UserModel(
       id: user.id,
       email: user.email ?? existing?.email ?? '',
-      name: nameOverride ??
+      name:
+          nameOverride ??
           (meta['name'] as String?) ??
           existing?.name ??
           (user.email?.split('@').first ?? 'User'),

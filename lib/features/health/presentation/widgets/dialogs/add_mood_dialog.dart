@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/models/mood_model.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import '../../../logic/bloc/mood_bloc.dart';
+import '../../../logic/bloc/mood_event.dart';
 
 class AddMoodDialog extends StatefulWidget {
-  const AddMoodDialog({super.key});
+  final MoodBloc bloc;
+
+  const AddMoodDialog({super.key, required this.bloc});
 
   @override
   State<AddMoodDialog> createState() => _AddMoodDialogState();
@@ -14,7 +19,7 @@ class AddMoodDialog extends StatefulWidget {
 class _AddMoodDialogState extends State<AddMoodDialog> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
-  
+
   String? _selectedMood;
   double _energyLevel = 3;
   int _sleepQuality = 3;
@@ -26,35 +31,46 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
     super.dispose();
   }
 
+  /// Each entry carries the stable canonical [key] (persisted) plus the
+  /// emoji and localized label (display only).
   List<Map<String, String>> _getMoods(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return [
-      {'emoji': '😊', 'name': l10n.veryHappy},
-      {'emoji': '🙂', 'name': l10n.happy},
-      {'emoji': '😐', 'name': l10n.neutral},
-      {'emoji': '😔', 'name': l10n.sad},
-      {'emoji': '😢', 'name': l10n.verySad},
+      {'key': 'very_happy', 'emoji': '😊', 'name': l10n.veryHappy},
+      {'key': 'happy', 'emoji': '🙂', 'name': l10n.happy},
+      {'key': 'neutral', 'emoji': '😐', 'name': l10n.neutral},
+      {'key': 'sad', 'emoji': '😔', 'name': l10n.sad},
+      {'key': 'very_sad', 'emoji': '😢', 'name': l10n.verySad},
     ];
   }
 
   void _handleSave() {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     if (_selectedMood == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseSelectMood)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectMood)));
       return;
     }
 
-    debugPrint('Mood: $_selectedMood');
-    debugPrint('Energy Level: $_energyLevel');
-    debugPrint('Sleep Quality: $_sleepQuality');
-    debugPrint('Notes: ${_notesController.text}');
-    debugPrint('Date: $_selectedDate');
-    
+    final mood = MoodModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: '', // stamped by the bloc
+      mood: _selectedMood!,
+      energyLevel: _energyLevel.toInt(),
+      sleepQuality: _sleepQuality,
+      notes: _notesController.text.trim().isNotEmpty
+          ? _notesController.text.trim()
+          : null,
+      recordedAt: _selectedDate,
+      createdAt: DateTime.now(),
+    );
+
+    widget.bloc.add(AddMood(mood));
+
     Navigator.pop(context);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n.moodLoggedSuccessfully),
@@ -70,14 +86,14 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       if (!mounted) return;
       final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_selectedDate),
       );
-      
+
       if (time != null) {
         setState(() {
           _selectedDate = DateTime(
@@ -99,7 +115,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
 
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context). viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         decoration: const BoxDecoration(
@@ -125,7 +141,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Center(
                   child: Text(
                     l10n.howAreYouFeeling,
@@ -136,13 +152,13 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: moods.map((mood) {
-                    final isSelected = _selectedMood == mood['name'];
+                    final isSelected = _selectedMood == mood['key'];
                     return GestureDetector(
-                      onTap: () => setState(() => _selectedMood = mood['name']),
+                      onTap: () => setState(() => _selectedMood = mood['key']),
                       child: Container(
                         width: 56,
                         height: 56,
@@ -182,17 +198,20 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   }).toList(),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Text(
                   l10n.energyLevel,
-                  style: AppTextStyles.subtitle1. copyWith(
+                  style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -243,7 +262,9 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                           activeTrackColor: AppColors.main500,
                           inactiveTrackColor: AppColors.main300,
                           thumbColor: AppColors.main600,
-                          overlayColor: AppColors.main500.withValues(alpha: 0.2),
+                          overlayColor: AppColors.main500.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                         child: Slider(
                           value: _energyLevel,
@@ -259,7 +280,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Text(
                   l10n.sleepQuality,
                   style: AppTextStyles.subtitle1.copyWith(
@@ -292,7 +313,9 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                       return GestureDetector(
                         onTap: () => setState(() => _sleepQuality = index + 1),
                         child: Icon(
-                          index < _sleepQuality ? Icons. star : Icons.star_border,
+                          index < _sleepQuality
+                              ? Icons.star
+                              : Icons.star_border,
                           color: AppColors.main500,
                           size: 32,
                         ),
@@ -301,7 +324,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Text(
                   l10n.notes,
                   style: AppTextStyles.subtitle1.copyWith(
@@ -311,7 +334,10 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -346,7 +372,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
@@ -369,10 +395,14 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.main500, size: 20),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.main500,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
-                          '${_selectedDate. day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
+                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
                           style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
@@ -382,7 +412,7 @@ class _AddMoodDialogState extends State<AddMoodDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Row(
                   children: [
                     Expanded(

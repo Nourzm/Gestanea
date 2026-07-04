@@ -3,7 +3,7 @@ class LabResultModel {
   final String userId;
   final String testName;
   final double? value;
-  final String?  unit;
+  final String? unit;
   final double? normalRangeMin;
   final double? normalRangeMax;
   final String? interpretation;
@@ -37,9 +37,9 @@ class LabResultModel {
       'normal_range_min': normalRangeMin,
       'normal_range_max': normalRangeMax,
       'interpretation': interpretation,
-      'lab_date': labDate.toIso8601String(). split('T')[0],
+      'lab_date': labDate.toIso8601String().split('T')[0],
       'report_image_url': reportImageUrl,
-      'extracted_by_ocr': extractedByOcr ?  1 : 0,
+      'extracted_by_ocr': extractedByOcr ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -52,7 +52,7 @@ class LabResultModel {
       value: map['value'] != null ? (map['value'] as num).toDouble() : null,
       unit: map['unit'] as String?,
       normalRangeMin: map['normal_range_min'] != null
-          ?  (map['normal_range_min'] as num).toDouble()
+          ? (map['normal_range_min'] as num).toDouble()
           : null,
       normalRangeMax: map['normal_range_max'] != null
           ? (map['normal_range_max'] as num).toDouble()
@@ -61,7 +61,7 @@ class LabResultModel {
       labDate: DateTime.parse(map['lab_date'] as String),
       reportImageUrl: map['report_image_url'] as String?,
       extractedByOcr: (map['extracted_by_ocr'] as int) == 1,
-      createdAt: DateTime. parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
 
@@ -82,14 +82,14 @@ class LabResultModel {
     return LabResultModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      testName: testName ??  this.testName,
+      testName: testName ?? this.testName,
       value: value ?? this.value,
       unit: unit ?? this.unit,
       normalRangeMin: normalRangeMin ?? this.normalRangeMin,
       normalRangeMax: normalRangeMax ?? this.normalRangeMax,
       interpretation: interpretation ?? this.interpretation,
       labDate: labDate ?? this.labDate,
-      reportImageUrl: reportImageUrl ?? this. reportImageUrl,
+      reportImageUrl: reportImageUrl ?? this.reportImageUrl,
       extractedByOcr: extractedByOcr ?? this.extractedByOcr,
       createdAt: createdAt ?? this.createdAt,
     );

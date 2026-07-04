@@ -4,7 +4,7 @@ class CartItemModel {
   final String productId;
   final String productName;
   final double productPrice;
-  final String?  variantColor;
+  final String? variantColor;
   final String? variantSize;
   final int quantity;
   final DateTime addedAt;
@@ -31,7 +31,7 @@ class CartItemModel {
       'variant_color': variantColor,
       'variant_size': variantSize,
       'quantity': quantity,
-      'added_at': addedAt. toIso8601String(),
+      'added_at': addedAt.toIso8601String(),
     };
   }
 
@@ -44,7 +44,7 @@ class CartItemModel {
       productPrice: (map['product_price'] as num).toDouble(),
       variantColor: map['variant_color'] as String?,
       variantSize: map['variant_size'] as String?,
-      quantity: map['quantity'] as int?  ?? 1,
+      quantity: map['quantity'] as int? ?? 1,
       addedAt: DateTime.parse(map['added_at'] as String),
     );
   }
@@ -58,18 +58,18 @@ class CartItemModel {
     String? variantColor,
     String? variantSize,
     int? quantity,
-    DateTime?  addedAt,
+    DateTime? addedAt,
   }) {
     return CartItemModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       productId: productId ?? this.productId,
-      productName: productName ??  this.productName,
+      productName: productName ?? this.productName,
       productPrice: productPrice ?? this.productPrice,
       variantColor: variantColor ?? this.variantColor,
       variantSize: variantSize ?? this.variantSize,
-      quantity: quantity ??  this.quantity,
-      addedAt: addedAt ?? this. addedAt,
+      quantity: quantity ?? this.quantity,
+      addedAt: addedAt ?? this.addedAt,
     );
   }
 }

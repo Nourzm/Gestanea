@@ -178,9 +178,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
     if (_userId == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Not authenticated')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.notAuthenticated)),
+      );
       return;
     }
 

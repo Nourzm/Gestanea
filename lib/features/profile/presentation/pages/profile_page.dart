@@ -82,6 +82,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   Future<void> _handleGiveBirth() async {
+    final t = AppLocalizations.of(context)!;
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       barrierDismissible: false,
@@ -103,10 +104,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Congratulations! Your baby has been added 🎉'),
+              SnackBar(
+                content: Text(t.congratsBabyAdded),
                 backgroundColor: AppColors.alerts,
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
               ),
             );
 
@@ -118,7 +119,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: ${e.toString()}'),
+              content: Text('${t.error}: ${e.toString()}'),
               backgroundColor: AppColors.error1,
             ),
           );
@@ -135,9 +136,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(t.no_longer_pregnant),
-        content: const Text(
-          'Are you sure? This will end your pregnancy tracking.',
-        ),
+        content: Text(t.endPregnancyConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -146,7 +145,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
-              'Confirm',
+              t.confirm,
               style: const TextStyle(color: AppColors.error1),
             ),
           ),
@@ -162,8 +161,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Pregnancy tracking ended'),
+              SnackBar(
+                content: Text(t.pregnancyTrackingEnded),
                 backgroundColor: Colors.grey,
               ),
             );
@@ -174,7 +173,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: ${e.toString()}'),
+              content: Text('${t.error}: ${e.toString()}'),
               backgroundColor: AppColors.error1,
             ),
           );
@@ -243,7 +242,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     children: [
                       _SettingsTile(
                         icon: "assets/icons/question.svg",
-                        title: 'FAQ',
+                        title: t.faq,
                         destination: FaqScreen(),
                       ),
                       _SettingsTile(
@@ -605,7 +604,7 @@ class _LogoutButton extends StatelessWidget {
         }
       },
       child: NeumorphicButton(
-        text: "logout",
+        text: AppLocalizations.of(context)!.logout,
         prefixIcon: Icons.logout,
         onPressed: () => _confirmLogout(context),
         color: AppColors.error1,

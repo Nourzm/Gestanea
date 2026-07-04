@@ -17,6 +17,7 @@ import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart'
     as tips;
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'postpartum_track_page.dart';
 
@@ -57,28 +58,27 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
   }
 
   String _formatAgeText(int months) {
-    if (months == 0) {
-      return 'Newborn';
-    } else if (months == 1) {
-      return '1 month old';
+    final t = AppLocalizations.of(context)!;
+    if (months <= 0) {
+      return t.ageNewborn;
     } else if (months < 12) {
-      return '$months months old';
-    } else if (months == 12) {
-      return '1 year old';
+      return t.ageMonths(months);
     } else {
       final years = months ~/ 12;
       final remainingMonths = months % 12;
       if (remainingMonths == 0) {
-        return '$years ${years == 1 ? 'year' : 'years'} old';
+        return t.ageYears(years);
       }
-      return '$years ${years == 1 ? 'year' : 'years'} and $remainingMonths ${remainingMonths == 1 ? 'month' : 'months'} old';
+      return t.ageYearsMonths(years, remainingMonths);
     }
   }
 
   String _formatNextVaccine() {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final dashboard = widget.dashboard;
     if (dashboard == null || dashboard.nextVaccines.isEmpty) {
-      return 'All caught up!';
+      return t.allCaughtUpShort;
     }
     final nextVaccine = dashboard.nextVaccines.first;
     final dueDate = nextVaccine.dueDate;
@@ -86,13 +86,16 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
     final difference = dueDate.difference(now).inDays;
 
     if (difference < 0) {
-      return '${nextVaccine.vaccineName}: Overdue';
+      return t.vaccineOverdue(nextVaccine.vaccineName);
     } else if (difference == 0) {
-      return '${nextVaccine.vaccineName}: Today';
+      return t.vaccineToday(nextVaccine.vaccineName);
     } else if (difference <= 7) {
-      return '${nextVaccine.vaccineName}: ${DateFormat('MMM d').format(dueDate)}';
+      return t.vaccineOn(
+        nextVaccine.vaccineName,
+        DateFormat('MMM d', locale).format(dueDate),
+      );
     } else {
-      return 'Next: ${DateFormat('MMM d').format(dueDate)}';
+      return t.nextColon(DateFormat('MMM d', locale).format(dueDate));
     }
   }
 
@@ -121,12 +124,14 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final dashboard = widget.dashboard;
-    final babyName = dashboard?.babyName ?? 'Baby';
+    final babyName = dashboard?.babyName ?? t.babyDefault;
     final babyAge = dashboard?.babyAgeInMonths ?? 0;
     final babyWeight = dashboard?.babyWeight ?? 0.0;
     final babyHeight = dashboard?.babyHeight ?? 0.0;
-    final growthStatus = dashboard?.growthStatus ?? 'On Track';
+    final growthStatus = dashboard?.growthStatus ?? t.onTrack;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -141,21 +146,20 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  
                   // 👤 Profile section (tap -> Profile page)
                   GestureDetector(
                     onTap: () async {
                       // Capture cubit before navigation
                       final dashboardCubit = context.read<DashboardCubit>();
                       final authState = context.read<AuthBloc>().state;
-              
+
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const ProfileSettingsScreen(),
                         ),
                       );
-              
+
                       // Refresh dashboard when returning from profile page
                       // This handles the case where user triggered "I Gave Birth"
                       if (authState is AuthAuthenticated) {
@@ -175,11 +179,11 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                         SizedBox(width: screenWidth * 0.03),
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
-                            String greeting = 'Hello!';
+                            String greeting = t.helloGreeting;
                             String nameText = '';
                             if (state is AuthAuthenticated) {
                               nameText = state.user.name;
-                              greeting = 'Hello';
+                              greeting = t.hello;
                             }
                             return Text(
                               '$greeting ${nameText.isNotEmpty ? nameText : ''}',
@@ -194,7 +198,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       ],
                     ),
                   ),
-              
+
                   // 🔔 Notification icon (tap -> Notifications page)
                   GestureDetector(
                     onTap: () {
@@ -206,10 +210,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       );
                     },
                     child: NotificationIcon(
-                      icon: Icon(
-                        Icons.notifications,
-                        color: AppColors.main500,
-                      ),
+                      icon: Icon(Icons.notifications, color: AppColors.main500),
                     ),
                   ),
                 ],
@@ -310,9 +311,9 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatColumn(
-                          'Weight',
+                          t.weight,
                           babyWeight > 0
-                              ? '${babyWeight.toStringAsFixed(1)} kg'
+                              ? t.kgValue(babyWeight.toStringAsFixed(1))
                               : '--',
                         ),
                         Container(
@@ -321,7 +322,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                           color: Colors.white.withValues(alpha: 0.3),
                         ),
                         _buildStatColumn(
-                          'Height',
+                          t.heightLabel,
                           babyHeight > 0
                               ? '${babyHeight.toStringAsFixed(0)} cm'
                               : '--',
@@ -331,7 +332,7 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                           height: 40,
                           color: Colors.white.withValues(alpha: 0.3),
                         ),
-                        _buildStatColumn('Growth', growthStatus),
+                        _buildStatColumn(t.growthLabel, growthStatus),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -350,7 +351,10 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('More', style: TextStyle(color: primaryColor)),
+                          Text(
+                            t.moreLabel,
+                            style: TextStyle(color: primaryColor),
+                          ),
                           const Icon(
                             Icons.arrow_right_alt,
                             color: Colors.black54,
@@ -378,8 +382,8 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       child: _buildInfoCard(
                         color: primaryColor,
                         icon: Icons.lightbulb_outline,
-                        title: "Our Tips",
-                        subtitle: "follow best practices",
+                        title: t.ourTips,
+                        subtitle: t.followBestPractices,
                       ),
                     ),
                   ),
@@ -397,8 +401,8 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                       child: _buildInfoCard(
                         color: lightColor,
                         icon: Icons.medical_services_outlined,
-                        title: "Our Doctors",
-                        subtitle: "find the best doctor",
+                        title: t.ourDoctors,
+                        subtitle: t.findBestDoctor,
                       ),
                     ),
                   ),
@@ -411,15 +415,18 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Up coming",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  Text(
+                    t.upComing,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   GestureDetector(
                     onTap: _navigateToPlanPage,
-                    child: const Text(
-                      "see all",
-                      style: TextStyle(
+                    child: Text(
+                      t.seeAll,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -439,7 +446,10 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: _buildReminderCard(
                           vaccine.vaccineName,
-                          DateFormat('MMM d, yyyy').format(vaccine.dueDate),
+                          DateFormat(
+                            'MMM d, yyyy',
+                            locale,
+                          ).format(vaccine.dueDate),
                           primaryColor,
                           Icons.vaccines,
                         ),
@@ -447,8 +457,8 @@ class _PostpartumDashboardPageState extends State<PostpartumDashboardPage> {
                     )
               else
                 _buildReminderCard(
-                  "No upcoming vaccines",
-                  "All caught up!",
+                  t.noUpcomingVaccines,
+                  t.allCaughtUpShort,
                   lightColor,
                   Icons.check_circle,
                 ),

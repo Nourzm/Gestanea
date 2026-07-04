@@ -9,6 +9,7 @@ import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/baby/data/datasources/baby_local_data_source.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 /// Onboarding step "Tell Us About Your Baby" — gender, birth date, weight,
@@ -53,7 +54,9 @@ class _Personalize3State extends State<Personalize3> {
     if (auth is! AuthAuthenticated) return;
     if (_birthDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please pick your baby's birth date")),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleasePickBirthDate),
+        ),
       );
       return;
     }
@@ -64,7 +67,7 @@ class _Personalize3State extends State<Personalize3> {
       id: const Uuid().v4(),
       userId: auth.user.id,
       name: _nameController.text.trim().isEmpty
-          ? 'Baby'
+          ? AppLocalizations.of(context)!.babyDefault
           : _nameController.text.trim(),
       gender: _gender,
       dateOfBirth: _birthDate!,
@@ -87,7 +90,9 @@ class _Personalize3State extends State<Personalize3> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save baby: $e')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.couldNotSaveBaby('$e')),
+        ),
       );
       setState(() => _saving = false);
     }
@@ -95,6 +100,7 @@ class _Personalize3State extends State<Personalize3> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -102,9 +108,9 @@ class _Personalize3State extends State<Personalize3> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HeroSection(
-              title: 'Tell Us About\nYour Baby',
-              subtitle: 'Help us provide personalized care',
+            HeroSection(
+              title: t.tellAboutBabyMultiline,
+              subtitle: t.helpPersonalizedCare,
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -114,7 +120,7 @@ class _Personalize3State extends State<Personalize3> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _label("Baby's Name"),
+                  _label(t.babysName),
                   _fieldShell(
                     child: TextField(
                       controller: _nameController,
@@ -125,27 +131,30 @@ class _Personalize3State extends State<Personalize3> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _label("Baby's Gender"),
+                  _label(t.babysGender),
                   Row(
                     children: [
-                      Expanded(child: _genderTile('girl', '👧', 'Girl')),
+                      Expanded(child: _genderTile('girl', '👧', t.girlLabel)),
                       const SizedBox(width: 12),
-                      Expanded(child: _genderTile('boy', '👦', 'Boy')),
+                      Expanded(child: _genderTile('boy', '👦', t.boyLabel)),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _label("Baby's Birth Date"),
+                  _label(t.babysBirthDate),
                   GestureDetector(
                     onTap: _pickBirthDate,
                     child: _fieldShell(
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today,
-                              color: AppColors.main500, size: 18),
+                          const Icon(
+                            Icons.calendar_today,
+                            color: AppColors.main500,
+                            size: 18,
+                          ),
                           const SizedBox(width: 10),
                           Text(
                             _birthDate == null
-                                ? 'Pick a date'
+                                ? t.pickADate
                                 : '${_birthDate!.year}-${_birthDate!.month.toString().padLeft(2, '0')}-${_birthDate!.day.toString().padLeft(2, '0')}',
                             style: const TextStyle(fontSize: 14),
                           ),
@@ -160,19 +169,23 @@ class _Personalize3State extends State<Personalize3> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _label('Weight'),
+                            _label(t.weight),
                             _fieldShell(
                               child: Row(
                                 children: [
-                                  const Icon(Icons.monitor_weight_outlined,
-                                      size: 18, color: AppColors.main500),
+                                  const Icon(
+                                    Icons.monitor_weight_outlined,
+                                    size: 18,
+                                    color: AppColors.main500,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: TextField(
                                       controller: _weightController,
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
-                                              decimal: true),
+                                            decimal: true,
+                                          ),
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         hintText: '0.0',
@@ -197,19 +210,23 @@ class _Personalize3State extends State<Personalize3> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _label('Height'),
+                            _label(t.heightLabel),
                             _fieldShell(
                               child: Row(
                                 children: [
-                                  const Icon(Icons.straighten,
-                                      size: 18, color: AppColors.main500),
+                                  const Icon(
+                                    Icons.straighten,
+                                    size: 18,
+                                    color: AppColors.main500,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: TextField(
                                       controller: _heightController,
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
-                                              decimal: true),
+                                            decimal: true,
+                                          ),
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         hintText: '0',
@@ -233,15 +250,18 @@ class _Personalize3State extends State<Personalize3> {
                   ),
                   const SizedBox(height: 28),
                   GradientPillButton(
-                    label: 'Continue to Dashboard',
+                    label: t.continueToDashboard,
                     isLoading: _saving,
                     onPressed: _saving ? null : _continue,
                   ),
                   const SizedBox(height: 10),
-                  const Center(
+                  Center(
                     child: Text(
-                      'All information is kept private and secure',
-                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                      t.infoKeptPrivate,
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -254,22 +274,22 @@ class _Personalize3State extends State<Personalize3> {
   }
 
   Widget _label(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 6, top: 4),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 6, top: 4),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+    ),
+  );
 
   Widget _fieldShell({required Widget child}) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: AppColors.shadow1,
-        ),
-        child: child,
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      boxShadow: AppColors.shadow1,
+    ),
+    child: child,
+  );
 
   Widget _genderTile(String value, String emoji, String label) {
     final selected = _gender == value;

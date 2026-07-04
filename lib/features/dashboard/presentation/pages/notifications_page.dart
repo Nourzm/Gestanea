@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -40,7 +41,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           },
         ),
         title: Text(
-          'Notifications',
+          AppLocalizations.of(context)!.notifications,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -85,21 +86,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 right: 16,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text(
-                      "You're all caught up",
+                      AppLocalizations.of(context)!.allCaughtUp,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                         color: Colors.black12,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      "Lorem ipsum dolor sit amet consectetur.\nScelerisque viverra blandit egest",
+                      AppLocalizations.of(context)!.noNotificationsDesc,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black26,
                         height: 1.4,
@@ -171,8 +172,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "Delete",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.delete,
+                        style: const TextStyle(
                           color: Color(0xFFECECEC),
                           fontWeight: FontWeight.bold,
                         ),
@@ -256,8 +257,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                         children: [
                                           Text(
                                             isExpanded
-                                                ? "Show less"
-                                                : "Show more",
+                                                ? AppLocalizations.of(
+                                                    context,
+                                                  )!.showLess
+                                                : AppLocalizations.of(
+                                                    context,
+                                                  )!.showMore,
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: AppColors

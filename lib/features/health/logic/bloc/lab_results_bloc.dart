@@ -6,10 +6,14 @@ import 'lab_results_event.dart';
 import 'lab_results_state.dart';
 
 class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
-  final DatabaseHelper _dbHelper = DatabaseHelper. instance;
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
   final ImageStorageService _imageStorage = ImageStorageService();
 
-  LabResultsBloc() : super(LabResultsInitial()) {
+  /// Owner of the records this bloc reads and writes. All queries are scoped
+  /// to this id so users never see each other's data.
+  final String userId;
+
+  LabResultsBloc({required this.userId}) : super(LabResultsInitial()) {
     on<LoadLabResults>(_onLoad);
     on<AddLabResult>(_onAdd);
     on<DeleteLabResult>(_onDelete);
@@ -17,7 +21,10 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     on<RefreshLabResults>(_onRefresh);
   }
 
-  Future<void> _onLoad(LoadLabResults event, Emitter<LabResultsState> emit) async {
+  Future<void> _onLoad(
+    LoadLabResults event,
+    Emitter<LabResultsState> emit,
+  ) async {
     emit(LabResultsLoading());
     try {
       final labResults = await _getLabResults();
@@ -30,29 +37,36 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
 
   Future<void> _onAdd(AddLabResult event, Emitter<LabResultsState> emit) async {
     try {
-      await _saveLabResult(event.labResult);
+      // Stamp the real owner regardless of what the caller supplied.
+      await _saveLabResult(event.labResult.copyWith(userId: userId));
       add(LoadLabResults());
     } catch (e) {
       emit(LabResultsError(e.toString()));
     }
   }
 
-  Future<void> _onDelete(DeleteLabResult event, Emitter<LabResultsState> emit) async {
+  Future<void> _onDelete(
+    DeleteLabResult event,
+    Emitter<LabResultsState> emit,
+  ) async {
     try {
       await _deleteLabResult(event.id);
-      
+
       // Delete associated image
       if (event.imagePath != null) {
-        await _imageStorage. deleteImage(event.imagePath! );
+        await _imageStorage.deleteImage(event.imagePath!);
       }
-      
+
       add(LoadLabResults());
     } catch (e) {
       emit(LabResultsError(e.toString()));
     }
   }
 
-  Future<void> _onExport(ExportLabResultsAsZip event, Emitter<LabResultsState> emit) async {
+  Future<void> _onExport(
+    ExportLabResultsAsZip event,
+    Emitter<LabResultsState> emit,
+  ) async {
     emit(LabResultsExporting());
     try {
       await _imageStorage.shareZip();
@@ -62,7 +76,10 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     }
   }
 
-  Future<void> _onRefresh(RefreshLabResults event, Emitter<LabResultsState> emit) async {
+  Future<void> _onRefresh(
+    RefreshLabResults event,
+    Emitter<LabResultsState> emit,
+  ) async {
     add(LoadLabResults());
   }
 
@@ -71,22 +88,24 @@ class LabResultsBloc extends Bloc<LabResultsEvent, LabResultsState> {
     final db = await _dbHelper.database;
     final maps = await db.query(
       'lab_results',
+      where: 'user_id = ?',
+      whereArgs: [userId],
       orderBy: 'lab_date DESC, created_at DESC',
     );
-    return maps.map((map) => LabResultModel. fromMap(map)).toList();
+    return maps.map((map) => LabResultModel.fromMap(map)).toList();
   }
 
   Future<void> _saveLabResult(LabResultModel labResult) async {
     final db = await _dbHelper.database;
-    await db. insert('lab_results', labResult.toMap());
+    await db.insert('lab_results', labResult.toMap());
   }
 
   Future<void> _deleteLabResult(String id) async {
     final db = await _dbHelper.database;
     await db.delete(
       'lab_results',
-      where: 'id = ? ',
-      whereArgs: [id],
+      where: 'id = ? AND user_id = ?',
+      whereArgs: [id, userId],
     );
   }
 }

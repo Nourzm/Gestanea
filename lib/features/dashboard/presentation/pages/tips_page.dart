@@ -15,38 +15,6 @@ class Tips extends StatefulWidget {
 class _TipsState extends State<Tips> {
   final TextEditingController _searchController = TextEditingController();
 
-  static const _categories = <_TipCategory>[
-    _TipCategory('Wellness', Icons.spa_outlined),
-    _TipCategory('Nutrition', Icons.restaurant_outlined),
-    _TipCategory('Exercise', Icons.fitness_center_outlined),
-    _TipCategory('Sleep', Icons.bedtime_outlined),
-    _TipCategory('Mind', Icons.self_improvement_outlined),
-  ];
-
-  static const _tips = <_TipItem>[
-    _TipItem(
-      title: 'Eating for Two',
-      summary: 'Essential nutrients and meal planning for a healthy pregnancy',
-      readMinutes: 5,
-      featured: true,
-    ),
-    _TipItem(
-      title: 'Gentle Prenatal Stretches',
-      summary: 'Low-impact moves to ease back pain and stay flexible',
-      readMinutes: 4,
-    ),
-    _TipItem(
-      title: 'Sleep Better While Pregnant',
-      summary: 'Pillow tricks and positions that actually work',
-      readMinutes: 6,
-    ),
-    _TipItem(
-      title: 'Managing Morning Sickness',
-      summary: 'What helps, what doesn’t, and when to see a doctor',
-      readMinutes: 3,
-    ),
-  ];
-
   int _selectedCategory = 0;
 
   @override
@@ -60,19 +28,54 @@ class _TipsState extends State<Tips> {
     final screenWidth = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context)!;
 
+    final categories = <_TipCategory>[
+      _TipCategory(l10n.catWellness, Icons.spa_outlined),
+      _TipCategory(l10n.catNutrition, Icons.restaurant_outlined),
+      _TipCategory(l10n.catExercise, Icons.fitness_center_outlined),
+      _TipCategory(l10n.catSleep, Icons.bedtime_outlined),
+      _TipCategory(l10n.catMind, Icons.self_improvement_outlined),
+    ];
+
+    final tips = <_TipItem>[
+      _TipItem(
+        title: l10n.tip1Title,
+        summary: l10n.tip1Summary,
+        readMinutes: 5,
+        featured: true,
+      ),
+      _TipItem(
+        title: l10n.tip2Title,
+        summary: l10n.tip2Summary,
+        readMinutes: 4,
+      ),
+      _TipItem(
+        title: l10n.tip3Title,
+        summary: l10n.tip3Summary,
+        readMinutes: 6,
+      ),
+      _TipItem(
+        title: l10n.tip4Title,
+        summary: l10n.tip4Summary,
+        readMinutes: 3,
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       appBar: AppBar(
         backgroundColor: AppColors.bg_1,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppColors.main500, size: 22),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.main500,
+            size: 22,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Tips',
-          style: TextStyle(
+        title: Text(
+          l10n.tipsTitle,
+          style: const TextStyle(
             color: AppColors.main500,
             fontSize: 28,
             fontFamily: 'Lato',
@@ -90,8 +93,11 @@ class _TipsState extends State<Tips> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: AppColors.shadow1,
             ),
-            child: const Icon(Icons.notifications_outlined,
-                color: AppColors.main500, size: 20),
+            child: const Icon(
+              Icons.notifications_outlined,
+              color: AppColors.main500,
+              size: 20,
+            ),
           ),
         ],
       ),
@@ -110,10 +116,10 @@ class _TipsState extends State<Tips> {
               height: 78,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: _categories.length,
+                itemCount: categories.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, i) {
-                  final cat = _categories[i];
+                  final cat = categories[i];
                   final selected = _selectedCategory == i;
                   return GestureDetector(
                     onTap: () => setState(() => _selectedCategory = i),
@@ -137,9 +143,7 @@ class _TipsState extends State<Tips> {
                           ),
                           child: Icon(
                             cat.icon,
-                            color: selected
-                                ? Colors.white
-                                : AppColors.main500,
+                            color: selected ? Colors.white : AppColors.main500,
                             size: 24,
                           ),
                         ),
@@ -163,7 +167,7 @@ class _TipsState extends State<Tips> {
               ),
             ),
             const SizedBox(height: 16),
-            for (final tip in _tips)
+            for (final tip in tips)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: tip.featured
@@ -221,8 +225,11 @@ class _FeaturedTipCard extends StatelessWidget {
               ),
             ),
             alignment: Alignment.center,
-            child: const Icon(Icons.restaurant_outlined,
-                color: Colors.white, size: 36),
+            child: const Icon(
+              Icons.restaurant_outlined,
+              color: Colors.white,
+              size: 36,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(14),
@@ -252,8 +259,11 @@ class _FeaturedTipCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(Icons.arrow_forward_ios,
-                        color: AppColors.main500, size: 16),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.main500,
+                      size: 16,
+                    ),
                   ],
                 ),
               ],
@@ -289,8 +299,10 @@ class _TipListCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.center,
-            child: const Icon(Icons.lightbulb_outline,
-                color: AppColors.main500),
+            child: const Icon(
+              Icons.lightbulb_outline,
+              color: AppColors.main500,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -317,7 +329,7 @@ class _TipListCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${tip.readMinutes} min read',
+                  AppLocalizations.of(context)!.minRead(tip.readMinutes),
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.main500,

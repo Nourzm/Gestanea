@@ -55,18 +55,19 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Future<void> _saveMedicine() async {
+    final t = AppLocalizations.of(context)!;
     if (selectedMedication == null || selectedMedication!.isEmpty) {
-      _showError('Please enter a medication name');
+      _showError(t.pleaseEnterMedicationName);
       return;
     }
 
     if (selectedForm == null || selectedForm!.isEmpty) {
-      _showError('Please select a form');
+      _showError(t.pleaseSelectForm);
       return;
     }
 
     if (startingDate == null) {
-      _showError('Please select a starting date');
+      _showError(t.pleaseSelectStartDate);
       return;
     }
 

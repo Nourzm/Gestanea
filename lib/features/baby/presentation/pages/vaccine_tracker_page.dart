@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class VaccineTrackerPage extends StatelessWidget {
-
   final bool isGirl; // true for girl (pink), false for boy (blue)
   const VaccineTrackerPage({super.key, required this.isGirl});
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final Color primaryColor = isGirl ? AppColors.pink500 : AppColors.blue500;
     final Color secondaryColor = isGirl ? AppColors.pink300 : AppColors.main300;
     final Color backgroundColor = AppColors.bg_1;
@@ -55,7 +56,7 @@ class VaccineTrackerPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Vaccine Tracker',
+                        t.vaccineTrackerTitle,
                         style: AppTextStyles.headline2.copyWith(
                           color: AppColors.white,
                         ),
@@ -77,7 +78,10 @@ class VaccineTrackerPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   // Month Selector
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -102,7 +106,7 @@ class VaccineTrackerPage extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Vaccine List
             Expanded(
               child: Padding(
@@ -111,25 +115,25 @@ class VaccineTrackerPage extends StatelessWidget {
                   children: [
                     _buildVaccineCard(
                       title: 'BCG + HRV',
-                      subtitle: 'Completed: Birth (Jan 15)',
+                      subtitle: '${t.completedLabel}: Birth (Jan 15)',
                       completed: true,
                       primaryColor: primaryColor,
                     ),
                     _buildVaccineCard(
                       title: 'Rotavirus',
-                      subtitle: 'Completed: 2 months (Feb 20)',
+                      subtitle: '${t.completedLabel}: 2 months (Feb 20)',
                       completed: true,
                       primaryColor: primaryColor,
                     ),
                     _buildVaccineCard(
                       title: 'PCV13',
-                      subtitle: 'Upcoming: 2 months (April 10)',
+                      subtitle: '${t.upcomingLabel}: 2 months (April 10)',
                       completed: false,
                       primaryColor: primaryColor,
                     ),
                     _buildVaccineCard(
                       title: 'DTcaVPI-Hib-HBV',
-                      subtitle: 'Upcoming: 3 months (May 10)',
+                      subtitle: '${t.upcomingLabel}: 3 months (May 10)',
                       completed: false,
                       primaryColor: primaryColor,
                     ),
@@ -143,7 +147,7 @@ class VaccineTrackerPage extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 20),
               child: Center(
                 child: Text(
-                  'See Full Schedule',
+                  t.seeFullSchedule,
                   style: AppTextStyles.subtitle1.copyWith(
                     color: primaryColor,
                     fontWeight: FontWeight.bold,
@@ -176,8 +180,8 @@ class VaccineTrackerPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: completed 
-                  ? Colors.green.withValues(alpha: 0.1) 
+              color: completed
+                  ? Colors.green.withValues(alpha: 0.1)
                   : primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),

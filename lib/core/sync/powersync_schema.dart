@@ -22,19 +22,25 @@ const _userTables = <Table>[
     Column.text('created_at'),
     Column.text('updated_at'),
   ]),
-  Table('pregnancies', [
-    Column.text('user_id'),
-    Column.text('lmp_date'),
-    Column.text('due_date'),
-    Column.integer('current_week'),
-    Column.text('current_trimester'),
-    Column.integer('is_active'),
-    Column.text('medical_conditions'),
-    Column.text('created_at'),
-    Column.text('updated_at'),
-  ], indexes: [
-    Index('by_user', [IndexedColumn('user_id')]),
-  ]),
+  Table(
+    'pregnancies',
+    [
+      Column.text('user_id'),
+      Column.text('lmp_date'),
+      Column.text('due_date'),
+      Column.integer('current_week'),
+      Column.text('current_trimester'),
+      Column.integer('is_active'),
+      Column.text('medical_conditions'),
+      Column.real('pre_pregnancy_weight'),
+      Column.real('height_cm'),
+      Column.text('created_at'),
+      Column.text('updated_at'),
+    ],
+    indexes: [
+      Index('by_user', [IndexedColumn('user_id')]),
+    ],
+  ),
   Table('kick_counts', [
     Column.text('user_id'),
     Column.integer('kick_count'),

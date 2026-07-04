@@ -35,7 +35,7 @@ class VitalsCard extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
             spreadRadius: 0,
@@ -89,7 +89,7 @@ class VitalsCard extends StatelessWidget {
                 ),
                 child: Text(
                   status,
-                  style: AppTextStyles. smallLabel.copyWith(
+                  style: AppTextStyles.smallLabel.copyWith(
                     color: textColor,
                     fontSize: 10,
                   ),

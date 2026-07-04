@@ -6,7 +6,7 @@ class DatabaseHelper {
   /// Single source of truth for the schema version. Tests reference this so
   /// they can never drift from what the app actually opens.
   @visibleForTesting
-  static const int schemaVersion = 7;
+  static const int schemaVersion = 9;
 
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
@@ -36,21 +36,24 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-/// Static so the migration path can be exercised against an in-memory
-/// database in tests without touching the singleton.
-@visibleForTesting
-static Future<void> upgradeSchema(
-    Database db, int oldVersion, int newVersion) async {
-  if (oldVersion < 2) {
-    await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
-  }
-  if (oldVersion < 3) {
-    // Old version - skip
-  }
-  if (oldVersion < 4) {
-    // Drop and recreate measurements table without foreign key
-    await db.execute('DROP TABLE IF EXISTS measurements');
-    await db.execute('''
+  /// Static so the migration path can be exercised against an in-memory
+  /// database in tests without touching the singleton.
+  @visibleForTesting
+  static Future<void> upgradeSchema(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE doctors ADD COLUMN wilaya TEXT');
+    }
+    if (oldVersion < 3) {
+      // Old version - skip
+    }
+    if (oldVersion < 4) {
+      // Drop and recreate measurements table without foreign key
+      await db.execute('DROP TABLE IF EXISTS measurements');
+      await db.execute('''
       CREATE TABLE measurements (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -63,11 +66,11 @@ static Future<void> upgradeSchema(
         created_at TEXT NOT NULL
       )
     ''');
-  }
-  if (oldVersion < 5) {
-    // Drop and recreate symptoms table without foreign key
-    await db.execute('DROP TABLE IF EXISTS symptoms');
-    await db.execute('''
+    }
+    if (oldVersion < 5) {
+      // Drop and recreate symptoms table without foreign key
+      await db.execute('DROP TABLE IF EXISTS symptoms');
+      await db.execute('''
       CREATE TABLE symptoms (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -78,11 +81,11 @@ static Future<void> upgradeSchema(
         created_at TEXT NOT NULL
       )
     ''');
-  }
-  if (oldVersion < 6) {
-  // Drop and recreate lab_results table
-  await db. execute('DROP TABLE IF EXISTS lab_results');
-  await db.execute('''
+    }
+    if (oldVersion < 6) {
+      // Drop and recreate lab_results table
+      await db.execute('DROP TABLE IF EXISTS lab_results');
+      await db.execute('''
     CREATE TABLE lab_results (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -98,14 +101,14 @@ static Future<void> upgradeSchema(
       created_at TEXT NOT NULL
     )
   ''');
-}
-  if (oldVersion < 7) {
-    // auth_credentials is created lazily on first signup, so on some
-    // devices it doesn't exist yet at upgrade time. Create it (already
-    // carrying the new salt column) and only ALTER when an old copy
-    // without the column is present — otherwise openDatabase would throw
-    // "no such table" / "duplicate column" and brick every DB call.
-    await db.execute('''
+    }
+    if (oldVersion < 7) {
+      // auth_credentials is created lazily on first signup, so on some
+      // devices it doesn't exist yet at upgrade time. Create it (already
+      // carrying the new salt column) and only ALTER when an old copy
+      // without the column is present — otherwise openDatabase would throw
+      // "no such table" / "duplicate column" and brick every DB call.
+      await db.execute('''
       CREATE TABLE IF NOT EXISTS auth_credentials (
         user_id TEXT PRIMARY KEY,
         password TEXT NOT NULL,
@@ -113,19 +116,61 @@ static Future<void> upgradeSchema(
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
       )
     ''');
-    final columns = await db.rawQuery(
-      "PRAGMA table_info('auth_credentials')",
-    );
-    final hasSalt = columns.any((c) => c['name'] == 'salt');
-    if (!hasSalt) {
-      // Pre-existing table from the unsalted era. Existing rows get an
-      // empty salt, which fails verification — users must re-register.
-      await db.execute(
-        "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+      final columns = await db.rawQuery(
+        "PRAGMA table_info('auth_credentials')",
       );
+      final hasSalt = columns.any((c) => c['name'] == 'salt');
+      if (!hasSalt) {
+        // Pre-existing table from the unsalted era. Existing rows get an
+        // empty salt, which fails verification — users must re-register.
+        await db.execute(
+          "ALTER TABLE auth_credentials ADD COLUMN salt TEXT NOT NULL DEFAULT ''",
+        );
+      }
+    }
+    if (oldVersion < 8) {
+      // Mood logging goes live. The moods table only ever lived in createSchema,
+      // so installs that upgraded through earlier versions may not have it —
+      // create it (with the new energy_level/sleep_quality columns) and only
+      // ALTER when an older copy without those columns is present.
+      await db.execute('''
+      CREATE TABLE IF NOT EXISTS moods (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        mood TEXT NOT NULL,
+        intensity INTEGER,
+        energy_level INTEGER,
+        sleep_quality INTEGER,
+        notes TEXT,
+        recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+      final moodCols = await db.rawQuery("PRAGMA table_info('moods')");
+      final names = moodCols.map((c) => c['name'] as String).toSet();
+      if (!names.contains('energy_level')) {
+        await db.execute('ALTER TABLE moods ADD COLUMN energy_level INTEGER');
+      }
+      if (!names.contains('sleep_quality')) {
+        await db.execute('ALTER TABLE moods ADD COLUMN sleep_quality INTEGER');
+      }
+    }
+    if (oldVersion < 9) {
+      // BMI needs the mother's height + pre-pregnancy weight, stored on the
+      // active pregnancy. Add the columns only when absent.
+      final pregCols = await db.rawQuery("PRAGMA table_info('pregnancies')");
+      final names = pregCols.map((c) => c['name'] as String).toSet();
+      if (!names.contains('pre_pregnancy_weight')) {
+        await db.execute(
+          'ALTER TABLE pregnancies ADD COLUMN pre_pregnancy_weight REAL',
+        );
+      }
+      if (!names.contains('height_cm')) {
+        await db.execute('ALTER TABLE pregnancies ADD COLUMN height_cm REAL');
+      }
     }
   }
-}
+
   /// Static + visible for the same reason as [upgradeSchema].
   @visibleForTesting
   static Future<void> createSchema(Database db, int version) async {
@@ -156,6 +201,8 @@ static Future<void> upgradeSchema(
         current_trimester TEXT,
         is_active INTEGER DEFAULT 1,
         medical_conditions TEXT,
+        pre_pregnancy_weight REAL,
+        height_cm REAL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -255,8 +302,6 @@ static Future<void> upgradeSchema(
       )
     ''');
 
-  
-
     // Moods table
     await db.execute('''
       CREATE TABLE moods (
@@ -264,6 +309,8 @@ static Future<void> upgradeSchema(
         user_id TEXT NOT NULL,
         mood TEXT NOT NULL,
         intensity INTEGER,
+        energy_level INTEGER,
+        sleep_quality INTEGER,
         notes TEXT,
         recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -271,8 +318,8 @@ static Future<void> upgradeSchema(
       )
     ''');
 
-  // Lab Results table
-await db.execute('''
+    // Lab Results table
+    await db.execute('''
   CREATE TABLE lab_results (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -571,7 +618,7 @@ await db.execute('''
       )
     ''');
     // Measurements table (combined vitals)
-await db.execute('''
+    await db.execute('''
   CREATE TABLE measurements (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -584,8 +631,8 @@ await db.execute('''
     created_at TEXT NOT NULL
   )
 ''');
-// Symptoms table
-await db.execute('''
+    // Symptoms table
+    await db.execute('''
   CREATE TABLE symptoms (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,

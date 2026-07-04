@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -96,6 +97,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -110,7 +112,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          'Privacy Policy',
+          t.privacy_policy,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -130,7 +132,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
             // 1. Your Privacy Matters (Header Card)
             NeumorphicContainer(
               borderRadius: 30.0,
@@ -148,7 +150,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Your Privacy Matters',
+                    t.privacyMatters,
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 20,
@@ -157,7 +159,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'We are committed to protecting your personal information and ensuring transparency about how we use your data.',
+                    t.privacyMattersDesc,
                     style: TextStyle(
                       color: AppColors.main700.withValues(alpha: 0.7),
                       fontSize: 15,
@@ -166,7 +168,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    'Last Updated: December 4, 2025',
+                    t.privacyLastUpdated,
                     style: TextStyle(
                       color: AppColors.main400,
                       fontSize: 13,
@@ -181,36 +183,32 @@ class PrivacyPolicyScreen extends StatelessWidget {
             // 2. Data Collection
             PrivacySectionCard(
               icon: Icons.storage_outlined,
-              title: 'Data Collection',
-              content:
-                  'We collect only essential information needed to provide you with the best health tracking experience. This includes your profile information, health metrics, and app usage data.',
+              title: t.dataCollection,
+              content: t.dataCollectionContent,
             ),
             const SizedBox(height: 15),
 
             // 3. Data Security
             PrivacySectionCard(
               icon: Icons.lock_outline,
-              title: 'Data Security',
-              content:
-                  'Your data is encrypted using industry-standard protocols. We employ multiple layers of security to protect your personal health information from unauthorized access.',
+              title: t.dataSecurity,
+              content: t.dataSecurityContent,
             ),
             const SizedBox(height: 15),
 
             // 4. Data Usage
             PrivacySectionCard(
               icon: Icons.bar_chart_outlined,
-              title: 'Data Usage',
-              content:
-                  'We use your data to personalize your app experience, provide relevant health insights, and improve. We do not sell personal data to third parties.',
+              title: t.dataUsage,
+              content: t.dataUsageContent,
             ),
             const SizedBox(height: 15),
 
             // 5. Your Rights
             PrivacySectionCard(
               icon: Icons.assignment_turned_in_outlined,
-              title: 'Your Rights',
-              content:
-                  'You have the right to access, or update, or request deletion of your data. You can manage privacy settings within the app or contact support.',
+              title: t.yourRights,
+              content: t.yourRightsContent,
             ),
             const SizedBox(height: 30),
           ],

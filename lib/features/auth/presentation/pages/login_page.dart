@@ -26,9 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.fillAllFields)),
+      );
       return;
     }
     context.read<AuthBloc>().add(
@@ -74,8 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     HeroSection(
-                      title: "Welcome Back",
-                      subtitle: "Login to continue your journey",
+                      title: t.welcomeBack,
+                      subtitle: t.loginToContinue,
                     ),
                     Expanded(
                       child: Padding(
@@ -223,8 +223,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return GradientPillButton(
                                       label: t.login,
                                       isLoading: isLoading,
-                                      onPressed:
-                                          isLoading ? null : _onLoginPressed,
+                                      onPressed: isLoading
+                                          ? null
+                                          : _onLoginPressed,
                                     );
                                   },
                                 ),

@@ -30,16 +30,16 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill required fields')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.fillRequiredFields),
+        ),
       );
       return;
     }
 
     if (!_agreedToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You must agree to the Terms and Privacy Policy'),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context)!.mustAgreeTerms)),
       );
       return;
     }
@@ -90,9 +90,9 @@ class _SignupScreenState extends State<SignupScreen> {
               child: IntrinsicHeight(
                 child: Column(
                   children: [
-                    const HeroSection(
-                      title: "Create Account",
-                      subtitle: "Start your journey with us today",
+                    HeroSection(
+                      title: t.createAccount,
+                      subtitle: t.startJourneyToday,
                     ),
 
                     Expanded(
@@ -179,7 +179,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       Positioned(
                                         top: 55,
                                         child: Text(
-                                          'Must be at least 8 characters', // Added password hint
+                                          t.mustBe8Chars,
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.black54,
@@ -209,7 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                               WrapCrossAlignment.center,
                                           children: [
                                             Text(
-                                              'I agree to the ',
+                                              t.iAgreeTo,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black54,
@@ -220,7 +220,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 // Handle Terms & Conditions tap
                                               },
                                               child: Text(
-                                                'Terms & Conditions',
+                                                t.termsConditions,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: linkColor,
@@ -240,7 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 // Handle Privacy Policy tap
                                               },
                                               child: Text(
-                                                'Privacy Policy',
+                                                t.privacy_policy,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: linkColor,
@@ -268,8 +268,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     return GradientPillButton(
                                       label: t.signup,
                                       isLoading: isLoading,
-                                      onPressed:
-                                          isLoading ? null : _onSignupPressed,
+                                      onPressed: isLoading
+                                          ? null
+                                          : _onSignupPressed,
                                     );
                                   },
                                 ),
@@ -286,7 +287,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Already have an account? ',
+                                        t.alreadyHaveAccount,
                                         style: TextStyle(
                                           color: Colors.black54,
                                           fontSize: 16,
@@ -295,7 +296,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       GestureDetector(
                                         onTap: _goToLogin,
                                         child: Text(
-                                          'Sign In',
+                                          t.signIn,
                                           style: TextStyle(
                                             color: linkColor,
                                             fontWeight: FontWeight.bold,

@@ -9,7 +9,7 @@ import '../../../logic/bloc/measurements_event.dart';
 
 class AddMeasurementDialog extends StatefulWidget {
   final MeasurementsBloc bloc;
-  
+
   const AddMeasurementDialog({super.key, required this.bloc});
 
   @override
@@ -35,33 +35,33 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
 
   void _handleSave() {
     final l10n = AppLocalizations.of(context)!;
-    
-    if (_formKey. currentState!.validate()) {
+
+    if (_formKey.currentState!.validate()) {
       final measurement = MeasurementModel(
-        id: DateTime. now().millisecondsSinceEpoch. toString(),
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: 'current_user', // TODO: Get from session/auth
-        weight: _weightController. text.isNotEmpty 
-            ? double.tryParse(_weightController.text) 
+        weight: _weightController.text.isNotEmpty
+            ? double.tryParse(_weightController.text)
             : null,
-        heartRate: _heartRateController.text.isNotEmpty 
-            ? int. tryParse(_heartRateController.text) 
+        heartRate: _heartRateController.text.isNotEmpty
+            ? int.tryParse(_heartRateController.text)
             : null,
-        systolic: _systolicController.text.isNotEmpty 
-            ? int.tryParse(_systolicController.text) 
+        systolic: _systolicController.text.isNotEmpty
+            ? int.tryParse(_systolicController.text)
             : null,
-        diastolic: _diastolicController.text.isNotEmpty 
-            ? int.tryParse(_diastolicController.text) 
+        diastolic: _diastolicController.text.isNotEmpty
+            ? int.tryParse(_diastolicController.text)
             : null,
         recordedAt: _selectedDate,
-        createdAt: DateTime. now(),
+        createdAt: DateTime.now(),
       );
-      
+
       // Use widget.bloc instead of context. read
       widget.bloc.add(AddMeasurement(measurement));
-      
+
       Navigator.pop(context);
-      
-      ScaffoldMessenger.of(context). showSnackBar(
+
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.measurementSavedSuccessfully),
           backgroundColor: Colors.green,
@@ -75,16 +75,16 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2020),
-      lastDate: DateTime. now(),
+      lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       if (!mounted) return;
       final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_selectedDate),
       );
-      
+
       if (time != null) {
         setState(() {
           _selectedDate = DateTime(
@@ -101,8 +101,8 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)! ;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -123,12 +123,12 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey. shade600.withValues(alpha: 0.3),
+                    color: Colors.grey.shade600.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Text(
                   l10n.addMeasurement,
                   style: AppTextStyles.headline2.copyWith(
@@ -137,15 +137,19 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 _buildInputField(
                   l10n,
                   label: l10n.weightKg,
                   controller: _weightController,
                   icon: Icons.monitor_weight_outlined,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return l10n.pleaseEnterWeight;
+                    if (value == null || value.isEmpty) {
+                      return l10n.pleaseEnterWeight;
+                    }
                     final weight = double.tryParse(value);
                     if (weight == null) return l10n.pleaseEnterValidNumber;
                     if (weight < 30 || weight > 200) return l10n.weightRange;
@@ -153,7 +157,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 _buildInputField(
                   l10n,
                   label: l10n.heartRateBpm,
@@ -161,7 +165,9 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   icon: Icons.favorite,
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return l10n.pleaseEnterHeartRate;
+                    if (value == null || value.isEmpty) {
+                      return l10n.pleaseEnterHeartRate;
+                    }
                     final hr = int.tryParse(value);
                     if (hr == null) return l10n.pleaseEnterValidNumber;
                     if (hr < 40 || hr > 200) return l10n.heartRateRange;
@@ -169,9 +175,9 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 Text(
-                  l10n. bloodPressure,
+                  l10n.bloodPressure,
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.textDark,
@@ -188,7 +194,9 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                         icon: Icons.arrow_upward,
                         keyboardType: TextInputType.number,
                         validator: (value) {
-                          if (value == null || value.isEmpty) return l10n.required;
+                          if (value == null || value.isEmpty) {
+                            return l10n.required;
+                          }
                           final sys = int.tryParse(value);
                           if (sys == null) return l10n.invalid;
                           if (sys < 70 || sys > 190) return l10n.systolicRange;
@@ -205,7 +213,9 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                         icon: Icons.arrow_downward,
                         keyboardType: TextInputType.number,
                         validator: (value) {
-                          if (value == null || value.isEmpty) return l10n.required;
+                          if (value == null || value.isEmpty) {
+                            return l10n.required;
+                          }
                           final dia = int.tryParse(value);
                           if (dia == null) return l10n.invalid;
                           if (dia < 40 || dia > 130) return l10n.diastolicRange;
@@ -216,7 +226,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 GestureDetector(
                   onTap: _selectDateTime,
                   child: Container(
@@ -239,10 +249,14 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.main500, size: 20),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.main500,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
-                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute. toString().padLeft(2, '0')}',
+                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} ${_selectedDate.hour}:${_selectedDate.minute.toString().padLeft(2, '0')}',
                           style: AppTextStyles.body1.copyWith(
                             color: AppColors.textDark,
                           ),
@@ -252,7 +266,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 Row(
                   children: [
                     Expanded(
@@ -300,7 +314,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
             offset: Offset(2, 2),
           ),
           BoxShadow(
-            color: AppColors. white,
+            color: AppColors.white,
             blurRadius: 6,
             offset: Offset(-3, -3),
           ),
@@ -322,7 +336,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
                   fontSize: 14,
                 ),
               ),
-              style: AppTextStyles.body1. copyWith(
+              style: AppTextStyles.body1.copyWith(
                 color: AppColors.textDark,
                 fontSize: 14,
               ),

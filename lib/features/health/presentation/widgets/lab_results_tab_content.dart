@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/database/db_helper.dart';
+import 'package:gestanea/features/auth/logic/auth_bloc.dart';
+import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
@@ -30,8 +33,8 @@ class LabResultsTabContent extends StatelessWidget {
               children: [
                 // Recent Lab Results
                 Text(
-                  l10n. recentLabResults,
-                  style: AppTextStyles.headline2. copyWith(
+                  l10n.recentLabResults,
+                  style: AppTextStyles.headline2.copyWith(
                     fontSize: 18,
                     color: AppColors.textDark,
                   ),
@@ -43,53 +46,57 @@ class LabResultsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is LabResultsLoaded) {
                       if (state.labResults.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No lab results yet',
-                              style: TextStyle(color: Colors.grey),
+                              l10n.noLabResultsYet,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
                       }
-                      
+
                       // Show only the 4 most recent results
-                      final recentResults = state.labResults. take(4).toList();
+                      final recentResults = state.labResults.take(4).toList();
                       return Column(
                         children: recentResults.map((result) {
                           Color statusColor = const Color(0xFFB8E6B8);
                           String status = l10n.normal;
-                          
-                          if (result.normalRangeMin != null && 
-                              result.normalRangeMax != null && 
+
+                          if (result.normalRangeMin != null &&
+                              result.normalRangeMax != null &&
                               result.value != null) {
                             if (result.value! < result.normalRangeMin!) {
                               statusColor = const Color(0xFFFFE0B2);
-                              status = 'Low';
+                              status = l10n.low;
                             } else if (result.value! > result.normalRangeMax!) {
                               statusColor = const Color(0xFFFFB8B8);
-                              status = 'High';
+                              status = l10n.high;
                             }
                           }
-                          
+
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: _buildLabResultCard(
                               context,
                               test: result.testName,
-                              value: result.value != null 
-                                  ? '${result.value} ${result. unit ?? ''}' 
-                                  : 'N/A',
+                              value: result.value != null
+                                  ? '${result.value} ${result.unit ?? ''}'
+                                  : l10n.notAvailable,
                               status: status,
                               statusColor: statusColor,
-                              date: DateFormat('MMM dd, yyyy').format(result.labDate),
-                              range: result.normalRangeMin != null && result.normalRangeMax != null
+                              date: DateFormat(
+                                'MMM dd, yyyy',
+                              ).format(result.labDate),
+                              range:
+                                  result.normalRangeMin != null &&
+                                      result.normalRangeMax != null
                                   ? '${result.normalRangeMin}-${result.normalRangeMax} ${result.unit ?? ''}'
-                                  : 'N/A',
+                                  : l10n.notAvailable,
                             ),
                           );
-                        }). toList(),
+                        }).toList(),
                       );
                     }
                     return const Center(child: CircularProgressIndicator());
@@ -108,7 +115,7 @@ class LabResultsTabContent extends StatelessWidget {
                   builder: (btnContext) {
                     return SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton. icon(
+                      child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
                             btnContext,
@@ -121,18 +128,23 @@ class LabResultsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Lab Results'),
+                        label: Text(
+                          AppLocalizations.of(context)!.viewAllLabResults,
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.main500,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 24,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                     );
-                  }
+                  },
                 ),
 
                 const SizedBox(height: 20),
@@ -143,7 +155,7 @@ class LabResultsTabContent extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Tip Card
-                _buildTipCard(l10n. keepLabResultsOrganized),
+                _buildTipCard(l10n.keepLabResultsOrganized),
               ],
             ),
           ),
@@ -158,7 +170,9 @@ class LabResultsTabContent extends StatelessWidget {
             child: Container(
               height: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -181,7 +195,9 @@ class LabResultsTabContent extends StatelessWidget {
             child: Container(
               width: 25,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
@@ -208,7 +224,7 @@ class LabResultsTabContent extends StatelessWidget {
     required String range,
   }) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -244,14 +260,17 @@ class LabResultsTabContent extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 3,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   status,
-                  style: AppTextStyles. smallLabel.copyWith(
+                  style: AppTextStyles.smallLabel.copyWith(
                     fontSize: 11,
                     color: const Color(0xFF2D5F2D),
                   ),
@@ -293,8 +312,8 @@ class LabResultsTabContent extends StatelessWidget {
   }
 
   Widget _buildUploadButton(BuildContext context) {
-    final l10n = AppLocalizations. of(context)!;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -345,67 +364,129 @@ class LabResultsTabContent extends StatelessWidget {
     );
   }
 
+  /// The user's soonest upcoming, not-yet-completed appointment, or null.
+  Future<Map<String, dynamic>?> _nextAppointment(BuildContext context) async {
+    final auth = context.read<AuthBloc>().state;
+    if (auth is! AuthAuthenticated) return null;
+    final db = await DatabaseHelper.instance.database;
+    final now = DateTime.now();
+    final startOfToday = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).toIso8601String();
+    final rows = await db.query(
+      'appointments',
+      where: 'user_id = ? AND is_completed = 0 AND appointment_date >= ?',
+      whereArgs: [auth.user.id, startOfToday],
+      orderBy: 'appointment_date ASC',
+      limit: 1,
+    );
+    return rows.isNotEmpty ? rows.first : null;
+  }
+
   Widget _buildNextAppointmentCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.main500, Color(0xFFB388CC)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors. white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white. withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(12),
+    final localeCode = Localizations.localeOf(context).languageCode;
+
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: _nextAppointment(context),
+      builder: (context, snapshot) {
+        // Hide the card entirely when there's no upcoming appointment (instead
+        // of showing a made-up date).
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
+        }
+        final appt = snapshot.data;
+        if (appt == null) return const SizedBox.shrink();
+
+        final raw = appt['appointment_date'] as String?;
+        final dt = raw != null ? DateTime.tryParse(raw) : null;
+        final hasTime = dt != null && (dt.hour != 0 || dt.minute != 0);
+        final dateText = dt != null
+            ? DateFormat(
+                hasTime ? 'MMM d, yyyy · HH:mm' : 'MMM d, yyyy',
+                localeCode,
+              ).format(dt)
+            : (raw ?? '');
+        final title = (appt['title'] as String?)?.trim();
+
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.main500, Color(0xFFB388CC)],
             ),
-            child: const Icon(Icons.calendar_today, color: AppColors.white, size: 24),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(2, 2),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: AppColors.white,
+                blurRadius: 6,
+                offset: Offset(-3, -3),
+                spreadRadius: 0,
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.nextLabAppointment,
-                  style: AppTextStyles.body1.copyWith(
-                    color: AppColors.white,
-                    fontSize: 13,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'November 15, 2025 - 10:00 AM',
-                  style: AppTextStyles.subtitle1.copyWith(
-                    color: AppColors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: const Icon(
+                  Icons.calendar_today,
+                  color: AppColors.white,
+                  size: 24,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.nextLabAppointment,
+                      style: AppTextStyles.body1.copyWith(
+                        color: AppColors.white,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      dateText,
+                      style: AppTextStyles.subtitle1.copyWith(
+                        color: AppColors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (title != null && title.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        title,
+                        style: AppTextStyles.smallLabel.copyWith(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 12,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -432,7 +513,7 @@ class LabResultsTabContent extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: AppTextStyles.body1. copyWith(
+        style: AppTextStyles.body1.copyWith(
           color: const Color(0xFF7B4BA6),
           fontSize: 12,
         ),

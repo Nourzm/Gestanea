@@ -4,18 +4,18 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class AddMeasurementCard extends StatelessWidget {
-  final VoidCallback?  onTap;
+  final VoidCallback? onTap;
 
-  const AddMeasurementCard({super. key, this.onTap});
+  const AddMeasurementCard({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations. of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets. all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.pink600, AppColors.pink500],
@@ -38,15 +38,21 @@ class AddMeasurementCard extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // ✅ Center vertically
-          crossAxisAlignment: CrossAxisAlignment.center, // ✅ Center horizontally
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // ✅ Center horizontally
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center, // ✅ Center the row content
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // ✅ Center the row content
               children: [
-                Icon(Icons.add_circle_outline, color: AppColors.white, size: 15),
+                Icon(
+                  Icons.add_circle_outline,
+                  color: AppColors.white,
+                  size: 15,
+                ),
                 const SizedBox(width: 6),
                 Text(
-                  '${localizations.add}\n${localizations. measurement}',
+                  '${localizations.add}\n${localizations.measurement}',
                   style: AppTextStyles.subtitle1.copyWith(
                     fontSize: 14,
                     color: AppColors.white,

@@ -1,4 +1,3 @@
-
 import 'package:gestanea/features/auth/data/models/user_entity.dart';
 
 abstract class AuthRepository {
@@ -15,7 +14,7 @@ abstract class AuthRepository {
 
   /// Get currently logged in user (or null).
   Future<UserEntity?> getCurrentUser();
-   Future<UserEntity> updateUser(UserEntity user);
+  Future<UserEntity> updateUser(UserEntity user);
 
   /// Logout current user.
   Future<void> logout();

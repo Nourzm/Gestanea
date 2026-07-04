@@ -2,9 +2,9 @@ class BabyModel {
   final String id;
   final String userId;
   final String name;
-  final String?  gender;
+  final String? gender;
   final DateTime dateOfBirth;
-  final double?  birthWeight;
+  final double? birthWeight;
   final double? birthHeight;
   final String? themeColor;
   final bool isActive;
@@ -31,7 +31,7 @@ class BabyModel {
       'user_id': userId,
       'name': name,
       'gender': gender,
-      'date_of_birth': dateOfBirth.toIso8601String(). split('T')[0],
+      'date_of_birth': dateOfBirth.toIso8601String().split('T')[0],
       'birth_weight': birthWeight,
       'birth_height': birthHeight,
       'theme_color': themeColor,
@@ -41,7 +41,7 @@ class BabyModel {
     };
   }
 
-  factory BabyModel. fromMap(Map<String, dynamic> map) {
+  factory BabyModel.fromMap(Map<String, dynamic> map) {
     return BabyModel(
       id: map['id'] as String,
       userId: map['user_id'] as String,

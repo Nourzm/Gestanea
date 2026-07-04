@@ -4,6 +4,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/custom_button.dart';
 import 'package:gestanea/core/database/models/lab_result_model.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
 
@@ -22,14 +23,14 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
   final _minRangeController = TextEditingController();
   final _maxRangeController = TextEditingController();
   final _notesController = TextEditingController();
-  
+
   DateTime _selectedDate = DateTime.now();
 
   @override
   void dispose() {
-    _testNameController. dispose();
-    _valueController. dispose();
-    _unitController. dispose();
+    _testNameController.dispose();
+    _valueController.dispose();
+    _unitController.dispose();
     _minRangeController.dispose();
     _maxRangeController.dispose();
     _notesController.dispose();
@@ -41,9 +42,9 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2020),
-      lastDate: DateTime. now(),
+      lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       setState(() {
         _selectedDate = date;
@@ -57,23 +58,25 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: 'current_user',
         testName: _testNameController.text,
-        value: double.tryParse(_valueController. text),
-        unit: _unitController. text. isNotEmpty ? _unitController.text : null,
-        normalRangeMin: double.tryParse(_minRangeController. text),
+        value: double.tryParse(_valueController.text),
+        unit: _unitController.text.isNotEmpty ? _unitController.text : null,
+        normalRangeMin: double.tryParse(_minRangeController.text),
         normalRangeMax: double.tryParse(_maxRangeController.text),
-        interpretation: _notesController.text. isNotEmpty ? _notesController.text : null,
+        interpretation: _notesController.text.isNotEmpty
+            ? _notesController.text
+            : null,
         labDate: _selectedDate,
         extractedByOcr: false,
         createdAt: DateTime.now(),
       );
 
       context.read<LabResultsBloc>().add(AddLabResult(labResult));
-      
+
       Navigator.pop(context);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lab result added successfully!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.labResultAdded),
           backgroundColor: Colors.green,
         ),
       );
@@ -82,9 +85,10 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manual Lab Entry'),
+        title: Text(t.manualLabEntry),
         backgroundColor: AppColors.main500,
         foregroundColor: Colors.white,
       ),
@@ -96,55 +100,61 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Enter Lab Result Details',
-                style: AppTextStyles.headline2.copyWith(fontSize: 18, color: Colors.black),
+                t.enterLabDetails,
+                style: AppTextStyles.headline2.copyWith(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 20),
-              
+
               // Test Name
               _buildTextField(
                 controller: _testNameController,
-                label: 'Test Name *',
+                label: t.testNameRequired,
                 hint: 'e.g., Hemoglobin, Glucose',
                 validator: (value) {
-                  if (value == null || value. isEmpty) {
-                    return 'Please enter test name';
+                  if (value == null || value.isEmpty) {
+                    return t.pleaseEnterTestName;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Value
               _buildTextField(
                 controller: _valueController,
-                label: 'Value *',
+                label: t.valueRequired,
                 hint: 'e.g., 12.5',
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter value';
+                    return t.pleaseEnterValue;
                   }
                   if (double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                    return t.pleaseEnterValidNumber;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Unit
               _buildTextField(
                 controller: _unitController,
-                label: 'Unit',
+                label: t.unitLabel,
                 hint: 'e. g., g/dL, mg/dL',
               ),
               const SizedBox(height: 16),
-              
+
               // Normal Range
               Text(
-                'Normal Range',
-                style: AppTextStyles.subtitle1.copyWith(fontSize: 14, color: Colors.black87),
+                t.normalRangeLabel,
+                style: AppTextStyles.subtitle1.copyWith(
+                  fontSize: 14,
+                  color: Colors.black87,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -152,28 +162,35 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
                   Expanded(
                     child: _buildTextField(
                       controller: _minRangeController,
-                      label: 'Min',
+                      label: t.minLabel,
                       hint: '12',
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildTextField(
                       controller: _maxRangeController,
-                      label: 'Max',
+                      label: t.maxLabel,
                       hint: '16',
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Date
               Text(
-                'Test Date',
-                style: AppTextStyles.subtitle1.copyWith(fontSize: 14, color: Colors.black87),
+                t.testDate,
+                style: AppTextStyles.subtitle1.copyWith(
+                  fontSize: 14,
+                  color: Colors.black87,
+                ),
               ),
               const SizedBox(height: 8),
               GestureDetector(
@@ -187,7 +204,11 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_today, color: AppColors.main500, size: 20),
+                      const Icon(
+                        Icons.calendar_today,
+                        color: AppColors.main500,
+                        size: 20,
+                      ),
                       const SizedBox(width: 12),
                       Text(
                         '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
@@ -198,22 +219,22 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Notes
               _buildTextField(
                 controller: _notesController,
-                label: 'Notes (Optional)',
-                hint: 'Any additional notes.. .',
+                label: t.notesOptional,
+                hint: t.anyAdditionalNotes,
                 maxLines: 3,
               ),
               const SizedBox(height: 30),
-              
+
               // Save Button
               SizedBox(
                 width: double.infinity,
                 child: AppButton(
                   onPressed: _saveResult,
-                  text: 'Save Result',
+                  text: t.saveResult,
                   filled: true,
                 ),
               ),
@@ -229,7 +250,7 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
     required String label,
     String? hint,
     int maxLines = 1,
-    TextInputType?  keyboardType,
+    TextInputType? keyboardType,
     String? Function(String?)? validator,
   }) {
     return Column(
@@ -237,7 +258,10 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
       children: [
         Text(
           label,
-          style: AppTextStyles.subtitle1.copyWith(fontSize: 14, color: Colors.black),
+          style: AppTextStyles.subtitle1.copyWith(
+            fontSize: 14,
+            color: Colors.black,
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -246,15 +270,15 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
           keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey. shade400),
+            hintStyle: TextStyle(color: Colors.grey.shade400),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius. circular(12),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColors.main300),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius. circular(12),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColors.main300),
             ),
             focusedBorder: OutlineInputBorder(
@@ -265,7 +289,10 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.red),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
           validator: validator,
         ),

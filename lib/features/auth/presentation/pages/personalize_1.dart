@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/auth/presentation/widgets/preg_post.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class Personalize1 extends StatefulWidget {
   const Personalize1({super.key});
@@ -13,6 +14,7 @@ class Personalize1 extends StatefulWidget {
 class _Personalize1State extends State<Personalize1> {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -20,10 +22,7 @@ class _Personalize1State extends State<Personalize1> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HeroSection(
-              title: "Tell us about you",
-              subtitle: "Help us personalize your experience",
-            ),
+            HeroSection(title: t.tellUsAboutYou, subtitle: t.helpPersonalize),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.08,

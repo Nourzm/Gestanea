@@ -18,9 +18,8 @@
   "change_profile_photo": "Change profile photo",
   "full_name": "Full name",
   "enable_notifications": "Enable notifications",
-  "phone":"Phone",
-  "country":"Country",
-
+  "phone": "Phone",
+  "country": "Country",
   "plan": "Plan",
   "sundayShort": "S",
   "mondayShort": "M",
@@ -39,7 +38,7 @@
   "appointmentName": "Appointment Name",
   "medicationName": "Medication Name",
   "nextLabel": "Next",
-  "doneLabel": "Done",
+  "doneLabel": "DONE",
   "uploadPicture": "Upload a picture",
   "camera": "Camera",
   "gallery": "Gallery",
@@ -64,8 +63,12 @@
   "@medicinesTaken": {
     "description": "Medicine taken status",
     "placeholders": {
-      "taken": {"type": "int"},
-      "total": {"type": "int"}
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "daily": "Daily",
@@ -74,7 +77,6 @@
   "timesPerDayExample": "e.g., 3 (times per day)",
   "timesPerWeekExample": "e.g., 2 (times per week)",
   "timesPerMonthExample": "e.g., 1 (times per month)",
-
   "appointmentDateTime": "Appointment Date & Time",
   "appointmentLocation": "Appointment location",
   "selectDate": "Select Date",
@@ -89,13 +91,16 @@
   "tomorrow": "Tomorrow",
   "noAppointmentsFound": "No appointments found",
   "appointment": "Appointment",
-  
   "pleaseAddScheduledTime": "Please add at least one scheduled time",
   "reviewsCount": "{count} reviews",
-  "@reviewsCount": {"placeholders": {"count": {"type": "Object"}}},
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "qty": "Qty",
-
-
   "noMedicines": "No medicines",
   "schedule": "Schedule",
   "availability": "Availability",
@@ -121,7 +126,6 @@
   "addAppointment": "Add appointment",
   "error": "Error",
   "success": "Success",
-  "cancel": "Cancel",
   "confirm": "Confirm",
   "remove": "Remove",
   "apply": "Apply",
@@ -184,13 +188,17 @@
   "@week": {
     "description": "Week number",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "{days} days left",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "Market",
@@ -233,7 +241,6 @@
   "@upgradeNow": {
     "description": "Upgrade button text"
   },
-
   "healthLog": "Health Log",
   "trackYourWellness": "Track your wellness",
   "vitals": "Vitals",
@@ -266,12 +273,14 @@
   "okay": "Okay",
   "moodTrendsLast7Days": "Mood trends (last 7 days)",
   "mostlyPositiveMoods": "Mostly positive moods",
+  "takeCareYourself": "Be gentle with yourself — reach out if you need support",
+  "logMoodToSeeTrends": "Log your mood to see weekly trends",
+  "noEntriesYet": "No entries yet",
   "selfCareSuggestions": "Self-care suggestions",
   "takeShortWalk": "Take a short walk",
   "practiceDeepBreathing": "Practice deep breathing",
   "listenToCalmingMusic": "Listen to calming music",
   "connectWithLovedOnes": "Connect with loved ones",
-
   "doctors": "Doctors",
   "findDoctors": "find doctors by name or speciality",
   "useCurrentLocation": "Use current location",
@@ -285,7 +294,9 @@
   "doctorsFoundPlural": "{count} Doctors Found",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "Filter",
@@ -295,41 +306,49 @@
   "upToKm": "Up to {distance} km",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "Minimum Rating",
   "ratingAndAbove": "{rating} and above",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "Gender",
-
   "male": "Male",
   "female": "Female",
   "minimumReviews": "Minimum Reviews",
   "atLeastReviews": "At least {count} reviews",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applyFilters": "Apply Filters",
   "kmAway": "{distance} km away",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "reviews",
   "noDoctorsFound": "No doctors found",
-  "noResults": "No results",
   "noMatchingDoctors": "No doctors match \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "Try adjusting your filters",
@@ -347,14 +366,12 @@
   "phoneNumber": "Phone Number",
   "openingHours": "Opening Hours",
   "callNow": "Call Now",
-
   "all": "All",
   "taken": "Taken",
   "missed": "Missed",
   "take": "Take",
   "noMedicinesFound": "No medicines found",
   "pleaseLoginToViewPlan": "Please log in to view your plan",
-
   "selectColor": "Select Color",
   "selectSize": "Select Size",
   "addToCart": "Add to Cart",
@@ -364,19 +381,16 @@
   "specifications": "Specifications",
   "customerReviews": "Customer Reviews",
   "seeAll": "see all",
-
   "completeYourOrder": "Complete Your Order",
   "orderSummary": "Order Summary",
   "product": "Product",
   "size": "Size",
-  "qty": "Qty",
   "subtotal": "Subtotal",
   "deliveryFee": "Delivery Fee",
   "total": "Total",
   "deliveryInformation": "Delivery Information",
   "fullName": "Full Name",
   "enterYourFullName": "Enter your full name",
-  "phoneNumber": "Phone Number",
   "enterYourPhoneNumber": "Enter your phone number",
   "deliveryAddress": "Delivery Address",
   "streetAddressApartment": "Street address, apartment, etc.",
@@ -392,7 +406,9 @@
   "orderPlacedSuccessfully": "Order {orderId} placed successfully!",
   "@orderPlacedSuccessfully": {
     "placeholders": {
-      "orderId": {"type": "String"}
+      "orderId": {
+        "type": "String"
+      }
     }
   },
   "yourInformationIsSecure": "Your information is secure and encrypted",
@@ -432,40 +448,54 @@
   "energyLevel": "Energy level",
   "low": "Low",
   "high": "High",
+  "elevated": "Elevated",
+  "kg": "Kg",
+  "bpm": "bpm",
+  "borderline": "Borderline",
+  "analyzeWithAi": "Analyze with AI",
+  "aiAnalyzing": "Analyzing your results…",
+  "aiDisclaimerTitle": "Before you use AI analysis",
+  "aiDisclaimerBody": "This feature uses AI to help you understand your lab results in plain language. It is educational only — not a diagnosis or medical advice, and not a substitute for your doctor or midwife. Your report is sent securely for analysis. Do you want to continue?",
+  "iUnderstandContinue": "I understand, continue",
+  "aiNeedsConnection": "AI analysis needs an internet connection. Showing the standard view instead.",
+  "aiRateLimited": "You've reached today's AI analysis limit. Please try again tomorrow.",
+  "aiAnalysisFailed": "Couldn't analyze the results right now. Please try again later.",
+  "aiResultTitle": "AI Lab Analysis",
+  "aiOverallSummary": "Summary",
+  "aiGuidance": "Guidance",
+  "aiDetectedTests": "Your results",
+  "aiSeekCareTitle": "Please contact your provider",
   "sleepQuality": "Sleep quality",
   "howWasYourDay": "How was your day?",
   "prePregnancyBMI": "Pre-pregnancy BMI",
+  "bmiUnderweight": "Underweight",
+  "bmiOverweight": "Overweight",
+  "bmiObese": "Obese",
+  "setUpBmiTracking": "Set up BMI tracking",
+  "bmiSetupPrompt": "Add your height and pre-pregnancy weight to track BMI and healthy weight gain.",
+  "heightCmLabel": "Height (cm)",
+  "prePregnancyWeightLabel": "Pre-pregnancy weight (kg)",
+  "edit": "Edit",
   "normalBMI": "Normal",
   "currentGain": "Current gain",
   "targetRange": "Target range",
-  "expected": "Expected"
-  ,
-  "howAreYouFeelingToday": "How are you feeling today?",
-  "recentEntries": "Recent entries",
-  "feltEnergeticToday": "Felt energetic today",
-  "hoursAgo": "{hours} hours ago",
-  "calm": "Calm",
-  "relaxingEvening": "Relaxing evening",
-  "yesterday": "Yesterday",
-  "tired": "Tired",
-  "needMoreSleep": "Need more sleep",
-  "daysAgo": "{days} days ago",
-  "trackingMoodHelps": "Tracking your mood helps you understand your well-being.",
-  "great": "Great",
-  "good": "Good",
-  "okay": "Okay",
-  "moodTrendsLast7Days": "Mood trends (last 7 days)",
-  "mostlyPositiveMoods": "Mostly positive moods",
-  "selfCareSuggestions": "Self-care suggestions",
-  "takeShortWalk": "Take a short walk",
+  "expected": "Expected",
   "recentLabResults": "Recent Lab Results",
   "keepLabResultsOrganized": "Keep your lab results organized for better tracking.",
   "viewAllLabResults": "View All Lab Results",
   "riskFactorsToMonitor": "Risk factors to monitor",
   "lowRisk": "Low risk",
+  "moderateRisk": "Moderate",
+  "highRisk": "High",
+  "monitorWithProvider": "Monitor and discuss with your provider",
+  "contactProviderSoon": "Contact your provider soon",
+  "addMeasurementToAssess": "Add a measurement to assess this",
+  "someIndicatorsElevated": "Some indicators are slightly elevated",
+  "someIndicatorsHigh": "Some indicators need attention",
+  "assessedFromYourData": "Based on your logged measurements",
   "withinNormalRange": "Within normal range",
   "gestationalDiabetes": "Gestational diabetes",
-  "glucoseLevelsNormal": "Glucose levels normal",
+  "glucoseLevelsNormal": "Glucose levels are normal",
   "preeclampsia": "Preeclampsia",
   "noProteinInUrine": "No protein in urine",
   "warningSignsToWatch": "Warning signs to watch",
@@ -475,14 +505,13 @@
   "decreasedFetalMovement": "Decreased fetal movement",
   "vaginalBleeding": "Vaginal bleeding",
   "emergencyCall": "Emergency Call",
-  "areYouSureCall911": "Are you sure you want to call 911?",
+  "areYouSureCall911": "Are you sure you want to call emergency services?",
   "couldNotMakeEmergencyCall": "Could not make emergency call.",
-  "glucoseLevelsNormal": "Glucose levels are normal",
   "ifYouExperienceWarnings": "If you experience any warning signs, contact your healthcare provider immediately.",
   "allIndicatorsNormal": "All indicators are normal",
   "emergencyContact": "Emergency Contact",
   "overallRiskLevel": "Overall risk level",
-  "call911OrProvider": "Call 911 or your healthcare provider",
+  "call911OrProvider": "Call emergency services or your healthcare provider",
   "recentSymptoms": "Recent Symptoms",
   "logNewSymptom": "Log new symptom",
   "symptomFrequency": "Symptom frequency",
@@ -492,7 +521,6 @@
   "commonSymptomsWeek24": "Common symptoms at week 24 include back pain and swelling.",
   "viewAllSymptoms": "View All Symptoms",
   "weightProgress": "Weight Progress",
-  "onTrack": "On Track",
   "measurementSavedSuccessfully": "Measurement saved successfully!",
   "addMeasurement": "Add Measurement",
   "weightKg": "Weight (kg)",
@@ -510,5 +538,697 @@
   "diastolicRange": "Diastolic must be between 40 and 130",
   "normalRangeLabel": "Normal range",
   "uploadLabResults": "Upload Lab Results",
-  "nextLabAppointment": "Next Lab Appointment"
+  "nextLabAppointment": "Next Lab Appointment",
+  "currentWeekLabel": "Current week",
+  "viewingWeek": "Viewing week {week}",
+  "@viewingWeek": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "previewingWeek": "Previewing week {selected} — your current week is {current}.",
+  "@previewingWeek": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "current": {
+        "type": "int"
+      }
+    }
+  },
+  "length": "Length",
+  "whatToExpectWeek": "What to expect at week {week}",
+  "@whatToExpectWeek": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "kickCounter": "Kick counter",
+  "noKickSessions": "No sessions recorded yet.",
+  "kicksValue": "{count} kicks",
+  "@kicksValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesShort": "{minutes} min",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "startLabel": "Start",
+  "tapToStartKicks": "Tap to start a kick-counting session",
+  "tapToCount": "Tap to count",
+  "resetLabel": "Reset",
+  "finishLabel": "Finish",
+  "sessionSaved": "Session saved: {count} kicks",
+  "@sessionSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksDaysSuffix": "weeks, {days} days",
+  "@weeksDaysSuffix": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "notSet": "Not set",
+  "firstTrimester": "1st Trimester",
+  "secondTrimester": "2nd Trimester",
+  "thirdTrimester": "3rd Trimester",
+  "weekNote4": "Baby's heart begins to form and will soon start beating.",
+  "weekNote6": "Tiny buds that become the arms and legs are appearing.",
+  "weekNote8": "Fingers, toes and the major organs are taking shape.",
+  "weekNote10": "Vital organs are formed and baby can bend its limbs.",
+  "weekNote12": "Reflexes kick in — baby may curl fingers and toes.",
+  "weekNote14": "Facial muscles develop and baby starts making expressions.",
+  "weekNote16": "Baby makes small movements you'll soon be able to feel.",
+  "weekNote20": "Halfway there! Baby is settling into a sleep-wake rhythm.",
+  "weekNote24": "Baby's lungs keep developing and hearing is improving.",
+  "weekNote28": "Eyes can open and close, and baby responds to sounds.",
+  "weekNote32": "Baby practices breathing and is gaining weight quickly.",
+  "weekNote36": "Baby usually settles head-down; the lungs are nearly ready.",
+  "weekNote40": "Full term! Baby could arrive any day now.",
+  "trackTitle": "Track",
+  "trackingTools": "Tracking tools",
+  "babyProgress": "Baby progress",
+  "noMilestonesYet": "No milestones added yet",
+  "milestonesReached": "{achieved} of {total} milestones reached",
+  "@milestonesReached": {
+    "placeholders": {
+      "achieved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "latestWeightValue": "Latest weight: {weight} kg",
+  "@latestWeightValue": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      }
+    }
+  },
+  "feedsToday": "Feeds today",
+  "lastFeedAt": "Last {time}",
+  "@lastFeedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noFeedsYet": "No feeds yet",
+  "latestWeight": "Latest weight",
+  "recorded": "Recorded",
+  "milestonesLabel": "Milestones",
+  "achievedLabel": "Achieved",
+  "feedingLogTitle": "Feeding Log",
+  "feedingLogSub": "Track feeds",
+  "growthTrackerTitle": "Growth Tracker",
+  "growthTrackerSub": "Weight & height",
+  "milestonesSub": "Development",
+  "vaccinesTitle": "Vaccines",
+  "vaccinesSub": "Immunization",
+  "noBabyProfile": "No baby profile yet",
+  "addBabyPrompt": "Add your baby to start tracking feeds, growth, milestones and vaccines.",
+  "breastfeed": "Breastfeed",
+  "bottle": "Bottle",
+  "logAFeed": "Log a feed",
+  "logFeed": "Log feed",
+  "amountMlOptional": "Amount (ml) — optional",
+  "durationMinOptional": "Duration (min) — optional",
+  "feedLogged": "Feed logged",
+  "saveUpper": "SAVE",
+  "ageNewborn": "Newborn",
+  "ageMonths": "{months} mo old",
+  "@ageMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "ageYears": "{years}y old",
+  "@ageYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "ageYearsMonths": "{years}y {months}mo old",
+  "@ageYearsMonths": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "languages": "Languages",
+  "chooseLanguage": "Choose your preferred language",
+  "english": "English",
+  "french": "French",
+  "arabic": "Arabic",
+  "faq": "FAQ",
+  "congratsBabyAdded": "Congratulations! Your baby has been added 🎉",
+  "endPregnancyConfirm": "Are you sure? This will end your pregnancy tracking.",
+  "pregnancyTrackingEnded": "Pregnancy tracking ended",
+  "secureYourAccount": "Secure your account",
+  "secureYourAccountDesc": "Enable additional security features to protect your personal health information",
+  "changePassword": "Change password",
+  "lastChanged30Days": "Last changed 30 days ago",
+  "biometricAuth": "Biometric authentication",
+  "biometricAuthDesc": "Use fingerprint or Face ID to unlock",
+  "twoFactorAuth": "Two-factor authentication",
+  "twoFactorAuthDesc": "Add an extra layer of security",
+  "autoLock": "Auto-lock",
+  "autoLockDesc": "Lock app after 5 minutes of inactivity",
+  "manageNotifPrefs": "Manage your notification preferences",
+  "pushNotifications": "Push notifications",
+  "pushNotificationsDesc": "Receive notifications on your device",
+  "emailNotifications": "Email notifications",
+  "emailNotificationsDesc": "Get updates via email",
+  "appointmentReminders": "Appointment reminders",
+  "appointmentRemindersDesc": "Never miss a doctor's appointment",
+  "healthTips": "Health tips",
+  "healthTipsDesc": "Daily wellness recommendations",
+  "weeklyReports": "Weekly reports",
+  "weeklyReportsDesc": "Summary of your health progress",
+  "vitaminReminders": "Vitamin reminders",
+  "vitaminRemindersDesc": "Don't forget your supplements",
+  "contactsTitle": "Contacts",
+  "getInTouch": "Get in touch",
+  "getInTouchDesc": "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
+  "yourName": "Your name",
+  "enterYourName": "Enter your name",
+  "emailAddress": "Email address",
+  "subjectLabel": "Subject",
+  "subjectHint": "What is this about?",
+  "messageLabel": "Message",
+  "messageHint": "Tell us how we can help...",
+  "sendMessage": "Send message",
+  "wereHereToHelp": "We're here to help",
+  "wereHereToHelpDesc": "Choose the support option that works best for you. Our team is available 24/7 to assist you.",
+  "knowledgeBase": "Knowledge base",
+  "knowledgeBaseDesc": "Browse articles and guides",
+  "liveChat": "Live chat",
+  "liveChatDesc": "Chat with our support team",
+  "videoTutorials": "Video tutorials",
+  "videoTutorialsDesc": "Watch step-by-step guides",
+  "emailSupport": "Email support",
+  "phoneSupport": "Phone support",
+  "communityForum": "Community forum",
+  "communityForumDesc": "Connect with other users",
+  "retry": "Retry",
+  "noBabyProfileFound": "No baby profile found. Please add your baby first.",
+  "totalTime": "Total time",
+  "recentFeedings": "Recent feedings",
+  "viewAll": "View all",
+  "noFeedingLogs": "No feeding logs yet",
+  "addFeeding": "Add feeding",
+  "feedingTypeLabel": "Feeding type",
+  "durationMinutesLabel": "Duration (minutes)",
+  "amountMlLabel": "Amount (ml)",
+  "sideOptional": "Side (optional)",
+  "notSpecified": "Not specified",
+  "sideLeft": "Left",
+  "sideRight": "Right",
+  "sideBoth": "Both",
+  "timeLabel": "Time",
+  "mlValue": "{ml} ml",
+  "@mlValue": {
+    "placeholders": {
+      "ml": {
+        "type": "String"
+      }
+    }
+  },
+  "minSideValue": "{min} min · {side}",
+  "@minSideValue": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "currentWeight": "Current weight",
+  "noData": "No data",
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noRecordsYet": "No records yet",
+  "weightProgressChart": "Weight progress chart",
+  "chartPlaceholder": "Chart visualization would go here",
+  "recentLogs": "Recent logs",
+  "noWeightRecords": "No weight records yet",
+  "addWeightLog": "Add weight log",
+  "dateLabel": "Date",
+  "kgValue": "{value} kg",
+  "@kgValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "completedLabel": "Completed",
+  "developmentalMilestones": "Developmental milestones",
+  "expectedAtMonths": "Expected at {months} months",
+  "@expectedAtMonths": {
+    "placeholders": {
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "completedOn": "Completed: {date}",
+  "@completedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "addMilestoneTitle": "Add milestone",
+  "milestoneTitle": "Milestone title",
+  "expectedAgeMonthsLabel": "Expected age (months)",
+  "addLabel": "Add",
+  "msFirstSmile": "First smile",
+  "msHoldsHeadUp": "Holds head up",
+  "msRollsOver": "Rolls over",
+  "msSitsWithoutSupport": "Sits without support",
+  "msCrawls": "Crawls",
+  "msFirstWords": "First words",
+  "notAvailable": "N/A",
+  "vaccineTrackerTitle": "Vaccine tracker",
+  "seeFullSchedule": "See full schedule",
+  "upcomingLabel": "Upcoming",
+  "helloGreeting": "Hello!",
+  "hello": "Hello",
+  "ourDoctors": "Our Doctors",
+  "findBestDoctor": "find the best doctor",
+  "upComing": "Up coming",
+  "overdue": "Overdue",
+  "inMinutes": "In {minutes} minutes",
+  "@inMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "In {hours} hours",
+  "@inHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "noUpcomingEvents": "No upcoming events",
+  "addAppointmentsInPlan": "Add appointments in Plan",
+  "atTimeFormat": "{day} at {time}",
+  "@atTimeFormat": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "allCaughtUp": "You're all caught up",
+  "noNotificationsDesc": "No new notifications right now.",
+  "delete": "Delete",
+  "showMore": "Show more",
+  "showLess": "Show less",
+  "daysToGoLabel": "DAYS TO GO",
+  "weekLabel": "WEEK",
+  "daysLeftLabel": "DAYS LEFT",
+  "moreLabel": "More",
+  "plusDays": "+{day} days",
+  "@plusDays": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "ourTips": "Our Tips",
+  "followBestPractices": "follow best practices",
+  "allGoodNoAlerts": "All good! No health alerts at the moment.",
+  "babyDefault": "Baby",
+  "heightLabel": "Height",
+  "growthLabel": "Growth",
+  "allCaughtUpShort": "All caught up!",
+  "nextColon": "Next: {date}",
+  "@nextColon": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "vaccineOverdue": "{name}: Overdue",
+  "@vaccineOverdue": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "vaccineToday": "{name}: Today",
+  "@vaccineToday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "vaccineOn": "{name}: {date}",
+  "@vaccineOn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noUpcomingVaccines": "No upcoming vaccines",
+  "tipsTitle": "Tips",
+  "catWellness": "Wellness",
+  "catNutrition": "Nutrition",
+  "catExercise": "Exercise",
+  "catSleep": "Sleep",
+  "catMind": "Mind",
+  "minRead": "{minutes} min read",
+  "@minRead": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tip1Title": "Eating for Two",
+  "tip1Summary": "Essential nutrients and meal planning for a healthy pregnancy",
+  "tip2Title": "Gentle Prenatal Stretches",
+  "tip2Summary": "Low-impact moves to ease back pain and stay flexible",
+  "tip3Title": "Sleep Better While Pregnant",
+  "tip3Summary": "Pillow tricks and positions that actually work",
+  "tip4Title": "Managing Morning Sickness",
+  "tip4Summary": "What helps, what doesn’t, and when to see a doctor",
+  "myLabResults": "My Lab Results",
+  "exportAsZip": "Export as ZIP",
+  "exporting": "Exporting...",
+  "noLabResultsYet": "No lab results yet!",
+  "uploadFirstLabResult": "Upload your first lab result to get started.",
+  "normalLabel": "Normal",
+  "autoExtracted": "Auto-extracted",
+  "labResultImage": "Lab Result Image",
+  "deleteResult": "Delete Result",
+  "deleteResultConfirm": "Are you sure you want to delete {name}?",
+  "@deleteResultConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "exportLabResults": "Export Lab Results",
+  "exportZipConfirm": "Export all lab result images as a ZIP file?",
+  "export": "Export",
+  "normalRangeValue": "Normal: {min}-{max} {unit}",
+  "@normalRangeValue": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "labResultAdded": "Lab result added successfully!",
+  "manualLabEntry": "Manual Lab Entry",
+  "enterLabDetails": "Enter Lab Result Details",
+  "testNameRequired": "Test Name *",
+  "pleaseEnterTestName": "Please enter test name",
+  "valueRequired": "Value *",
+  "pleaseEnterValue": "Please enter value",
+  "unitLabel": "Unit",
+  "minLabel": "Min",
+  "maxLabel": "Max",
+  "testDate": "Test Date",
+  "notesOptional": "Notes (Optional)",
+  "anyAdditionalNotes": "Any additional notes...",
+  "saveResult": "Save Result",
+  "myMeasurements": "My Measurements",
+  "noMeasurementsYet": "No measurements yet!",
+  "tapAddMeasurement": "Tap \"Add Measurement\" to start.",
+  "mySymptoms": "My Symptoms",
+  "noSymptomsYet": "No symptoms logged yet!",
+  "tapLogSymptom": "Tap \"Log New Symptom\" to start.",
+  "pdfLabReport": "PDF Lab Report",
+  "pdfSavedSnack": "PDF saved!",
+  "pdfSavedTitle": "PDF Saved",
+  "filePrefix": "File: {name}",
+  "@filePrefix": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savePdfReference": "Save PDF Reference",
+  "enterDataManually": "Enter Data Manually",
+  "ocrFailed": "OCR failed: {error}",
+  "@ocrFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noImageSaved": "No image saved. Please try again.",
+  "noDataExtracted": "No Data Extracted",
+  "ocrNoResultsPrompt": "OCR could not extract lab results. Would you like to:\n\n1. Save just the image for reference\n2. Enter data manually",
+  "labReport": "Lab Report",
+  "imageSavedAddLater": "Image saved! You can add details later.",
+  "saveImageOnly": "Save Image Only",
+  "enterManually": "Enter Manually",
+  "labResultsSaved": "Lab results saved successfully!",
+  "extractLabResults": "Extract Lab Results",
+  "extractingText": "Extracting text from image...",
+  "extractedResults": "Extracted Results",
+  "noLabResultsDetected": "No lab results detected. You can add them manually.",
+  "viewRawText": "View Raw Text",
+  "noTextExtracted": "No text extracted",
+  "saveResults": "Save Results",
+  "cameraPermissionDenied": "Camera permission denied",
+  "photosPermissionDenied": "Photos permission denied",
+  "failedToPickImage": "Failed to pick image: {error}",
+  "@failedToPickImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToPickPdf": "Failed to pick PDF: {error}",
+  "@failedToPickPdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Take Photo",
+  "takePhotoDesc": "Use camera to capture lab result",
+  "chooseFromGallery": "Choose from Gallery",
+  "chooseFromGalleryDesc": "Select existing photo",
+  "uploadPdf": "Upload PDF",
+  "uploadPdfDesc": "Select PDF lab report",
+  "manualEntryTitle": "Manual Entry",
+  "manualEntryDesc": "Enter results manually",
+  "viewAllMeasurements": "View All Measurements",
+  "minutesAgo": "{minutes} min ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pleaseEnterAppointmentName": "Please enter an appointment name",
+  "pleaseSelectDate": "Please select a date",
+  "pleaseSelectTime": "Please select a time",
+  "pleaseEnterMedicationName": "Please enter a medication name",
+  "pleaseSelectForm": "Please select a form",
+  "pleaseSelectStartDate": "Please select a starting date",
+  "notAuthenticated": "Not authenticated",
+  "stillHaveQuestions": "Still have questions?",
+  "contactSupport": "Contact Support",
+  "faqQ1": "How do I set appointment reminders?",
+  "faqA1": "You can set appointment reminders by navigating to the \"Appointments\" section, selecting your scheduled visit, and tapping the \"Set Reminder\" option. You will be able to choose a time interval (e.g., 1 day or 1 hour before).",
+  "faqQ2": "Is my health data secure?",
+  "faqA2": "Yes. We use industry-leading encryption and follow HIPAA/GDPR compliance guidelines to ensure your personal health information remains private and secure. Data is stored anonymously on secure servers.",
+  "faqQ3": "How do I change my due date?",
+  "faqA3": "If you are tracking a pregnancy, you can change your estimated due date (EDD) in the \"Profile\" or \"Tracking\" settings. Tap on the current due date field to manually enter a new date based on your latest ultrasound or doctor's recommendation.",
+  "faqQ4": "Can I export my health records?",
+  "faqA4": "Yes! Go to Settings > Data & Privacy > Download My Data to export all your information in a readable format.",
+  "faqQ5": "How do I contact support?",
+  "faqA5": "You can contact support via the \"Contact Support\" button at the bottom of this screen, or you can email us directly at support@appname.com. We typically respond within 24 hours.",
+  "faqQ6": "What languages are supported?",
+  "faqA6": "Currently, the app supports English, French, and Arabic. You can change your preferred language in the \"App Settings\" menu.",
+  "aboutDescription": "Your trusted companion through pregnancy and motherhood. Track your journey, get personalized insights, and connect with a supportive community.",
+  "activeUsers": "Active Users",
+  "appRating": "App Rating",
+  "versionInfo": "Version Info",
+  "madeWithLove": "Made with Love",
+  "madeWithLoveSub": "For moms everywhere",
+  "copyrightNotice": "© 2025 MomCare. All rights reserved.",
+  "privacyMatters": "Your Privacy Matters",
+  "privacyMattersDesc": "We are committed to protecting your personal information and ensuring transparency about how we use your data.",
+  "privacyLastUpdated": "Last Updated: December 4, 2025",
+  "dataCollection": "Data Collection",
+  "dataCollectionContent": "We collect only essential information needed to provide you with the best health tracking experience. This includes your profile information, health metrics, and app usage data.",
+  "dataSecurity": "Data Security",
+  "dataSecurityContent": "Your data is encrypted using industry-standard protocols. We employ multiple layers of security to protect your personal health information from unauthorized access.",
+  "dataUsage": "Data Usage",
+  "dataUsageContent": "We use your data to personalize your app experience, provide relevant health insights, and improve. We do not sell personal data to third parties.",
+  "yourRights": "Your Rights",
+  "yourRightsContent": "You have the right to access, or update, or request deletion of your data. You can manage privacy settings within the app or contact support.",
+  "fillAllFields": "Please fill all fields",
+  "welcomeBack": "Welcome Back",
+  "loginToContinue": "Login to continue your journey",
+  "fillRequiredFields": "Please fill required fields",
+  "mustAgreeTerms": "You must agree to the Terms and Privacy Policy",
+  "startJourneyToday": "Start your journey with us today",
+  "mustBe8Chars": "Must be at least 8 characters",
+  "iAgreeTo": "I agree to the ",
+  "termsConditions": "Terms & Conditions",
+  "alreadyHaveAccount": "Already have an account? ",
+  "signIn": "Sign In",
+  "tellUsAboutYou": "Tell us about you",
+  "helpPersonalize": "Help us personalize your experience",
+  "howFarAlong": "How Far Along?",
+  "couldNotSavePregnancy": "Could not save pregnancy: {error}",
+  "@couldNotSavePregnancy": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "wellCalculateDueDate": "We'll calculate your due date",
+  "completeSetup": "Complete Setup",
+  "canUpdateAnytime": "You can update this information anytime",
+  "byWeeks": "By Weeks",
+  "byDate": "By Date",
+  "youAre": "You are",
+  "selectWeeks": "Select Weeks",
+  "weekShort": "Week {n}",
+  "@weekShort": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pickFirstDayLastPeriod": "Pick the first day of your last period",
+  "additionalDays": "Additional Days",
+  "tellAboutBaby": "Tell Us About Your Baby",
+  "tellAboutBabyMultiline": "Tell Us About\nYour Baby",
+  "pleasePickBirthDate": "Please pick your baby's birth date",
+  "couldNotSaveBaby": "Could not save baby: {error}",
+  "@couldNotSaveBaby": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "helpPersonalizedCare": "Help us provide personalized care",
+  "babysName": "Baby's Name",
+  "babysGender": "Baby's Gender",
+  "girlLabel": "Girl",
+  "boyLabel": "Boy",
+  "babysBirthDate": "Baby's Birth Date",
+  "pickADate": "Pick a date",
+  "continueToDashboard": "Continue to Dashboard",
+  "infoKeptPrivate": "All information is kept private and secure",
+  "whatBestDescribes": "What best describes you",
+  "imPregnant": "I'm Pregnant",
+  "pregnantOptionDesc": "Track your pregnancy journey, get weekly insights, and prepare for your baby",
+  "iHaveBaby": "I have a baby",
+  "babyOptionDesc": "Postpartum care, baby development tracking, and parenting support",
+  "canChangeAnytime": "Don't worry, you can change this anytime in settings",
+  "obTrack": "Track",
+  "obYourJourney": "Your Journey",
+  "obDesc1": "Monitor your pregnancy week by week with personalized tips and insights",
+  "obBabyGrowth": "Baby Growth",
+  "obMonitor": "Monitor",
+  "obDesc2": "Follow your baby's growth and milestones month by month",
+  "obNeverMiss": "Never Miss a",
+  "obMoment": "Moment",
+  "obDesc3": "Set reminders for appointments, vaccines, and important checkups",
+  "obMomBaby": "Mom & Baby",
+  "obMarketplace": "Marketplace",
+  "obDesc4": "Shop curated products for you and your baby",
+  "getStarted": "Get Started",
+  "next": "Next",
+  "everythingYouNeed": "Everything you need for pregnancy, baby care, and beyond — all in one place",
+  "trackYourPregnancy": "Track Your Pregnancy",
+  "weekByWeekInsights": "Week-by-week insights",
+  "healthAppointments": "Health & Appointments",
+  "neverMissCheckup": "Never miss a checkup",
+  "communitySupport": "Community Support",
+  "connectWithOthers": "Connect with others",
+  "takesLessMinute": "Takes less than a minute",
+  "yourJourneyOurSupport": "Your Journey,\nOur Support",
+  "letsGetStarted": "Let's Get Started",
+  "appTagline": "Your Journey, Our Care",
+  "loadingExperience": "Loading your experience...",
+  "weeksUnit": "weeks",
+  "navHome": "Home",
+  "navTrack": "Track",
+  "navHealth": "Health",
+  "navPlan": "Plan",
+  "navMarket": "Market"
 }

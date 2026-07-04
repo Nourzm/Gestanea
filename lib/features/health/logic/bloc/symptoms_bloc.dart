@@ -5,9 +5,13 @@ import 'symptoms_event.dart';
 import 'symptoms_state.dart';
 
 class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
-  final DatabaseHelper _dbHelper = DatabaseHelper. instance;
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  SymptomsBloc() : super(SymptomsInitial()) {
+  /// Owner of the records this bloc reads and writes. All queries are scoped
+  /// to this id so users never see each other's data.
+  final String userId;
+
+  SymptomsBloc({required this.userId}) : super(SymptomsInitial()) {
     on<LoadSymptoms>(_onLoad);
     on<AddSymptom>(_onAdd);
     on<DeleteSymptom>(_onDelete);
@@ -18,7 +22,7 @@ class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
     emit(SymptomsLoading());
     try {
       final symptoms = await _getSymptoms();
-      final latest = symptoms.isNotEmpty ? symptoms. first : null;
+      final latest = symptoms.isNotEmpty ? symptoms.first : null;
       emit(SymptomsLoaded(symptoms, latest));
     } catch (e) {
       emit(SymptomsError(e.toString()));
@@ -27,14 +31,18 @@ class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
 
   Future<void> _onAdd(AddSymptom event, Emitter<SymptomsState> emit) async {
     try {
-      await _saveSymptom(event.symptom);
+      // Stamp the real owner regardless of what the caller supplied.
+      await _saveSymptom(event.symptom.copyWith(userId: userId));
       add(LoadSymptoms());
     } catch (e) {
-      emit(SymptomsError(e. toString()));
+      emit(SymptomsError(e.toString()));
     }
   }
 
-  Future<void> _onDelete(DeleteSymptom event, Emitter<SymptomsState> emit) async {
+  Future<void> _onDelete(
+    DeleteSymptom event,
+    Emitter<SymptomsState> emit,
+  ) async {
     try {
       await _deleteSymptom(event.id);
       add(LoadSymptoms());
@@ -43,7 +51,10 @@ class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
     }
   }
 
-  Future<void> _onRefresh(RefreshSymptoms event, Emitter<SymptomsState> emit) async {
+  Future<void> _onRefresh(
+    RefreshSymptoms event,
+    Emitter<SymptomsState> emit,
+  ) async {
     add(LoadSymptoms());
   }
 
@@ -52,6 +63,8 @@ class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
     final db = await _dbHelper.database;
     final maps = await db.query(
       'symptoms',
+      where: 'user_id = ?',
+      whereArgs: [userId],
       orderBy: 'recorded_at DESC',
     );
     return maps.map((map) => SymptomModel.fromMap(map)).toList();
@@ -66,8 +79,8 @@ class SymptomsBloc extends Bloc<SymptomsEvent, SymptomsState> {
     final db = await _dbHelper.database;
     await db.delete(
       'symptoms',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'id = ? AND user_id = ?',
+      whereArgs: [id, userId],
     );
   }
 

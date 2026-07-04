@@ -1,5 +1,6 @@
 // lib/features/dashboard/presentation/widgets/week_progress_card.dart
 import 'package:flutter/material.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class WeekProgressCard extends StatelessWidget {
   final int currentWeek;
@@ -19,6 +20,7 @@ class WeekProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -53,9 +55,9 @@ class WeekProgressCard extends StatelessWidget {
                       color: Color(0xFF9B7FDB),
                     ),
                   ),
-                  const Text(
-                    'DONE',
-                    style: TextStyle(
+                  Text(
+                    t.doneLabel,
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white70,
                       letterSpacing: 1.2,
@@ -70,18 +72,15 @@ class WeekProgressCard extends StatelessWidget {
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF9B7FDB),
-                    width: 4,
-                  ),
+                  border: Border.all(color: const Color(0xFF9B7FDB), width: 4),
                 ),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'WEEK',
-                        style: TextStyle(
+                      Text(
+                        t.weekLabel,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white70,
                           letterSpacing: 1.2,
@@ -96,7 +95,7 @@ class WeekProgressCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '+$currentDay day',
+                        t.plusDays(currentDay),
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white70,
@@ -119,9 +118,9 @@ class WeekProgressCard extends StatelessWidget {
                       color: Color(0xFF9B7FDB),
                     ),
                   ),
-                  const Text(
-                    'DAYS LEFT',
-                    style: TextStyle(
+                  Text(
+                    t.daysLeftLabel,
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white70,
                       letterSpacing: 1.2,

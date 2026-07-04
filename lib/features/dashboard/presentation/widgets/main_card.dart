@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class PregnancyProgressCard extends StatelessWidget {
   const PregnancyProgressCard({super.key, required this.onTap});
-  final void Function(int)  onTap;
+  final void Function(int) onTap;
   // Color Palette extracted from the image
   final Color bgLight = const Color(0xFFF8D9F8);
   final Color bgDark = const Color(0xFFF1C0F2);
@@ -16,6 +17,7 @@ class PregnancyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
         // Extract pregnancy data from state
@@ -77,15 +79,15 @@ class PregnancyProgressCard extends StatelessWidget {
                         flex: 2,
                         child: _buildStatItem(
                           value: "${progressPercentage.toStringAsFixed(1)}%",
-                          label: "DONE",
+                          label: t.doneLabel,
                           align: CrossAxisAlignment.center,
                         ),
                       ),
 
                       // Center Ring with week and day
                       Expanded(
-                        flex: 4, 
-                        child: _buildCentralRing(currentWeek, currentDay),
+                        flex: 4,
+                        child: _buildCentralRing(t, currentWeek, currentDay),
                       ),
 
                       // Right Stat - Days left
@@ -93,7 +95,7 @@ class PregnancyProgressCard extends StatelessWidget {
                         flex: 2,
                         child: _buildStatItem(
                           value: "$daysLeft",
-                          label: "DAYS TO GO",
+                          label: t.daysToGoLabel,
                           align: CrossAxisAlignment.center,
                         ),
                       ),
@@ -126,7 +128,7 @@ class PregnancyProgressCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "More",
+                          t.moreLabel,
                           style: TextStyle(
                             color: textPurple,
                             fontWeight: FontWeight.w600,
@@ -147,7 +149,7 @@ class PregnancyProgressCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCentralRing(int week, int day) {
+  Widget _buildCentralRing(AppLocalizations t, int week, int day) {
     return Center(
       child: Container(
         height: 160,
@@ -176,7 +178,7 @@ class PregnancyProgressCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "WEEK",
+                t.weekLabel,
                 style: TextStyle(
                   color: labelPurple,
                   fontSize: 12,
@@ -200,7 +202,7 @@ class PregnancyProgressCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                "+$day day${day != 1 ? 's' : ''}",
+                t.plusDays(day),
                 style: TextStyle(
                   color: labelPurple,
                   fontSize: 14,

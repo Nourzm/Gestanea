@@ -2,7 +2,7 @@ class TipModel {
   final String id;
   final String title;
   final String content;
-  final String?  category;
+  final String? category;
   final String? targetAudience;
   final String? imageUrl;
   final String? source;
@@ -14,9 +14,9 @@ class TipModel {
     required this.title,
     required this.content,
     this.category,
-    this. targetAudience,
+    this.targetAudience,
     this.imageUrl,
-    this. source,
+    this.source,
     this.isActive = true,
     required this.createdAt,
   });
@@ -58,7 +58,7 @@ class TipModel {
     String? imageUrl,
     String? source,
     bool? isActive,
-    DateTime?  createdAt,
+    DateTime? createdAt,
   }) {
     return TipModel(
       id: id ?? this.id,
@@ -69,7 +69,7 @@ class TipModel {
       imageUrl: imageUrl ?? this.imageUrl,
       source: source ?? this.source,
       isActive: isActive ?? this.isActive,
-      createdAt: createdAt ??  this.createdAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

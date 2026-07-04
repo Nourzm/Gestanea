@@ -1,12 +1,18 @@
 // lib/features/pregnancy/presentation/widgets/kick_counter_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancy/data/repositories/pregnancy_repository.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class KickCounterWidget extends StatefulWidget {
-  const KickCounterWidget({super.key});
+  /// Called after a session is successfully saved, so parents can refresh
+  /// any kick history / daily total they display.
+  final VoidCallback? onSessionSaved;
+
+  const KickCounterWidget({super.key, this.onSessionSaved});
 
   @override
   State<KickCounterWidget> createState() => _KickCounterWidgetState();
@@ -41,6 +47,7 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
   }
 
   Future<void> _stopTracking() async {
+    final savedCount = kickCount;
     if (_startTime != null && kickCount > 0) {
       final duration = DateTime.now().difference(_startTime!).inMinutes;
       final userId = _getUserId();
@@ -59,21 +66,23 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
       }
     }
 
-    setState(() => isTracking = false);
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Session saved: $kickCount kicks'),
-          backgroundColor: const Color(0xFF9B7FDB),
-        ),
-      );
-    }
-    
+    if (!mounted) return;
+
     setState(() {
+      isTracking = false;
       kickCount = 0;
       _startTime = null;
     });
+
+    if (savedCount > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.sessionSaved(savedCount)),
+          backgroundColor: AppColors.main600,
+        ),
+      );
+      widget.onSessionSaved?.call();
+    }
   }
 
   void _resetCounter() {
@@ -82,123 +91,128 @@ class _KickCounterWidgetState extends State<KickCounterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!isTracking) {
-      return GestureDetector(
-        onTap: _startTracking,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Column(
-              children: [
-                Image.asset('assets/images/kickcounter.png',
-                width: 200,
-                height: 200,),
-                const SizedBox(height: 8),
-                const Text(
-                  'Tap to start tracking kicks',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: AppColors.shadow1,
       ),
-      child: Column(
-        children: [
-          Image.asset('assets/images/kickcounter.png',
-          width: 200,
-          height: 200
-          ),
-          GestureDetector(
-            onTap: _incrementKick,
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFE8A5C8), Color(0xFFFFB6D9)],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFE8A5C8).withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '$kickCount',
-                      style: const TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      'Tap to count',
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
-                    ),
-                  ],
+      child: isTracking ? _buildTracking() : _buildIdle(),
+    );
+  }
+
+  Widget _buildIdle() {
+    final t = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        _kickCircle(label: t.startLabel, big: false, onTap: _startTracking),
+        const SizedBox(height: 16),
+        Text(
+          t.tapToStartKicks,
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTracking() {
+    final t = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        _kickCircle(
+          label: t.tapToCount,
+          big: true,
+          countOverride: kickCount,
+          onTap: _incrementKick,
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton.icon(
+              onPressed: _resetCounter,
+              icon: const Icon(Icons.refresh),
+              label: Text(t.resetLabel),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.main600,
+                side: const BorderSide(color: AppColors.main500, width: 2),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlinedButton.icon(
-                onPressed: _resetCounter,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Reset'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF9B7FDB),
-                  side: const BorderSide(color: Color(0xFF9B7FDB), width: 2),
+            const SizedBox(width: 16),
+            ElevatedButton.icon(
+              onPressed: _stopTracking,
+              icon: const Icon(Icons.check),
+              label: Text(t.finishLabel),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.main600,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
                 ),
               ),
-              const SizedBox(width: 16),
-              ElevatedButton.icon(
-                onPressed: _stopTracking,
-                icon: const Icon(Icons.check),
-                label: const Text('Finish'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE8A5C8),
-                ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _kickCircle({
+    required String label,
+    required bool big,
+    int? countOverride,
+    required VoidCallback onTap,
+  }) {
+    final double size = big ? 170 : 140;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [AppColors.main500, AppColors.main600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.main500.withValues(alpha: 0.35),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (countOverride != null)
+                Text(
+                  '$countOverride',
+                  style: const TextStyle(
+                    fontSize: 56,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )
+              else
+                const Icon(Icons.favorite, color: Colors.white, size: 48),
+              Text(
+                label,
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

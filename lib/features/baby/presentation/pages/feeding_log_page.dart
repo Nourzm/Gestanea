@@ -9,11 +9,12 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/feeding_log_model.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_cubit.dart';
 import 'package:gestanea/features/baby/logic/cubit/baby_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class FeedingLogPage extends StatefulWidget {
   final String? babyId;
-  
+
   const FeedingLogPage({super.key, this.babyId});
 
   @override
@@ -35,8 +36,25 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
     }
   }
 
+  String _feedingLabel(AppLocalizations t, String type) =>
+      type == 'Bottle' ? t.bottle : t.breastfeed;
+
+  String _sideLabel(AppLocalizations t, String side) {
+    switch (side) {
+      case 'Left':
+        return t.sideLeft;
+      case 'Right':
+        return t.sideRight;
+      case 'Both':
+        return t.sideBoth;
+      default:
+        return side;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -53,46 +71,51 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
             if (state is BabyLoading || state is FeedingLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (state is BabyError) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(state.message, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => context.read<BabyCubit>().loadBabyProfile(),
-                      child: const Text('Retry'),
+                      onPressed: () =>
+                          context.read<BabyCubit>().loadBabyProfile(),
+                      child: Text(t.retry),
                     ),
                   ],
                 ),
               );
             }
-            
+
             if (state is NoBabyProfile) {
-              return const Center(
-                child: Text('No baby profile found. Please add your baby first.'),
-              );
+              return Center(child: Text(t.noBabyProfileFound));
             }
-            
+
             List<FeedingLogModel> feedingLogs = [];
             if (state is FeedingLoaded) {
               feedingLogs = state.feedingLogs;
             }
-            
+
             // Filter by selected type and today
             final today = DateTime.now();
             final todayLogs = feedingLogs.where((log) {
               final logDate = log.loggedAt;
-              return logDate.year == today.year && 
-                     logDate.month == today.month && 
-                     logDate.day == today.day;
+              return logDate.year == today.year &&
+                  logDate.month == today.month &&
+                  logDate.day == today.day;
             }).toList();
-            
+
             // Calculate totals
             final totalFeedings = todayLogs.length;
-            final totalMinutes = todayLogs.fold<int>(0, (sum, log) => sum + (log.durationMinutes ?? 0));
+            final totalMinutes = todayLogs.fold<int>(
+              0,
+              (sum, log) => sum + (log.durationMinutes ?? 0),
+            );
             final hours = totalMinutes ~/ 60;
             final minutes = totalMinutes % 60;
 
@@ -100,19 +123,28 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
               children: [
                 // Header
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.main500,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(
-                            'Feeding Log',
-                            style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                            t.feedingLogTitle,
+                            style: AppTextStyles.headline1.copyWith(
+                              color: AppColors.main500,
+                            ),
                           ),
                         ),
                       ),
@@ -144,15 +176,25 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                               children: [
                                 Column(
                                   children: [
-                                    Icon(Icons.restaurant, color: AppColors.white, size: 32),
+                                    Icon(
+                                      Icons.restaurant,
+                                      color: AppColors.white,
+                                      size: 32,
+                                    ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '$totalFeedings times',
-                                      style: AppTextStyles.headline2.copyWith(color: AppColors.white),
+                                      '$totalFeedings ${t.times}',
+                                      style: AppTextStyles.headline2.copyWith(
+                                        color: AppColors.white,
+                                      ),
                                     ),
                                     Text(
-                                      'Today',
-                                      style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                      t.today,
+                                      style: AppTextStyles.smallLabel.copyWith(
+                                        color: AppColors.white.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -163,15 +205,25 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                                 ),
                                 Column(
                                   children: [
-                                    Icon(Icons.timer, color: AppColors.white, size: 32),
+                                    Icon(
+                                      Icons.timer,
+                                      color: AppColors.white,
+                                      size: 32,
+                                    ),
                                     const SizedBox(height: 8),
                                     Text(
                                       '${hours}h ${minutes}m',
-                                      style: AppTextStyles.headline2.copyWith(color: AppColors.white),
+                                      style: AppTextStyles.headline2.copyWith(
+                                        color: AppColors.white,
+                                      ),
                                     ),
                                     Text(
-                                      'Total Time',
-                                      style: AppTextStyles.smallLabel.copyWith(color: AppColors.white.withValues(alpha: 0.7)),
+                                      t.totalTime,
+                                      style: AppTextStyles.smallLabel.copyWith(
+                                        color: AppColors.white.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -184,11 +236,19 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildTypeButton('Breastfeed', Icons.child_care),
+                                child: _buildTypeButton(
+                                  'Breastfeed',
+                                  t.breastfeed,
+                                  Icons.child_care,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: _buildTypeButton('Bottle', Icons.baby_changing_station),
+                                child: _buildTypeButton(
+                                  'Bottle',
+                                  t.bottle,
+                                  Icons.baby_changing_station,
+                                ),
                               ),
                             ],
                           ),
@@ -199,7 +259,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Recent Feedings',
+                                t.recentFeedings,
                                 style: AppTextStyles.headline2,
                               ),
                               TextButton(
@@ -207,8 +267,10 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                                   // TODO: Navigate to all feeding logs page
                                 },
                                 child: Text(
-                                  'View All',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.main500),
+                                  t.viewAll,
+                                  style: AppTextStyles.body1.copyWith(
+                                    color: AppColors.main500,
+                                  ),
                                 ),
                               ),
                             ],
@@ -219,13 +281,17 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'No feeding logs yet',
-                                  style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
+                                  t.noFeedingLogs,
+                                  style: AppTextStyles.body1.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ),
                             )
                           else
-                            ...feedingLogs.take(10).map((log) => _buildFeedingLogItem(log)),
+                            ...feedingLogs
+                                .take(10)
+                                .map((log) => _buildFeedingLogItem(log)),
                         ],
                       ),
                     ),
@@ -242,12 +308,12 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
         },
         backgroundColor: AppColors.main500,
         icon: const Icon(Icons.add, color: AppColors.white),
-        label: Text('Add Feeding', style: AppTextStyles.bodyWhite),
+        label: Text(t.addFeeding, style: AppTextStyles.bodyWhite),
       ),
     );
   }
 
-  Widget _buildTypeButton(String type, IconData icon) {
+  Widget _buildTypeButton(String type, String label, IconData icon) {
     bool isSelected = selectedType == type;
     return GestureDetector(
       onTap: () {
@@ -272,7 +338,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
             ),
             const SizedBox(width: 8),
             Text(
-              type,
+              label,
               style: AppTextStyles.body1.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isSelected ? AppColors.white : AppColors.textSecondary,
@@ -285,9 +351,11 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
   }
 
   Widget _buildFeedingLogItem(FeedingLogModel log) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final startTime = log.loggedAt;
-    final timeStr = DateFormat('h:mm a').format(startTime);
-    
+    final timeStr = DateFormat('h:mm a', locale).format(startTime);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -318,7 +386,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  log.feedingType,
+                  _feedingLabel(t, log.feedingType),
                   style: AppTextStyles.subtitle1.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
@@ -327,23 +395,26 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 const SizedBox(height: 4),
                 Text(
                   log.feedingType == 'Breastfeed'
-                      ? '${log.durationMinutes ?? 0} min${log.breastSide != null ? ' - ${log.breastSide} side' : ''}'
-                      : '${log.amountMl ?? 0} ml',
+                      ? (log.breastSide != null
+                            ? t.minSideValue(
+                                log.durationMinutes ?? 0,
+                                _sideLabel(t, log.breastSide!),
+                              )
+                            : t.minutesShort(log.durationMinutes ?? 0))
+                      : t.mlValue('${log.amountMl ?? 0}'),
                   style: AppTextStyles.body1,
                 ),
               ],
             ),
           ),
-          Text(
-            timeStr,
-            style: AppTextStyles.body1,
-          ),
+          Text(timeStr, style: AppTextStyles.body1),
         ],
       ),
     );
   }
 
   void _showAddFeedingDialog(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     String feedingType = 'Breastfeed';
     String? selectedSide;
     final durationController = TextEditingController();
@@ -360,7 +431,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               title: Text(
-                'Add Feeding',
+                t.addFeeding,
                 style: AppTextStyles.headline2.copyWith(
                   color: AppColors.textPrimary,
                 ),
@@ -372,7 +443,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                     DropdownButtonFormField<String>(
                       initialValue: feedingType,
                       decoration: InputDecoration(
-                        labelText: 'Feeding Type',
+                        labelText: t.feedingTypeLabel,
                         labelStyle: AppTextStyles.body1.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -388,7 +459,10 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       items: ['Breastfeed', 'Bottle'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value, style: AppTextStyles.body1),
+                          child: Text(
+                            _feedingLabel(t, value),
+                            style: AppTextStyles.body1,
+                          ),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -404,8 +478,8 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       style: AppTextStyles.body1,
                       decoration: InputDecoration(
                         labelText: feedingType == 'Breastfeed'
-                            ? 'Duration (minutes)'
-                            : 'Amount (ml)',
+                            ? t.durationMinutesLabel
+                            : t.amountMlLabel,
                         labelStyle: AppTextStyles.body1.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -424,7 +498,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       DropdownButtonFormField<String>(
                         initialValue: selectedSide,
                         decoration: InputDecoration(
-                          labelText: 'Side (optional)',
+                          labelText: t.sideOptional,
                           labelStyle: AppTextStyles.body1.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -437,10 +511,17 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                             borderSide: BorderSide(color: AppColors.main500),
                           ),
                         ),
-                        items: [null, 'Left', 'Right', 'Both'].map((String? value) {
+                        items: [null, 'Left', 'Right', 'Both'].map((
+                          String? value,
+                        ) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value ?? 'Not specified', style: AppTextStyles.body1),
+                            child: Text(
+                              value == null
+                                  ? t.notSpecified
+                                  : _sideLabel(t, value),
+                              style: AppTextStyles.body1,
+                            ),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -467,19 +548,24 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                         child: TextField(
                           style: AppTextStyles.body1,
                           decoration: InputDecoration(
-                            labelText: 'Time',
+                            labelText: t.timeLabel,
                             labelStyle: AppTextStyles.body1.copyWith(
                               color: AppColors.textSecondary,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.purpleGrey),
+                              borderSide: BorderSide(
+                                color: AppColors.purpleGrey,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(color: AppColors.main500),
                             ),
-                            suffixIcon: Icon(Icons.access_time, color: AppColors.main500),
+                            suffixIcon: Icon(
+                              Icons.access_time,
+                              color: AppColors.main500,
+                            ),
                           ),
                           controller: TextEditingController(
                             text: selectedTime.format(context),
@@ -494,7 +580,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
                   child: Text(
-                    'Cancel',
+                    t.cancel,
                     style: AppTextStyles.body1.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -504,16 +590,23 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                   onPressed: () {
                     final now = DateTime.now();
                     final loggedAt = DateTime(
-                      now.year, now.month, now.day,
-                      selectedTime.hour, selectedTime.minute,
+                      now.year,
+                      now.month,
+                      now.day,
+                      selectedTime.hour,
+                      selectedTime.minute,
                     );
-                    
+
                     final value = int.tryParse(durationController.text) ?? 0;
-                    
+
                     context.read<BabyCubit>().addFeedingLog(
                       feedingType: feedingType,
-                      durationMinutes: feedingType == 'Breastfeed' ? value : null,
-                      amountMl: feedingType == 'Bottle' ? value.toDouble() : null,
+                      durationMinutes: feedingType == 'Breastfeed'
+                          ? value
+                          : null,
+                      amountMl: feedingType == 'Bottle'
+                          ? value.toDouble()
+                          : null,
                       breastSide: selectedSide,
                       loggedAt: loggedAt,
                     );
@@ -526,7 +619,7 @@ class _FeedingLogPageState extends State<FeedingLogPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text('Save', style: AppTextStyles.bodyWhite),
+                  child: Text(t.save, style: AppTextStyles.bodyWhite),
                 ),
               ],
             );

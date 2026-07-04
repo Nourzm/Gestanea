@@ -9,9 +9,9 @@ class MedicineLoggedModel {
 
   MedicineLoggedModel({
     required this.id,
-    required this. medicineId,
+    required this.medicineId,
     required this.userId,
-    required this. loggedDate,
+    required this.loggedDate,
     required this.status,
     this.notes,
     required this.loggedAt,
@@ -22,7 +22,7 @@ class MedicineLoggedModel {
       'id': id,
       'medicine_id': medicineId,
       'user_id': userId,
-      'logged_date': loggedDate.toIso8601String(). split('T')[0],
+      'logged_date': loggedDate.toIso8601String().split('T')[0],
       'status': status,
       'notes': notes,
       'logged_at': loggedAt.toIso8601String(),
@@ -37,26 +37,26 @@ class MedicineLoggedModel {
       loggedDate: DateTime.parse(map['logged_date'] as String),
       status: map['status'] as String,
       notes: map['notes'] as String?,
-      loggedAt: DateTime. parse(map['logged_at'] as String),
+      loggedAt: DateTime.parse(map['logged_at'] as String),
     );
   }
 
   MedicineLoggedModel copyWith({
-    String?  id,
+    String? id,
     String? medicineId,
     String? userId,
     DateTime? loggedDate,
     String? status,
     String? notes,
-    DateTime?  loggedAt,
+    DateTime? loggedAt,
   }) {
     return MedicineLoggedModel(
-      id: id ??  this.id,
-      medicineId: medicineId ?? this. medicineId,
+      id: id ?? this.id,
+      medicineId: medicineId ?? this.medicineId,
       userId: userId ?? this.userId,
-      loggedDate: loggedDate ??  this.loggedDate,
+      loggedDate: loggedDate ?? this.loggedDate,
       status: status ?? this.status,
-      notes: notes ?? this. notes,
+      notes: notes ?? this.notes,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }

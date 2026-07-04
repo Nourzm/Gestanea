@@ -98,3 +98,6 @@ windows/flutter/CMakeLists.txt
 
 # Locally-installed skill bundles (re-installable via skills-lock.json)
 .agents/skills/
+
+# Supabase CLI local scratch
+supabase/.temp/

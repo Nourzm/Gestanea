@@ -111,8 +111,9 @@ class AppointmentDB extends AppointmentRepository {
       await db.insert('appointments', appointment.toMap());
 
       // Fire-and-forget: schedule a heads-up 1 hour before the appointment.
-      final reminderAt =
-          appointment.appointmentDate.subtract(const Duration(hours: 1));
+      final reminderAt = appointment.appointmentDate.subtract(
+        const Duration(hours: 1),
+      );
       if (reminderAt.isAfter(DateTime.now())) {
         try {
           await NotificationsService.instance.scheduleAppointmentAlert(
