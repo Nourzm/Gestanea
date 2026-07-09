@@ -30,7 +30,9 @@ class PregnancyProgressBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFB07CDE), // solid purple background like your image
+        color: const Color(
+          0xFFB07CDE,
+        ), // solid purple background like your image
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(

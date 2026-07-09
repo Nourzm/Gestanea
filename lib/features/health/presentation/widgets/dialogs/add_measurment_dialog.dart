@@ -39,7 +39,7 @@ class _AddMeasurementDialogState extends State<AddMeasurementDialog> {
     if (_formKey.currentState!.validate()) {
       final measurement = MeasurementModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 'current_user', // TODO: Get from session/auth
+        userId: '', // real owner is stamped by the bloc on insert
         weight: _weightController.text.isNotEmpty
             ? double.tryParse(_weightController.text)
             : null,

@@ -9,6 +9,11 @@ import 'package:powersync/powersync.dart';
 
 /// Long-lived holder for the PowerSync database + connector.
 ///
+/// ⚠️ NOT YET USED BY FEATURE CODE. Every feature reads/writes the legacy
+/// `gestanea.db` via `DatabaseHelper.instance`; nothing routes through this
+/// database, so no app data actually syncs even when fully configured.
+/// See GAPS.md #1 for the migration plan before relying on sync.
+///
 /// Lifecycle:
 ///   1. `init()` opens (or creates) the PowerSync local SQLite at
 ///      `<docs>/gestanea_powersync.db`.

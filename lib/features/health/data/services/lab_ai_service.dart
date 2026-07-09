@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:gestanea/core/services/supabase_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../models/lab_ai_result.dart';
 
 /// Thrown for any failure analyzing a lab result via the Edge Function.
@@ -13,7 +15,8 @@ class LabAiException implements Exception {
   String toString() => 'LabAiException($code): $message';
 }
 
-/// Calls the `analyze-lab` Supabase Edge Function (which proxies Claude).
+/// Calls the `analyze-lab` Supabase Edge Function, which proxies the AI
+/// provider chosen server-side (Gemini / OpenRouter / Claude).
 ///
 /// The Anthropic key lives only on the server; this just forwards the image
 /// and/or OCR text plus pregnancy context and parses the structured reply.
@@ -25,6 +28,18 @@ class LabAiService {
   /// the function accepts the anon key. Callers fall back to the offline
   /// threshold view when this is false.
   bool get isAvailable => SupabaseService.instance.isReady;
+
+  /// Stable per-install id used by the server for rate limiting, since the
+  /// app authenticates locally and there is no Supabase user to bucket by.
+  static Future<String> _installId() async {
+    final prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('lab_ai_install_id');
+    if (id == null) {
+      id = const Uuid().v4();
+      await prefs.setString('lab_ai_install_id', id);
+    }
+    return id;
+  }
 
   Future<LabAiResult> analyze({
     File? image,
@@ -53,6 +68,7 @@ class LabAiService {
     }
 
     final body = <String, dynamic>{
+      'installId': await _installId(),
       if (imageBase64 != null) 'imageBase64': imageBase64,
       if (mediaType != null) 'mediaType': mediaType,
       if (ocrText != null && ocrText.trim().isNotEmpty) 'ocrText': ocrText,

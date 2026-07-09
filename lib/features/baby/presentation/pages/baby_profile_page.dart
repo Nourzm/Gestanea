@@ -11,7 +11,7 @@ import 'milestone_tracker_page.dart';
 
 class BabyProfilePage extends StatefulWidget {
   final String? babyId;
-  
+
   const BabyProfilePage({super.key, this.babyId});
 
   @override
@@ -36,7 +36,7 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
             if (state is BabyLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (state is BabyError) {
               return Center(
                 child: Column(
@@ -45,20 +45,24 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
                     Text(state.message, style: AppTextStyles.body1),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => context.read<BabyCubit>().loadBabyProfile(),
+                      onPressed: () =>
+                          context.read<BabyCubit>().loadBabyProfile(),
                       child: const Text('Retry'),
                     ),
                   ],
                 ),
               );
             }
-            
+
             if (state is BabyLoaded) {
               final baby = state.baby;
               final birthDate = baby.dateOfBirth;
-              final ageInMonths = DateTime.now().difference(birthDate).inDays ~/ 30;
-              final formattedBirthDate = DateFormat('MMMM d, yyyy').format(birthDate);
-              
+              final ageInMonths =
+                  DateTime.now().difference(birthDate).inDays ~/ 30;
+              final formattedBirthDate = DateFormat(
+                'MMMM d, yyyy',
+              ).format(birthDate);
+
               return Column(
                 children: [
                   _buildHeader(context),
@@ -72,36 +76,69 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
                               width: 120,
                               height: 120,
                               decoration: BoxDecoration(
-                                color: (baby.gender?.toLowerCase() ?? '') == 'female' 
-                                    ? AppColors.pink500 
+                                color:
+                                    (baby.gender?.toLowerCase() ?? '') ==
+                                        'female'
+                                    ? AppColors.pink500
                                     : AppColors.blue500,
                                 shape: BoxShape.circle,
                                 boxShadow: AppColors.shadow1,
                               ),
-                              child: const Icon(Icons.child_care, size: 60, color: AppColors.white),
+                              child: const Icon(
+                                Icons.child_care,
+                                size: 60,
+                                color: AppColors.white,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             Text(
                               baby.name,
-                              style: AppTextStyles.headline1.copyWith(fontSize: 28),
+                              style: AppTextStyles.headline1.copyWith(
+                                fontSize: 28,
+                              ),
                             ),
                             const SizedBox(height: 32),
                             _buildInfoCard(
                               'Gender',
                               baby.gender ?? 'Not specified',
-                              (baby.gender?.toLowerCase() ?? '') == 'female' ? Icons.female : Icons.male,
-                              (baby.gender?.toLowerCase() ?? '') == 'female' ? AppColors.pink500 : AppColors.blue500,
+                              (baby.gender?.toLowerCase() ?? '') == 'female'
+                                  ? Icons.female
+                                  : Icons.male,
+                              (baby.gender?.toLowerCase() ?? '') == 'female'
+                                  ? AppColors.pink500
+                                  : AppColors.blue500,
                             ),
                             const SizedBox(height: 12),
-                            _buildInfoCard('Date of Birth', formattedBirthDate, Icons.cake, AppColors.main500),
+                            _buildInfoCard(
+                              'Date of Birth',
+                              formattedBirthDate,
+                              Icons.cake,
+                              AppColors.main500,
+                            ),
                             const SizedBox(height: 12),
-                            _buildInfoCard('Age', '$ageInMonths months', Icons.access_time, AppColors.blue500),
+                            _buildInfoCard(
+                              'Age',
+                              '$ageInMonths months',
+                              Icons.access_time,
+                              AppColors.blue500,
+                            ),
                             const SizedBox(height: 12),
                             if (baby.birthWeight != null)
-                              _buildInfoCard('Birth Weight', '${baby.birthWeight} kg', Icons.monitor_weight, AppColors.pink500),
-                            if (baby.birthWeight != null) const SizedBox(height: 12),
+                              _buildInfoCard(
+                                'Birth Weight',
+                                '${baby.birthWeight} kg',
+                                Icons.monitor_weight,
+                                AppColors.pink500,
+                              ),
+                            if (baby.birthWeight != null)
+                              const SizedBox(height: 12),
                             if (baby.birthHeight != null)
-                              _buildInfoCard('Birth Height', '${baby.birthHeight} cm', Icons.height, AppColors.main500),
+                              _buildInfoCard(
+                                'Birth Height',
+                                '${baby.birthHeight} cm',
+                                Icons.height,
+                                AppColors.main500,
+                              ),
                             const SizedBox(height: 32),
                             _buildActionButtons(context, baby.id),
                           ],
@@ -112,7 +149,7 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
                 ],
               );
             }
-            
+
             return _buildNoDataView(context);
           },
         ),
@@ -127,14 +164,20 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: AppColors.main500, size: 24),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.main500,
+              size: 24,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           Expanded(
             child: Center(
               child: Text(
                 'Baby Profile',
-                style: AppTextStyles.headline1.copyWith(color: AppColors.main500),
+                style: AppTextStyles.headline1.copyWith(
+                  color: AppColors.main500,
+                ),
               ),
             ),
           ),
@@ -162,12 +205,16 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
                 const SizedBox(height: 16),
                 Text(
                   'No baby profile found',
-                  style: AppTextStyles.headline2.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.headline2.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Add a baby to get started',
-                  style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.body1.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -200,7 +247,9 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
               backgroundColor: AppColors.main500,
               foregroundColor: AppColors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
         ),
@@ -225,7 +274,9 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
               foregroundColor: AppColors.main500,
               side: const BorderSide(color: AppColors.main500, width: 2),
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
         ),
@@ -233,7 +284,12 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
     );
   }
 
-  Widget _buildInfoCard(String label, String value, IconData icon, Color color) {
+  Widget _buildInfoCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -256,10 +312,7 @@ class _BabyProfilePageState extends State<BabyProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: AppTextStyles.smallLabel,
-                ),
+                Text(label, style: AppTextStyles.smallLabel),
                 const SizedBox(height: 4),
                 Text(
                   value,

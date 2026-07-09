@@ -29,7 +29,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   final DatabaseHelper _dbHelper;
 
   PregnancyLocalDataSourceImpl({DatabaseHelper? dbHelper})
-      : _dbHelper = dbHelper ?? DatabaseHelper.instance;
+    : _dbHelper = dbHelper ?? DatabaseHelper.instance;
 
   @override
   Future<PregnancyModel?> getActivePregnancy(int userId) async {
@@ -75,7 +75,7 @@ class PregnancyLocalDataSourceImpl implements PregnancyLocalDataSource {
   @override
   Future<Map<String, dynamic>> calculatePregnancyWeek(int userId) async {
     final pregnancy = await getActivePregnancy(userId);
-    
+
     if (pregnancy == null) {
       return {
         'currentWeek': 0,

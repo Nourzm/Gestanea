@@ -22,6 +22,11 @@ From `gestanea/` (Supabase CLI logged in + linked):
 
 ```bash
 # 1. Rate-limit table
+#    NOTE: `supabase db push` may fail on an already-populated project because
+#    the init migration recreates existing tables. If it does, just paste
+#    supabase/migrations/20260616000000_ai_lab_usage.sql into the dashboard
+#    SQL editor instead. The function also works WITHOUT this table (rate
+#    limiting is best-effort), so this step can be deferred.
 supabase db push
 
 # 2A. FREE path — Gemini (default provider, no card needed)
@@ -38,8 +43,13 @@ supabase functions deploy analyze-lab
 ```
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` are injected
-by the runtime — don't set them. JWT verification is on by default, so only
-signed-in users can call it. Daily per-user cap: `LAB_AI_DAILY_LIMIT` (default 20).
+by the runtime — don't set them.
+
+**Rate limiting:** daily cap per bucket via `LAB_AI_DAILY_LIMIT` (default 20).
+The bucket is the Supabase user id when a session exists, otherwise the
+client's per-install UUID (`installId` in the request body — the Flutter app
+sends it automatically). Anonymous requests without a valid `installId` are
+rejected with 400.
 
 ## Switch providers later
 

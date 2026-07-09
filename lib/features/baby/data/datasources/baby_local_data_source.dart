@@ -10,7 +10,7 @@ class BabyLocalDataSource {
   BabyLocalDataSource(this._dbHelper);
 
   // ==================== BABY CRUD ====================
-  
+
   Future<BabyModel?> getBabyByUserId(String userId) async {
     final db = await _dbHelper.database;
     final maps = await db.query(
@@ -63,11 +63,7 @@ class BabyLocalDataSource {
 
   Future<void> deleteBaby(String babyId) async {
     final db = await _dbHelper.database;
-    await db.delete(
-      'babies',
-      where: 'id = ?',
-      whereArgs: [babyId],
-    );
+    await db.delete('babies', where: 'id = ?', whereArgs: [babyId]);
   }
 
   // ==================== GROWTH RECORDS ====================
@@ -113,11 +109,7 @@ class BabyLocalDataSource {
 
   Future<void> deleteGrowthRecord(String growthId) async {
     final db = await _dbHelper.database;
-    await db.delete(
-      'baby_growth',
-      where: 'id = ?',
-      whereArgs: [growthId],
-    );
+    await db.delete('baby_growth', where: 'id = ?', whereArgs: [growthId]);
   }
 
   // ==================== MILESTONES ====================
@@ -159,7 +151,10 @@ class BabyLocalDataSource {
     );
   }
 
-  Future<void> markMilestoneAchieved(String milestoneId, DateTime achievedDate) async {
+  Future<void> markMilestoneAchieved(
+    String milestoneId,
+    DateTime achievedDate,
+  ) async {
     final db = await _dbHelper.database;
     await db.update(
       'milestones',
@@ -171,16 +166,15 @@ class BabyLocalDataSource {
 
   Future<void> deleteMilestone(String milestoneId) async {
     final db = await _dbHelper.database;
-    await db.delete(
-      'milestones',
-      where: 'id = ?',
-      whereArgs: [milestoneId],
-    );
+    await db.delete('milestones', where: 'id = ?', whereArgs: [milestoneId]);
   }
 
   // ==================== FEEDING LOGS ====================
 
-  Future<List<FeedingLogModel>> getFeedingLogs(String babyId, {int? limit}) async {
+  Future<List<FeedingLogModel>> getFeedingLogs(
+    String babyId, {
+    int? limit,
+  }) async {
     final db = await _dbHelper.database;
     final maps = await db.query(
       'feeding_logs',
@@ -192,7 +186,10 @@ class BabyLocalDataSource {
     return maps.map((map) => FeedingLogModel.fromMap(map)).toList();
   }
 
-  Future<List<FeedingLogModel>> getFeedingLogsByDate(String babyId, DateTime date) async {
+  Future<List<FeedingLogModel>> getFeedingLogsByDate(
+    String babyId,
+    DateTime date,
+  ) async {
     final db = await _dbHelper.database;
     final dateStr = date.toIso8601String().split('T')[0];
     final maps = await db.query(
@@ -221,20 +218,20 @@ class BabyLocalDataSource {
 
   Future<void> deleteFeedingLog(String feedingLogId) async {
     final db = await _dbHelper.database;
-    await db.delete(
-      'feeding_logs',
-      where: 'id = ?',
-      whereArgs: [feedingLogId],
-    );
+    await db.delete('feeding_logs', where: 'id = ?', whereArgs: [feedingLogId]);
   }
 
   // ==================== STATISTICS ====================
 
-  Future<Map<String, dynamic>> getFeedingStats(String babyId, {int days = 7}) async {
+  Future<Map<String, dynamic>> getFeedingStats(
+    String babyId, {
+    int days = 7,
+  }) async {
     final db = await _dbHelper.database;
     final startDate = DateTime.now().subtract(Duration(days: days));
-    
-    final maps = await db.rawQuery('''
+
+    final maps = await db.rawQuery(
+      '''
       SELECT 
         feeding_type,
         COUNT(*) as count,
@@ -243,12 +240,10 @@ class BabyLocalDataSource {
       FROM feeding_logs
       WHERE baby_id = ? AND logged_at >= ?
       GROUP BY feeding_type
-    ''', [babyId, startDate.toIso8601String()]);
+    ''',
+      [babyId, startDate.toIso8601String()],
+    );
 
-    return {
-      'stats': maps,
-      'startDate': startDate,
-      'endDate': DateTime.now(),
-    };
+    return {'stats': maps, 'startDate': startDate, 'endDate': DateTime.now()};
   }
 }

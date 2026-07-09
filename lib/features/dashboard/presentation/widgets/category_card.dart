@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 class CategoryCard extends StatelessWidget {
   // Required path to the SVG asset, e.g., 'assets/icons/pill.svg'
   final String svgAssetPath;
@@ -63,7 +62,7 @@ class CategoryCard extends StatelessWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 8),
 
         // 2. Category Name Text

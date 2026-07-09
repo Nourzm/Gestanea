@@ -75,7 +75,10 @@ class BabyRepository {
     return _localDataSource.updateMilestone(milestone);
   }
 
-  Future<void> markMilestoneAchieved(String milestoneId, DateTime achievedDate) {
+  Future<void> markMilestoneAchieved(
+    String milestoneId,
+    DateTime achievedDate,
+  ) {
     return _localDataSource.markMilestoneAchieved(milestoneId, achievedDate);
   }
 
@@ -89,7 +92,10 @@ class BabyRepository {
     return _localDataSource.getFeedingLogs(babyId, limit: limit);
   }
 
-  Future<List<FeedingLogModel>> getFeedingLogsByDate(String babyId, DateTime date) {
+  Future<List<FeedingLogModel>> getFeedingLogsByDate(
+    String babyId,
+    DateTime date,
+  ) {
     return _localDataSource.getFeedingLogsByDate(babyId, date);
   }
 

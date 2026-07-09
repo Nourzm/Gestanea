@@ -31,7 +31,13 @@ class BabyLoaded extends BabyState {
   });
 
   @override
-  List<Object?> get props => [baby, growthRecords, milestones, feedingLogs, latestGrowth];
+  List<Object?> get props => [
+    baby,
+    growthRecords,
+    milestones,
+    feedingLogs,
+    latestGrowth,
+  ];
 
   BabyLoaded copyWith({
     BabyModel? baby,
@@ -68,10 +74,7 @@ class GrowthLoaded extends BabyState {
   final List<BabyGrowthModel> growthRecords;
   final BabyGrowthModel? latestGrowth;
 
-  const GrowthLoaded({
-    required this.growthRecords,
-    this.latestGrowth,
-  });
+  const GrowthLoaded({required this.growthRecords, this.latestGrowth});
 
   @override
   List<Object?> get props => [growthRecords, latestGrowth];
@@ -92,7 +95,11 @@ class MilestoneLoaded extends BabyState {
   });
 
   @override
-  List<Object?> get props => [allMilestones, achievedMilestones, upcomingMilestones];
+  List<Object?> get props => [
+    allMilestones,
+    achievedMilestones,
+    upcomingMilestones,
+  ];
 }
 
 // Feeding Log specific states

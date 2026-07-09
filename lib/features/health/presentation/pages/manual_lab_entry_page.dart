@@ -56,7 +56,7 @@ class _ManualLabEntryPageState extends State<ManualLabEntryPage> {
     if (_formKey.currentState!.validate()) {
       final labResult = LabResultModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 'current_user',
+        userId: '', // real owner is stamped by the bloc on insert
         testName: _testNameController.text,
         value: double.tryParse(_valueController.text),
         unit: _unitController.text.isNotEmpty ? _unitController.text : null,

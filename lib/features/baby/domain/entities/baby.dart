@@ -20,7 +20,8 @@ class Baby {
 
   int get ageInMonths {
     final now = DateTime.now();
-    return ((now.year - dateOfBirth.year) * 12) + (now.month - dateOfBirth.month);
+    return ((now.year - dateOfBirth.year) * 12) +
+        (now.month - dateOfBirth.month);
   }
 
   int get ageInDays {

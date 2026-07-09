@@ -144,10 +144,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                 // Upcoming Appointments & Medicine
                 const Text(
                   'Upcoming',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 12),
                 UpcomingRemindersWidget(
@@ -159,10 +156,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                 // Health Alerts
                 const Text(
                   'Health Alerts',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 12),
                 HealthAlertsWidget(alerts: dashboard.healthAlerts),
@@ -181,7 +175,11 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.tips_and_updates, color: Colors.white, size: 32),
+                      const Icon(
+                        Icons.tips_and_updates,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -256,10 +254,7 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 12, color: Colors.white70),
             ),
           ],
         ),
@@ -267,4 +262,3 @@ class _PregnancyDashboardPageState extends State<PregnancyDashboardPage> {
     );
   }
 }
-

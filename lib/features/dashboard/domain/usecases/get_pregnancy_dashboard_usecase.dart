@@ -7,7 +7,7 @@ class GetPregnancyDashboardUseCase {
   final DashboardRepository _repository;
 
   GetPregnancyDashboardUseCase({DashboardRepository? repository})
-      : _repository = repository ?? DashboardRepositoryImpl();
+    : _repository = repository ?? DashboardRepositoryImpl();
 
   Future<PregnancyDashboard> call(int userId) async {
     return await _repository.getPregnancyDashboard(userId);

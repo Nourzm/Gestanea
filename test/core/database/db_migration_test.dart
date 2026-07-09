@@ -60,10 +60,10 @@ void main() {
   test('v6 -> v7 adds salt to a pre-existing unsalted table', () async {
     final db = await openV6(withAuthTable: true);
     await db.insert('users', {'id': 'u1', 'email': 'a@b.c', 'name': 'A'});
-    await db.insert(
-      'auth_credentials',
-      {'user_id': 'u1', 'password': 'legacy-hash'},
-    );
+    await db.insert('auth_credentials', {
+      'user_id': 'u1',
+      'password': 'legacy-hash',
+    });
 
     await DatabaseHelper.upgradeSchema(db, 6, DatabaseHelper.schemaVersion);
 
@@ -86,14 +86,120 @@ void main() {
     await db.close();
   });
 
+  // ---- v8 (moods energy_level/sleep_quality) & v9 (pregnancies BMI cols) ----
+
+  Future<Set<String>> columnsOf(Database db, String table) async {
+    final cols = await db.rawQuery("PRAGMA table_info('$table')");
+    return cols.map((c) => c['name'] as String).toSet();
+  }
+
+  /// Minimal v7 fixture. [withMoods]/[withPregnancies] simulate devices in
+  /// different historical states (both tables only ever lived in
+  /// createSchema, so upgraded devices may lack either).
+  Future<Database> openV7({
+    required bool withMoods,
+    required bool withPregnancies,
+  }) async {
+    final db = await openDatabase(
+      inMemoryDatabasePath,
+      version: 7,
+      onCreate: (db, _) async {
+        if (withMoods) {
+          // Pre-v8 shape: no energy_level / sleep_quality.
+          await db.execute('''
+            CREATE TABLE moods (
+              id TEXT PRIMARY KEY,
+              user_id TEXT NOT NULL,
+              mood TEXT NOT NULL,
+              intensity INTEGER,
+              notes TEXT,
+              recorded_at TEXT,
+              created_at TEXT
+            )
+          ''');
+        }
+        if (withPregnancies) {
+          // Pre-v9 shape: no pre_pregnancy_weight / height_cm.
+          await db.execute('''
+            CREATE TABLE pregnancies (
+              id TEXT PRIMARY KEY,
+              user_id TEXT NOT NULL,
+              lmp_date TEXT NOT NULL,
+              due_date TEXT NOT NULL,
+              is_active INTEGER DEFAULT 1
+            )
+          ''');
+        }
+      },
+    );
+    return db;
+  }
+
+  test(
+    'v7 -> latest adds mood + pregnancy columns to existing tables',
+    () async {
+      final db = await openV7(withMoods: true, withPregnancies: true);
+      await db.insert('pregnancies', {
+        'id': 'p1',
+        'user_id': 'u1',
+        'lmp_date': '2026-01-01',
+        'due_date': '2026-10-08',
+      });
+
+      await DatabaseHelper.upgradeSchema(db, 7, DatabaseHelper.schemaVersion);
+
+      expect(
+        await columnsOf(db, 'moods'),
+        containsAll(<String>['energy_level', 'sleep_quality']),
+      );
+      expect(
+        await columnsOf(db, 'pregnancies'),
+        containsAll(<String>['pre_pregnancy_weight', 'height_cm']),
+      );
+      // Existing row survives with null new columns.
+      final rows = await db.query('pregnancies');
+      expect(rows, hasLength(1));
+      expect(rows.first['pre_pregnancy_weight'], isNull);
+      await db.close();
+    },
+  );
+
+  test(
+    'v7 -> latest succeeds when moods and pregnancies never existed',
+    () async {
+      // Regression: the original v9 step bare-ALTERed pregnancies and threw
+      // "no such table" on devices that lacked it, bricking the upgrade.
+      final db = await openV7(withMoods: false, withPregnancies: false);
+      await DatabaseHelper.upgradeSchema(db, 7, DatabaseHelper.schemaVersion);
+      expect(
+        await columnsOf(db, 'moods'),
+        containsAll(<String>['mood', 'energy_level', 'sleep_quality']),
+      );
+      expect(
+        await columnsOf(db, 'pregnancies'),
+        containsAll(<String>['lmp_date', 'pre_pregnancy_weight', 'height_cm']),
+      );
+      await db.close();
+    },
+  );
+
+  test('v7 -> latest is idempotent on re-run', () async {
+    final db = await openV7(withMoods: true, withPregnancies: true);
+    await DatabaseHelper.upgradeSchema(db, 7, DatabaseHelper.schemaVersion);
+    await DatabaseHelper.upgradeSchema(db, 7, DatabaseHelper.schemaVersion);
+    expect(
+      await columnsOf(db, 'pregnancies'),
+      containsAll(<String>['pre_pregnancy_weight', 'height_cm']),
+    );
+    await db.close();
+  });
+
   test('fresh createSchema produces all core tables', () async {
     final db = await openDatabase(inMemoryDatabasePath);
     await DatabaseHelper.createSchema(db, DatabaseHelper.schemaVersion);
     final tables = (await db.rawQuery(
       "SELECT name FROM sqlite_master WHERE type='table'",
-    ))
-        .map((r) => r['name'])
-        .toSet();
+    )).map((r) => r['name']).toSet();
     expect(
       tables,
       containsAll(<String>[

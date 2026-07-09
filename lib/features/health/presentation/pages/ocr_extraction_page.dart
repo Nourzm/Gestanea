@@ -189,7 +189,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
                 // Save image-only record
                 final labResult = LabResultModel(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  userId: 'current_user',
+                  userId: '', // real owner is stamped by the bloc on insert
                   testName: t.labReport,
                   labDate: DateTime.now(),
                   reportImageUrl: _savedImagePath,
@@ -235,7 +235,7 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
       final data = entry.value as Map<String, dynamic>;
       final labResult = LabResultModel(
         id: '${DateTime.now().millisecondsSinceEpoch}_${entry.key}',
-        userId: 'current_user',
+        userId: '', // real owner is stamped by the bloc on insert
         testName: entry.key.toUpperCase(),
         value: data['value'],
         unit: data['unit'],

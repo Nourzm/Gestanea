@@ -16,7 +16,7 @@ class PdfExtractionPage extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final labResult = LabResultModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: 'current_user',
+      userId: '', // real owner is stamped by the bloc on insert
       testName: t.pdfLabReport,
       labDate: DateTime.now(),
       reportImageUrl: pdfPath,

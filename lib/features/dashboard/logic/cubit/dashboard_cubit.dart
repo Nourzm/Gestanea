@@ -14,12 +14,12 @@ class DashboardCubit extends Cubit<DashboardState> {
     GetPregnancyDashboardUseCase? getPregnancyDashboardUseCase,
     GetPostpartumDashboardUseCase? getPostpartumDashboardUseCase,
     DashboardRepository? repository,
-  })  : _getPregnancyDashboardUseCase =
-            getPregnancyDashboardUseCase ?? GetPregnancyDashboardUseCase(),
-        _getPostpartumDashboardUseCase =
-            getPostpartumDashboardUseCase ?? GetPostpartumDashboardUseCase(),
-        _repository = repository ?? DashboardRepositoryImpl(),
-        super(DashboardInitial());
+  }) : _getPregnancyDashboardUseCase =
+           getPregnancyDashboardUseCase ?? GetPregnancyDashboardUseCase(),
+       _getPostpartumDashboardUseCase =
+           getPostpartumDashboardUseCase ?? GetPostpartumDashboardUseCase(),
+       _repository = repository ?? DashboardRepositoryImpl(),
+       super(DashboardInitial());
 
   Future<void> loadDashboard(int userId) async {
     emit(DashboardLoading());
@@ -67,17 +67,25 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> loadDashboardByStringId(String userIdString) async {
     emit(DashboardLoading());
     try {
-      final isPregnant = await _repository.isUserPregnantByStringId(userIdString);
+      final isPregnant = await _repository.isUserPregnantByStringId(
+        userIdString,
+      );
       if (isPregnant) {
-        final dashboard = await _getPregnancyDashboardUseCase.callByStringId(userIdString);
+        final dashboard = await _getPregnancyDashboardUseCase.callByStringId(
+          userIdString,
+        );
         emit(PregnancyDashboardLoaded(dashboard));
       } else {
         final hasBaby = await _repository.hasActiveBabyByStringId(userIdString);
         if (hasBaby) {
-          final dashboard = await _getPostpartumDashboardUseCase.callByStringId(userIdString);
+          final dashboard = await _getPostpartumDashboardUseCase.callByStringId(
+            userIdString,
+          );
           emit(PostpartumDashboardLoaded(dashboard));
         } else {
-          final dashboard = await _getPregnancyDashboardUseCase.callByStringId(userIdString);
+          final dashboard = await _getPregnancyDashboardUseCase.callByStringId(
+            userIdString,
+          );
           emit(PregnancyDashboardLoaded(dashboard));
         }
       }

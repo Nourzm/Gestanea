@@ -536,7 +536,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           AppLocalizations.of(context)!.yourInformationIsSecure,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary.withValues(alpha: 0.7),
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                       ],

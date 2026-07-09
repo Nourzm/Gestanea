@@ -3,8 +3,9 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import '../../data/models/lab_ai_result.dart';
 
-/// Shows the Claude lab interpretation in a scrollable modal sheet, with the
-/// red-flag escalation banner (when present) and the mandatory disclaimer.
+/// Shows the AI lab interpretation (provider-agnostic — Gemini/OpenRouter/
+/// Claude, chosen server-side) in a scrollable modal sheet, with the red-flag
+/// escalation banner (when present) and the mandatory disclaimer.
 Future<void> showLabAiResultSheet(BuildContext context, LabAiResult result) {
   return showModalBottomSheet(
     context: context,

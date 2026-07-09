@@ -1,7 +1,7 @@
 # 🤰👶 Pregnancy & Baby App — Flutter Mobile
 
 **One-line:** Mobile app to manage pregnancy tracking, baby care, health logs, appointments, marketplace, and community support.  
-**Tech:** Flutter (mobile), Clean Architecture, Riverpod.
+**Tech:** Flutter (mobile), Clean Architecture, flutter_bloc (BLoC/Cubit).
 
 > This README explains the repository structure, what each folder is, how to run the app, and coding/branch rules.
 
@@ -67,7 +67,7 @@ Each feature follows the same internal pattern: `data/`, `domain/`, `presentatio
 - `presentation/`
   - `pages/` → screens (e.g., `week_tracker_page.dart`)
   - `widgets/` → UI components specific to pregnancy
-  - `providers/` → Riverpod providers (e.g., `pregnancy_provider.dart`)
+  - `logic/` → Blocs/Cubits (e.g., `measurements_bloc.dart`)
 
 **Tip:** Follow this pattern for every feature.
 
@@ -182,12 +182,12 @@ pregnancy_baby_app/
 
 ---
 
-## 🏗️ Architecture: Clean Architecture + Riverpod
+## 🏗️ Architecture: Clean Architecture + BLoC
 
 ### Three Layers
 
 1. **Presentation Layer** (`features/*/presentation/`)
-   - UI, pages, widgets, Riverpod providers
+   - UI, pages, widgets, Blocs/Cubits
    - Only displays data and captures user input
 
 2. **Domain Layer** (`features/*/domain/`)
@@ -203,7 +203,7 @@ pregnancy_baby_app/
 ```
 UI (Button Click)
     ↓
-Riverpod Provider (Presentation)
+Bloc/Cubit (Logic)
     ↓
 UseCase (Domain)
     ↓

@@ -360,7 +360,33 @@ Deno.serve(async (req: Request) => {
     // no Supabase session — proceed as anonymous
   }
 
-  // --- Per-user daily rate limit (service-role bypasses RLS) ---
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return json({ error: "Invalid JSON body" }, 400);
+  }
+  const locale = (body.locale as string) ?? "en";
+
+  // --- Rate-limit bucket ---
+  // Real Supabase user when present; otherwise the client's per-install UUID
+  // (the app authenticates locally, so most callers have no Supabase session).
+  // A caller with neither is rejected — prevents everyone sharing one
+  // "anonymous" bucket. Install ids are client-chosen so a determined abuser
+  // can rotate them, but this stops naive scripted abuse of the anon key.
+  const installId = body.installId as string | undefined;
+  const uuidRe =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  let bucket: string;
+  if (userId !== "anonymous") {
+    bucket = userId;
+  } else if (installId && uuidRe.test(installId)) {
+    bucket = `install:${installId}`;
+  } else {
+    return json({ error: "missing_install_id" }, 400);
+  }
+
+  // --- Per-bucket daily rate limit (service-role bypasses RLS) ---
   // Best-effort: if the ai_lab_usage table isn't there yet (migration not
   // applied), skip limiting rather than failing — so a first deploy works with
   // just the provider secret, no DB step required.
@@ -374,7 +400,7 @@ Deno.serve(async (req: Request) => {
     const { count, error } = await serviceClient
       .from("ai_lab_usage")
       .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
+      .eq("user_id", bucket)
       .gte("created_at", since.toISOString());
     if (!error && (count ?? 0) >= DAILY_LIMIT) {
       return json(
@@ -385,14 +411,6 @@ Deno.serve(async (req: Request) => {
   } catch (_) {
     // table missing or query failed — don't block the request
   }
-
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
-    return json({ error: "Invalid JSON body" }, 400);
-  }
-  const locale = (body.locale as string) ?? "en";
 
   let result: unknown;
   try {
@@ -405,9 +423,10 @@ Deno.serve(async (req: Request) => {
     return json({ error: "upstream_error", detail: String(e) }, 502);
   }
 
-  // Record usage (best-effort; ignored if the table doesn't exist).
+  // Record usage against the same bucket (best-effort; ignored if the table
+  // doesn't exist).
   try {
-    await serviceClient.from("ai_lab_usage").insert({ user_id: userId });
+    await serviceClient.from("ai_lab_usage").insert({ user_id: bucket });
   } catch (_) {
     // no-op
   }

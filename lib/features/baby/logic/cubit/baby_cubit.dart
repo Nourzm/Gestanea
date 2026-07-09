@@ -12,11 +12,9 @@ class BabyCubit extends Cubit<BabyState> {
   final String userId;
   String? _currentBabyId;
 
-  BabyCubit({
-    required BabyRepository repository,
-    required this.userId,
-  })  : _repository = repository,
-        super(BabyInitial());
+  BabyCubit({required BabyRepository repository, required this.userId})
+    : _repository = repository,
+      super(BabyInitial());
 
   String? get currentBabyId => _currentBabyId;
 
@@ -38,13 +36,15 @@ class BabyCubit extends Cubit<BabyState> {
       final feedingLogs = await _repository.getFeedingLogs(baby.id, limit: 10);
       final latestGrowth = await _repository.getLatestGrowthRecord(baby.id);
 
-      emit(BabyLoaded(
-        baby: baby,
-        growthRecords: growthRecords,
-        milestones: milestones,
-        feedingLogs: feedingLogs,
-        latestGrowth: latestGrowth,
-      ));
+      emit(
+        BabyLoaded(
+          baby: baby,
+          growthRecords: growthRecords,
+          milestones: milestones,
+          feedingLogs: feedingLogs,
+          latestGrowth: latestGrowth,
+        ),
+      );
     } catch (e) {
       emit(BabyError('Failed to load baby profile: ${e.toString()}'));
     }
@@ -78,12 +78,14 @@ class BabyCubit extends Cubit<BabyState> {
       await _repository.createBaby(baby);
       _currentBabyId = baby.id;
 
-      emit(BabyLoaded(
-        baby: baby,
-        growthRecords: const [],
-        milestones: const [],
-        feedingLogs: const [],
-      ));
+      emit(
+        BabyLoaded(
+          baby: baby,
+          growthRecords: const [],
+          milestones: const [],
+          feedingLogs: const [],
+        ),
+      );
     } catch (e) {
       emit(BabyError('Failed to create baby profile: ${e.toString()}'));
     }
@@ -132,10 +134,7 @@ class BabyCubit extends Cubit<BabyState> {
       final records = await _repository.getGrowthRecords(_currentBabyId!);
       final latest = await _repository.getLatestGrowthRecord(_currentBabyId!);
 
-      emit(GrowthLoaded(
-        growthRecords: records,
-        latestGrowth: latest,
-      ));
+      emit(GrowthLoaded(growthRecords: records, latestGrowth: latest));
     } catch (e) {
       emit(BabyError('Failed to load growth records: ${e.toString()}'));
     }
@@ -199,11 +198,13 @@ class BabyCubit extends Cubit<BabyState> {
       final achieved = all.where((m) => m.achievedDate != null).toList();
       final upcoming = all.where((m) => m.achievedDate == null).toList();
 
-      emit(MilestoneLoaded(
-        allMilestones: all,
-        achievedMilestones: achieved,
-        upcomingMilestones: upcoming,
-      ));
+      emit(
+        MilestoneLoaded(
+          allMilestones: all,
+          achievedMilestones: achieved,
+          upcomingMilestones: upcoming,
+        ),
+      );
     } catch (e) {
       emit(BabyError('Failed to load milestones: ${e.toString()}'));
     }
@@ -277,11 +278,13 @@ class BabyCubit extends Cubit<BabyState> {
         logs = logs.where((log) => log.feedingType == filterType).toList();
       }
 
-      emit(FeedingLoaded(
-        feedingLogs: logs,
-        stats: stats,
-        selectedType: filterType,
-      ));
+      emit(
+        FeedingLoaded(
+          feedingLogs: logs,
+          stats: stats,
+          selectedType: filterType,
+        ),
+      );
     } catch (e) {
       emit(BabyError('Failed to load feeding logs: ${e.toString()}'));
     }
@@ -315,11 +318,11 @@ class BabyCubit extends Cubit<BabyState> {
 
       await _repository.addFeedingLog(feedingLog);
       emit(const BabyOperationSuccess('Feeding log added successfully'));
-      
+
       // Reload with current filter
       final currentState = state;
-      final filterType = currentState is FeedingLoaded 
-          ? currentState.selectedType 
+      final filterType = currentState is FeedingLoaded
+          ? currentState.selectedType
           : 'All';
       await loadFeedingLogs(filterType: filterType);
     } catch (e) {
@@ -331,10 +334,10 @@ class BabyCubit extends Cubit<BabyState> {
     try {
       await _repository.deleteFeedingLog(feedingLogId);
       emit(const BabyOperationSuccess('Feeding log deleted'));
-      
+
       final currentState = state;
-      final filterType = currentState is FeedingLoaded 
-          ? currentState.selectedType 
+      final filterType = currentState is FeedingLoaded
+          ? currentState.selectedType
           : 'All';
       await loadFeedingLogs(filterType: filterType);
     } catch (e) {

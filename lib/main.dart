@@ -28,4 +28,3 @@ void main() async {
   unawaited(NotificationsService.instance.init());
   runApp(const MyApp());
 }
-

@@ -72,7 +72,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
 
       final symptom = SymptomModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 'current_user', // TODO: Get from session/auth
+        userId: '', // real owner is stamped by the bloc on insert
         symptomName: symptomName,
         severity: _selectedSeverity,
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,

@@ -1,10 +1,14 @@
--- Per-user usage log for the analyze-lab Edge Function's daily rate limit.
+-- Per-bucket usage log for the analyze-lab Edge Function's daily rate limit.
 -- Rows are written by the function using the service role; clients never
 -- read or write this table directly (RLS denies all client access).
+--
+-- user_id is TEXT, not a uuid FK: the app authenticates locally, so most
+-- callers are bucketed by a per-install id ("install:<uuid>") rather than a
+-- Supabase auth.users row.
 
 create table if not exists public.ai_lab_usage (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users (id) on delete cascade,
+  user_id text not null,
   created_at timestamptz not null default now()
 );
 

@@ -6,6 +6,7 @@ import 'package:gestanea/features/auth/data/datasources/auth_local_data_source.d
 import 'package:gestanea/features/auth/data/models/auth_repo.dart';
 import 'package:gestanea/features/auth/data/models/user_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 /// Auth repository that prefers Supabase Auth when configured, and falls
 /// back transparently to the local SQLite credentials store when the app
@@ -207,15 +208,5 @@ class AuthRepositoryImpl implements AuthRepository {
     return model;
   }
 
-  String _uuid() {
-    // Mirror of uuid package's v4 without taking on the import here.
-    final now = DateTime.now().microsecondsSinceEpoch;
-    final r = now ^ identityHashCode(this);
-    return '${(r ^ now).toRadixString(16).padLeft(8, '0')}-'
-        '${(now >> 16 & 0xffff).toRadixString(16).padLeft(4, '0')}-'
-        '4${(now >> 32 & 0xfff).toRadixString(16).padLeft(3, '0')}-'
-        '${(8 | (r >> 8 & 0x3)).toRadixString(16)}'
-        '${(r >> 4 & 0xfff).toRadixString(16).padLeft(3, '0')}-'
-        '${(r & 0xffffffffffff).toRadixString(16).padLeft(12, '0')}';
-  }
+  String _uuid() => const Uuid().v4();
 }

@@ -157,7 +157,26 @@ class DatabaseHelper {
     }
     if (oldVersion < 9) {
       // BMI needs the mother's height + pre-pregnancy weight, stored on the
-      // active pregnancy. Add the columns only when absent.
+      // active pregnancy. Same self-healing pattern as v7/v8: create the table
+      // if a device somehow lacks it (PRAGMA on a missing table returns an
+      // empty list, so a bare ALTER would throw "no such table" and brick the
+      // upgrade), then only ALTER when the columns are absent.
+      await db.execute('''
+      CREATE TABLE IF NOT EXISTS pregnancies (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        lmp_date TEXT NOT NULL,
+        due_date TEXT NOT NULL,
+        current_week INTEGER,
+        current_trimester TEXT,
+        is_active INTEGER DEFAULT 1,
+        medical_conditions TEXT,
+        pre_pregnancy_weight REAL,
+        height_cm REAL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
       final pregCols = await db.rawQuery("PRAGMA table_info('pregnancies')");
       final names = pregCols.map((c) => c['name'] as String).toSet();
       if (!names.contains('pre_pregnancy_weight')) {
