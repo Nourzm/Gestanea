@@ -81,11 +81,15 @@ class PdfExtractionPage extends StatelessWidget {
 
               OutlinedButton.icon(
                 onPressed: () {
+                  final bloc = context.read<LabResultsBloc>();
                   Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ManualLabEntryPage(),
+                      builder: (context) => BlocProvider.value(
+                        value: bloc,
+                        child: const ManualLabEntryPage(),
+                      ),
                     ),
                   );
                 },

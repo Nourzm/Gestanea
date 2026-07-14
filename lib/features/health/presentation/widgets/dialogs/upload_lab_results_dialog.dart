@@ -1,17 +1,25 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import '../../../logic/bloc/lab_results_bloc.dart';
 import '../../pages/ocr_extraction_page.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../pages/pdf_extraction_page.dart';
 import '../../pages/manual_lab_entry_page.dart';
 
 class UploadLabResultsDialog extends StatelessWidget {
-  const UploadLabResultsDialog({super.key});
+  /// Passed explicitly because this sheet — and every page it pushes — lives
+  /// on routes ABOVE the health tab where the bloc is provided, so
+  /// `context.read` cannot find it there. Each push re-attaches it via
+  /// `BlocProvider.value`.
+  final LabResultsBloc bloc;
+
+  const UploadLabResultsDialog({super.key, required this.bloc});
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
@@ -76,11 +84,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to OCR extraction page
+        // Navigate to OCR extraction page (bloc re-attached to the new route)
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OcrExtractionPage(imageFile: imageFile),
+            builder: (context) => BlocProvider.value(
+              value: bloc,
+              child: OcrExtractionPage(imageFile: imageFile),
+            ),
           ),
         );
       }
@@ -112,11 +123,14 @@ class UploadLabResultsDialog extends StatelessWidget {
         // Close dialog
         Navigator.pop(context);
 
-        // Navigate to PDF viewer/extraction page
+        // Navigate to PDF viewer/extraction page (bloc re-attached)
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PdfExtractionPage(pdfPath: pdfPath),
+            builder: (context) => BlocProvider.value(
+              value: bloc,
+              child: PdfExtractionPage(pdfPath: pdfPath),
+            ),
           ),
         );
       }
@@ -207,7 +221,10 @@ class UploadLabResultsDialog extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ManualLabEntryPage(),
+                  builder: (context) => BlocProvider.value(
+                    value: bloc,
+                    child: const ManualLabEntryPage(),
+                  ),
                 ),
               );
             },

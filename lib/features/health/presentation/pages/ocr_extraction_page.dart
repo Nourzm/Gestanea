@@ -260,12 +260,16 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogContext);
+                final bloc = context.read<LabResultsBloc>();
                 Navigator.pop(context); // Close OCR page
-                // Navigate to manual entry
+                // Navigate to manual entry (bloc re-attached to new route)
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ManualLabEntryPage(),
+                    builder: (context) => BlocProvider.value(
+                      value: bloc,
+                      child: const ManualLabEntryPage(),
+                    ),
                   ),
                 );
               },

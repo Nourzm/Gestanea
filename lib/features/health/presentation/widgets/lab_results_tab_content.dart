@@ -316,11 +316,14 @@ class LabResultsTabContent extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // Capture the bloc HERE — the sheet and the pages it pushes are on
+        // routes above this tab, where context.read can't find it.
+        final bloc = context.read<LabResultsBloc>();
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const UploadLabResultsDialog(),
+          builder: (context) => UploadLabResultsDialog(bloc: bloc),
         );
       },
       child: Container(
