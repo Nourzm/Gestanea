@@ -18,9 +18,19 @@ const PROVIDER = (Deno.env.get("LAB_AI_PROVIDER") ?? "gemini").toLowerCase();
 const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.0-flash";
 const ANTHROPIC_MODEL = Deno.env.get("LAB_AI_MODEL") ?? "claude-opus-4-8";
 // OpenRouter routes to many models via its own upstream accounts (free `:free`
-// variants need no card and work regardless of the caller's region).
-const OPENROUTER_MODEL =
-  Deno.env.get("OPENROUTER_MODEL") ?? "google/gemini-2.0-flash-exp:free";
+// variants need no card and work regardless of the caller's region). Free
+// pools congest and model ids rotate, so this is a comma-separated fallback
+// chain — tried in order on 404/429/5xx. Override with the OPENROUTER_MODEL
+// secret (also accepts a comma-separated list).
+const OPENROUTER_MODELS = (
+  Deno.env.get("OPENROUTER_MODEL") ??
+    "google/gemma-4-31b-it:free," +
+      "google/gemma-4-26b-a4b-it:free," +
+      "nvidia/nemotron-nano-12b-v2-vl:free"
+)
+  .split(",")
+  .map((m) => m.trim())
+  .filter(Boolean);
 const DAILY_LIMIT = Number(Deno.env.get("LAB_AI_DAILY_LIMIT") ?? "20");
 
 const corsHeaders = {
@@ -309,29 +319,56 @@ async function callOpenRouter(
   }
   content.push({ type: "text", text: buildUserText(body) });
 
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "authorization": `Bearer ${key}`,
-      "HTTP-Referer": "https://gestanea.app",
-      "X-Title": "Gestanea",
-    },
-    body: JSON.stringify({
-      model: OPENROUTER_MODEL,
-      messages: [
-        { role: "system", content: `${systemPrompt(locale)}\n\n${jsonShapeHint()}` },
-        { role: "user", content },
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.2,
-    }),
-  });
-  if (!res.ok) throw new Error(`openrouter ${res.status}: ${await res.text()}`);
-  const data = await res.json();
-  const text = data?.choices?.[0]?.message?.content;
-  if (!text) throw new Error("openrouter: empty response");
-  return parseJsonLoose(typeof text === "string" ? text : JSON.stringify(text));
+  // Try each model in the chain; free pools 404 (id retired) or 429
+  // (upstream congestion) routinely, so failure of one model is expected.
+  const errors: string[] = [];
+  for (const model of OPENROUTER_MODELS) {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "authorization": `Bearer ${key}`,
+        "HTTP-Referer": "https://gestanea.app",
+        "X-Title": "Gestanea",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: `${systemPrompt(locale)}\n\n${jsonShapeHint()}`,
+          },
+          { role: "user", content },
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.2,
+      }),
+    });
+    if (!res.ok) {
+      errors.push(`${model}: http ${res.status}`);
+      continue;
+    }
+    const data = await res.json();
+    // OpenRouter can return 200 with an embedded provider error.
+    if (data?.error) {
+      errors.push(`${model}: ${data.error.code ?? ""} ${data.error.message ?? ""}`);
+      continue;
+    }
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) {
+      errors.push(`${model}: empty response`);
+      continue;
+    }
+    try {
+      return parseJsonLoose(
+        typeof text === "string" ? text : JSON.stringify(text),
+      );
+    } catch (e) {
+      errors.push(`${model}: ${String(e)}`);
+      continue;
+    }
+  }
+  throw new Error(`openrouter: all models failed — ${errors.join(" | ")}`);
 }
 
 Deno.serve(async (req: Request) => {
@@ -434,7 +471,7 @@ Deno.serve(async (req: Request) => {
   const model = PROVIDER === "anthropic"
     ? ANTHROPIC_MODEL
     : PROVIDER === "openrouter"
-    ? OPENROUTER_MODEL
+    ? OPENROUTER_MODELS.join(",")
     : GEMINI_MODEL;
   return json({ result, provider: PROVIDER, model }, 200);
 });
