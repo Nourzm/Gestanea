@@ -2218,6 +2218,18 @@ abstract class AppLocalizations {
   /// **'Please contact your provider'**
   String get aiSeekCareTitle;
 
+  /// No description provided for @aiSaveResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to my results'**
+  String get aiSaveResults;
+
+  /// No description provided for @aiResultsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'AI analysis saved to your lab results'**
+  String get aiResultsSaved;
+
   /// No description provided for @sleepQuality.
   ///
   /// In en, this message translates to:

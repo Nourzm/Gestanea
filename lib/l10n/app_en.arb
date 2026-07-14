@@ -465,6 +465,8 @@
   "aiGuidance": "Guidance",
   "aiDetectedTests": "Your results",
   "aiSeekCareTitle": "Please contact your provider",
+  "aiSaveResults": "Save to my results",
+  "aiResultsSaved": "AI analysis saved to your lab results",
   "sleepQuality": "Sleep quality",
   "howWasYourDay": "How was your day?",
   "prePregnancyBMI": "Pre-pregnancy BMI",

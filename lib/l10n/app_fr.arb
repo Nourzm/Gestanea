@@ -251,6 +251,8 @@
   "aiGuidance": "Conseils",
   "aiDetectedTests": "Vos résultats",
   "aiSeekCareTitle": "Veuillez contacter votre professionnel de santé",
+  "aiSaveResults": "Enregistrer dans mes résultats",
+  "aiResultsSaved": "Analyse IA enregistrée dans vos résultats",
   "sleepQuality": "Qualité du sommeil",
   "howWasYourDay": "Comment s'est passée votre journée ?",
   "bloodPressure": "Tension artérielle",

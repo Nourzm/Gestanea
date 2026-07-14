@@ -1104,6 +1104,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiSeekCareTitle => 'Please contact your provider';
 
   @override
+  String get aiSaveResults => 'Save to my results';
+
+  @override
+  String get aiResultsSaved => 'AI analysis saved to your lab results';
+
+  @override
   String get sleepQuality => 'Sleep quality';
 
   @override

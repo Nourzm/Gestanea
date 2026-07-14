@@ -12,6 +12,7 @@ import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/pregnancy/data/datasources/pregnancy_local_data_source.dart';
 import '../../logic/bloc/lab_results_bloc.dart';
 import '../../logic/bloc/lab_results_event.dart';
+import '../../data/models/lab_ai_result.dart';
 import '../../data/services/lab_ai_service.dart';
 import '../../data/services/lab_ai_consent.dart';
 import '../widgets/lab_ai_result_sheet.dart';
@@ -126,6 +127,48 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
     );
   }
 
+  /// Persists the AI analysis: one lab-result row per extracted test, each
+  /// carrying its value/unit/range and the AI explanation as interpretation.
+  Future<void> _saveAiAnalysis(LabAiResult result, String savedMsg) async {
+    final bloc = context.read<LabResultsBloc>();
+    double? num(String s) => double.tryParse(
+      s.replaceAll(',', '.').replaceAll(RegExp(r'[^0-9.\-]'), ''),
+    );
+    final rangeRe = RegExp(r'([\d.,]+)\s*[-–]\s*([\d.,]+)');
+    final now = DateTime.now();
+
+    var i = 0;
+    for (final test in result.tests) {
+      final range = rangeRe.firstMatch(test.referenceRange);
+      bloc.add(
+        AddLabResult(
+          LabResultModel(
+            id: '${now.millisecondsSinceEpoch}_ai$i',
+            userId: '', // real owner is stamped by the bloc on insert
+            testName: test.testName,
+            value: num(test.value),
+            unit: test.unit.isNotEmpty ? test.unit : null,
+            normalRangeMin: range != null ? num(range.group(1)!) : null,
+            normalRangeMax: range != null ? num(range.group(2)!) : null,
+            interpretation: test.explanation.isNotEmpty
+                ? test.explanation
+                : result.overallSummary,
+            labDate: now,
+            reportImageUrl: _savedImagePath,
+            extractedByOcr: true,
+            createdAt: now,
+          ),
+        ),
+      );
+      i++;
+    }
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(savedMsg), backgroundColor: Colors.green),
+      );
+    }
+  }
+
   Future<void> _analyzeWithAi() async {
     final t = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
@@ -151,7 +194,11 @@ class _OcrExtractionPageState extends State<OcrExtractionPage> {
       );
       if (!mounted) return;
       setState(() => _aiSummary = result.overallSummary);
-      await showLabAiResultSheet(context, result);
+      await showLabAiResultSheet(
+        context,
+        result,
+        onSave: (r) => _saveAiAnalysis(r, t.aiResultsSaved),
+      );
     } on LabAiException catch (e) {
       if (!mounted) return;
       final msg = e.code == 'rate_limited'

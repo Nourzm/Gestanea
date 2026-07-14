@@ -1111,6 +1111,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Veuillez contacter votre professionnel de santé';
 
   @override
+  String get aiSaveResults => 'Enregistrer dans mes résultats';
+
+  @override
+  String get aiResultsSaved => 'Analyse IA enregistrée dans vos résultats';
+
+  @override
   String get sleepQuality => 'Qualité du sommeil';
 
   @override

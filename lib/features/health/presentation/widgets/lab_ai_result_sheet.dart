@@ -6,18 +6,46 @@ import '../../data/models/lab_ai_result.dart';
 /// Shows the AI lab interpretation (provider-agnostic — Gemini/OpenRouter/
 /// Claude, chosen server-side) in a scrollable modal sheet, with the red-flag
 /// escalation banner (when present) and the mandatory disclaimer.
-Future<void> showLabAiResultSheet(BuildContext context, LabAiResult result) {
+///
+/// When [onSave] is provided, a "Save to my results" button is shown; it runs
+/// the callback once, then closes the sheet.
+Future<void> showLabAiResultSheet(
+  BuildContext context,
+  LabAiResult result, {
+  Future<void> Function(LabAiResult result)? onSave,
+}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (ctx) => _LabAiResultSheet(result: result),
+    builder: (ctx) => _LabAiResultSheet(result: result, onSave: onSave),
   );
 }
 
-class _LabAiResultSheet extends StatelessWidget {
+class _LabAiResultSheet extends StatefulWidget {
   final LabAiResult result;
-  const _LabAiResultSheet({required this.result});
+  final Future<void> Function(LabAiResult result)? onSave;
+  const _LabAiResultSheet({required this.result, this.onSave});
+
+  @override
+  State<_LabAiResultSheet> createState() => _LabAiResultSheetState();
+}
+
+class _LabAiResultSheetState extends State<_LabAiResultSheet> {
+  bool _saving = false;
+
+  LabAiResult get result => widget.result;
+
+  Future<void> _handleSave() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await widget.onSave!(result);
+      if (mounted) Navigator.pop(context);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
 
   ({Color bg, Color fg, String label}) _status(
     String status,
@@ -255,6 +283,36 @@ class _LabAiResultSheet extends StatelessWidget {
                     ],
                   ),
                 ),
+              // Save into the user's lab results (persists after this sheet
+              // closes — the analysis itself is otherwise ephemeral).
+              if (widget.onSave != null) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _saving ? null : _handleSave,
+                    icon: _saving
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.save_alt),
+                    label: Text(l10n.aiSaveResults),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.main500,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 12),
             ],
           ),

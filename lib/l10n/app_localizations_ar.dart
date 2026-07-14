@@ -1099,6 +1099,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiSeekCareTitle => 'يرجى التواصل مع مقدّم الرعاية الصحية';
 
   @override
+  String get aiSaveResults => 'حفظ في نتائجي';
+
+  @override
+  String get aiResultsSaved => 'تم حفظ تحليل الذكاء الاصطناعي في نتائج مختبرك';
+
+  @override
   String get sleepQuality => 'جودة النوم';
 
   @override
