@@ -4,6 +4,8 @@ from fastapi import FastAPI
 
 from app.core.config import settings
 from app.routers import api_router
+from app.routers.health.lab_results import router as lab_router
+app.include_router(lab_router)
 
 # Create FastAPI application instance
 app = FastAPI(
