@@ -1232,5 +1232,195 @@
   "navTrack": "Track",
   "navHealth": "Health",
   "navPlan": "Plan",
-  "navMarket": "Market"
+  "navMarket": "Market",
+  "noInternetConnection": "No internet connection",
+  "locationPermissionRequired": "Location Service Disabled",
+  "locationPermissionMessage": "Please enable location services in your device settings to find nearby doctors.",
+  "gettingLocation": "Getting your location...",
+  "locationPermissionDenied": "Location permission denied",
+  "locationUpdated": "Location updated",
+  "selectLocation": "Select Location",
+  "searchWilaya": "Search for a wilaya...",
+  "findTheBestDoctor": "find the best doctor",
+  "at": "at",
+  "in_": "in",
+  "minutes": "minutes",
+  "hours": "hours",
+  "contactFormDescription": "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
+  "supportEmail": "support@gestanea.com",
+  "supportPhone": "+213 555 000 111",
+  "supportHours": "Mon–Fri, 9am–6pm",
+  "yourNameLabel": "Your name",
+  "emailAddressLabel": "Email address",
+  "emailPlaceholder": "Enter your email",
+  "whatIsThisAbout": "What is this about?",
+  "tellUsHowWeCanHelp": "Tell us how we can help...",
+  "faqIntroText": "Find answers to common questions about using Gestanea.",
+  "faqQuestion1": "How do I set appointment reminders?",
+  "faqAnswer1": "You can set appointment reminders by navigating to the \"Appointments\" section, selecting your scheduled visit, and tapping the \"Set Reminder\" option.",
+  "faqQuestion2": "Is my health data secure?",
+  "faqAnswer2": "Yes. We use industry-leading encryption and follow HIPAA/GDPR compliance guidelines to ensure your personal health information remains private and secure.",
+  "faqQuestion3": "How do I change my due date?",
+  "faqAnswer3": "You can change your estimated due date (EDD) in the \"Profile\" or \"Tracking\" settings. Tap on the current due date field to manually enter a new date.",
+  "faqQuestion4": "Can I export my health records?",
+  "faqAnswer4": "Yes! Go to Settings > Data & Privacy > Download My Data to export all your information in a readable format.",
+  "faqQuestion5": "How do I contact support?",
+  "faqAnswer5": "You can contact support via the \"Contact Support\" button at the bottom of this screen, or email us directly at support@gestanea.com. We typically respond within 24 hours.",
+  "faqQuestion6": "What languages are supported?",
+  "faqAnswer6": "Currently, the app supports English, French, and Arabic. You can change your preferred language in the \"App Settings\" menu.",
+  "choosePreferredLanguage": "Choose your preferred language",
+  "enableSecurityFeaturesDescription": "Enable additional security features to protect your personal health information",
+  "lastChangedDaysAgo": "Last changed 30 days ago",
+  "biometricAuthentication": "Biometric authentication",
+  "useFingerprintOrFaceId": "Use fingerprint or Face ID to unlock",
+  "twoFactorAuthentication": "Two-factor authentication",
+  "addExtraLayerSecurity": "Add an extra layer of security",
+  "lockAppAfterInactivity": "Lock app after 5 minutes of inactivity",
+  "healthRiskAssessment": "Health Risk Assessment",
+  "unableToAssessRisk": "Unable to assess risk",
+  "noAssessmentAvailable": "No assessment available",
+  "noMoodsLogged": "No moods logged yet",
+  "noNotes": "No notes",
+  "viewAllMoods": "View all moods",
+  "noMoodDataAvailable": "No mood data available",
+  "mixedMoodsCareMessage": "Be gentle with yourself — reach out if you need support",
+  "pleaseLogInToSaveMood": "Please log in to save your mood",
+  "myMoods": "My Moods",
+  "noMoodsLoggedYet": "No moods logged yet!",
+  "tapLogMoodToStart": "Tap \"Log Mood\" to start tracking your mood.",
+  "iDontNeedThisContact": "I don't need this contact",
+  "saveEmergencyContacts": "Save emergency contacts",
+  "analyzingYourHealthData": "Analyzing your health data...",
+  "noSignificantConcernsMessage": "No significant concerns detected",
+  "noAssessmentDetailsAvailable": "No assessment details available",
+  "lowStatus": "Low",
+  "highStatus": "High",
+  "viewAllLabPapers": "View all lab papers",
+  "labResultAddedSuccessfully": "Lab result added successfully!",
+  "pdfSavedAndUploaded": "PDF saved and uploaded successfully!",
+  "savePDFReference": "Save PDF Reference",
+  "imageSaved": "Image saved",
+  "extractingTextFromImage": "Extracting text from image...",
+  "labResultsSavedSuccessfully": "Lab results saved successfully!",
+  "noResultsToSave": "No results to save",
+  "reviewEditLabResults": "Review & Edit Lab Results",
+  "imageNotAvailable": "Image not available",
+  "addTest": "Add test",
+  "labPapersGallery": "Lab Papers Gallery",
+  "exportingLabPapers": "Exporting lab papers...",
+  "uploadLabReportsToSee": "Upload lab reports to see them here",
+  "exportAllLabResultsAsZIP": "Export all lab results as ZIP",
+  "labResultUpdatedSuccessfully": "Lab result updated successfully!",
+  "editLabResult": "Edit Lab Result",
+  "noSymptomLogged": "No symptoms logged yet",
+  "pain": "pain",
+  "sleep": "sleep",
+  "feet": "feet",
+  "noSymptomDataAvailable": "No symptom data available",
+  "tapLogNewSymptomToStart": "Tap \"Log New Symptom\" to start.",
+  "heartRateProgress": "Heart rate progress",
+  "bloodPressureTrend": "Blood pressure trend",
+  "noWeightDataAvailable": "No weight data available",
+  "monitor": "Monitor",
+  "underweight": "Underweight",
+  "overweight": "Overweight",
+  "obese": "Obese",
+  "tapAddMeasurementToStart": "Tap \"Add Measurement\" to start.",
+  "appName": "Gestanéa",
+  "appVersion": "Version 1.0.0",
+  "appDescription": "Your trusted companion through pregnancy and motherhood. Track your journey, get personalized insights, and connect with a supportive community.",
+  "activeUsersCount": "50K+",
+  "appRatingValue": "4.9",
+  "versionBuild": "1.0.0 (Build 1)",
+  "forMomsEverywhere": "For moms everywhere",
+  "copyrightText": "© 2025 Gestanéa. All rights reserved.",
+  "weAreHereToHelp": "We're here to help",
+  "chooseSupportOptionDescription": "Choose the support option that works best for you. Our team is available 24/7 to assist you.",
+  "browseArticlesAndGuides": "Browse articles and guides",
+  "chatWithSupportTeam": "Chat with our support team",
+  "watchStepByStepGuides": "Watch step-by-step guides",
+  "emailSupportAddress": "support@gestanea.com",
+  "phoneSupportNumber": "+213 555 000 111",
+  "connectWithOtherUsers": "Connect with other users",
+  "yourPrivacyMatters": "Your Privacy Matters",
+  "privacyCommitmentDescription": "We are committed to protecting your personal information and ensuring transparency about how we use your data.",
+  "lastUpdatedPrivacy": "Last Updated: December 4, 2025",
+  "dataCollectionDescription": "We collect only essential information needed to provide you with the best health tracking experience. This includes your profile information, health metrics, and app usage data.",
+  "dataSecurityDescription": "Your data is encrypted using industry-standard protocols. We employ multiple layers of security to protect your personal health information from unauthorized access.",
+  "dataUsageDescription": "We use your data to personalize your app experience, provide relevant health insights, and improve our services. We do not sell personal data to third parties.",
+  "yourRightsDescription": "You have the right to access, update, or request deletion of your data. You can manage privacy settings within the app or contact support.",
+  "manageNotificationPreferences": "Manage your notification preferences",
+  "receiveNotificationsOnDevice": "Receive notifications on your device",
+  "getUpdatesViaEmail": "Get updates via email",
+  "neverMissAppointment": "Never miss a doctor's appointment",
+  "dailyWellnessRecommendations": "Daily wellness recommendations",
+  "healthProgressSummary": "Summary of your health progress",
+  "dontForgetSupplements": "Don't forget your supplements",
+  "done": "Done",
+  "daysToGo": "Days to go",
+  "more": "More",
+  "days": "days",
+  "day": "day",
+  "otpSent": "OTP sent successfully",
+  "minAgoShort": "{minutes}m ago",
+  "@minAgoShort": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "hoursAgoShort": "{hours}h ago",
+  "@hoursAgoShort": {
+    "placeholders": {
+      "hours": { "type": "int" }
+    }
+  },
+  "daysAgoShort": "{days}d ago",
+  "@daysAgoShort": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "minAgo": "{minutes} min ago",
+  "@minAgo": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "failedToPickPDF": "Failed to pick PDF: {error}",
+  "@failedToPickPDF": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToSavePDF": "Failed to save PDF: {error}",
+  "@failedToSavePDF": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToSaveResults": "Failed to save results: {error}",
+  "@failedToSaveResults": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "areYouSureDeleteResult": "Are you sure you want to delete \"{name}\"?",
+  "@areYouSureDeleteResult": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "errorUpdatingResult": "Error updating result: {error}",
+  "@errorUpdatingResult": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "saveResults": "Save {count} result(s)",
+  "@saveResults": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }
+

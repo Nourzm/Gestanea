@@ -5,6 +5,7 @@ import 'package:gestanea/core/utils/box_shadow.dart';
 import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:gestanea/core/services/emailjs_service.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -431,27 +432,41 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  // Contact details
                   _buildContactDetail(Icons.email_outlined, t.supportEmail),
                   _buildContactDetail(Icons.phone_outlined, t.supportPhone),
                   _buildContactDetail(Icons.schedule, t.supportHours),
                 ],
               ),
-              const SizedBox(height: 20),
+            ),
+            const SizedBox(height: 20),
 
             // 2. Contact Form Fields
-            NeumorphicTextField(label: t.yourNameLabel, hint: t.enterYourName),
+            NeumorphicTextField(
+              label: t.yourNameLabel,
+              hint: t.enterYourName,
+              controller: _nameController,
+              errorText: _nameError,
+            ),
             const SizedBox(height: 15),
             NeumorphicTextField(
               label: t.emailAddressLabel,
               hint: t.emailPlaceholder,
+              controller: _emailController,
+              errorText: _emailError,
             ),
             const SizedBox(height: 15),
-            NeumorphicTextField(label: t.subjectLabel, hint: t.whatIsThisAbout),
+            NeumorphicTextField(
+              label: t.subjectLabel,
+              hint: t.whatIsThisAbout,
+              controller: _subjectController,
+              errorText: _subjectError,
+            ),
             const SizedBox(height: 15),
             NeumorphicTextField(
               label: t.messageLabel,
               hint: t.tellUsHowWeCanHelp,
+              controller: _messageController,
+              errorText: _messageError,
               maxLines: 6,
             ),
             const SizedBox(height: 30),

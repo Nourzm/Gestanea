@@ -27,14 +27,14 @@ class NeumorphicButton extends StatelessWidget {
     this.isLoading = false,
   });
 
-  Widget? _buildIcon(dynamic icon, Color color) {
+  Widget? _buildIcon(dynamic icon, Color iconColor) {
     if (icon == null) return null;
 
     if (icon is IconData) {
       return Row(
         children: [
           Icon(icon, color: Colors.white, size: 20),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
         ],
       );
     } else if (icon is String) {
@@ -58,6 +58,12 @@ class NeumorphicButton extends StatelessWidget {
     final prefix = _buildIcon(prefixIcon, Colors.white);
     final suffix = _buildIcon(suffixIcon, Colors.white);
 
+    final gradient = (isLoading || onPressed == null)
+        ? LinearGradient(colors: [Colors.grey[400]!, Colors.grey[400]!])
+        : (color == null
+            ? AppColors.onboarding
+            : LinearGradient(colors: [color!, color!]));
+
     return GestureDetector(
       onTap: (isLoading || onPressed == null) ? null : onPressed,
       child: Container(
@@ -68,11 +74,7 @@ class NeumorphicButton extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: (isLoading || onPressed == null)
-              ? LinearGradient(colors: [Colors.grey[400]!, Colors.grey[400]!])
-              : (color == null
-                    ? AppColors.onboarding
-                    : LinearGradient(colors: [?color, ?color])),
+          gradient: gradient,
           boxShadow: const [
             BoxShadow(
               color: Color.fromARGB(100, 0, 0, 0),
@@ -86,38 +88,30 @@ class NeumorphicButton extends StatelessWidget {
             vertical: verticalPadding,
             horizontal: horizontalPadding,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(width: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  prefix ?? const SizedBox(width: 20, height: 20),
-
-                  Text(
-                    text,
-                    style: AppTextStyles.headline2.copyWith(
-                      color: AppColors.white,
-                      fontSize: size.width * 0.04,
-                      fontWeight: FontWeight.w600,
+          child: isLoading
+              ? const Center(
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
                     ),
                   ),
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         prefix ?? const SizedBox(width: 20, height: 20),
-
                         Text(
                           text,
                           style: AppTextStyles.headline2.copyWith(
                             color: AppColors.white,
-                            fontSize: 16,
+                            fontSize: size.width * 0.04,
                             fontWeight: FontWeight.w600,
                           ),
                           maxLines: 1,
@@ -125,7 +119,6 @@ class NeumorphicButton extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     suffix ?? const SizedBox(width: 20, height: 20),
                   ],
                 ),
