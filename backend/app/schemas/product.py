@@ -23,6 +23,7 @@ class ProductBase(BaseModel):
     image_urls: str  # JSON string or comma-separated URLs
     vendor_name: Optional[str] = None
     is_available: bool = True
+    translations: Optional[dict] = None  # JSON field for multi-language support
 
 
 
@@ -44,7 +45,7 @@ class ProductCategoryBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     image_url: Optional[str] = None
     display_order: Optional[int] = 0
-
+    translations: Optional[dict] = None  # JSON field for multi-language support
 
 
 

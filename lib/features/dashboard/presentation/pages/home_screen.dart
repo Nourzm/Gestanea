@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/pregnancy_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_overview_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -23,6 +26,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -68,19 +72,47 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Image.asset("assets/images/profile.png"),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              Widget avatar;
+
+                              if (state is AuthAuthenticated) {
+                                avatar = ProfileAvatar(
+                                  imageUrl: state.user.profilePictureUrl,
+                                  userId: state.user.id,
+                                  radius: 24,
+                                );
+                              } else {
+                                avatar = CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.grey.shade300,
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                  ),
+                                );
+                              }
+
+                              return Container(
+                                // border thickness
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.main500, // border color
+                                    width: 3,
+                                  ),
+                                ),
+                                child: avatar,
+                              );
+                            },
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
-                              String greeting = 'Hello!';
+                              String greeting = t.hello;
                               String nameText = '';
                               if (state is AuthAuthenticated) {
                                 nameText = state.user.name;
-                                greeting = 'Hello';
+                                greeting = t.hello;
                               }
                               return Text(
                                 '$greeting ${nameText.isNotEmpty ? nameText : ''}',
@@ -129,7 +161,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     // Our Tips Card
-                    Expanded(child: ClickableTipsCard(targetPage: Tips())),
+                    Expanded(child: ClickableTipsCard(targetPage: const TipsOverviewPage())),
 
                     SizedBox(width: screenWidth * 0.04),
 
@@ -177,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               SizedBox(height: screenHeight * 0.015),
                               Text(
-                                'Our Doctors',
+                                t.ourDoctors,
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.045,
                                   fontWeight: FontWeight.bold,
@@ -186,7 +218,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               SizedBox(height: screenHeight * 0.005),
                               Text(
-                                'find the best doctor',
+                                t.findTheBestDoctor,
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
                                   color: AppColors.main500.withValues(
@@ -212,7 +244,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Up coming',
+                      t.upComing,
                       style: TextStyle(
                         fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.bold,
@@ -223,7 +255,7 @@ class HomeScreen extends StatelessWidget {
                       onTap: () =>
                           onNavigate(3), // Navigate to Plan page (index 3)
                       child: Text(
-                        'see all',
+                        t.seeAll,
                         style: TextStyle(
                           fontSize: screenWidth * 0.035,
                           fontWeight: FontWeight.w600,
@@ -267,6 +299,7 @@ class HomeScreen extends StatelessWidget {
                           title: appointments[i].title,
                           subtitle: _formatAppointmentTime(
                             appointments[i].dateTime,
+                            t,
                           ),
                           icon: "assets/icons/heartplus.svg",
                           isAppointment: true,
@@ -288,6 +321,7 @@ class HomeScreen extends StatelessWidget {
                           title: medicines[i].medicineName,
                           subtitle: _formatMedicineTime(
                             medicines[i].nextDoseTime,
+                            t,
                           ),
                           icon: "assets/icons/pills.svg",
                           isAppointment: false,
@@ -297,7 +331,11 @@ class HomeScreen extends StatelessWidget {
 
                     // Show placeholder if no upcoming events
                     if (upcomingItems.isEmpty) {
-                      return _buildNoUpcomingItems(screenWidth, screenHeight);
+                      return _buildNoUpcomingItems(
+                        screenWidth,
+                        screenHeight,
+                        t,
+                      );
                     }
 
                     return Column(children: upcomingItems);
@@ -313,7 +351,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  String _formatAppointmentTime(DateTime dateTime) {
+  String _formatAppointmentTime(DateTime dateTime, AppLocalizations t) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final appointmentDate = DateTime(
@@ -325,27 +363,27 @@ class HomeScreen extends StatelessWidget {
 
     String dayText;
     if (appointmentDate == today) {
-      dayText = 'Today';
+      dayText = t.today;
     } else if (appointmentDate == tomorrow) {
-      dayText = 'Tomorrow';
+      dayText = t.tomorrow;
     } else {
       dayText = DateFormat('MMM d').format(dateTime);
     }
 
     final timeText = DateFormat('h:mm a').format(dateTime);
-    return '$dayText at $timeText';
+    return '$dayText ${t.at} $timeText';
   }
 
-  String _formatMedicineTime(DateTime dateTime) {
+  String _formatMedicineTime(DateTime dateTime, AppLocalizations t) {
     final now = DateTime.now();
     final diff = dateTime.difference(now);
 
     if (diff.isNegative) {
-      return 'Overdue';
+      return t.overdue;
     } else if (diff.inMinutes < 60) {
-      return 'In ${diff.inMinutes} minutes';
+      return '${t.in_} ${diff.inMinutes} ${t.minutes}';
     } else if (diff.inHours < 24) {
-      return 'In ${diff.inHours} hours';
+      return '${t.in_} ${diff.inHours} ${t.hours}';
     } else {
       return DateFormat('MMM d, h:mm a').format(dateTime);
     }
@@ -434,7 +472,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNoUpcomingItems(double screenWidth, double screenHeight) {
+  Widget _buildNoUpcomingItems(
+    double screenWidth,
+    double screenHeight,
+    AppLocalizations t,
+  ) {
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.06),
       decoration: BoxDecoration(
@@ -454,7 +496,7 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: screenHeight * 0.01),
           Text(
-            'No upcoming events',
+            t.noUpcomingEvents,
             style: TextStyle(
               fontSize: screenWidth * 0.04,
               color: Colors.grey.shade600,
@@ -465,7 +507,7 @@ class HomeScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => onNavigate(3),
             child: Text(
-              'Add appointments in Plan',
+              t.addAppointmentsInPlan,
               style: TextStyle(
                 fontSize: screenWidth * 0.035,
                 color: AppColors.main500,

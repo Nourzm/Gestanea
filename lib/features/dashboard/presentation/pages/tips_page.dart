@@ -13,7 +13,14 @@ class Tips extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
     final l10n = AppLocalizations.of(context)!;
-
+    final List<Map<String, String>> tipCategories = [
+      {'name': 'All', 'asset': 'assets/icons/global.svg'},
+      {'name': 'Nutrition', 'asset': 'assets/icons/food.svg'},
+      {'name': 'Exercise', 'asset': 'assets/icons/sports.svg'},
+      {'name': 'Sleep', 'asset': 'assets/icons/sleep.svg'},
+      {'name': 'Baby Care', 'asset': 'assets/icons/baby.svg'},
+      {'name': 'Wellness', 'asset': 'assets/icons/health.svg'},
+    ];
     // final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -58,32 +65,54 @@ class Tips extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                    CategoryCard(
-                      categoryName: 'Wellness',
-                      svgAssetPath: "assets/icons/health.svg",
-                    ),
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: tipCategories.map((category) {
+                      // Wrap the CategoryCard and add a SizedBox for spacing
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: 12,
+                        ), // Space between cards
+                        child: CategoryCard(
+                          categoryName: category['name']!,
+                          svgAssetPath: category['asset']!,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 SizedBox(height: 10),
 
-                ProductCardToggle(initialExpanded: true),
-                ProductCardToggle(),
-                ProductCardToggle(),
+                ProductCardToggle(
+                  initialExpanded: true,
+                  title: "Healthy Nutrition",
+                  description:
+                      "Include a variety of fruits, vegetables, lean proteins, and whole grains to support both mother and baby.",
+                  readTime: "4 min read",
+                  imagePath: "assets/images/onboarding5.png",
+                ),
+                ProductCardToggle(
+                  title: "Safe Exercise",
+                  description:
+                      "Light activities like walking, swimming, or prenatal yoga can improve circulation and reduce stress.",
+                  readTime: "3 min read",
+                  imagePath: "assets/images/onboarding5.png",
+                ),
+                ProductCardToggle(
+                  title: "Adequate Sleep",
+                  description:
+                      "Aim for 7–9 hours per night. Use pillows to support your back and abdomen for comfort.",
+                  readTime: "2 min read",
+                  imagePath: "assets/images/onboarding5.png",
+                ),
+                ProductCardToggle(
+                  title: "Hydration Matters",
+                  description:
+                      "Drink at least 8–10 glasses of water daily to help maintain amniotic fluid levels and prevent fatigue.",
+                  readTime: "2 min read",
+                  imagePath: "assets/images/onboarding5.png",
+                ),
 
                 // Container(
                 //   width: double.infinity,

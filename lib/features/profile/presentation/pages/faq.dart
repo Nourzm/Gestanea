@@ -3,6 +3,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -144,6 +145,7 @@ class FaqScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -157,7 +159,7 @@ class FaqScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          'FAQ',
+          t.faq,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -181,53 +183,32 @@ class FaqScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                "Choose your preferred language",
+                t.faqIntroText,
                 style: TextStyle(color: AppColors.textDark),
               ),
             ),
 
-            const FaqTile(
-              question: 'How do I set appointment reminders?',
-              answer:
-                  'You can set appointment reminders by navigating to the "Appointments" section, selecting your scheduled visit, and tapping the "Set Reminder" option. You will be able to choose a time interval (e.g., 1 day or 1 hour before).',
-            ),
+            FaqTile(question: t.faqQuestion1, answer: t.faqAnswer1),
             const SizedBox(height: 15),
-            const FaqTile(
-              question: 'Is my health data secure?',
-              answer:
-                  'Yes. We use industry-leading encryption and follow HIPAA/GDPR compliance guidelines to ensure your personal health information remains private and secure. Data is stored anonymously on secure servers.',
-            ),
+            FaqTile(question: t.faqQuestion2, answer: t.faqAnswer2),
             const SizedBox(height: 15),
-            const FaqTile(
-              question: 'How do I change my due date?',
-              answer:
-                  'If you are tracking a pregnancy, you can change your estimated due date (EDD) in the "Profile" or "Tracking" settings. Tap on the current due date field to manually enter a new date based on your latest ultrasound or doctor\'s recommendation.',
-            ),
+            FaqTile(question: t.faqQuestion3, answer: t.faqAnswer3),
             const SizedBox(height: 15),
-            const FaqTile(
-              question: 'Can I export my health records?',
-              answer:
-                  'Yes! Go to Settings > Data & Privacy > Download My Data to export all your information in a readable format.',
+            FaqTile(
+              question: t.faqQuestion4,
+              answer: t.faqAnswer4,
               initiallyExpanded: true,
             ),
             const SizedBox(height: 15),
-            const FaqTile(
-              question: 'How do I contact support?',
-              answer:
-                  'You can contact support via the "Contact Support" button at the bottom of this screen, or you can email us directly at support@appname.com. We typically respond within 24 hours.',
-            ),
+            FaqTile(question: t.faqQuestion5, answer: t.faqAnswer5),
             const SizedBox(height: 15),
-            const FaqTile(
-              question: 'What languages are supported?',
-              answer:
-                  'Currently, the app supports English, Spanish, French, and German. You can change your preferred language in the "App Settings" menu.',
-            ),
+            FaqTile(question: t.faqQuestion6, answer: t.faqAnswer6),
             const SizedBox(height: 40),
 
             // --- Contact Support Section ---
             Center(
               child: Text(
-                'Still have questions?',
+                t.stillHaveQuestions,
                 style: TextStyle(
                   color: AppColors.main400,
                   fontSize: 16,
@@ -239,14 +220,14 @@ class FaqScreen extends StatelessWidget {
 
             // Contact Support Button
             NeumorphicButton(
-              text: "Contact Support",
+              text: t.contactSupport,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ContactUsScreen()),
                 );
               },
-              prefixIcon: const Icon(Icons.call, color: AppColors.white, size: 24),
+              prefixIcon: Icons.call,
               color: AppColors.main500,
             ),
             const SizedBox(height: 30),

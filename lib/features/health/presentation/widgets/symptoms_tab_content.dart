@@ -7,8 +7,10 @@ import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../logic/bloc/symptoms_bloc.dart';
 import '../../logic/bloc/symptoms_state.dart';
+import '../../logic/bloc/symptoms_event.dart';
 import '../pages/symptoms_list_page.dart';
 import 'dialogs/add_symptom_dialog.dart';
+import 'ai_health_insights_card.dart';
 
 class SymptomsTabContent extends StatelessWidget {
   const SymptomsTabContent({super.key});
@@ -25,9 +27,15 @@ class SymptomsTabContent extends StatelessWidget {
             color: Color(0xFFFAF0FF),
             borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<SymptomsBloc>().add(LoadSymptoms());
+              await Future.delayed(const Duration(milliseconds: 500));
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Recent Symptoms
@@ -45,12 +53,12 @@ class SymptomsTabContent extends StatelessWidget {
                   builder: (context, state) {
                     if (state is SymptomsLoaded) {
                       if (state.symptoms.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Center(
                             child: Text(
-                              'No symptoms logged yet',
-                              style: TextStyle(color: Colors.grey),
+                              AppLocalizations.of(context)!.noSymptomLogged,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         );
@@ -64,13 +72,13 @@ class SymptomsTabContent extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 12),
                             child: _buildSymptomCard(
                               context,
-                              icon: _getSymptomIcon(symptom.symptomName),
+                              icon: _getSymptomIcon(symptom.symptomName, localizations),
                               symptom: symptom.symptomName,
                               severity: symptom.severity ?? 'N/A',
                               severityColor: _getSeverityColor(
-                                symptom.severity,
+                                symptom.severity, localizations,
                               ),
-                              time: _formatTime(symptom.recordedAt),
+                              time: _formatTime(symptom.recordedAt, localizations),
                             ),
                           );
                         }).toList(),
@@ -105,7 +113,7 @@ class SymptomsTabContent extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.list),
-                        label: const Text('View All Symptoms'),
+                        label: Text(AppLocalizations.of(context)!.viewAllSymptoms),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: themeData.primaryColor,
                           foregroundColor: Colors.white,
@@ -129,9 +137,28 @@ class SymptomsTabContent extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Tip Card
-                _buildTipCard(localizations.commonSymptomsWeek24),
+                // AI Symptom Insights
+                BlocBuilder<SymptomsBloc, SymptomsState>(
+                  builder: (context, state) {
+                    final symptoms = state is SymptomsLoaded ? state.symptoms : [];
+                    final recentSymptoms = symptoms.take(5).map((s) => {
+                      'name': s.symptomName,
+                      'severity': s.severity,
+                      'duration': s.duration,
+                    }).toList();
+                    
+                    return AIHealthInsightsCard(
+                      healthData: {
+                        'symptoms': recentSymptoms,
+                        'pregnancyWeek': 20, // TODO: Get from user profile
+                      },
+                      insightType: 'symptoms',
+                      language: localizations.localeName,
+                    );
+                  },
+                ),
               ],
+              ),
             ),
           ),
         ),
@@ -189,50 +216,54 @@ class SymptomsTabContent extends StatelessWidget {
     );
   }
 
-  IconData _getSymptomIcon(String symptom) {
+  IconData _getSymptomIcon(String symptom, AppLocalizations l10n) {
     final lowerSymptom = symptom.toLowerCase();
-    if (lowerSymptom.contains('pain') || lowerSymptom.contains('back')) {
+    // Check against localized symptom names
+    if (lowerSymptom.contains(l10n.backPain.toLowerCase()) || 
+        lowerSymptom.contains(l10n.pain.toLowerCase())) {
       return Icons.airline_seat_flat;
-    } else if (lowerSymptom.contains('sleep')) {
+    } else if (lowerSymptom.contains(l10n.sleepIssues.toLowerCase()) ||
+        lowerSymptom.contains(l10n.sleep.toLowerCase())) {
       return Icons.nights_stay;
-    } else if (lowerSymptom.contains('swell') ||
-        lowerSymptom.contains('feet')) {
+    } else if (lowerSymptom.contains(l10n.swelling.toLowerCase()) ||
+        lowerSymptom.contains(l10n.feet.toLowerCase())) {
       return Icons.water_drop;
-    } else if (lowerSymptom.contains('heart')) {
+    } else if (lowerSymptom.contains(l10n.heartburn.toLowerCase())) {
       return Icons.food_bank;
-    } else if (lowerSymptom.contains('head')) {
+    } else if (lowerSymptom.contains(l10n.headache.toLowerCase())) {
       return Icons.psychology;
-    } else if (lowerSymptom.contains('nausea')) {
+    } else if (lowerSymptom.contains(l10n.nausea.toLowerCase())) {
       return Icons.sick;
     }
     return Icons.health_and_safety;
   }
 
-  Color _getSeverityColor(String? severity) {
-    switch (severity?.toLowerCase()) {
-      case 'mild':
-        return const Color(0xFFFFF3CD);
-      case 'moderate':
-        return const Color(0xFFFFE0B2);
-      case 'severe':
-        return const Color(0xFFFFB8B8);
-      default:
-        return const Color(0xFFFFF3CD);
+  Color _getSeverityColor(String? severity, AppLocalizations l10n) {
+    if (severity == null) return const Color(0xFFFFF3CD);
+    final lowerSeverity = severity.toLowerCase();
+    // Check against localized severity levels
+    if (lowerSeverity == l10n.mild.toLowerCase()) {
+      return const Color(0xFFFFF3CD);
+    } else if (lowerSeverity == l10n.moderate.toLowerCase()) {
+      return const Color(0xFFFFE0B2);
+    } else if (lowerSeverity == l10n.severe.toLowerCase()) {
+      return const Color(0xFFFFB8B8);
     }
+    return const Color(0xFFFFF3CD);
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(DateTime dateTime, AppLocalizations localizations) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inHours < 1) {
-      return '${difference.inMinutes} min ago';
+      return localizations.minAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} hours ago';
+      return localizations.hoursAgo(difference.inHours);
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return localizations.yesterday;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return localizations.daysAgo(difference.inDays);
     } else {
       return DateFormat('MMM dd').format(dateTime);
     }
@@ -379,50 +410,118 @@ class SymptomsTabContent extends StatelessWidget {
   Widget _buildFrequencyChart(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: AppColors.white,
-            blurRadius: 6,
-            offset: Offset(-3, -3),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            localizations.symptomFrequency,
-            style: AppTextStyles.subtitle1.copyWith(
-              fontSize: 14,
-              color: AppColors.textDark,
+    return BlocBuilder<SymptomsBloc, SymptomsState>(
+      builder: (context, state) {
+        if (state is! SymptomsLoaded || state.symptoms.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x3F000000),
+                  blurRadius: 4,
+                  offset: Offset(2, 2),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: AppColors.white,
+                  blurRadius: 6,
+                  offset: Offset(-3, -3),
+                  spreadRadius: 0,
+                ),
+              ],
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  localizations.symptomFrequency,
+                  style: AppTextStyles.subtitle1.copyWith(
+                    fontSize: 14,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  localizations.noSymptomDataAvailable,
+                  style: AppTextStyles.smallLabel.copyWith(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Calculate frequency of each symptom
+        final Map<String, int> frequencyMap = {};
+        for (final symptom in state.symptoms) {
+          final name = symptom.symptomName.toLowerCase();
+          frequencyMap[name] = (frequencyMap[name] ?? 0) + 1;
+        }
+
+        // Sort by frequency and take top 5
+        final sortedSymptoms = frequencyMap.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+        final topSymptoms = sortedSymptoms.take(5).toList();
+
+        // Find max value for normalization
+        final maxCount = topSymptoms.isEmpty ? 1 : topSymptoms.first.value;
+
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(2, 2),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: AppColors.white,
+                blurRadius: 6,
+                offset: Offset(-3, -3),
+                spreadRadius: 0,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          _buildFrequencyBar(context, localizations.backPain, 0.85),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.swollenFeet, 0.6),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.heartburn, 0.5),
-          const SizedBox(height: 10),
-          _buildFrequencyBar(context, localizations.sleepIssues, 0.7),
-        ],
-      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localizations.symptomFrequency,
+                style: AppTextStyles.subtitle1.copyWith(
+                  fontSize: 14,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...topSymptoms.asMap().entries.map((entry) {
+                final index = entry.key;
+                final symptomEntry = entry.value;
+                final symptomName = symptomEntry.key[0].toUpperCase() + symptomEntry.key.substring(1);
+                final count = symptomEntry.value;
+                final normalizedValue = count / maxCount;
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index < topSymptoms.length - 1 ? 10 : 0),
+                  child: _buildFrequencyBar(context, symptomName, normalizedValue, count),
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildFrequencyBar(BuildContext context, String label, double value) {
+  Widget _buildFrequencyBar(BuildContext context, String label, double value, int count) {
     final localizations = AppLocalizations.of(context)!;
     final themeData = context.watch<ThemeCubit>().currentTheme;
 
@@ -440,7 +539,7 @@ class SymptomsTabContent extends StatelessWidget {
               ),
             ),
             Text(
-              '${(value * 7).toInt()} ${localizations.times}',
+              '$count ${count == 1 ? 'time' : localizations.times}',
               style: AppTextStyles.smallLabel.copyWith(
                 fontSize: 11,
                 color: AppColors.textDark,

@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class VitalsCard extends StatelessWidget {
-  final IconData icon;
+  final String iconPath;
   final String title;
   final String value;
   final String status;
   final Color statusColor;
   final Color textColor;
+  final String? trend;
 
   const VitalsCard({
     super.key,
-    required this.icon,
+    required this.iconPath,
     required this.title,
     required this.value,
     required this.status,
     required this.statusColor,
     required this.textColor,
+    this.trend,
   });
 
   @override
@@ -50,7 +53,15 @@ class VitalsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: themeData.primaryColor, size: 20),
+              SvgPicture.asset(
+                iconPath,
+                width: 20,
+                height: 20,
+                colorFilter: ColorFilter.mode(
+                  themeData.primaryColor,
+                  BlendMode.srcIn,
+                ),
+              ),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -72,15 +83,31 @@ class VitalsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: Text(
-                  value,
-                  style: AppTextStyles.headline2.copyWith(
-                    fontSize: 16,
-                    color: AppColors.textDark,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style: AppTextStyles.headline2.copyWith(
+                        fontSize: 16,
+                        color: AppColors.textDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (trend != null && trend!.isNotEmpty)
+                      Text(
+                        trend!,
+                        style: AppTextStyles.smallLabel.copyWith(
+                          fontSize: 10,
+                          color: trend!.startsWith('+') 
+                              ? const Color(0xFFFF9800) 
+                              : const Color(0xFF4CAF50),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               const SizedBox(width: 4),

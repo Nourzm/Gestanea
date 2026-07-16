@@ -13,4 +13,25 @@ abstract class DashboardRepository {
   Future<PostpartumDashboard> getPostpartumDashboardByStringId(String userId);
   Future<bool> isUserPregnantByStringId(String userId);
   Future<bool> hasActiveBabyByStringId(String userId);
+  
+  // Sync tips from remote (non-blocking, works offline)
+  Future<void> syncTips();
+  
+  // Get tips with filtering
+  Future<List<Map<String, dynamic>>> getTips({
+    String? category,
+    String? targetAudience,
+    int? currentWeek,
+    int? currentMonth,
+    bool isPostpartum = false,
+    int? postpartumWeek,
+    int limit = 50,
+  });
+  
+  // Get saved tip IDs for a user
+  Future<List<String>> getSavedTipIds(String userId);
+  
+  // Save/unsave tip for user
+  Future<void> saveTipForUser(String userId, String tipId);
+  Future<void> removeSavedTipForUser(String userId, String tipId);
 }

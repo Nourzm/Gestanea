@@ -78,6 +78,7 @@ class _AddSymptomDialogState extends State<AddSymptomDialog> {
         symptomName: symptomName,
         severity: _selectedSeverity,
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
         recordedAt: _selectedDate,
         createdAt: DateTime.now(),
       );

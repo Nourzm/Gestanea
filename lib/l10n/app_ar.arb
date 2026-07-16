@@ -1,24 +1,118 @@
 {
-  "locationPermissionRequired": "مطلوب إذن الموقع",
-  "locationPermissionMessage": "نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.",
-  "gettingLocation": "جارٍ تحديد موقعك...",
-  "locationPermissionDenied": "تم رفض إذن الموقع",
-  "locationUpdated": "تم تحديث الموقع",
-  "retry": "إعادة المحاولة",
-  "showingDoctorsNearYou": "عرض الأطباء القريبين منك",
-  "selectLocation": "اختر الموقع",
-  "searchWilaya": "ابحث عن ولاية...",
-  "full_name": "الاسم الكامل",
-  "enable_notifications": "تفعيل الإشعارات",
+  "hello": "مرحباً",
+  "ourDoctors": "أطبائنا",
+  "findTheBestDoctor": "ابحثي عن أفضل طبيب",
+  "upComing": "قادم",
+  "seeAll": "عرض الكل",
+  "today": "اليوم",
+  "tomorrow": "غداً",
+  "at": "في",
+  "overdue": "متأخر",
+  "in_": "في",
+  "minutes": "دقائق",
+  "hours": "ساعات",
+  "noUpcomingEvents": "لا توجد أحداث قادمة",
+  "addAppointmentsInPlan": "أضيفي المواعيد في الخطة",
+  "getInTouch": "تواصلي معنا",
+  "contactFormDescription": "هل لديك سؤال أو ملاحظة؟ نود سماع آرائك. ملي النموذج أدناه وسنرد عليك خلال 24 ساعة.",
+  "supportEmail": "support@momcare.com",
+  "supportPhone": "+1 (800) 123-4567",
+  "supportHours": "الاثنين-الجمعة، 9 صباحاً-6 مساءً",
+  "yourNameLabel": "اسمك",
+  "enterYourName": "أدخلي اسمك",
+  "emailAddressLabel": "عنوان البريد الإلكتروني",
+  "emailPlaceholder": "بريدك@example.com",
+  "subjectLabel": "الموضوع",
+  "whatIsThisAbout": "ما هو موضوع هذا؟",
+  "messageLabel": "الرسالة",
+  "tellUsHowWeCanHelp": "أخبرينا كيف يمكننا مساعدتك...",
+  "sendMessage": "إرسال الرسالة",
+  "appName": "جيستانيا",
+  "appVersion": "الإصدار 2.1.0",
+  "appDescription": "رفيقك الموثوق به عبر الحمل والأمومة. تابعي رحلتك واحصلي على رؤى شخصية والتقطي بمجتمع داعم.",
+  "activeUsersCount": "100K+",
+  "activeUsers": "المستخدمون النشطون",
+  "appRatingValue": "4.8★",
+  "appRating": "تقييم التطبيق",
+  "versionInfo": "معلومات الإصدار",
+  "versionBuild": "Build 2.1.0 (245)",
+  "madeWithLove": "مصنوع بحب",
+  "forMomsEverywhere": "لجميع الأمهات في كل مكان",
+  "copyrightText": "© 2025 جيستانيا. جميع الحقوق محفوظة.",
+  "faqIntroText": "اختر لغتك المفضلة",
+  "faqQuestion1": "كيف يمكنني تعيين تذكيرات المواعيد؟",
+  "faqAnswer1": "يمكنك تعيين تذكيرات المواعيد بالانتقال إلى قسم \"المواعيد\" وتحديد زيارتك المجدولة والنقر على خيار \"تعيين تذكير\". ستتمكن من اختيار فترة زمنية (على سبيل المثال، يوم واحد أو ساعة واحدة قبل).",
+  "faqQuestion2": "هل بيانات صحتي آمنة؟",
+  "faqAnswer2": "نعم. نحن نستخدم التشفير الرائد في الصناعة ونتابع إرشادات التوافق مع HIPAA / GDPR لضمان بقاء معلومات صحتك الشخصية خاصة وآمنة. يتم تخزين البيانات بشكل مجهول على خوادم آمنة.",
+  "faqQuestion3": "كيف يمكنني تغيير موعد ولادتي المتوقع؟",
+  "faqAnswer3": "إذا كنت تتابعين الحمل، يمكنك تغيير موعد الولادة المتوقع (EDD) في إعدادات \"الملف الشخصي\" أو \"التتبع\". اضغطي على حقل التاريخ الحالي لإدخال تاريخ جديد يدويًا بناءً على آخر الموجات فوق الصوتية أو توصية طبيبك.",
+  "faqQuestion4": "هل يمكنني تصدير سجلاتي الطبية؟",
+  "faqAnswer4": "نعم! انتقلي إلى الإعدادات > البيانات والخصوصية > تنزيل بياناتي لتصدير جميع معلوماتك بصيغة قابلة للقراءة.",
+  "faqQuestion5": "كيف يمكنني الاتصال بالدعم؟",
+  "faqAnswer5": "يمكنك الاتصال بالدعم من خلال زر \"الاتصال بالدعم\" في أسفل هذه الشاشة، أو يمكنك إرسال بريد إلكتروني مباشرة إلى support@appname.com. نحن عادة ما نرد خلال 24 ساعة.",
+  "faqQuestion6": "ما هي اللغات المدعومة؟",
+  "faqAnswer6": "حاليًا، يدعم التطبيق اللغة الإنجليزية والإسبانية والفرنسية والألمانية. يمكنك تغيير لغتك المفضلة في قائمة \"إعدادات التطبيق\".",
+  "stillHaveQuestions": "هل لديك أسئلة أخرى؟",
+  "contactSupport": "الاتصال بالدعم",
+  "yourPrivacyMatters": "خصوصيتك مهمة لنا",
+  "privacyCommitmentDescription": "نحن ملتزمون بحماية معلوماتك الشخصية وضمان الشفافية حول كيفية استخدام بيانتك.",
+  "lastUpdatedPrivacy": "آخر تحديث: 4 ديسمبر 2025",
+  "dataCollection": "جمع البيانات",
+  "dataCollectionDescription": "نحن نجمع فقط المعلومات الضرورية المطلوبة لتوفير أفضل تجربة تتبع صحي لك. يتضمن ذلك معلومات ملفك الشخصي ومقاييس صحتك وبيانات استخدام التطبيق.",
+  "dataSecurity": "أمان البيانات",
+  "dataSecurityDescription": "يتم تشفير بيانتك باستخدام بروتوكولات معيارية في الصناعة. نستخدم عدة طبقات من الأمان لحماية معلوماتك الصحية الشخصية من الوصول غير المصرح به.",
+  "dataUsage": "استخدام البيانات",
+  "dataUsageDescription": "نستخدم بياناتك لتخصيص تجربة تطبيقك وتوفير رؤى صحية ذات صلة وتحسينها. نحن لا نبيع البيانات الشخصية لأطراف ثالثة.",
+  "yourRights": "حقوقك",
+  "yourRightsDescription": "لديك الحق في الوصول أو تحديث أو طلب حذف بيانتك. يمكنك إدارة إعدادات الخصوصية في التطبيق أو الاتصال بالدعم.",
+  "faq": "الأسئلة المتكررة",
+  "weAreHereToHelp": "نحن هنا لمساعدتك",
+  "chooseSupportOptionDescription": "اختر خيار الدعم الذي يناسبك بشكل أفضل. فريقنا متاح 24/7 لمساعدتك.",
+  "knowledgeBase": "قاعدة المعرفة",
+  "browseArticlesAndGuides": "تصفح المقالات والأدلة",
+  "liveChat": "دردشة مباشرة",
+  "chatWithSupportTeam": "تحدث مع فريق الدعم الخاص بنا",
+  "videoTutorials": "دروس فيديو",
+  "watchStepByStepGuides": "شاهد الأدلة خطوة بخطوة",
+  "emailSupport": "دعم البريد الإلكتروني",
+  "emailSupportAddress": "support@momcare.com",
+  "phoneSupport": "دعم الهاتف",
+  "phoneSupportNumber": "1-800-MOM-CARE",
+  "communityForum": "منتدى المجتمع",
+  "connectWithOtherUsers": "تواصل مع المستخدمين الآخرين",
+  "secureYourAccount": "أمّن حسابك",
+  "enableSecurityFeaturesDescription": "فعّل ميزات الأمان الإضافية لحماية معلومات صحتك الشخصية",
+  "changePassword": "تغيير كلمة المرور",
+  "lastChangedDaysAgo": "تم التغيير آخر مرة قبل 30 يوماً",
+  "biometricAuthentication": "المصادقة البيومترية",
+  "useFingerprintOrFaceId": "استخدم بصمة الإصبع أو Face ID للفتح",
+  "twoFactorAuthentication": "المصادقة ذات العاملين",
+  "addExtraLayerSecurity": "أضف طبقة أمان إضافية",
+  "autoLock": "القفل التلقائي",
+  "lockAppAfterInactivity": "قفل التطبيق بعد 5 دقائق من عدم الاستخدام",
+  "manageNotificationPreferences": "إدارة تفضيلات الإشعارات",
+  "pushNotifications": "إشعارات الدفع",
+  "receiveNotificationsOnDevice": "تلقي الإشعارات على جهازك",
+  "emailNotifications": "إشعارات البريد الإلكتروني",
+  "getUpdatesViaEmail": "احصل على التحديثات عبر البريد الإلكتروني",
+  "appointmentReminders": "تذكيرات المواعيد",
+  "neverMissAppointment": "لا تفوت موعد الطبيب أبداً",
+  "healthTips": "نصائح صحية",
+  "dailyWellnessRecommendations": "توصيات العافية اليومية",
+  "weeklyReports": "التقارير الأسبوعية",
+  "healthProgressSummary": "ملخص تقدمك الصحي",
+  "vitaminReminders": "تذكيرات الفيتامينات",
+  "dontForgetSupplements": "لا تنسى المكملات الغذائية",
+  "choosePreferredLanguage": "اختر لغتك المفضلة",
   "phone": "الهاتف",
   "country": "البلد",
-  "logout_confirmation": "هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟",
-  "cancel": "إلغاء",
+  "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "unknown": "غير معروف",
   "profile": "الملف الشخصي",
   "profile_updated": "تم تحديث الملف الشخصي",
   "edit_profile": "تعديل الملف الشخصي",
   "change_profile_photo": "تغيير صورة الملف الشخصي",
+  "full_name": "الاسم الكامل",
   "save_changes": "حفظ التغييرات",
   "save": "حفظ",
   "security": "الأمان",
@@ -29,7 +123,6 @@
   "privacy_policy": "سياسة الخصوصية",
   "about_app": "حول التطبيق",
   "change": "تغيير",
-
   "plan": "الخطة",
   "sundayShort": "ح",
   "mondayShort": "ن",
@@ -73,8 +166,12 @@
   "@medicinesTaken": {
     "description": "Medicine taken status",
     "placeholders": {
-      "taken": {"type": "int"},
-      "total": {"type": "int"}
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "daily": "يوميًا",
@@ -83,7 +180,6 @@
   "timesPerDayExample": "مثال: 3 مرات يوميًا",
   "timesPerWeekExample": "مثال: 2 مرتين أسبوعيًا",
   "timesPerMonthExample": "مثال: 1 مرة شهريًا",
-
   "appointmentDateTime": "تاريخ ووقت الموعد",
   "appointmentLocation": "مكان الموعد",
   "selectDate": "اختر التاريخ",
@@ -98,10 +194,15 @@
   "tomorrow": "غداً",
   "noAppointmentsFound": "لا توجد مواعيد",
   "appointment": "موعد",
- 
   "pleaseAddScheduledTime": "يرجى إضافة وقت مجدول واحد على الأقل",
   "reviewsCount": "{count} تقييمات",
-  "@reviewsCount": {"placeholders": {"count": {"type": "Object"}}},
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "qty": "الكمية",
   "all": "الكل",
   "taken": "تم تناولها",
@@ -187,6 +288,13 @@
   "enter_email": "أدخلي بريدكِ الإلكتروني",
   "enter_name": "أدخلي اسمكِ",
   "rememberMe": "تذكريني",
+  "sendOtp": "إرسال الرمز",
+  "verifyOtp": "تحقق من الرمز",
+  "enterOtpCode": "أدخلي رمز التحقق",
+  "otpSent": "تم إرسال رمز التحقق إلى بريدكِ الإلكتروني",
+  "otpCodePlaceholder": "رمز من 6 أرقام",
+  "resendOtp": "إعادة إرسال الرمز",
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتكِ والمحاولة مرة أخرى.",
   "version": "الإصدار",
   "pregnant": "حامل",
   "postpartum": "ما بعد الولادة",
@@ -194,13 +302,17 @@
   "@week": {
     "description": "رقم الأسبوع",
     "placeholders": {
-      "week": {"type": "int"}
+      "week": {
+        "type": "int"
+      }
     }
   },
   "daysLeft": "{days} أيام متبقية",
   "@daysLeft": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "market": "المتجر",
@@ -228,16 +340,16 @@
   "measurement": "القياس",
   "healthTipMessage": "عمل رائع! أنتِ تحافظين على وتيرة زيادة وزن صحية. استمري في تناول نظام غذائي متوازن وممارسة التمارين الخفيفة.",
   "onTrack": "على المسار الصحيح",
-
   "doctors": "الأطباء",
   "findDoctors": "ابحثي عن الأطباء بالاسم أو التخصص",
   "useCurrentLocation": "استخدمي موقعي الحالي",
- 
   "doctorsFoundSingle": "تم العثور على طبيب واحد",
   "doctorsFoundPlural": "تم العثور على {count} أطباء",
   "@doctorsFoundPlural": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "filter": "تصفية",
@@ -247,14 +359,18 @@
   "upToKm": "حتى {distance} كم",
   "@upToKm": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "minimumRating": "التقييم الأدنى",
   "ratingAndAbove": "{rating} وما فوق",
   "@ratingAndAbove": {
     "placeholders": {
-      "rating": {"type": "String"}
+      "rating": {
+        "type": "String"
+      }
     }
   },
   "gender": "الجنس",
@@ -265,14 +381,18 @@
   "atLeastReviews": "على الأقل {count} مراجعة",
   "@atLeastReviews": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applyFilters": "تطبيق التصفية",
   "kmAway": "على بعد {distance} كم",
   "@kmAway": {
     "placeholders": {
-      "distance": {"type": "String"}
+      "distance": {
+        "type": "String"
+      }
     }
   },
   "reviews": "مراجعات",
@@ -280,7 +400,9 @@
   "noMatchingDoctors": "لا يوجد أطباء يطابقون \"{query}\"",
   "@noMatchingDoctors": {
     "placeholders": {
-      "query": {"type": "String"}
+      "query": {
+        "type": "String"
+      }
     }
   },
   "tryAdjustingFilters": "حاولي تعديل التصفية",
@@ -297,53 +419,8 @@
   "address": "العنوان",
   "phoneNumber": "رقم الهاتف",
   "openingHours": "ساعات العمل",
-  "callNow": "اتصلي الآن",
-
-  "take": "تناولي",
-  "noMedicinesFound": "لم يتم العثور على أدوية",
-  "pleaseLoginToViewPlan": "يرجى تسجيل الدخول لعرض خطتك",
-
-  "selectColor": "اختاري اللون",
-  "selectSize": "اختاري المقاس",
-  "addToCart": "أضيفي إلى السلة",
-  "buyNow": "اشتري الآن",
-  "description": "الوصف",
-  "noDescriptionAvailable": "لا يوجد وصف متاح",
-  "specifications": "المواصفات",
-  "customerReviews": "تقييمات العملاء",
-  "seeAll": "عرض الكل",
-
-  "completeYourOrder": "أكملي طلبك",
-  "orderSummary": "ملخص الطلب",
-  "product": "المنتج",
-  "size": "المقاس",
-  "qty": "الكمية",
-  "subtotal": "المجموع الفرعي",
-  "deliveryFee": "رسوم التوصيل",
-  "total": "المجموع",
-  "deliveryInformation": "معلومات التوصيل",
-  "fullName": "الاسم الكامل",
-  "enterYourFullName": "أدخلي اسمك الكامل",
-  "phoneNumber": "رقم الهاتف",
-  "enterYourPhoneNumber": "أدخلي رقم هاتفك",
-  "deliveryAddress": "عنوان التوصيل",
-  "streetAddressApartment": "عنوان الشارع، الشقة، إلخ.",
-  "city": "المدينة",
-  "enterYourCity": "أدخلي مدينتك",
-  "specialInstructions": "تعليمات خاصة (اختياري)",
-  "addDeliveryNotes": "أضيفي ملاحظات التوصيل، طلبات خاصة...",
-  "paymentMethod": "طريقة الدفع",
-  "cashOnDelivery": "الدفع عند الاستلام",
-  "creditDebitCard": "بطاقة ائتمان / خصم",
-  "digitalWallet": "محفظة رقمية",
-  "placeOrder": "إتمام الطلب",
-  "orderPlacedSuccessfully": "تم تقديم الطلب {orderId} بنجاح!",
-  "@orderPlacedSuccessfully": {
-    "placeholders": {
-      "orderId": {"type": "String"}
-    }
-  },
-  "yourInformationIsSecure": "معلوماتك آمنة ومشفرة",
-  "openNow": "مفتوح الآن"
+  "callNow": "اتصل الآن",
+  "pregnancyPillow": "وسادة الحمل",
+  "essentialNutrientsMealPlanning": "العناصر الغذائية الأساسية وتخطيط الوجبات لحمل صحي",
+  "fiveMinRead": "قراءة 5 دقائق"
 }
-

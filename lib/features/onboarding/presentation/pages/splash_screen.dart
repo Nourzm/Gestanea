@@ -105,12 +105,9 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  // --- The main build method for the UI ---
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // The body uses a simple purple color as a base,
-      // replace with AppColors.splashGradient if that's the desired purple look
       body: Container(
         decoration: const BoxDecoration(
           // Assuming AppColors.splashGradient is the desired purple gradient

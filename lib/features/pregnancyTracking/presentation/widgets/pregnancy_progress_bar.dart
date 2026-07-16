@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class PregnancyProgressBar extends StatelessWidget {
   final int currentWeek;
   final int currentDay;
   final String trimester;
-  final int daysLeft; // total days remaining
+  final int daysLeft;
   final String dueDate;
 
   const PregnancyProgressBar({
@@ -18,86 +20,168 @@ class PregnancyProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Pregnancy lasts about 280 days (40 weeks)
     const totalPregnancyDays = 280;
     final currentDaysPassed = (currentWeek * 7) + currentDay;
-    final progress = currentDaysPassed / totalPregnancyDays;
-
-    // Convert remaining days back to weeks + days
-    final weeksLeft = daysLeft ~/ 7;
-    final extraDaysLeft = daysLeft % 7;
+    final progress = (currentDaysPassed / totalPregnancyDays).clamp(0.0, 1.0);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFB07CDE), // solid purple background like your image
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.main600.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row: current duration + trimester
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$currentWeek weeks and $currentDay days',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+                'Pregnancy Journey',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.main700,
                 ),
               ),
-              Text(
-                trimester,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.main300,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${(progress * 100).toInt()}%',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.main600,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // Progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: progress.clamp(0.0, 1.0),
-              minHeight: 6,
-              backgroundColor: Colors.white.withOpacity(0.3),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF8A4DC3),
+          const SizedBox(height: 24),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                height: 12,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.bg_1,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-            ),
+              FractionallySizedBox(
+                widthFactor: progress,
+                child: Container(
+                  height: 12,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.main400, AppColors.main600],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.main600.withOpacity(0.3),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: (MediaQuery.of(context).size.width - 72) * progress - 15,
+                top: -20,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    'assets/images/baby_not_born.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-
-          // Bottom row: due date + remaining weeks
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Date of labor $dueDate',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
+              _buildModernInfoTile(
+                icon: Icons.calendar_today_outlined,
+                label: 'Week $currentWeek',
+                subLabel: 'Current',
               ),
-              Text(
-                '$weeksLeft weeks and $extraDaysLeft days left',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
+              _buildModernInfoTile(
+                icon: Icons.event_note_outlined,
+                label: dueDate,
+                subLabel: 'Due Date',
+                isRight: true,
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildModernInfoTile({
+    required IconData icon,
+    required String label,
+    required String subLabel,
+    bool isRight = false,
+  }) {
+    return Column(
+      crossAxisAlignment: isRight ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Text(
+          subLabel,
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColors.textDark.withOpacity(0.5),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!isRight) Icon(icon, size: 14, color: AppColors.main500),
+            if (!isRight) const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: AppColors.main700,
+              ),
+            ),
+            if (isRight) const SizedBox(width: 4),
+            if (isRight) Icon(icon, size: 14, color: AppColors.main500),
+          ],
+        ),
+      ],
     );
   }
 }

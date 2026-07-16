@@ -6,6 +6,11 @@ class AppRoutes {
   static const String track = '/track';
   static const String signup = '/signup';
   static const String onboarding = '/onboarding';
+  static const String onboardingCommonInfo = '/onboarding/common-info';
+  static const String onboardingUserStatus = '/onboarding/user-status';
+  static const String onboardingPregnancy = '/onboarding/pregnancy';
+  static const String onboardingBaby = '/onboarding/baby';
+  static const String onboardingHealth = '/onboarding/health';
   static const String dashboard = '/dashboard';
   static const String pregnancy = '/pregnancy';
   static const String baby = '/baby';

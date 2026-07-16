@@ -9,34 +9,344 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get locationPermissionRequired =>
-      'Autorisation de localisation requise';
+  String get hello => 'Bonjour';
 
   @override
-  String get locationPermissionMessage =>
-      'Nous avons besoin d\'accéder à votre localisation pour afficher les médecins à proximité.';
+  String get ourDoctors => 'Nos Médecins';
 
   @override
-  String get gettingLocation => 'Obtention de votre position...';
+  String get findTheBestDoctor => 'trouvez le meilleur médecin';
 
   @override
-  String get locationPermissionDenied => 'Autorisation de localisation refusée';
+  String get upComing => 'À venir';
 
   @override
-  String get locationUpdated => 'Localisation mise à jour';
+  String get seeAll => 'voir tout';
 
   @override
-  String get retry => 'Réessayer';
+  String get today => 'Aujourd\'hui';
 
   @override
-  String get showingDoctorsNearYou =>
-      'Affichage des médecins près de chez vous';
+  String get tomorrow => 'Demain';
 
   @override
-  String get selectLocation => 'Sélectionner l\'emplacement';
+  String get at => 'à';
 
   @override
-  String get searchWilaya => 'Rechercher une wilaya...';
+  String get overdue => 'En retard';
+
+  @override
+  String get in_ => 'Dans';
+
+  @override
+  String get minutes => 'minutes';
+
+  @override
+  String get hours => 'heures';
+
+  @override
+  String get noUpcomingEvents => 'Pas d\'événements à venir';
+
+  @override
+  String get addAppointmentsInPlan => 'Ajouter des rendez-vous au Plan';
+
+  @override
+  String get getInTouch => 'Nous Contacter';
+
+  @override
+  String get contactFormDescription =>
+      'Avez-vous une question ou un retour? Nous aimerions avoir de vos nouvelles. Remplissez le formulaire ci-dessous et nous vous répondrons dans les 24 heures.';
+
+  @override
+  String get supportEmail => 'support@momcare.com';
+
+  @override
+  String get supportPhone => '+1 (800) 123-4567';
+
+  @override
+  String get supportHours => 'Lun-Ven, 9h-18h EST';
+
+  @override
+  String get yourNameLabel => 'Votre Nom';
+
+  @override
+  String get enterYourName => 'Entrez votre nom';
+
+  @override
+  String get emailAddressLabel => 'Adresse E-mail';
+
+  @override
+  String get emailPlaceholder => 'votre.email@example.com';
+
+  @override
+  String get subjectLabel => 'Sujet';
+
+  @override
+  String get whatIsThisAbout => 'De quoi s\'agit-il?';
+
+  @override
+  String get messageLabel => 'Message';
+
+  @override
+  String get tellUsHowWeCanHelp =>
+      'Dites-nous comment nous pouvons vous aider...';
+
+  @override
+  String get sendMessage => 'Envoyer le Message';
+
+  @override
+  String get appName => 'Gestanéa';
+
+  @override
+  String get appVersion => 'Version 2.1.0';
+
+  @override
+  String get appDescription =>
+      'Votre compagnon de confiance à travers la grossesse et la maternité. Suivez votre parcours, obtenez des informations personnalisées et connectez-vous avec une communauté solidaire.';
+
+  @override
+  String get activeUsersCount => '100K+';
+
+  @override
+  String get activeUsers => 'Utilisateurs Actifs';
+
+  @override
+  String get appRatingValue => '4.8★';
+
+  @override
+  String get appRating => 'Évaluation de l\'Application';
+
+  @override
+  String get versionInfo => 'Informations de Version';
+
+  @override
+  String get versionBuild => 'Build 2.1.0 (245)';
+
+  @override
+  String get madeWithLove => 'Créé avec Amour';
+
+  @override
+  String get forMomsEverywhere => 'Pour les mamans partout';
+
+  @override
+  String get copyrightText => '© 2025 Gestanéa. Tous droits réservés.';
+
+  @override
+  String get faqIntroText => 'Choisissez votre langue préférée';
+
+  @override
+  String get faqQuestion1 =>
+      'Comment puis-je définir des rappels de rendez-vous?';
+
+  @override
+  String get faqAnswer1 =>
+      'Vous pouvez définir des rappels de rendez-vous en accédant à la section \"Rendez-vous\", en sélectionnant votre visite prévue et en appuyant sur l\'option \"Définir un rappel\". Vous pourrez choisir un intervalle de temps (par exemple, 1 jour ou 1 heure avant).';
+
+  @override
+  String get faqQuestion2 => 'Mes données de santé sont-elles sécurisées?';
+
+  @override
+  String get faqAnswer2 =>
+      'Oui. Nous utilisons le chiffrement de pointe et suivons les directives de conformité HIPAA/GDPR pour assurer que vos informations de santé personnelles restent privées et sécurisées. Les données sont stockées de manière anonyme sur des serveurs sécurisés.';
+
+  @override
+  String get faqQuestion3 =>
+      'Comment puis-je changer ma date d\'accouchement prévue?';
+
+  @override
+  String get faqAnswer3 =>
+      'Si vous suivez une grossesse, vous pouvez modifier votre date d\'accouchement prévue (EDD) dans les paramètres \"Profil\" ou \"Suivi\". Appuyez sur le champ de date actuel pour entrer manuellement une nouvelle date en fonction de votre dernière échographie ou de la recommandation de votre médecin.';
+
+  @override
+  String get faqQuestion4 => 'Puis-je exporter mes dossiers médicaux?';
+
+  @override
+  String get faqAnswer4 =>
+      'Oui! Allez à Paramètres > Données et confidentialité > Télécharger mes données pour exporter toutes vos informations dans un format lisible.';
+
+  @override
+  String get faqQuestion5 => 'Comment puis-je contacter le support?';
+
+  @override
+  String get faqAnswer5 =>
+      'Vous pouvez contacter le support via le bouton \"Contacter le support\" en bas de cet écran, ou vous pouvez nous envoyer un e-mail directement à support@appname.com. Nous répondons généralement dans les 24 heures.';
+
+  @override
+  String get faqQuestion6 => 'Quelles langues sont prises en charge?';
+
+  @override
+  String get faqAnswer6 =>
+      'Actuellement, l\'application prend en charge l\'anglais, l\'espagnol, le français et l\'allemand. Vous pouvez modifier votre langue préférée dans le menu \"Paramètres de l\'application\".';
+
+  @override
+  String get stillHaveQuestions => 'Vous avez encore des questions?';
+
+  @override
+  String get contactSupport => 'Contacter le support';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get yourPrivacyMatters => 'Votre Vie Privée Est Importante';
+
+  @override
+  String get privacyCommitmentDescription =>
+      'Nous nous engageons à protéger vos informations personnelles et à assurer la transparence sur la manière dont nous utilisons vos données.';
+
+  @override
+  String get lastUpdatedPrivacy => 'Dernière mise à jour : 4 décembre 2025';
+
+  @override
+  String get dataCollection => 'Collecte de Données';
+
+  @override
+  String get dataCollectionDescription =>
+      'Nous collectons uniquement les informations essentielles nécessaires pour vous offrir la meilleure expérience de suivi de santé. Cela inclut vos informations de profil, vos mesures de santé et vos données d\'utilisation de l\'application.';
+
+  @override
+  String get dataSecurity => 'Sécurité des Données';
+
+  @override
+  String get dataSecurityDescription =>
+      'Vos données sont chiffrées à l\'aide de protocoles standards de l\'industrie. Nous employons plusieurs couches de sécurité pour protéger vos informations de santé personnelles contre l\'accès non autorisé.';
+
+  @override
+  String get dataUsage => 'Utilisation des Données';
+
+  @override
+  String get dataUsageDescription =>
+      'Nous utilisons vos données pour personnaliser votre expérience d\'application, fournir des informations de santé pertinentes et l\'améliorer. Nous ne vendons pas les données personnelles à des tiers.';
+
+  @override
+  String get yourRights => 'Vos Droits';
+
+  @override
+  String get yourRightsDescription =>
+      'Vous avez le droit d\'accéder, de mettre à jour ou de demander la suppression de vos données. Vous pouvez gérer les paramètres de confidentialité dans l\'application ou contacter le support.';
+
+  @override
+  String get weAreHereToHelp => 'Nous sommes là pour vous aider';
+
+  @override
+  String get chooseSupportOptionDescription =>
+      'Choisissez l\'option de support qui vous convient le mieux. Notre équipe est disponible 24h/24 et 7j/7 pour vous aider.';
+
+  @override
+  String get knowledgeBase => 'Base de Connaissances';
+
+  @override
+  String get browseArticlesAndGuides => 'Parcourir les articles et guides';
+
+  @override
+  String get liveChat => 'Chat en direct';
+
+  @override
+  String get chatWithSupportTeam => 'Discutez avec notre équipe d\'assistance';
+
+  @override
+  String get videoTutorials => 'Tutoriels Vidéo';
+
+  @override
+  String get watchStepByStepGuides => 'Regarder les guides étape par étape';
+
+  @override
+  String get emailSupport => 'Assistance par E-mail';
+
+  @override
+  String get emailSupportAddress => 'support@momcare.com';
+
+  @override
+  String get phoneSupport => 'Assistance Téléphonique';
+
+  @override
+  String get phoneSupportNumber => '1-800-MOM-CARE';
+
+  @override
+  String get communityForum => 'Forum Communautaire';
+
+  @override
+  String get connectWithOtherUsers =>
+      'Connectez-vous avec d\'autres utilisateurs';
+
+  @override
+  String get secureYourAccount => 'Sécurisez Votre Compte';
+
+  @override
+  String get enableSecurityFeaturesDescription =>
+      'Activez des fonctions de sécurité supplémentaires pour protéger vos informations de santé personnelles';
+
+  @override
+  String get changePassword => 'Changer le mot de passe';
+
+  @override
+  String get lastChangedDaysAgo => 'Dernière modification il y a 30 jours';
+
+  @override
+  String get biometricAuthentication => 'Authentification Biométrique';
+
+  @override
+  String get useFingerprintOrFaceId =>
+      'Utilisez l\'empreinte digitale ou Face ID pour déverrouiller';
+
+  @override
+  String get twoFactorAuthentication => 'Authentification à Deux Facteurs';
+
+  @override
+  String get addExtraLayerSecurity =>
+      'Ajouter une couche de sécurité supplémentaire';
+
+  @override
+  String get autoLock => 'Verrouillage Automatique';
+
+  @override
+  String get lockAppAfterInactivity =>
+      'Verrouiller l\'application après 5 minutes d\'inactivité';
+
+  @override
+  String get manageNotificationPreferences =>
+      'Gérez vos préférences de notification';
+
+  @override
+  String get pushNotifications => 'Notifications Push';
+
+  @override
+  String get receiveNotificationsOnDevice =>
+      'Recevez des notifications sur votre appareil';
+
+  @override
+  String get emailNotifications => 'Notifications par e-mail';
+
+  @override
+  String get getUpdatesViaEmail => 'Recevez des mises à jour par e-mail';
+
+  @override
+  String get appointmentReminders => 'Rappels de rendez-vous';
+
+  @override
+  String get neverMissAppointment => 'Ne manquez jamais un rendez-vous médical';
+
+  @override
+  String get healthTips => 'Conseils de santé';
+
+  @override
+  String get dailyWellnessRecommendations =>
+      'Recommandations quotidiennes de bien-être';
+
+  @override
+  String get weeklyReports => 'Rapports hebdomadaires';
+
+  @override
+  String get healthProgressSummary => 'Résumé de vos progrès de santé';
+
+  @override
+  String get vitaminReminders => 'Rappels de vitamines';
+
+  @override
+  String get dontForgetSupplements => 'N\'oubliez pas vos suppléments';
+
+  @override
+  String get choosePreferredLanguage => 'Choisissez votre langue préférée';
 
   @override
   String get security => 'Sécurité';
@@ -70,9 +380,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logout_confirmation => 'Voulez-vous vraiment vous déconnecter ? ';
-
-  @override
-  String get cancel => 'Annuler';
 
   @override
   String get unknown => 'Inconnu';
@@ -468,9 +775,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get login => 'Connexion';
 
   @override
-  String get signup => 'S\'inscrire';
-
-  @override
   String get password => 'Mot de passe';
 
   @override
@@ -521,6 +825,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createAccount => 'Créer un compte';
 
   @override
+  String get signup => 'S\'inscrire';
+
+  @override
   String get your_name => 'Votre nom';
 
   @override
@@ -534,6 +841,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rememberMe => 'Se souvenir de moi';
+
+  @override
+  String get sendOtp => 'Envoyer le code';
+
+  @override
+  String get verifyOtp => 'Vérifier le code';
+
+  @override
+  String get enterOtpCode => 'Entrez le code de vérification';
+
+  @override
+  String get otpSent => 'Code de vérification envoyé à votre email';
+
+  @override
+  String get otpCodePlaceholder => 'Code à 6 chiffres';
+
+  @override
+  String get resendOtp => 'Renvoyer le code';
+
+  @override
+  String get noInternetConnection =>
+      'Pas de connexion Internet. Veuillez vérifier votre réseau et réessayer.';
 
   @override
   String get version => 'Version';
@@ -565,9 +894,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get skinCare => 'Soins de la peau';
-
-  @override
-  String get pregnancyPillow => 'Coussin de grossesse';
 
   @override
   String get backSupportBelt => 'Ceinture de soutien dorsal';
@@ -643,7 +969,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get feltEnergeticToday => 'Je me suis senti énergique aujourd\'hui';
 
   @override
-  String hoursAgo(Object hours) {
+  String hoursAgo(int hours) {
     return 'il y a $hours heures';
   }
 
@@ -663,7 +989,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get needMoreSleep => 'Besoin de plus de sommeil';
 
   @override
-  String daysAgo(Object days) {
+  String daysAgo(int days) {
     return 'il y a $days jours';
   }
 
@@ -761,6 +1087,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get cancel => 'Annuler';
+
+  @override
   String get applyFilters => 'Appliquer les filtres';
 
   @override
@@ -826,411 +1155,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get callNow => 'Appeler maintenant';
 
   @override
-  String get all => 'Tous';
+  String get pregnancyPillow => 'Oreiller de Grossesse';
 
   @override
-  String get taken => 'Pris';
+  String get essentialNutrientsMealPlanning =>
+      'Nutriments essentiels et planification des repas pour une grossesse saine';
 
   @override
-  String get missed => 'Manqué';
-
-  @override
-  String get take => 'Prendre';
-
-  @override
-  String get noMedicinesFound => 'Aucun médicament trouvé';
-
-  @override
-  String get pleaseLoginToViewPlan =>
-      'Veuillez vous connecter pour voir votre plan';
-
-  @override
-  String get selectColor => 'Sélectionnez la couleur';
-
-  @override
-  String get selectSize => 'Sélectionnez la taille';
-
-  @override
-  String get addToCart => 'Ajouter au panier';
-
-  @override
-  String get buyNow => 'Acheter maintenant';
-
-  @override
-  String get description => 'Description';
-
-  @override
-  String get noDescriptionAvailable => 'Aucune description disponible';
-
-  @override
-  String get specifications => 'Spécifications';
-
-  @override
-  String get customerReviews => 'Avis des clientes';
-
-  @override
-  String get seeAll => 'voir tout';
-
-  @override
-  String get completeYourOrder => 'Complétez votre commande';
-
-  @override
-  String get orderSummary => 'Résumé de la commande';
-
-  @override
-  String get product => 'Produit';
-
-  @override
-  String get size => 'Taille';
-
-  @override
-  String get subtotal => 'Sous-total';
-
-  @override
-  String get deliveryFee => 'Frais de livraison';
-
-  @override
-  String get total => 'Total';
-
-  @override
-  String get deliveryInformation => 'Informations de livraison';
-
-  @override
-  String get fullName => 'Nom complet';
-
-  @override
-  String get enterYourFullName => 'Entrez votre nom complet';
-
-  @override
-  String get enterYourPhoneNumber => 'Entrez votre numéro de téléphone';
-
-  @override
-  String get deliveryAddress => 'Adresse de livraison';
-
-  @override
-  String get streetAddressApartment => 'Adresse, appartement, etc.';
-
-  @override
-  String get city => 'Ville';
-
-  @override
-  String get enterYourCity => 'Entrez votre ville';
-
-  @override
-  String get specialInstructions => 'Instructions spéciales (Facultatif)';
-
-  @override
-  String get addDeliveryNotes =>
-      'Ajoutez des notes de livraison, demandes spéciales...';
-
-  @override
-  String get paymentMethod => 'Méthode de paiement';
-
-  @override
-  String get cashOnDelivery => 'Paiement à la livraison';
-
-  @override
-  String get creditDebitCard => 'Carte de crédit / débit';
-
-  @override
-  String get digitalWallet => 'Portefeuille numérique';
-
-  @override
-  String get placeOrder => 'Passer la commande';
-
-  @override
-  String orderPlacedSuccessfully(String orderId) {
-    return 'Commande $orderId passée avec succès !';
-  }
-
-  @override
-  String get yourInformationIsSecure =>
-      'Vos informations sont sécurisées et cryptées';
-
-  @override
-  String get openNow => 'Ouvert maintenant';
-
-  @override
-  String get nausea => 'Nausea';
-
-  @override
-  String get headache => 'Headache';
-
-  @override
-  String get backPain => 'Back pain';
-
-  @override
-  String get swelling => 'Swelling';
-
-  @override
-  String get fatigue => 'Fatigue';
-
-  @override
-  String get dizziness => 'Dizziness';
-
-  @override
-  String get heartburn => 'Heartburn';
-
-  @override
-  String get legCramps => 'Leg cramps';
-
-  @override
-  String get other => 'Other';
-
-  @override
-  String get pleaseSelectSymptom => 'Please select a symptom';
-
-  @override
-  String get pleaseSelectSeverity => 'Please select severity';
-
-  @override
-  String get symptomLoggedSuccessfully => 'Symptom logged successfully!';
-
-  @override
-  String get addSymptom => 'Add Symptom';
-
-  @override
-  String get symptomType => 'Symptom type';
-
-  @override
-  String get selectSymptom => 'Select symptom';
-
-  @override
-  String get specifySymptom => 'Specify symptom';
-
-  @override
-  String get pleaseSpecifySymptom => 'Please specify the symptom';
-
-  @override
-  String get severity => 'Severity';
-
-  @override
-  String get mild => 'Mild';
-
-  @override
-  String get moderate => 'Moderate';
-
-  @override
-  String get severe => 'Severe';
-
-  @override
-  String get duration => 'Duration';
-
-  @override
-  String get pleaseEnterDuration => 'Please enter duration';
-
-  @override
-  String get notes => 'Notes';
-
-  @override
-  String get veryHappy => 'Très heureux(se)';
-
-  @override
-  String get happy => 'Heureux(se)';
-
-  @override
-  String get neutral => 'Neutre';
-
-  @override
-  String get sad => 'Triste';
-
-  @override
-  String get verySad => 'Très triste';
-
-  @override
-  String get pleaseSelectMood => 'Veuillez sélectionner une humeur';
-
-  @override
-  String get moodLoggedSuccessfully => 'Humeur enregistrée avec succès !';
-
-  @override
-  String get howAreYouFeeling => 'Comment vous sentez-vous ?';
-
-  @override
-  String get energyLevel => 'Niveau d\'énergie';
-
-  @override
-  String get low => 'Faible';
-
-  @override
-  String get high => 'Élevé';
-
-  @override
-  String get sleepQuality => 'Qualité du sommeil';
-
-  @override
-  String get howWasYourDay => 'Comment s\'est passée votre journée ?';
-
-  @override
-  String get prePregnancyBMI => 'Pre-pregnancy BMI';
-
-  @override
-  String get normalBMI => 'Normal';
-
-  @override
-  String get currentGain => 'Current gain';
-
-  @override
-  String get targetRange => 'Target range';
-
-  @override
-  String get expected => 'Expected';
-
-  @override
-  String get recentLabResults => 'Recent Lab Results';
-
-  @override
-  String get keepLabResultsOrganized =>
-      'Keep your lab results organized for better tracking.';
-
-  @override
-  String get viewAllLabResults => 'View All Lab Results';
-
-  @override
-  String get riskFactorsToMonitor => 'Risk factors to monitor';
-
-  @override
-  String get lowRisk => 'Faible risque';
-
-  @override
-  String get withinNormalRange => 'Dans la plage normale';
-
-  @override
-  String get gestationalDiabetes => 'Diabète gestationnel';
-
-  @override
-  String get glucoseLevelsNormal => 'Les niveaux de glucose sont normaux';
-
-  @override
-  String get preeclampsia => 'Prééclampsie';
-
-  @override
-  String get noProteinInUrine => 'Aucune protéine dans les urines';
-
-  @override
-  String get warningSignsToWatch => 'Signes d\'alerte à surveiller';
-
-  @override
-  String get severeHeadache => 'Forte migraine';
-
-  @override
-  String get blurredVision => 'Vision trouble';
-
-  @override
-  String get severeAbdominalPain => 'Douleur abdominale sévère';
-
-  @override
-  String get decreasedFetalMovement => 'Mouvements fœtaux diminués';
-
-  @override
-  String get vaginalBleeding => 'Saignement vaginal';
-
-  @override
-  String get emergencyCall => 'Appel d\'urgence';
-
-  @override
-  String get areYouSureCall911 => 'Êtes-vous sûr de vouloir appeler le 911 ?';
-
-  @override
-  String get couldNotMakeEmergencyCall =>
-      'Impossible de passer l\'appel d\'urgence.';
-
-  @override
-  String get ifYouExperienceWarnings =>
-      'Si vous ressentez un signe d\'alerte, contactez immédiatement votre professionnel de santé.';
-
-  @override
-  String get allIndicatorsNormal => 'Tous les indicateurs sont normaux';
-
-  @override
-  String get emergencyContact => 'Contact d\'urgence';
-
-  @override
-  String get overallRiskLevel => 'Niveau de risque global';
-
-  @override
-  String get call911OrProvider =>
-      'Appelez le 911 ou votre professionnel de santé';
-
-  @override
-  String get recentSymptoms => 'Recent Symptoms';
-
-  @override
-  String get logNewSymptom => 'Log new symptom';
-
-  @override
-  String get symptomFrequency => 'Symptom frequency';
-
-  @override
-  String get swollenFeet => 'Swollen feet';
-
-  @override
-  String get sleepIssues => 'Sleep issues';
-
-  @override
-  String get times => 'times';
-
-  @override
-  String get commonSymptomsWeek24 =>
-      'Common symptoms at week 24 include back pain and swelling.';
-
-  @override
-  String get viewAllSymptoms => 'View All Symptoms';
-
-  @override
-  String get weightProgress => 'Weight Progress';
-
-  @override
-  String get measurementSavedSuccessfully => 'Measurement saved successfully!';
-
-  @override
-  String get addMeasurement => 'Add Measurement';
-
-  @override
-  String get weightKg => 'Weight (kg)';
-
-  @override
-  String get pleaseEnterWeight => 'Please enter your weight';
-
-  @override
-  String get pleaseEnterValidNumber => 'Please enter a valid number';
-
-  @override
-  String get weightRange => 'Weight must be between 30 and 200 kg';
-
-  @override
-  String get heartRateBpm => 'Heart Rate (bpm)';
-
-  @override
-  String get pleaseEnterHeartRate => 'Please enter your heart rate';
-
-  @override
-  String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
-
-  @override
-  String get systolic => 'Systolic';
-
-  @override
-  String get required => 'Required';
-
-  @override
-  String get invalid => 'Invalid';
-
-  @override
-  String get systolicRange => 'Systolic must be between 70 and 190';
-
-  @override
-  String get diastolic => 'Diastolic';
-
-  @override
-  String get diastolicRange => 'Diastolic must be between 40 and 130';
-
-  @override
-  String get normalRangeLabel => 'Normal range';
-
-  @override
-  String get uploadLabResults => 'Upload Lab Results';
-
-  @override
-  String get nextLabAppointment => 'Next Lab Appointment';
+  String get fiveMinRead => '5 min de lecture';
 }

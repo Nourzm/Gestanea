@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../../../core/database/models/measurement_model.dart';
 import '../../logic/bloc/measurements_bloc.dart';
 import '../../logic/bloc/measurements_event.dart';
@@ -14,10 +15,10 @@ class MeasurementsListPage extends StatelessWidget {
     final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Measurements'),
+        title: Text(AppLocalizations.of(context)!.myMeasurements),
         backgroundColor: themeData.primaryColor,
-
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<MeasurementsBloc, MeasurementsState>(
         builder: (context, state) {
@@ -32,7 +33,7 @@ class MeasurementsListPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Error: ${state.message}'),
+                  Text('${AppLocalizations.of(context)!.error}: ${state.message}'),
                 ],
               ),
             );
@@ -40,7 +41,7 @@ class MeasurementsListPage extends StatelessWidget {
 
           if (state is MeasurementsLoaded) {
             if (state.measurements.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -54,7 +55,7 @@ class MeasurementsListPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('Tap "Add Measurement" to start. '),
+                    Text(AppLocalizations.of(context)!.tapAddMeasurementToStart),
                   ],
                 ),
               );
@@ -70,7 +71,7 @@ class MeasurementsListPage extends StatelessWidget {
             );
           }
 
-          return const Center(child: Text('No data'));
+          return Center(child: Text(AppLocalizations.of(context)!.noData));
         },
       ),
     );

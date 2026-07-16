@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -42,6 +43,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -56,7 +58,7 @@ class AboutScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          'About App',
+          t.about_app,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -83,11 +85,15 @@ class AboutScreen extends StatelessWidget {
                   NeumorphicContainer(
                     borderRadius: 90.0,
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset("assets/images/fetus.png", width: 150, height: 150,),
+                    child: Image.asset(
+                      "assets/images/fetus.png",
+                      width: 150,
+                      height: 150,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'MomCare',
+                    t.appName,
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 18,
@@ -95,7 +101,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Version 2.1.0',
+                    t.appVersion,
                     style: TextStyle(color: AppColors.main400, fontSize: 15),
                   ),
                 ],
@@ -111,7 +117,7 @@ class AboutScreen extends StatelessWidget {
                 vertical: 30.0,
               ),
               child: Text(
-                'Your trusted companion through pregnancy and motherhood. Track your journey, get personalized insights, and connect with a supportive community.',
+                t.appDescription,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.textPrimary,
@@ -135,7 +141,7 @@ class AboutScreen extends StatelessWidget {
                         Icon(Icons.group, color: AppColors.main500, size: 30),
                         const SizedBox(height: 8),
                         Text(
-                          '100K+',
+                          t.activeUsersCount,
                           style: TextStyle(
                             color: AppColors.textPrimary,
                             fontSize: 18,
@@ -143,7 +149,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Active Users',
+                          t.activeUsers,
                           style: TextStyle(
                             color: AppColors.main400,
                             fontSize: 13,
@@ -165,7 +171,7 @@ class AboutScreen extends StatelessWidget {
                         Icon(Icons.star, color: AppColors.main500, size: 30),
                         const SizedBox(height: 8),
                         Text(
-                          '4.8\u2605',
+                          t.appRatingValue,
                           style: TextStyle(
                             color: AppColors.textPrimary,
                             fontSize: 18,
@@ -173,7 +179,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'App Rating',
+                          t.appRating,
                           style: TextStyle(
                             color: AppColors.main400,
                             fontSize: 13,
@@ -190,8 +196,8 @@ class AboutScreen extends StatelessWidget {
             // 4. Version Info Tile
             _buildInfoTile(
               icon: Icons.code,
-              title: 'Version Info',
-              subtitle: 'Build 2.1.0 (245)',
+              title: t.versionInfo,
+              subtitle: t.versionBuild,
               onTap: () {},
             ),
             const SizedBox(height: 15),
@@ -199,8 +205,8 @@ class AboutScreen extends StatelessWidget {
             // 5. Made with Love Tile
             _buildInfoTile(
               icon: Icons.favorite_border,
-              title: 'Made with Love',
-              subtitle: 'For moms everywhere',
+              title: t.madeWithLove,
+              subtitle: t.forMomsEverywhere,
               onTap: () {},
             ),
             const SizedBox(height: 40),
@@ -208,7 +214,7 @@ class AboutScreen extends StatelessWidget {
             // 6. Footer Copyright
             Center(
               child: Text(
-                '© 2025 MomCare. All rights reserved.',
+                t.copyrightText,
                 style: TextStyle(color: AppColors.main400, fontSize: 12),
               ),
             ),

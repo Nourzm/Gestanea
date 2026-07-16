@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/features/profile/presentation/pages/change_password_page.dart';
 import 'package:gestanea/features/profile/presentation/widgets/neuo_container.dart';
-
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class SecurityPage extends StatefulWidget {
   const SecurityPage({super.key});
@@ -12,12 +13,13 @@ class SecurityPage extends StatefulWidget {
 }
 
 class _SecurityPageState extends State<SecurityPage> {
-  bool _biometricEnabled = true;
+  bool _biometricEnabled = false;
   bool _twoFactorEnabled = false;
-  bool _autoLockEnabled = true;
+  bool _autoLockEnabled = false;
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
@@ -30,7 +32,7 @@ class _SecurityPageState extends State<SecurityPage> {
           },
         ),
         title: Text(
-          'Security',
+          t.security,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -72,7 +74,7 @@ class _SecurityPageState extends State<SecurityPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Secure Your Account',
+                      t.secureYourAccount,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -81,7 +83,7 @@ class _SecurityPageState extends State<SecurityPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Enable additional security features to protect your personal health information',
+                      t.enableSecurityFeaturesDescription,
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 14,
@@ -96,21 +98,28 @@ class _SecurityPageState extends State<SecurityPage> {
             // 2. Security Options List
             _buildOptionTile(
               icon: Icons.vpn_key_outlined,
-              title: 'Change Password',
-              subtitle: 'Last changed 30 days ago',
+              title: t.changePassword,
+              subtitle: t.lastChangedDaysAgo,
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.main600,
                 size: 30,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChangePasswordPage(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 15),
 
             _buildSwitchTile(
               icon: Icons.fingerprint,
-              title: 'Biometric Authentication',
-              subtitle: 'Use fingerprint or Face ID to unlock',
+              title: t.biometricAuthentication,
+              subtitle: t.useFingerprintOrFaceId,
               value: _biometricEnabled,
               onChanged: (val) {
                 setState(() {
@@ -122,8 +131,8 @@ class _SecurityPageState extends State<SecurityPage> {
 
             _buildSwitchTile(
               icon: Icons.phonelink_lock_outlined,
-              title: 'Two-Factor Authentication',
-              subtitle: 'Add an extra layer of security',
+              title: t.twoFactorAuthentication,
+              subtitle: t.addExtraLayerSecurity,
               value: _twoFactorEnabled,
               onChanged: (val) {
                 setState(() {
@@ -135,8 +144,8 @@ class _SecurityPageState extends State<SecurityPage> {
 
             _buildSwitchTile(
               icon: Icons.lock_outline,
-              title: 'Auto-Lock',
-              subtitle: 'Lock app after 5 minutes of inactivity',
+              title: t.autoLock,
+              subtitle: t.lockAppAfterInactivity,
               value: _autoLockEnabled,
               onChanged: (val) {
                 setState(() {
@@ -242,5 +251,3 @@ class _SecurityPageState extends State<SecurityPage> {
     );
   }
 }
-
-

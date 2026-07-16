@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -140,6 +141,7 @@ class NotificationsSettings extends StatefulWidget {
 class _NotificationsSettingsState extends State<NotificationsSettings> {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -154,7 +156,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
           },
         ),
         title: Text(
-          'Notifications',
+          t.notifications,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -177,7 +179,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Text(
-                'Manage your notification preferences',
+                t.manageNotificationPreferences,
                 style: TextStyle(
                   color: AppColors.main700.withOpacity(0.7),
                   fontSize: 16,
@@ -188,38 +190,38 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
 
             // Notification Toggles List
             NotificationSwitchTile(
-              title: 'Push Notifications',
-              subtitle: 'Receive notifications on your device',
+              title: t.pushNotifications,
+              subtitle: t.receiveNotificationsOnDevice,
               initialValue: true,
             ),
             const SizedBox(height: 15),
             NotificationSwitchTile(
-              title: 'Email Notifications',
-              subtitle: 'Get updates via email',
+              title: t.emailNotifications,
+              subtitle: t.getUpdatesViaEmail,
               initialValue: true,
             ),
             const SizedBox(height: 15),
             NotificationSwitchTile(
-              title: 'Appointment Reminders',
-              subtitle: 'Never miss a doctor\'s appointment',
+              title: t.appointmentReminders,
+              subtitle: t.neverMissAppointment,
               initialValue: true,
             ),
             const SizedBox(height: 15),
             NotificationSwitchTile(
-              title: 'Health Tips',
-              subtitle: 'Daily wellness recommendations',
+              title: t.healthTips,
+              subtitle: t.dailyWellnessRecommendations,
               initialValue: true,
             ),
             const SizedBox(height: 15),
             NotificationSwitchTile(
-              title: 'Weekly Reports',
-              subtitle: 'Summary of your health progress',
+              title: t.weeklyReports,
+              subtitle: t.healthProgressSummary,
               initialValue: false, // Defaulting to off based on image state
             ),
             const SizedBox(height: 15),
             NotificationSwitchTile(
-              title: 'Vitamin Reminders',
-              subtitle: 'Don\'t forget your supplements',
+              title: t.vitaminReminders,
+              subtitle: t.dontForgetSupplements,
               initialValue: true,
             ),
             const SizedBox(height: 30),

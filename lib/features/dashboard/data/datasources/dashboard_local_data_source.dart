@@ -1,4 +1,5 @@
 // lib/features/dashboard/data/datasources/dashboard_local_data_source.dart
+import 'package:sqflite/sqflite.dart';
 import '../../../../core/database/db_helper.dart';
 
 abstract class DashboardLocalDataSource {
@@ -22,6 +23,29 @@ abstract class DashboardLocalDataSource {
   Future<List<Map<String, dynamic>>> getUpcomingRemindersByStringId(String userId, int days);
   Future<List<Map<String, dynamic>>> getUnresolvedHealthAlertsByStringId(String userId);
   Future<List<Map<String, dynamic>>> getMedicineRemindersByStringId(String userId);
+  
+  // Tips sync methods
+  Future<void> saveTips(List<Map<String, dynamic>> tips);
+  
+  // Get tips with filtering
+  Future<List<Map<String, dynamic>>> getTips({
+    String? category,
+    String? targetAudience,
+    int? currentWeek,
+    int? currentMonth,
+    bool isPostpartum = false,
+    int? postpartumWeek,
+    int limit = 50,
+  });
+  
+  // Get saved tip IDs for a user
+  Future<List<String>> getSavedTipIds(String userId);
+  
+  // Save tip for user
+  Future<void> saveTipForUser(String userId, String tipId);
+  
+  // Remove saved tip for user
+  Future<void> removeSavedTipForUser(String userId, String tipId);
 }
 
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
@@ -329,5 +353,162 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     ''', [userId, today.toIso8601String()]);
     
     return result;
+  }
+
+  @override
+  Future<void> saveTips(List<Map<String, dynamic>> tips) async {
+    final db = await _dbHelper.database;
+    final batch = db.batch();
+    
+    for (final tip in tips) {
+      // Convert to match local schema
+      final tipMap = {
+        'id': tip['id'] ?? tip['id'],
+        'title': tip['title'] ?? '',
+        'content': tip['content'] ?? '',
+        'content_json': tip['content_json'],
+        'category': tip['category'],
+        'target_audience': tip['target_audience'],
+        'image_url': tip['image_url'],
+        'source': tip['source'],
+        'is_active': (tip['is_active'] ?? true) ? 1 : 0,
+        'is_global': (tip['is_global'] ?? false) ? 1 : 0,
+        'priority': tip['priority'] ?? 0,
+        'pregnancy_week_from': tip['pregnancy_week_from'],
+        'pregnancy_week_to': tip['pregnancy_week_to'],
+        'pregnancy_month_from': tip['pregnancy_month_from'],
+        'pregnancy_month_to': tip['pregnancy_month_to'],
+        'postpartum_week_from': tip['postpartum_week_from'],
+        'postpartum_week_to': tip['postpartum_week_to'],
+        'created_at': tip['created_at'] ?? DateTime.now().toIso8601String(),
+      };
+      
+      batch.insert(
+        'tips',
+        tipMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    
+    await batch.commit(noResult: true);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getTips({
+    String? category,
+    String? targetAudience,
+    int? currentWeek,
+    int? currentMonth,
+    bool isPostpartum = false,
+    int? postpartumWeek,
+    int limit = 50,
+  }) async {
+    final db = await _dbHelper.database;
+    
+    // Build WHERE clause for stage-based filtering
+    // Tips are included if:
+    // 1. is_global = true (always visible)
+    // 2. OR the current week/month is within the tip's defined range
+    final conditions = <String>['is_active = 1'];
+    final whereArgs = <dynamic>[];
+    
+    // Target audience filter
+    if (targetAudience != null) {
+      conditions.add('target_audience = ?');
+      whereArgs.add(targetAudience);
+    }
+    
+    // Category filter
+    if (category != null && category.isNotEmpty && category.toLowerCase() != 'all') {
+      conditions.add('category = ?');
+      whereArgs.add(category);
+    }
+    
+    // Stage-based filtering (is_global OR stage matches)
+    if (isPostpartum && postpartumWeek != null) {
+      // Postpartum: is_global OR (postpartum_week_from <= currentWeek <= postpartum_week_to)
+      conditions.add(
+        '(is_global = 1 OR ((postpartum_week_from IS NULL OR postpartum_week_from <= ?) AND (postpartum_week_to IS NULL OR postpartum_week_to >= ?)))'
+      );
+      whereArgs.add(postpartumWeek);
+      whereArgs.add(postpartumWeek);
+    } else if (!isPostpartum) {
+      // Pregnancy: is_global OR (week range OR month range matches)
+      if (currentWeek != null) {
+        conditions.add(
+          '(is_global = 1 OR ((pregnancy_week_from IS NULL OR pregnancy_week_from <= ?) AND (pregnancy_week_to IS NULL OR pregnancy_week_to >= ?)))'
+        );
+        whereArgs.add(currentWeek);
+        whereArgs.add(currentWeek);
+      } else if (currentMonth != null) {
+        conditions.add(
+          '(is_global = 1 OR ((pregnancy_month_from IS NULL OR pregnancy_month_from <= ?) AND (pregnancy_month_to IS NULL OR pregnancy_month_to >= ?)))'
+        );
+        whereArgs.add(currentMonth);
+        whereArgs.add(currentMonth);
+      } else {
+        // No week/month specified, show global tips only
+        conditions.add('is_global = 1');
+      }
+    } else {
+      // Postpartum but no week specified, show global tips only
+      conditions.add('is_global = 1');
+    }
+    
+    final whereClause = conditions.join(' AND ');
+    
+    // Debug: Print the query for troubleshooting
+    print('Tips Query: WHERE $whereClause');
+    print('Tips Query Args: $whereArgs');
+    
+    final result = await db.query(
+      'tips',
+      where: whereClause,
+      whereArgs: whereArgs,
+      orderBy: 'priority DESC, created_at DESC',
+      limit: limit,
+    );
+    
+    print('Tips Query Result: ${result.length} tips found');
+    
+    return result;
+  }
+
+  @override
+  Future<List<String>> getSavedTipIds(String userId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'user_saved_tips',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      columns: ['tip_id'],
+    );
+    return result.map((row) => row['tip_id'] as String).toList();
+  }
+
+  @override
+  Future<void> saveTipForUser(String userId, String tipId) async {
+    final db = await _dbHelper.database;
+    final id = '$userId-$tipId'; // Simple ID generation
+    await db.insert(
+      'user_saved_tips',
+      {
+        'id': id,
+        'user_id': userId,
+        'tip_id': tipId,
+        'saved_at': DateTime.now().toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  @override
+  Future<void> removeSavedTipForUser(String userId, String tipId) async {
+    final db = await _dbHelper.database;
+    await db.delete(
+      'user_saved_tips',
+      where: 'user_id = ? AND tip_id = ?',
+      whereArgs: [userId, tipId],
+    );
   }
 }

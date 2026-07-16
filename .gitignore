@@ -43,6 +43,10 @@ app.*.map.json
 lib/generated/
 lib/.dart_tool/flutter_gen/
 
+# Test coverage
+coverage/
+*.lcov
+
 # Environment variables
 .env
 .env.local

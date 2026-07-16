@@ -4,6 +4,7 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/features/profile/presentation/widgets/neuo_cards.dart';
 // Assuming this is your root app file that contains MyApp.setAppLocale
 import 'package:gestanea/app.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 // --- Language Data Model ---
 class LanguageData {
@@ -57,6 +58,7 @@ class _LanguagesPageState extends State<LanguagesPage> {
   Widget build(BuildContext context) {
     // Read the current locale from the MaterialApp widget itself
     final currentLocale = Localizations.localeOf(context);
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.bg_1,
@@ -69,7 +71,7 @@ class _LanguagesPageState extends State<LanguagesPage> {
           },
         ),
         title: Text(
-          'Languages',
+          t.language,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -87,7 +89,7 @@ class _LanguagesPageState extends State<LanguagesPage> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                "Choose your preferred language",
+                t.choosePreferredLanguage,
                 style: TextStyle(color: AppColors.textDark),
               ),
             ),

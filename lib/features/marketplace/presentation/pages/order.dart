@@ -209,21 +209,50 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
-                                            child: Image.asset(
-                                              state.productImage,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return const Center(
-                                                      child: Icon(
-                                                        Icons
-                                                            .image_not_supported,
-                                                        color: Colors.grey,
-                                                        size: 40,
-                                                      ),
-                                                    );
-                                                  },
-                                            ),
+                                            child:
+                                                state.productImage.startsWith(
+                                                  'http',
+                                                )
+                                                ? Image.network(
+                                                    state.productImage,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) {
+                                                          return const Center(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .image_not_supported,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 40,
+                                                            ),
+                                                          );
+                                                        },
+                                                  )
+                                                : Image.asset(
+                                                    state.productImage,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) {
+                                                          return const Center(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .image_not_supported,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 40,
+                                                            ),
+                                                          );
+                                                        },
+                                                  ),
                                           )
                                         : const Center(
                                             child: Icon(

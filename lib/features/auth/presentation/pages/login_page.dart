@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
-import 'package:gestanea/core/widgets/custom_button.dart';
+import 'package:gestanea/core/session/session_manager.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/auth/presentation/widgets/hero_section.dart';
 import 'package:gestanea/features/auth/presentation/widgets/input_fields.dart';
+import 'package:gestanea/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,8 +23,43 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final SessionManager _sessionManager = SessionManager();
 
-  void _onLoginPressed() {
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedCredentials();
+  }
+
+  /// Load remembered credentials if "Remember Me" was enabled
+  Future<void> _loadRememberedCredentials() async {
+    try {
+      final credentials = await _sessionManager.getRememberedCredentials();
+      if (credentials != null && mounted) {
+        setState(() {
+          _emailController.text = credentials['email'] ?? '';
+          _passwordController.text = credentials['password'] ?? '';
+          _rememberMe = true;
+        });
+      }
+    } catch (e) {
+      print('Error loading remembered credentials: $e');
+    }
+  }
+
+  /// Handle remember me checkbox change
+  Future<void> _onRememberMeChanged(bool? value) async {
+    setState(() {
+      _rememberMe = value ?? false;
+    });
+
+    // If unchecked, clear saved credentials
+    if (!_rememberMe) {
+      await _sessionManager.clearRememberedCredentials();
+    }
+  }
+
+  Future<void> _onLoginPressed() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     if (email.isEmpty || password.isEmpty) {
@@ -32,6 +68,18 @@ class _LoginScreenState extends State<LoginScreen> {
       ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
       return;
     }
+
+    // Save credentials if "Remember Me" is checked
+    if (_rememberMe) {
+      await _sessionManager.saveRememberedCredentials(
+        email: email,
+        password: password,
+      );
+    } else {
+      // Clear credentials if unchecked
+      await _sessionManager.clearRememberedCredentials();
+    }
+
     context.read<AuthBloc>().add(
       LoginRequested(email: email, password: password),
     );
@@ -60,12 +108,35 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthAuthenticated) {
+              // Clear remembered credentials if remember me was unchecked
+              if (!_rememberMe) {
+                _sessionManager.clearRememberedCredentials();
+              }
               Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
             } else if (state is AuthFailure) {
               final message = state.message.replaceAll('Exception: ', '');
+              
+              // Map error keys to localized messages
+              String localizedMessage;
+              if (message == 'noInternetConnection') {
+                localizedMessage = t.noInternetConnection;
+              } else if (message.toLowerCase().contains('invalid') ||
+                         message.toLowerCase().contains('password') ||
+                         message.toLowerCase().contains('email')) {
+                // Credential errors - show as SnackBar (global message)
+                localizedMessage = 'Invalid email or password';
+              } else {
+                // Generic error - use mapped message
+                localizedMessage = message;
+              }
+              
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(SnackBar(content: Text(message)));
+              ).showSnackBar(SnackBar(
+                content: Text(localizedMessage),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ));
             }
           },
           child: SingleChildScrollView(
@@ -149,12 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               height: 24,
                                               child: Checkbox(
                                                 value: _rememberMe,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _rememberMe =
-                                                        value ?? false;
-                                                  });
-                                                },
+                                                onChanged: _onRememberMeChanged,
                                                 activeColor: AppColors.main400,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
@@ -181,14 +247,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                       Flexible(
                                         child: TextButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const ForgotPasswordPage(),
+                                              ),
+                                            );
+                                          },
                                           style: TextButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 8,
                                             ),
                                             minimumSize: const Size(0, 36),
-                                            tapTargetSize: MaterialTapTargetSize
-                                                .shrinkWrap,
+                                            tapTargetSize:
+                                                MaterialTapTargetSize.shrinkWrap,
                                           ),
                                           child: Text(
                                             t.forgot,

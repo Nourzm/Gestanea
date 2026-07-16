@@ -316,6 +316,59 @@ class _DoctorsScreenContentState extends State<DoctorsScreenContent> {
                     );
                   }
 
+                  if (state is DoctorsOffline) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.wifi_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              l10n.noInternetConnection ??
+                                  'No internet connection',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.headline2.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              'Please check your internet connection and try again',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<DoctorsBloc>().add(LoadDoctors());
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l10n.retry ?? 'Retry'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   if (state is DoctorsError) {
                     return Center(
                       child: Column(

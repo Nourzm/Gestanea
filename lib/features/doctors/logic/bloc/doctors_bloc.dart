@@ -1,17 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/database/models/doctor_model.dart';
 import 'package:gestanea/core/database/models/doctor_filter_model.dart';
-import 'package:gestanea/core/services/doctor_api_service.dart';
+import 'package:gestanea/features/doctors/doctor_api_service.dart';
 import 'package:gestanea/core/services/location_service.dart';
+import 'package:gestanea/core/services/connectivity_service.dart';
 import 'doctors_event.dart';
 import 'doctors_state.dart';
 
 class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
   final LocationService _locationService;
+  final ConnectivityService _connectivityService;
 
-  DoctorsBloc({LocationService? locationService})
-    : _locationService = locationService ?? LocationService(),
-      super(DoctorsInitial()) {
+  DoctorsBloc({
+    LocationService? locationService,
+    ConnectivityService? connectivityService,
+  }) : _locationService = locationService ?? LocationService(),
+       _connectivityService = connectivityService ?? ConnectivityService(),
+       super(DoctorsInitial()) {
     on<LoadDoctors>(_onLoadDoctors);
     on<SearchDoctors>(_onSearchDoctors);
     on<FilterDoctors>(_onFilterDoctors);
@@ -35,12 +40,27 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
   ) async {
     emit(DoctorsLoading());
     try {
+      // Check connectivity first
+      final isOnline = await _connectivityService.checkConnectivity();
+      if (!isOnline) {
+        emit(DoctorsOffline());
+        return;
+      }
+
       _userLat = event.userLat;
       _userLon = event.userLon;
 
       await _fetchAndEmit(emit);
     } catch (e) {
-      emit(DoctorsError('Failed to load doctors: ${e.toString()}'));
+      // Check if it's a network error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socketexception') ||
+          errorMessage.contains('network') ||
+          errorMessage.contains('connection')) {
+        emit(DoctorsOffline());
+      } else {
+        emit(DoctorsError('Failed to load doctors: ${e.toString()}'));
+      }
     }
   }
 
@@ -51,6 +71,13 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
     try {
       emit(DoctorsLoading());
 
+      // Check connectivity first
+      final isOnline = await _connectivityService.checkConnectivity();
+      if (!isOnline) {
+        emit(DoctorsOffline());
+        return;
+      }
+
       final position = await _locationService.getCurrentLocation();
       if (position != null) {
         _userLat = position.latitude;
@@ -60,7 +87,15 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
 
       await _fetchAndEmit(emit);
     } catch (e) {
-      emit(DoctorsError('Failed to refresh location: ${e.toString()}'));
+      // Check if it's a network error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socketexception') ||
+          errorMessage.contains('network') ||
+          errorMessage.contains('connection')) {
+        emit(DoctorsOffline());
+      } else {
+        emit(DoctorsError('Failed to refresh location: ${e.toString()}'));
+      }
     }
   }
 
@@ -183,7 +218,16 @@ class DoctorsBloc extends Bloc<DoctorsEvent, DoctorsState> {
         ),
       );
     } catch (e) {
-      emit(DoctorsError('Failed to load doctors: ${e.toString()}'));
+      // Check if it's a network error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socketexception') ||
+          errorMessage.contains('network') ||
+          errorMessage.contains('connection') ||
+          errorMessage.contains('unreachable')) {
+        emit(DoctorsOffline());
+      } else {
+        emit(DoctorsError('Failed to load doctors: ${e.toString()}'));
+      }
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 
 class NeumorphicButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
 
   final dynamic prefixIcon; // IconData or SVG path
@@ -13,6 +13,7 @@ class NeumorphicButton extends StatelessWidget {
   final Color? color;
   final double? minHeight;
   final double? maxWidth;
+  final bool isLoading;
 
   const NeumorphicButton({
     super.key,
@@ -23,6 +24,7 @@ class NeumorphicButton extends StatelessWidget {
     this.color,
     this.minHeight,
     this.maxWidth,
+    this.isLoading = false,
   });
 
   Widget? _buildIcon(dynamic icon, Color color) {
@@ -48,7 +50,7 @@ class NeumorphicButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final buttonHeight = minHeight ?? size.height * 0.08;
+    final buttonHeight = minHeight ?? size.height * 0.07;
 
     final verticalPadding = size.height * 0.012;
     final horizontalPadding = size.width * 0.04;
@@ -57,7 +59,7 @@ class NeumorphicButton extends StatelessWidget {
     final suffix = _buildIcon(suffixIcon, Colors.white);
 
     return GestureDetector(
-      onTap: onPressed,
+      onTap: (isLoading || onPressed == null) ? null : onPressed,
       child: Container(
         width: double.infinity,
         constraints: BoxConstraints(
@@ -66,9 +68,11 @@ class NeumorphicButton extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: color == null
-              ? AppColors.onboarding
-              : LinearGradient(colors: [?color, ?color]),
+          gradient: (isLoading || onPressed == null)
+              ? LinearGradient(colors: [Colors.grey[400]!, Colors.grey[400]!])
+              : (color == null
+                    ? AppColors.onboarding
+                    : LinearGradient(colors: [?color, ?color])),
           boxShadow: const [
             BoxShadow(
               color: Color.fromARGB(100, 0, 0, 0),
@@ -95,18 +99,36 @@ class NeumorphicButton extends StatelessWidget {
                     text,
                     style: AppTextStyles.headline2.copyWith(
                       color: AppColors.white,
-                      fontSize: 16,
+                      fontSize: size.width * 0.04,
                       fontWeight: FontWeight.w600,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(width: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        prefix ?? const SizedBox(width: 20, height: 20),
 
-              suffix ?? const SizedBox(width: 20, height: 20),
-            ],
-          ),
+                        Text(
+                          text,
+                          style: AppTextStyles.headline2.copyWith(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+
+                    suffix ?? const SizedBox(width: 20, height: 20),
+                  ],
+                ),
         ),
       ),
     );

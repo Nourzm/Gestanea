@@ -65,11 +65,11 @@ class MeasurementModel {
     return MeasurementModel(
       id: map['id'] as String,
       userId: map['user_id'] as String,
-      weight: map['weight'] as double?,
+      weight: map['weight'] != null ? (map['weight'] as num).toDouble() : null,
       heartRate: map['heart_rate'] as int?,
       systolic: map['systolic'] as int?,
       diastolic: map['diastolic'] as int?,
-      recordedAt: DateTime. parse(map['recorded_at'] as String),
+      recordedAt: DateTime.parse(map['recorded_at'] as String),
       notes: map['notes'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
     );
