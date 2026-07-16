@@ -8,7 +8,6 @@ import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/profile/presentation/pages/about_app.dart';
 import 'package:gestanea/features/profile/presentation/pages/contactus.dart';
 import 'package:gestanea/features/profile/presentation/pages/faq.dart';
@@ -245,11 +244,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     children: [
                       _SettingsTile(
                         icon: "assets/icons/question.svg",
-                        title: 'FAQ',
+                        title: t.faq,
                         destination: FaqScreen(),
                       ),
                       _SettingsTile(
-                        icon: "assets/icons/help.svg",
+                        icon: "assets/icons/Help.svg",
                         title: t.help_support,
                         destination: HelpSupportScreen(),
                       ),

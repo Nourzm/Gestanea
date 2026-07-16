@@ -1,13 +1,109 @@
 {
-  "locationPermissionRequired": "Location Permission Required",
-  "locationPermissionMessage": "We need access to your location to show nearby doctors.",
-  "gettingLocation": "Getting your location...",
-  "locationPermissionDenied": "Location permission denied",
-  "locationUpdated": "Location updated",
-  "retry": "Retry",
-  "showingDoctorsNearYou": "Showing doctors near you",
-  "selectLocation": "Select Location",
-  "searchWilaya": "Search for a wilaya...",
+  "hello": "Hello",
+  "ourDoctors": "Our Doctors",
+  "findTheBestDoctor": "find the best doctor",
+  "upComing": "Up coming",
+  "seeAll": "see all",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "at": "at",
+  "overdue": "Overdue",
+  "in_": "In",
+  "minutes": "minutes",
+  "hours": "hours",
+  "noUpcomingEvents": "No upcoming events",
+  "addAppointmentsInPlan": "Add appointments in Plan",
+  "getInTouch": "Get in Touch",
+  "contactFormDescription": "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
+  "supportEmail": "support@momcare.com",
+  "supportPhone": "+1 (800) 123-4567",
+  "supportHours": "Mon-Fri, 9AM-6PM EST",
+  "yourNameLabel": "Your Name",
+  "enterYourName": "Enter your name",
+  "emailAddressLabel": "Email Address",
+  "emailPlaceholder": "your.email@example.com",
+  "subjectLabel": "Subject",
+  "whatIsThisAbout": "What is this about?",
+  "messageLabel": "Message",
+  "tellUsHowWeCanHelp": "Tell us how we can help...",
+  "sendMessage": "Send Message",
+  "appName": "Gestanéa",
+  "appVersion": "Version 2.1.0",
+  "appDescription": "Your trusted companion through pregnancy and motherhood. Track your journey, get personalized insights, and connect with a supportive community.",
+  "activeUsersCount": "100K+",
+  "activeUsers": "Active Users",
+  "appRatingValue": "4.8★",
+  "appRating": "App Rating",
+  "versionInfo": "Version Info",
+  "versionBuild": "Build 2.1.0 (245)",
+  "madeWithLove": "Made with Love",
+  "forMomsEverywhere": "For moms everywhere",
+  "copyrightText": "© 2025 Gestanéa. All rights reserved.",
+  "faqIntroText": "Choose your preferred language",
+  "faqQuestion1": "How do I set appointment reminders?",
+  "faqAnswer1": "You can set appointment reminders by navigating to the \"Appointments\" section, selecting your scheduled visit, and tapping the \"Set Reminder\" option. You will be able to choose a time interval (e.g., 1 day or 1 hour before).",
+  "faqQuestion2": "Is my health data secure?",
+  "faqAnswer2": "Yes. We use industry-leading encryption and follow HIPAA/GDPR compliance guidelines to ensure your personal health information remains private and secure. Data is stored anonymously on secure servers.",
+  "faqQuestion3": "How do I change my due date?",
+  "faqAnswer3": "If you are tracking a pregnancy, you can change your estimated due date (EDD) in the \"Profile\" or \"Tracking\" settings. Tap on the current due date field to manually enter a new date based on your latest ultrasound or doctor's recommendation.",
+  "faqQuestion4": "Can I export my health records?",
+  "faqAnswer4": "Yes! Go to Settings > Data & Privacy > Download My Data to export all your information in a readable format.",
+  "faqQuestion5": "How do I contact support?",
+  "faqAnswer5": "You can contact support via the \"Contact Support\" button at the bottom of this screen, or you can email us directly at support@appname.com. We typically respond within 24 hours.",
+  "faqQuestion6": "What languages are supported?",
+  "faqAnswer6": "Currently, the app supports English, Spanish, French, and German. You can change your preferred language in the \"App Settings\" menu.",
+  "stillHaveQuestions": "Still have questions?",
+  "contactSupport": "Contact Support",
+  "faq": "FAQ",
+  "yourPrivacyMatters": "Your Privacy Matters",
+  "privacyCommitmentDescription": "We are committed to protecting your personal information and ensuring transparency about how we use your data.",
+  "lastUpdatedPrivacy": "Last Updated: December 4, 2025",
+  "dataCollection": "Data Collection",
+  "dataCollectionDescription": "We collect only essential information needed to provide you with the best health tracking experience. This includes your profile information, health metrics, and app usage data.",
+  "dataSecurity": "Data Security",
+  "dataSecurityDescription": "Your data is encrypted using industry-standard protocols. We employ multiple layers of security to protect your personal health information from unauthorized access.",
+  "dataUsage": "Data Usage",
+  "dataUsageDescription": "We use your data to personalize your app experience, provide relevant health insights, and improve. We do not sell personal data to third parties.",
+  "yourRights": "Your Rights",
+  "yourRightsDescription": "You have the right to access, or update, or request deletion of your data. You can manage privacy settings within the app or contact support.",
+  "weAreHereToHelp": "We're Here to Help",
+  "chooseSupportOptionDescription": "Choose the support option that works best for you. Our team is available 24/7 to assist you.",
+  "knowledgeBase": "Knowledge Base",
+  "browseArticlesAndGuides": "Browse articles and guides",
+  "liveChat": "Live Chat",
+  "chatWithSupportTeam": "Chat with our support team",
+  "videoTutorials": "Video Tutorials",
+  "watchStepByStepGuides": "Watch step-by-step guides",
+  "emailSupport": "Email Support",
+  "emailSupportAddress": "support@momcare.com",
+  "phoneSupport": "Phone Support",
+  "phoneSupportNumber": "1-800-MOM-CARE",
+  "communityForum": "Community Forum",
+  "connectWithOtherUsers": "Connect with other users",
+  "secureYourAccount": "Secure Your Account",
+  "enableSecurityFeaturesDescription": "Enable additional security features to protect your personal health information",
+  "changePassword": "Change Password",
+  "lastChangedDaysAgo": "Last changed 30 days ago",
+  "biometricAuthentication": "Biometric Authentication",
+  "useFingerprintOrFaceId": "Use fingerprint or Face ID to unlock",
+  "twoFactorAuthentication": "Two-Factor Authentication",
+  "addExtraLayerSecurity": "Add an extra layer of security",
+  "autoLock": "Auto-Lock",
+  "lockAppAfterInactivity": "Lock app after 5 minutes of inactivity",
+  "manageNotificationPreferences": "Manage your notification preferences",
+  "pushNotifications": "Push Notifications",
+  "receiveNotificationsOnDevice": "Receive notifications on your device",
+  "emailNotifications": "Email Notifications",
+  "getUpdatesViaEmail": "Get updates via email",
+  "appointmentReminders": "Appointment Reminders",
+  "neverMissAppointment": "Never miss a doctor's appointment",
+  "healthTips": "Health Tips",
+  "dailyWellnessRecommendations": "Daily wellness recommendations",
+  "weeklyReports": "Weekly Reports",
+  "healthProgressSummary": "Summary of your health progress",
+  "vitaminReminders": "Vitamin Reminders",
+  "dontForgetSupplements": "Don't forget your supplements",
+  "choosePreferredLanguage": "Choose your preferred language",
   "security": "Security",
   "i_gave_birth": "I gave birth",
   "no_longer_pregnant": "No longer pregnant",
@@ -19,7 +115,6 @@
   "save": "Save",
   "save_changes": "Save changes",
   "logout_confirmation": "Are you sure you want to log out?",
-  "cancel": "Cancel",
   "unknown": "Unknown",
   "profile": "Profile",
   "profile_updated": "Profile updated",
@@ -169,7 +264,6 @@
   "appTitle": "Pregnancy & Baby Care",
   "welcome": "Welcome",
   "login": "Login",
-  "signup": "Sign Up",
   "password": "Password",
   "logout": "Logout",
   "settings": "Settings",
@@ -178,7 +272,7 @@
   "notifications": "Notifications",
   "help": "Help",
   "about": "About",
-  "welcome_back": "Welcome Back! ",
+  "welcome_back": "Welcome Back!",
   "or": "— OR —",
   "register": "Register",
   "auth": "Your trusted companion for every stage of motherhood",
@@ -234,7 +328,6 @@
   "@skinCare": {
     "description": "Skin care category"
   },
-  "pregnancyPillow": "Pregnancy Pillow",
   "@pregnancyPillow": {
     "description": "Pregnancy pillow product"
   },
@@ -273,28 +366,6 @@
   "measurement": "Measurement",
   "healthTipMessage": "Great job!  You're maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.",
   "onTrack": "On Track",
-  "moodTab": "Mood Tab",
-  "recentEntries": "Recent entries",
-  "howAreYouFeelingToday": "How are you feeling today?",
-  "feltEnergeticToday": "Felt energetic today",
-  "hoursAgo": "{hours} hours ago",
-  "calm": "Calm",
-  "relaxingEvening": "Relaxing evening",
-  "yesterday": "Yesterday",
-  "tired": "Tired",
-  "needMoreSleep": "Need more sleep",
-  "daysAgo": "{days} days ago",
-  "trackingMoodHelps": "Tracking your mood helps you understand your well-being.",
-  "great": "Great",
-  "good": "Good",
-  "okay": "Okay",
-  "moodTrendsLast7Days": "Mood trends (last 7 days)",
-  "mostlyPositiveMoods": "Mostly positive moods",
-  "selfCareSuggestions": "Self-care suggestions",
-  "takeShortWalk": "Take a short walk",
-  "practiceDeepBreathing": "Practice deep breathing",
-  "listenToCalmingMusic": "Listen to calming music",
-  "connectWithLovedOnes": "Connect with loved ones",
   "doctors": "Doctors",
   "findDoctors": "find doctors by name or speciality",
   "useCurrentLocation": "Use current location",
@@ -375,431 +446,7 @@
   "phoneNumber": "Phone Number",
   "openingHours": "Opening Hours",
   "callNow": "Call Now",
-  "all": "All",
-  "taken": "Taken",
-  "missed": "Missed",
-  "take": "Take",
-  "noMedicinesFound": "No medicines found",
-  "pleaseLoginToViewPlan": "Please log in to view your plan",
-  "selectColor": "Select Color",
-  "selectSize": "Select Size",
-  "addToCart": "Add to Cart",
-  "buyNow": "Buy Now",
-  "description": "Description",
-  "noDescriptionAvailable": "No description available",
-  "specifications": "Specifications",
-  "customerReviews": "Customer Reviews",
-  "seeAll": "see all",
-  "completeYourOrder": "Complete Your Order",
-  "orderSummary": "Order Summary",
-  "product": "Product",
-  "size": "Size",
-  "qty": "Qty",
-  "subtotal": "Subtotal",
-  "deliveryFee": "Delivery Fee",
-  "total": "Total",
-  "deliveryInformation": "Delivery Information",
-  "fullName": "Full Name",
-  "enterYourFullName": "Enter your full name",
-  "phoneNumber": "Phone Number",
-  "enterYourPhoneNumber": "Enter your phone number",
-  "deliveryAddress": "Delivery Address",
-  "streetAddressApartment": "Street address, apartment, etc.",
-  "city": "City",
-  "enterYourCity": "Enter your city",
-  "specialInstructions": "Special Instructions (Optional)",
-  "addDeliveryNotes": "Add delivery notes, special requests...",
-  "paymentMethod": "Payment Method",
-  "cashOnDelivery": "Cash on Delivery",
-  "creditDebitCard": "Credit / Debit Card",
-  "digitalWallet": "Digital Wallet",
-  "placeOrder": "Place Order",
-  "orderPlacedSuccessfully": "Order {orderId} placed successfully!",
-  "@orderPlacedSuccessfully": {
-    "placeholders": {
-      "orderId": {
-        "type": "String"
-      }
-    }
-  },
-  "yourInformationIsSecure": "Your information is secure and encrypted",
-  "openNow": "Open Now",
-  "nausea": "Nausea",
-  "headache": "Headache",
-  "backPain": "Back pain",
-  "swelling": "Swelling",
-  "fatigue": "Fatigue",
-  "dizziness": "Dizziness",
-  "heartburn": "Heartburn",
-  "legCramps": "Leg cramps",
-  "other": "Other",
-  "pleaseSelectSymptom": "Please select a symptom",
-  "pleaseSelectSeverity": "Please select severity",
-  "symptomLoggedSuccessfully": "Symptom logged successfully!",
-  "addSymptom": "Add Symptom",
-  "symptomType": "Symptom type",
-  "selectSymptom": "Select symptom",
-  "specifySymptom": "Specify symptom",
-  "pleaseSpecifySymptom": "Please specify the symptom",
-  "severity": "Severity",
-  "mild": "Mild",
-  "moderate": "Moderate",
-  "severe": "Severe",
-  "duration": "Duration",
-  "pleaseEnterDuration": "Please enter duration",
-  "notes": "Notes",
-  "veryHappy": "Very happy",
-  "happy": "Happy",
-  "neutral": "Neutral",
-  "sad": "Sad",
-  "verySad": "Very sad",
-  "pleaseSelectMood": "Please select a mood",
-  "moodLoggedSuccessfully": "Mood logged successfully!",
-  "howAreYouFeeling": "How are you feeling?",
-  "energyLevel": "Energy level",
-  "low": "Low",
-  "high": "High",
-  "sleepQuality": "Sleep quality",
-  "howWasYourDay": "How was your day?",
-  "prePregnancyBMI": "Pre-pregnancy BMI",
-  "normalBMI": "Normal",
-  "currentGain": "Current gain",
-  "targetRange": "Target range",
-  "expected": "Expected",
-  "howAreYouFeelingToday": "How are you feeling today?",
-  "recentEntries": "Recent entries",
-  "feltEnergeticToday": "Felt energetic today",
-  "hoursAgo": "{hours} hours ago",
-  "calm": "Calm",
-  "relaxingEvening": "Relaxing evening",
-  "yesterday": "Yesterday",
-  "tired": "Tired",
-  "needMoreSleep": "Need more sleep",
-  "daysAgo": "{days} days ago",
-  "trackingMoodHelps": "Tracking your mood helps you understand your well-being.",
-  "great": "Great",
-  "good": "Good",
-  "okay": "Okay",
-  "moodTrendsLast7Days": "Mood trends (last 7 days)",
-  "mostlyPositiveMoods": "Mostly positive moods",
-  "selfCareSuggestions": "Self-care suggestions",
-  "takeShortWalk": "Take a short walk",
-  "recentLabResults": "Recent Lab Results",
-  "keepLabResultsOrganized": "Keep your lab results organized for better tracking.",
-  "viewAllLabResults": "View All Lab Results",
-  "riskFactorsToMonitor": "Risk factors to monitor",
-  "lowRisk": "Low risk",
-  "withinNormalRange": "Within normal range",
-  "gestationalDiabetes": "Gestational diabetes",
-  "glucoseLevelsNormal": "Glucose levels normal",
-  "preeclampsia": "Preeclampsia",
-  "noProteinInUrine": "No protein in urine",
-  "warningSignsToWatch": "Warning signs to watch",
-  "severeHeadache": "Severe headache",
-  "blurredVision": "Blurred vision",
-  "severeAbdominalPain": "Severe abdominal pain",
-  "decreasedFetalMovement": "Decreased fetal movement",
-  "vaginalBleeding": "Vaginal bleeding",
-  "emergencyCall": "Emergency Call",
-  "areYouSureCall911": "Are you sure you want to call 911?",
-  "couldNotMakeEmergencyCall": "Could not make emergency call.",
-  "glucoseLevelsNormal": "Glucose levels are normal",
-  "ifYouExperienceWarnings": "If you experience any warning signs, contact your healthcare provider immediately.",
-  "allIndicatorsNormal": "All indicators are normal",
-  "emergencyContact": "Emergency Contact",
-  "overallRiskLevel": "Overall risk level",
-  "call911OrProvider": "Call 911 or your healthcare provider",
-  "recentSymptoms": "Recent Symptoms",
-  "logNewSymptom": "Log new symptom",
-  "symptomFrequency": "Symptom frequency",
-  "swollenFeet": "Swollen feet",
-  "sleepIssues": "Sleep issues",
-  "times": "times",
-  "commonSymptomsWeek24": "Common symptoms at week 24 include back pain and swelling.",
-  "viewAllSymptoms": "View All Symptoms",
-  "weightProgress": "Weight Progress",
-  "onTrack": "On Track",
-  "measurementSavedSuccessfully": "Measurement saved successfully!",
-  "addMeasurement": "Add Measurement",
-  "weightKg": "Weight (kg)",
-  "pleaseEnterWeight": "Please enter your weight",
-  "pleaseEnterValidNumber": "Please enter a valid number",
-  "weightRange": "Weight must be between 30 and 200 kg",
-  "heartRateBpm": "Heart Rate (bpm)",
-  "pleaseEnterHeartRate": "Please enter your heart rate",
-  "heartRateRange": "Heart rate must be between 40 and 200 bpm",
-  "systolic": "Systolic",
-  "required": "Required",
-  "invalid": "Invalid",
-  "systolicRange": "Systolic must be between 70 and 190",
-  "diastolic": "Diastolic",
-  "diastolicRange": "Diastolic must be between 40 and 130",
-  "normalRangeLabel": "Normal range",
-  "uploadLabResults": "Upload Lab Results",
-  "nextLabAppointment": "Next Lab Appointment",
-  "navHome": "Home",
-  "navTrack": "Track",
-  "navHealth": "Health",
-  "navPlan": "Plan",
-  "navMarket": "Market",
-  "hello": "Hello",
-  "done": "DONE",
-  "daysToGo": "DAYS TO GO",
-  "weekLabel": "WEEK",
-  "day": "day",
-  "days": "days",
-  "more": "More",
-  "ourTips": "Our Tips",
-  "followBestPractices": "follow best practices",
-  "ourDoctors": "Our Doctors",
-  "findTheBestDoctor": "find the best doctor",
-  "upComing": "Up coming",
-  "noUpcomingEvents": "No upcoming events",
-  "addAppointmentsInPlan": "Add appointments in Plan",
-  "overdue": "Overdue",
-  "inMinutes": "In {minutes} minutes",
-  "@inMinutes": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "inHours": "In {hours} hours",
-  "@inHours": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "todayAt": "Today at {time}",
-  "@todayAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "tomorrowAt": "Tomorrow at {time}",
-  "@tomorrowAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "at": "at",
-  "myMoods": "My Moods",
-  "noMoodsLoggedYet": "No moods logged yet!",
-  "tapLogMoodToStart": "Tap \"Log Mood\" to start.",
-  "noData": "No data",
-  "pleaseLogInToSaveMood": "Please log in to save mood",
-  "mySymptoms": "My Symptoms",
-  "tapLogNewSymptomToStart": "Tap \"Log New Symptom\" to start.",
-  "myMeasurements": "My Measurements",
-  "tapAddMeasurementToStart": "Tap \"Add Measurement\" to start.",
-  "myLabResults": "My Lab Results",
-  "uploadFirstLabResult": "Upload your first lab result to get started.",
-  "labPapersGallery": "Lab Papers Gallery",
-  "uploadLabReportsToSee": "Upload lab reports to see them here",
-  "exportingLabPapers": "Exporting lab papers...",
-  "healthRiskAssessment": "Health Risk Assessment",
-  "analyzingYourHealthData": "Analyzing your health data...",
-  "unableToAssessRisk": "Unable to assess risk",
-  "noAssessmentAvailable": "No assessment available",
-  "viewAllMeasurements": "View All Measurements",
-  "viewAllMoods": "View All Moods",
-  "viewAllLabPapers": "View All Lab Papers",
-  "noWeightDataAvailable": "No weight data available",
-  "monitor": "Monitor",
-  "cameraPermissionDenied": "Camera permission denied",
-  "photosPermissionDenied": "Photos permission denied",
-  "failedToPickImage": "Failed to pick image: {error}",
-  "@failedToPickImage": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "failedToPickPDF": "Failed to pick PDF: {error}",
-  "@failedToPickPDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "reviewEditLabResults": "Review & Edit Lab Results",
-  "imageNotAvailable": "Image not available",
-  "addTest": "Add Test",
-  "saveResults": "Save {count} Result(s)",
-  "@saveResults": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "labResultsSavedSuccessfully": "Lab results saved successfully!",
-  "failedToSaveResults": "Failed to save results: {error}",
-  "@failedToSaveResults": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "noResultsToSave": "No results to save",
-  "pdfLabReport": "PDF Lab Report",
-  "savePDFReference": "Save PDF Reference",
-  "enterDataManually": "Enter Data Manually",
-  "pdfSavedAndUploaded": "PDF saved and uploaded!",
-  "failedToSavePDF": "Failed to save PDF: {error}",
-  "@failedToSavePDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "extractLabResults": "Extract Lab Results",
-  "extractingTextFromImage": "Extracting text from image...",
-  "viewRawText": "View Raw Text",
-  "noDataExtracted": "No Data Extracted",
-  "saveImageOnly": "Save Image Only",
-  "imageSaved": "Image saved!  You can add details later.",
-  "enterManually": "Enter Manually",
-  "noImageSaved": "No image saved.  Please try again.",
-  "manualLabEntry": "Manual Lab Entry",
-  "labResultAddedSuccessfully": "Lab result added successfully!",
-  "exporting": "Exporting.. .",
-  "labResultImage": "Lab Result Image",
-  "deleteResult": "Delete Result",
-  "areYouSureDeleteResult": "Are you sure you want to delete {testName}?",
-  "@areYouSureDeleteResult": {
-    "placeholders": {
-      "testName": {
-        "type": "String"
-      }
-    }
-  },
-  "delete": "Delete",
-  "exportLabResults": "Export Lab Results",
-  "exportAllLabResultsAsZIP": "Export all lab result images as a ZIP file?",
-  "export": "Export",
-  "labResultUpdatedSuccessfully": "Lab result updated successfully",
-  "errorUpdatingResult": "Error updating result: {error}",
-  "@errorUpdatingResult": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "editLabResult": "Edit Lab Result",
-  "errorCallingContact": "Error calling {contactName}: {error}",
-  "@errorCallingContact": {
-    "placeholders": {
-      "contactName": {
-        "type": "String"
-      },
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "iDontNeedThisContact": "I don't need this contact",
-  "saveEmergencyContacts": "Save",
-  "setupEmergencyContacts": "Setup Emergency Contacts",
-  "setupContactsDescription": "Add emergency contacts for quick access during urgent situations.",
-  "partner": "Partner",
-  "healthcareProvider": "Healthcare Provider",
-  "parent": "Parent/Family",
-  "actionNeeded": "ACTION NEEDED",
-  "detectedPatterns": "Detected Patterns",
-  "recommendations": "Recommendations",
-  "aiAnalysis": "AI Analysis",
-  "aiRiskAssessmentDisclaimer": "⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.",
-  "riskLevel": "RISK",
-  "none": "NONE",
-  "normalRisk": "Normal",
-  "lowRiskLevel": "Low",
-  "mediumRisk": "Medium",
-  "highRisk": "High",
-  "urgentRisk": "Urgent",
-  "noSignificantConcerns": "No significant concerns",
-  "heartRateProgress": "Heart Rate Progress",
-  "bloodPressureTrend": "Blood Pressure Trend",
-  "noSymptomLogged": "No symptoms logged yet",
-  "noMoodsLogged": "No moods logged yet",
-  "noLabResultsYet": "No lab results yet",
-  "lowStatus": "Low",
-  "highStatus": "High",
-  "viewAllLabPapers": "View All Lab Papers",
-  "systolic": "Systolic",
-  "diastolic": "Diastolic",
-  "noSymptomDataAvailable": "No symptom data available",
-  "noNotes": "No notes",
-  "noMoodDataAvailable": "No mood data available",
-  "noSignificantConcernsMessage": "No significant concerns",
-  "noAssessmentDetailsAvailable": "No assessment details available",
-  "minAgo": "{minutes} min ago",
-  "@minAgo": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgo": "{hours} hours ago",
-  "@hoursAgo": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgo": "{days} days ago",
-  "@daysAgo": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "yesterday": "Yesterday",
-  "minAgoShort": "{minutes}m ago",
-  "@minAgoShort": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgoShort": "{hours}h ago",
-  "@hoursAgoShort": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgoShort": "{days}d ago",
-  "@daysAgoShort": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "underweight": "Underweight",
-  "overweight": "Overweight",
-  "obese": "Obese",
-  "normalBMI": "Normal",
-  "mixedMoodsCareMessage": "Mixed moods - take care of yourself!",
-  "pain": "pain",
-  "sleep": "sleep",
-  "feet": "feet"
+  "pregnancyPillow": "Pregnancy Pillow",
+  "essentialNutrientsMealPlanning": "Essential nutrients and meal planning for a healthy pregnancy",
+  "fiveMinRead": "5 min read"
 }

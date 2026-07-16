@@ -1,15 +1,109 @@
 {
-  "locationPermissionRequired": "Autorisation de localisation requise",
-  "locationPermissionMessage": "Nous avons besoin d'accéder à votre localisation pour afficher les médecins à proximité.",
-  "gettingLocation": "Obtention de votre position...",
-  "locationPermissionDenied": "Autorisation de localisation refusée",
-  "locationUpdated": "Localisation mise à jour",
-  "retry": "Réessayer",
-  "showingDoctorsNearYou": "Affichage des médecins près de chez vous",
-  "selectLocation": "Sélectionner l'emplacement",
-  "searchWilaya": "Rechercher une wilaya...",
-  "full_name": "Nom complet",
-  "enable_notifications": "Activer les notifications",
+  "hello": "Bonjour",
+  "ourDoctors": "Nos Médecins",
+  "findTheBestDoctor": "trouvez le meilleur médecin",
+  "upComing": "À venir",
+  "seeAll": "voir tout",
+  "today": "Aujourd'hui",
+  "tomorrow": "Demain",
+  "at": "à",
+  "overdue": "En retard",
+  "in_": "Dans",
+  "minutes": "minutes",
+  "hours": "heures",
+  "noUpcomingEvents": "Pas d'événements à venir",
+  "addAppointmentsInPlan": "Ajouter des rendez-vous au Plan",
+  "getInTouch": "Nous Contacter",
+  "contactFormDescription": "Avez-vous une question ou un retour? Nous aimerions avoir de vos nouvelles. Remplissez le formulaire ci-dessous et nous vous répondrons dans les 24 heures.",
+  "supportEmail": "support@momcare.com",
+  "supportPhone": "+1 (800) 123-4567",
+  "supportHours": "Lun-Ven, 9h-18h EST",
+  "yourNameLabel": "Votre Nom",
+  "enterYourName": "Entrez votre nom",
+  "emailAddressLabel": "Adresse E-mail",
+  "emailPlaceholder": "votre.email@example.com",
+  "subjectLabel": "Sujet",
+  "whatIsThisAbout": "De quoi s'agit-il?",
+  "messageLabel": "Message",
+  "tellUsHowWeCanHelp": "Dites-nous comment nous pouvons vous aider...",
+  "sendMessage": "Envoyer le Message",
+  "faqIntroText": "Choisissez votre langue préférée",
+  "faqQuestion1": "Comment puis-je définir des rappels de rendez-vous?",
+  "faqAnswer1": "Vous pouvez définir des rappels de rendez-vous en accédant à la section \"Rendez-vous\", en sélectionnant votre visite prévue et en appuyant sur l'option \"Définir un rappel\". Vous pourrez choisir un intervalle de temps (par exemple, 1 jour ou 1 heure avant).",
+  "faqQuestion2": "Mes données de santé sont-elles sécurisées?",
+  "faqAnswer2": "Oui. Nous utilisons le chiffrement de pointe et suivons les directives de conformité HIPAA/GDPR pour assurer que vos informations de santé personnelles restent privées et sécurisées. Les données sont stockées de manière anonyme sur des serveurs sécurisés.",
+  "faqQuestion3": "Comment puis-je changer ma date d'accouchement prévue?",
+  "faqAnswer3": "Si vous suivez une grossesse, vous pouvez modifier votre date d'accouchement prévue (EDD) dans les paramètres \"Profil\" ou \"Suivi\". Appuyez sur le champ de date actuel pour entrer manuellement une nouvelle date en fonction de votre dernière échographie ou de la recommandation de votre médecin.",
+  "faqQuestion4": "Puis-je exporter mes dossiers médicaux?",
+  "faqAnswer4": "Oui! Allez à Paramètres > Données et confidentialité > Télécharger mes données pour exporter toutes vos informations dans un format lisible.",
+  "faqQuestion5": "Comment puis-je contacter le support?",
+  "faqAnswer5": "Vous pouvez contacter le support via le bouton \"Contacter le support\" en bas de cet écran, ou vous pouvez nous envoyer un e-mail directement à support@appname.com. Nous répondons généralement dans les 24 heures.",
+  "faqQuestion6": "Quelles langues sont prises en charge?",
+  "faqAnswer6": "Actuellement, l'application prend en charge l'anglais, l'espagnol, le français et l'allemand. Vous pouvez modifier votre langue préférée dans le menu \"Paramètres de l'application\".",
+  "stillHaveQuestions": "Vous avez encore des questions?",
+  "contactSupport": "Contacter le support",
+  "faq": "FAQ",
+  "appName": "Gestanéa",
+  "appVersion": "Version 2.1.0",
+  "appDescription": "Votre compagnon de confiance à travers la grossesse et la maternité. Suivez votre parcours, obtenez des informations personnalisées et connectez-vous avec une communauté solidaire.",
+  "activeUsersCount": "100K+",
+  "activeUsers": "Utilisateurs Actifs",
+  "appRatingValue": "4.8★",
+  "appRating": "Évaluation de l'Application",
+  "versionInfo": "Informations de Version",
+  "versionBuild": "Build 2.1.0 (245)",
+  "madeWithLove": "Créé avec Amour",
+  "forMomsEverywhere": "Pour les mamans partout",
+  "copyrightText": "© 2025 Gestanéa. Tous droits réservés.",
+  "yourPrivacyMatters": "Votre Vie Privée Est Importante",
+  "privacyCommitmentDescription": "Nous nous engageons à protéger vos informations personnelles et à assurer la transparence sur la manière dont nous utilisons vos données.",
+  "lastUpdatedPrivacy": "Dernière mise à jour : 4 décembre 2025",
+  "dataCollection": "Collecte de Données",
+  "dataCollectionDescription": "Nous collectons uniquement les informations essentielles nécessaires pour vous offrir la meilleure expérience de suivi de santé. Cela inclut vos informations de profil, vos mesures de santé et vos données d'utilisation de l'application.",
+  "dataSecurity": "Sécurité des Données",
+  "dataSecurityDescription": "Vos données sont chiffrées à l'aide de protocoles standards de l'industrie. Nous employons plusieurs couches de sécurité pour protéger vos informations de santé personnelles contre l'accès non autorisé.",
+  "dataUsage": "Utilisation des Données",
+  "dataUsageDescription": "Nous utilisons vos données pour personnaliser votre expérience d'application, fournir des informations de santé pertinentes et l'améliorer. Nous ne vendons pas les données personnelles à des tiers.",
+  "yourRights": "Vos Droits",
+  "yourRightsDescription": "Vous avez le droit d'accéder, de mettre à jour ou de demander la suppression de vos données. Vous pouvez gérer les paramètres de confidentialité dans l'application ou contacter le support.",
+  "weAreHereToHelp": "Nous sommes là pour vous aider",
+  "chooseSupportOptionDescription": "Choisissez l'option de support qui vous convient le mieux. Notre équipe est disponible 24h/24 et 7j/7 pour vous aider.",
+  "knowledgeBase": "Base de Connaissances",
+  "browseArticlesAndGuides": "Parcourir les articles et guides",
+  "liveChat": "Chat en direct",
+  "chatWithSupportTeam": "Discutez avec notre équipe d'assistance",
+  "videoTutorials": "Tutoriels Vidéo",
+  "watchStepByStepGuides": "Regarder les guides étape par étape",
+  "emailSupport": "Assistance par E-mail",
+  "emailSupportAddress": "support@momcare.com",
+  "phoneSupport": "Assistance Téléphonique",
+  "phoneSupportNumber": "1-800-MOM-CARE",
+  "communityForum": "Forum Communautaire",
+  "connectWithOtherUsers": "Connectez-vous avec d'autres utilisateurs",
+  "secureYourAccount": "Sécurisez Votre Compte",
+  "enableSecurityFeaturesDescription": "Activez des fonctions de sécurité supplémentaires pour protéger vos informations de santé personnelles",
+  "changePassword": "Changer le mot de passe",
+  "lastChangedDaysAgo": "Dernière modification il y a 30 jours",
+  "biometricAuthentication": "Authentification Biométrique",
+  "useFingerprintOrFaceId": "Utilisez l'empreinte digitale ou Face ID pour déverrouiller",
+  "twoFactorAuthentication": "Authentification à Deux Facteurs",
+  "addExtraLayerSecurity": "Ajouter une couche de sécurité supplémentaire",
+  "autoLock": "Verrouillage Automatique",
+  "lockAppAfterInactivity": "Verrouiller l'application après 5 minutes d'inactivité",
+  "manageNotificationPreferences": "Gérez vos préférences de notification",
+  "pushNotifications": "Notifications Push",
+  "receiveNotificationsOnDevice": "Recevez des notifications sur votre appareil",
+  "emailNotifications": "Notifications par e-mail",
+  "getUpdatesViaEmail": "Recevez des mises à jour par e-mail",
+  "appointmentReminders": "Rappels de rendez-vous",
+  "neverMissAppointment": "Ne manquez jamais un rendez-vous médical",
+  "healthTips": "Conseils de santé",
+  "dailyWellnessRecommendations": "Recommandations quotidiennes de bien-être",
+  "weeklyReports": "Rapports hebdomadaires",
+  "healthProgressSummary": "Résumé de vos progrès de santé",
+  "vitaminReminders": "Rappels de vitamines",
+  "dontForgetSupplements": "N'oubliez pas vos suppléments",
+  "choosePreferredLanguage": "Choisissez votre langue préférée",
   "phone": "Téléphone",
   "country": "Pays",
   "security": "Sécurité",
@@ -20,9 +114,7 @@
   "privacy_policy": "Politique de confidentialité",
   "about_app": "À propos de l'application",
   "change": "Modifier",
-  "logout": "Se déconnecter",
-  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ? ",
-  "cancel": "Annuler",
+  "logout_confirmation": "Voulez-vous vraiment vous déconnecter ?",
   "unknown": "Inconnu",
   "profile": "Profil",
   "profile_updated": "Profil mis à jour",
@@ -30,6 +122,7 @@
   "change_profile_photo": "Changer la photo de profil",
   "save_changes": "Enregistrer les modifications",
   "save": "Enregistrer",
+  "enable_notifications": "Activer les notifications",
   "plan": "Plan",
   "sundayShort": "D",
   "mondayShort": "L",
@@ -231,7 +324,6 @@
   "maternityWear": "Vêtements de maternité",
   "painRelief": "Soulagement de la douleur",
   "skinCare": "Soins de la peau",
-  "pregnancyPillow": "Coussin de grossesse",
   "backSupportBelt": "Ceinture de soutien dorsal",
   "searchHint": "Trouvez ce dont vous avez besoin.. .",
   "dontMissOut": "Ne ratez pas ! ",
@@ -285,28 +377,6 @@
   "measurement": "Mesure",
   "healthTipMessage": "Bravo ! Vous maintenez un rythme de prise de poids sain. Continuez votre alimentation équilibrée et vos exercices doux.",
   "onTrack": "Sur la bonne voie",
-  "moodTab": "Humeur",
-  "recentEntries": "Entrées récentes",
-  "howAreYouFeelingToday": "Comment vous sentez-vous aujourd'hui ?",
-  "feltEnergeticToday": "Je me suis senti énergique aujourd'hui",
-  "hoursAgo": "il y a {hours} heures",
-  "calm": "Calme",
-  "relaxingEvening": "Soirée relaxante",
-  "yesterday": "Hier",
-  "tired": "Fatigué(e)",
-  "needMoreSleep": "Besoin de plus de sommeil",
-  "daysAgo": "il y a {days} jours",
-  "trackingMoodHelps": "Suivre votre humeur vous aide à comprendre votre bien-être.",
-  "great": "Super",
-  "good": "Bien",
-  "okay": "Moyen",
-  "moodTrendsLast7Days": "Tendances de l'humeur (7 derniers jours)",
-  "mostlyPositiveMoods": "Humeurs majoritairement positives",
-  "selfCareSuggestions": "Suggestions d'auto-soin",
-  "takeShortWalk": "Faire une courte promenade",
-  "practiceDeepBreathing": "Pratiquer la respiration profonde",
-  "listenToCalmingMusic": "Écouter de la musique apaisante",
-  "connectWithLovedOnes": "Se connecter avec ses proches",
   "doctors": "Médecins",
   "findDoctors": "trouver des médecins par nom ou spécialité",
   "useCurrentLocation": "Utiliser ma position actuelle",
@@ -387,314 +457,7 @@
   "phoneNumber": "Numéro de téléphone",
   "openingHours": "Heures d'ouverture",
   "callNow": "Appeler maintenant",
-  "take": "Prendre",
-  "noMedicinesFound": "Aucun médicament trouvé",
-  "pleaseLoginToViewPlan": "Veuillez vous connecter pour voir votre plan",
-  "selectColor": "Sélectionnez la couleur",
-  "selectSize": "Sélectionnez la taille",
-  "addToCart": "Ajouter au panier",
-  "buyNow": "Acheter maintenant",
-  "description": "Description",
-  "noDescriptionAvailable": "Aucune description disponible",
-  "specifications": "Spécifications",
-  "customerReviews": "Avis des clientes",
-  "seeAll": "voir tout",
-  "completeYourOrder": "Complétez votre commande",
-  "orderSummary": "Résumé de la commande",
-  "product": "Produit",
-  "size": "Taille",
-  "qty": "Qté",
-  "subtotal": "Sous-total",
-  "deliveryFee": "Frais de livraison",
-  "total": "Total",
-  "deliveryInformation": "Informations de livraison",
-  "fullName": "Nom complet",
-  "enterYourFullName": "Entrez votre nom complet",
-  "phoneNumber": "Numéro de téléphone",
-  "enterYourPhoneNumber": "Entrez votre numéro de téléphone",
-  "deliveryAddress": "Adresse de livraison",
-  "streetAddressApartment": "Adresse, appartement, etc.",
-  "city": "Ville",
-  "enterYourCity": "Entrez votre ville",
-  "specialInstructions": "Instructions spéciales (Facultatif)",
-  "addDeliveryNotes": "Ajoutez des notes de livraison, demandes spéciales...",
-  "paymentMethod": "Méthode de paiement",
-  "cashOnDelivery": "Paiement à la livraison",
-  "creditDebitCard": "Carte de crédit / débit",
-  "digitalWallet": "Portefeuille numérique",
-  "placeOrder": "Passer la commande",
-  "orderPlacedSuccessfully": "Commande {orderId} passée avec succès !",
-  "@orderPlacedSuccessfully": {
-    "placeholders": {
-      "orderId": {
-        "type": "String"
-      }
-    }
-  },
-  "yourInformationIsSecure": "Vos informations sont sécurisées et cryptées",
-  "openNow": "Ouvert maintenant",
-  "navHome": "Accueil",
-  "navTrack": "Suivre",
-  "navHealth": "Santé",
-  "navPlan": "Plan",
-  "navMarket": "Marché",
-  "hello": "Bonjour",
-  "done": "FAIT",
-  "daysToGo": "JOURS RESTANTS",
-  "weekLabel": "SEMAINE",
-  "day": "jour",
-  "days": "jours",
-  "more": "Plus",
-  "ourTips": "Nos Conseils",
-  "followBestPractices": "suivre les meilleures pratiques",  "ourDoctors": "Nos médecins",
-  "findTheBestDoctor": "trouver le meilleur médecin",
-  "upComing": "À venir",
-  "noUpcomingEvents": "Aucun événement à venir",
-  "addAppointmentsInPlan": "Ajouter des rendez-vous dans le Plan",
-  "overdue": "En retard",
-  "inMinutes": "Dans {minutes} minutes",
-  "@inMinutes": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "inHours": "Dans {hours} heures",
-  "@inHours": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "todayAt": "Aujourd'hui à {time}",
-  "@todayAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "tomorrowAt": "Demain à {time}",
-  "@tomorrowAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "at": "à",
-  "myMoods": "Mes humeurs",
-  "noMoodsLoggedYet": "Aucune humeur enregistrée !",
-  "tapLogMoodToStart": "Appuyez sur \"Enregistrer l'humeur\" pour commencer.",
-  "noData": "Aucune donnée",
-  "pleaseLogInToSaveMood": "Veuillez vous connecter pour enregistrer l'humeur",
-  "mySymptoms": "Mes symptômes",
-  "tapLogNewSymptomToStart": "Appuyez sur \"Enregistrer un nouveau symptôme\" pour commencer.",
-  "myMeasurements": "Mes mesures",
-  "tapAddMeasurementToStart": "Appuyez sur \"Ajouter une mesure\" pour commencer.",
-  "myLabResults": "Mes résultats de laboratoire",
-  "uploadFirstLabResult": "Téléchargez votre premier résultat de laboratoire pour commencer.",
-  "labPapersGallery": "Galerie de documents de laboratoire",
-  "uploadLabReportsToSee": "Téléchargez des rapports de laboratoire pour les voir ici",
-  "exportingLabPapers": "Export des documents de laboratoire...",
-  "healthRiskAssessment": "Évaluation des risques de santé",
-  "analyzingYourHealthData": "Analyse de vos données de santé...",
-  "unableToAssessRisk": "Impossible d'évaluer le risque",
-  "noAssessmentAvailable": "Aucune évaluation disponible",
-  "viewAllMeasurements": "Voir toutes les mesures",
-  "viewAllMoods": "Voir toutes les humeurs",
-  "viewAllLabPapers": "Voir tous les documents de laboratoire",
-  "noWeightDataAvailable": "Aucune donnée de poids disponible",
-  "monitor": "Surveiller",
-  "cameraPermissionDenied": "Permission de caméra refusée",
-  "photosPermissionDenied": "Permission de photos refusée",
-  "failedToPickImage": "Échec de la sélection de l'image : {error}",
-  "@failedToPickImage": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "failedToPickPDF": "Échec de la sélection du PDF : {error}",
-  "@failedToPickPDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "reviewEditLabResults": "Réviser et modifier les résultats de laboratoire",
-  "imageNotAvailable": "Image non disponible",
-  "addTest": "Ajouter un test",
-  "saveResults": "Enregistrer {count} résultat(s)",
-  "@saveResults": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "labResultsSavedSuccessfully": "Résultats de laboratoire enregistrés avec succès !",
-  "failedToSaveResults": "Échec de l'enregistrement des résultats : {error}",
-  "@failedToSaveResults": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "noResultsToSave": "Aucun résultat à enregistrer",
-  "pdfLabReport": "Rapport de laboratoire PDF",
-  "savePDFReference": "Enregistrer la référence PDF",
-  "enterDataManually": "Saisir les données manuellement",
-  "pdfSavedAndUploaded": "PDF enregistré et téléchargé !",
-  "failedToSavePDF": "Échec de l'enregistrement du PDF : {error}",
-  "@failedToSavePDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "extractLabResults": "Extraire les résultats de laboratoire",
-  "extractingTextFromImage": "Extraction du texte de l'image...",
-  "viewRawText": "Voir le texte brut",
-  "noDataExtracted": "Aucune donnée extraite",
-  "saveImageOnly": "Enregistrer uniquement l'image",
-  "imageSaved": "Image enregistrée ! Vous pouvez ajouter des détails plus tard.",
-  "enterManually": "Saisir manuellement",
-  "noImageSaved": "Aucune image enregistrée. Veuillez réessayer.",
-  "manualLabEntry": "Saisie manuelle de laboratoire",
-  "labResultAddedSuccessfully": "Résultat de laboratoire ajouté avec succès !",
-  "exporting": "Exportation...",
-  "labResultImage": "Image du résultat de laboratoire",
-  "deleteResult": "Supprimer le résultat",
-  "areYouSureDeleteResult": "Êtes-vous sûr de vouloir supprimer {testName} ?",
-  "@areYouSureDeleteResult": {
-    "placeholders": {
-      "testName": {
-        "type": "String"
-      }
-    }
-  },
-  "delete": "Supprimer",
-  "exportLabResults": "Exporter les résultats de laboratoire",
-  "exportAllLabResultsAsZIP": "Exporter toutes les images de résultats de laboratoire dans un fichier ZIP ?",
-  "export": "Exporter",
-  "labResultUpdatedSuccessfully": "Résultat de laboratoire mis à jour avec succès",
-  "errorUpdatingResult": "Erreur lors de la mise à jour du résultat : {error}",
-  "@errorUpdatingResult": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "editLabResult": "Modifier le résultat de laboratoire",
-  "errorCallingContact": "Erreur lors de l'appel de {contactName} : {error}",
-  "@errorCallingContact": {
-    "placeholders": {
-      "contactName": {
-        "type": "String"
-      },
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "iDontNeedThisContact": "Je n'ai pas besoin de ce contact",
-  "saveEmergencyContacts": "Enregistrer",
-  "setupEmergencyContacts": "Configurer les contacts d'urgence",
-  "setupContactsDescription": "Ajoutez des contacts d'urgence pour un accès rapide en cas de situations urgentes.",
-  "partner": "Partenaire",
-  "healthcareProvider": "Fournisseur de soins de santé",
-  "parent": "Parent/Famille",
-  "actionNeeded": "ACTION REQUISE",
-  "detectedPatterns": "Schémas détectés",
-  "recommendations": "Recommandations",
-  "aiAnalysis": "Analyse IA",
-  "aiRiskAssessmentDisclaimer": "⚠️ Évaluation des risques générée par l'IA. Ce n'est pas un diagnostic médical. Consultez toujours votre professionnel de la santé pour toute préoccupation.",
-  "riskLevel": "RISQUE",
-  "none": "AUCUN",
-  "normalRisk": "Normal",
-  "lowRiskLevel": "Faible",
-  "mediumRisk": "Moyen",
-  "highRisk": "Élevé",
-  "urgentRisk": "Urgent",
-  "noSignificantConcerns": "Aucune préoccupation significative",
-  "heartRateProgress": "Progression de la fréquence cardiaque",
-  "bloodPressureTrend": "Tendance de la pression artérielle",
-  "noSymptomLogged": "Aucun symptôme enregistré",
-  "noMoodsLogged": "Aucune humeur enregistrée",
-  "noLabResultsYet": "Aucun résultat de laboratoire pour le moment",
-  "lowStatus": "Bas",
-  "highStatus": "Élevé",
-  "viewAllLabPapers": "Afficher tous les documents de laboratoire",
-  "systolic": "Systolique",
-  "diastolic": "Diastolique",
-  "noSymptomDataAvailable": "Aucune donnée de symptôme disponible",
-  "noNotes": "Aucune note",
-  "noMoodDataAvailable": "Aucune donnée d'humeur disponible",
-  "noSignificantConcernsMessage": "Aucune préoccupation significative",
-  "noAssessmentDetailsAvailable": "Aucun détail d'évaluation disponible",
-  "minAgo": "il y a {minutes} min",
-  "@minAgo": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgo": "il y a {hours} heures",
-  "@hoursAgo": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgo": "il y a {days} jours",
-  "@daysAgo": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "yesterday": "Hier",
-  "minAgoShort": "il y a {minutes}m",
-  "@minAgoShort": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgoShort": "il y a {hours}h",
-  "@hoursAgoShort": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgoShort": "il y a {days}j",
-  "@daysAgoShort": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "underweight": "Insuffisance pondérale",
-  "overweight": "Surpoids",
-  "obese": "Obèse",
-  "normalBMI": "Normal",
-  "mixedMoodsCareMessage": "Humeurs mélangées - prenez soin de vous!",
-  "pain": "douleur",
-  "sleep": "sommeil",
-  "feet": "pieds"
+  "pregnancyPillow": "Oreiller de Grossesse",
+  "essentialNutrientsMealPlanning": "Nutriments essentiels et planification des repas pour une grossesse saine",
+  "fiveMinRead": "5 min de lecture"
 }

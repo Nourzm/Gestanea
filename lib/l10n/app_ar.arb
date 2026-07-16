@@ -1,24 +1,118 @@
 {
-  "locationPermissionRequired": "مطلوب إذن الموقع",
-  "locationPermissionMessage": "نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.",
-  "gettingLocation": "جارٍ تحديد موقعك...",
-  "locationPermissionDenied": "تم رفض إذن الموقع",
-  "locationUpdated": "تم تحديث الموقع",
-  "retry": "إعادة المحاولة",
-  "showingDoctorsNearYou": "عرض الأطباء القريبين منك",
-  "selectLocation": "اختر الموقع",
-  "searchWilaya": "ابحث عن ولاية...",
-  "full_name": "الاسم الكامل",
-  "enable_notifications": "تفعيل الإشعارات",
+  "hello": "مرحباً",
+  "ourDoctors": "أطبائنا",
+  "findTheBestDoctor": "ابحثي عن أفضل طبيب",
+  "upComing": "قادم",
+  "seeAll": "عرض الكل",
+  "today": "اليوم",
+  "tomorrow": "غداً",
+  "at": "في",
+  "overdue": "متأخر",
+  "in_": "في",
+  "minutes": "دقائق",
+  "hours": "ساعات",
+  "noUpcomingEvents": "لا توجد أحداث قادمة",
+  "addAppointmentsInPlan": "أضيفي المواعيد في الخطة",
+  "getInTouch": "تواصلي معنا",
+  "contactFormDescription": "هل لديك سؤال أو ملاحظة؟ نود سماع آرائك. ملي النموذج أدناه وسنرد عليك خلال 24 ساعة.",
+  "supportEmail": "support@momcare.com",
+  "supportPhone": "+1 (800) 123-4567",
+  "supportHours": "الاثنين-الجمعة، 9 صباحاً-6 مساءً",
+  "yourNameLabel": "اسمك",
+  "enterYourName": "أدخلي اسمك",
+  "emailAddressLabel": "عنوان البريد الإلكتروني",
+  "emailPlaceholder": "بريدك@example.com",
+  "subjectLabel": "الموضوع",
+  "whatIsThisAbout": "ما هو موضوع هذا؟",
+  "messageLabel": "الرسالة",
+  "tellUsHowWeCanHelp": "أخبرينا كيف يمكننا مساعدتك...",
+  "sendMessage": "إرسال الرسالة",
+  "appName": "جيستانيا",
+  "appVersion": "الإصدار 2.1.0",
+  "appDescription": "رفيقك الموثوق به عبر الحمل والأمومة. تابعي رحلتك واحصلي على رؤى شخصية والتقطي بمجتمع داعم.",
+  "activeUsersCount": "100K+",
+  "activeUsers": "المستخدمون النشطون",
+  "appRatingValue": "4.8★",
+  "appRating": "تقييم التطبيق",
+  "versionInfo": "معلومات الإصدار",
+  "versionBuild": "Build 2.1.0 (245)",
+  "madeWithLove": "مصنوع بحب",
+  "forMomsEverywhere": "لجميع الأمهات في كل مكان",
+  "copyrightText": "© 2025 جيستانيا. جميع الحقوق محفوظة.",
+  "faqIntroText": "اختر لغتك المفضلة",
+  "faqQuestion1": "كيف يمكنني تعيين تذكيرات المواعيد؟",
+  "faqAnswer1": "يمكنك تعيين تذكيرات المواعيد بالانتقال إلى قسم \"المواعيد\" وتحديد زيارتك المجدولة والنقر على خيار \"تعيين تذكير\". ستتمكن من اختيار فترة زمنية (على سبيل المثال، يوم واحد أو ساعة واحدة قبل).",
+  "faqQuestion2": "هل بيانات صحتي آمنة؟",
+  "faqAnswer2": "نعم. نحن نستخدم التشفير الرائد في الصناعة ونتابع إرشادات التوافق مع HIPAA / GDPR لضمان بقاء معلومات صحتك الشخصية خاصة وآمنة. يتم تخزين البيانات بشكل مجهول على خوادم آمنة.",
+  "faqQuestion3": "كيف يمكنني تغيير موعد ولادتي المتوقع؟",
+  "faqAnswer3": "إذا كنت تتابعين الحمل، يمكنك تغيير موعد الولادة المتوقع (EDD) في إعدادات \"الملف الشخصي\" أو \"التتبع\". اضغطي على حقل التاريخ الحالي لإدخال تاريخ جديد يدويًا بناءً على آخر الموجات فوق الصوتية أو توصية طبيبك.",
+  "faqQuestion4": "هل يمكنني تصدير سجلاتي الطبية؟",
+  "faqAnswer4": "نعم! انتقلي إلى الإعدادات > البيانات والخصوصية > تنزيل بياناتي لتصدير جميع معلوماتك بصيغة قابلة للقراءة.",
+  "faqQuestion5": "كيف يمكنني الاتصال بالدعم؟",
+  "faqAnswer5": "يمكنك الاتصال بالدعم من خلال زر \"الاتصال بالدعم\" في أسفل هذه الشاشة، أو يمكنك إرسال بريد إلكتروني مباشرة إلى support@appname.com. نحن عادة ما نرد خلال 24 ساعة.",
+  "faqQuestion6": "ما هي اللغات المدعومة؟",
+  "faqAnswer6": "حاليًا، يدعم التطبيق اللغة الإنجليزية والإسبانية والفرنسية والألمانية. يمكنك تغيير لغتك المفضلة في قائمة \"إعدادات التطبيق\".",
+  "stillHaveQuestions": "هل لديك أسئلة أخرى؟",
+  "contactSupport": "الاتصال بالدعم",
+  "yourPrivacyMatters": "خصوصيتك مهمة لنا",
+  "privacyCommitmentDescription": "نحن ملتزمون بحماية معلوماتك الشخصية وضمان الشفافية حول كيفية استخدام بيانتك.",
+  "lastUpdatedPrivacy": "آخر تحديث: 4 ديسمبر 2025",
+  "dataCollection": "جمع البيانات",
+  "dataCollectionDescription": "نحن نجمع فقط المعلومات الضرورية المطلوبة لتوفير أفضل تجربة تتبع صحي لك. يتضمن ذلك معلومات ملفك الشخصي ومقاييس صحتك وبيانات استخدام التطبيق.",
+  "dataSecurity": "أمان البيانات",
+  "dataSecurityDescription": "يتم تشفير بيانتك باستخدام بروتوكولات معيارية في الصناعة. نستخدم عدة طبقات من الأمان لحماية معلوماتك الصحية الشخصية من الوصول غير المصرح به.",
+  "dataUsage": "استخدام البيانات",
+  "dataUsageDescription": "نستخدم بياناتك لتخصيص تجربة تطبيقك وتوفير رؤى صحية ذات صلة وتحسينها. نحن لا نبيع البيانات الشخصية لأطراف ثالثة.",
+  "yourRights": "حقوقك",
+  "yourRightsDescription": "لديك الحق في الوصول أو تحديث أو طلب حذف بيانتك. يمكنك إدارة إعدادات الخصوصية في التطبيق أو الاتصال بالدعم.",
+  "faq": "الأسئلة المتكررة",
+  "weAreHereToHelp": "نحن هنا لمساعدتك",
+  "chooseSupportOptionDescription": "اختر خيار الدعم الذي يناسبك بشكل أفضل. فريقنا متاح 24/7 لمساعدتك.",
+  "knowledgeBase": "قاعدة المعرفة",
+  "browseArticlesAndGuides": "تصفح المقالات والأدلة",
+  "liveChat": "دردشة مباشرة",
+  "chatWithSupportTeam": "تحدث مع فريق الدعم الخاص بنا",
+  "videoTutorials": "دروس فيديو",
+  "watchStepByStepGuides": "شاهد الأدلة خطوة بخطوة",
+  "emailSupport": "دعم البريد الإلكتروني",
+  "emailSupportAddress": "support@momcare.com",
+  "phoneSupport": "دعم الهاتف",
+  "phoneSupportNumber": "1-800-MOM-CARE",
+  "communityForum": "منتدى المجتمع",
+  "connectWithOtherUsers": "تواصل مع المستخدمين الآخرين",
+  "secureYourAccount": "أمّن حسابك",
+  "enableSecurityFeaturesDescription": "فعّل ميزات الأمان الإضافية لحماية معلومات صحتك الشخصية",
+  "changePassword": "تغيير كلمة المرور",
+  "lastChangedDaysAgo": "تم التغيير آخر مرة قبل 30 يوماً",
+  "biometricAuthentication": "المصادقة البيومترية",
+  "useFingerprintOrFaceId": "استخدم بصمة الإصبع أو Face ID للفتح",
+  "twoFactorAuthentication": "المصادقة ذات العاملين",
+  "addExtraLayerSecurity": "أضف طبقة أمان إضافية",
+  "autoLock": "القفل التلقائي",
+  "lockAppAfterInactivity": "قفل التطبيق بعد 5 دقائق من عدم الاستخدام",
+  "manageNotificationPreferences": "إدارة تفضيلات الإشعارات",
+  "pushNotifications": "إشعارات الدفع",
+  "receiveNotificationsOnDevice": "تلقي الإشعارات على جهازك",
+  "emailNotifications": "إشعارات البريد الإلكتروني",
+  "getUpdatesViaEmail": "احصل على التحديثات عبر البريد الإلكتروني",
+  "appointmentReminders": "تذكيرات المواعيد",
+  "neverMissAppointment": "لا تفوت موعد الطبيب أبداً",
+  "healthTips": "نصائح صحية",
+  "dailyWellnessRecommendations": "توصيات العافية اليومية",
+  "weeklyReports": "التقارير الأسبوعية",
+  "healthProgressSummary": "ملخص تقدمك الصحي",
+  "vitaminReminders": "تذكيرات الفيتامينات",
+  "dontForgetSupplements": "لا تنسى المكملات الغذائية",
+  "choosePreferredLanguage": "اختر لغتك المفضلة",
   "phone": "الهاتف",
   "country": "البلد",
-  "logout_confirmation": "هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟",
-  "cancel": "إلغاء",
+  "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "unknown": "غير معروف",
   "profile": "الملف الشخصي",
   "profile_updated": "تم تحديث الملف الشخصي",
   "edit_profile": "تعديل الملف الشخصي",
   "change_profile_photo": "تغيير صورة الملف الشخصي",
+  "full_name": "الاسم الكامل",
   "save_changes": "حفظ التغييرات",
   "save": "حفظ",
   "security": "الأمان",
@@ -325,315 +419,8 @@
   "address": "العنوان",
   "phoneNumber": "رقم الهاتف",
   "openingHours": "ساعات العمل",
-  "callNow": "اتصلي الآن",
-  "take": "تناولي",
-  "noMedicinesFound": "لم يتم العثور على أدوية",
-  "pleaseLoginToViewPlan": "يرجى تسجيل الدخول لعرض خطتك",
-  "selectColor": "اختاري اللون",
-  "selectSize": "اختاري المقاس",
-  "addToCart": "أضيفي إلى السلة",
-  "buyNow": "اشتري الآن",
-  "description": "الوصف",
-  "noDescriptionAvailable": "لا يوجد وصف متاح",
-  "specifications": "المواصفات",
-  "customerReviews": "تقييمات العملاء",
-  "seeAll": "عرض الكل",
-  "completeYourOrder": "أكملي طلبك",
-  "orderSummary": "ملخص الطلب",
-  "product": "المنتج",
-  "size": "المقاس",
-  "qty": "الكمية",
-  "subtotal": "المجموع الفرعي",
-  "deliveryFee": "رسوم التوصيل",
-  "total": "المجموع",
-  "deliveryInformation": "معلومات التوصيل",
-  "fullName": "الاسم الكامل",
-  "enterYourFullName": "أدخلي اسمك الكامل",
-  "phoneNumber": "رقم الهاتف",
-  "enterYourPhoneNumber": "أدخلي رقم هاتفك",
-  "deliveryAddress": "عنوان التوصيل",
-  "streetAddressApartment": "عنوان الشارع، الشقة، إلخ.",
-  "city": "المدينة",
-  "enterYourCity": "أدخلي مدينتك",
-  "specialInstructions": "تعليمات خاصة (اختياري)",
-  "addDeliveryNotes": "أضيفي ملاحظات التوصيل، طلبات خاصة...",
-  "paymentMethod": "طريقة الدفع",
-  "cashOnDelivery": "الدفع عند الاستلام",
-  "creditDebitCard": "بطاقة ائتمان / خصم",
-  "digitalWallet": "محفظة رقمية",
-  "placeOrder": "إتمام الطلب",
-  "orderPlacedSuccessfully": "تم تقديم الطلب {orderId} بنجاح!",
-  "@orderPlacedSuccessfully": {
-    "placeholders": {
-      "orderId": {
-        "type": "String"
-      }
-    }
-  },
-  "yourInformationIsSecure": "معلوماتك آمنة ومشفرة",
-  "openNow": "مفتوح الآن",
-  "navHome": "الرئيسية",
-  "navTrack": "التتبع",
-  "navHealth": "الصحة",
-  "navPlan": "الخطة",
-  "navMarket": "المتجر",
-  "hello": "مرحباً",
-  "done": "تم",
-  "daysToGo": "أيام متبقية",
-  "weekLabel": "أسبوع",
-  "day": "يوم",
-  "days": "أيام",
-  "more": "المزيد",
-  "ourTips": "نصائحنا",
-  "followBestPractices": "اتبعي أفضل الممارسات",  "ourDoctors": "أطباؤنا",
-  "findTheBestDoctor": "ابحثي عن أفضل طبيب",
-  "upComing": "القادمة",
-  "noUpcomingEvents": "لا توجد أحداث قادمة",
-  "addAppointmentsInPlan": "أضيفي المواعيد في الخطة",
-  "overdue": "متأخر",
-  "inMinutes": "خلال {minutes} دقائق",
-  "@inMinutes": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "inHours": "خلال {hours} ساعات",
-  "@inHours": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "todayAt": "اليوم في {time}",
-  "@todayAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "tomorrowAt": "غداً في {time}",
-  "@tomorrowAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "at": "في",
-  "myMoods": "مزاجي",
-  "noMoodsLoggedYet": "لم يتم تسجيل أي حالة مزاجية بعد!",
-  "tapLogMoodToStart": "اضغطي على \"تسجيل الحالة المزاجية\" للبدء.",
-  "noData": "لا توجد بيانات",
-  "pleaseLogInToSaveMood": "يرجى تسجيل الدخول لحفظ الحالة المزاجية",
-  "mySymptoms": "أعراضي",
-  "tapLogNewSymptomToStart": "اضغطي على \"تسجيل عرض جديد\" للبدء.",
-  "myMeasurements": "قياساتي",
-  "tapAddMeasurementToStart": "اضغطي على \"إضافة قياس\" للبدء.",
-  "myLabResults": "نتائج المختبر",
-  "uploadFirstLabResult": "ارفعي أول نتيجة مختبر للبدء.",
-  "labPapersGallery": "معرض أوراق المختبر",
-  "uploadLabReportsToSee": "ارفعي تقارير المختبر لرؤيتها هنا",
-  "exportingLabPapers": "جارٍ تصدير أوراق المختبر...",
-  "healthRiskAssessment": "تقييم المخاطر الصحية",
-  "analyzingYourHealthData": "جارٍ تحليل بياناتك الصحية...",
-  "unableToAssessRisk": "غير قادر على تقييم المخاطر",
-  "noAssessmentAvailable": "لا يوجد تقييم متاح",
-  "viewAllMeasurements": "عرض جميع القياسات",
-  "viewAllMoods": "عرض جميع الحالات المزاجية",
-  "viewAllLabPapers": "عرض جميع أوراق المختبر",
-  "noWeightDataAvailable": "لا توجد بيانات للوزن",
-  "monitor": "مراقبة",
-  "cameraPermissionDenied": "تم رفض إذن الكاميرا",
-  "photosPermissionDenied": "تم رفض إذن الصور",
-  "failedToPickImage": "فشل في اختيار الصورة: {error}",
-  "@failedToPickImage": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "failedToPickPDF": "فشل في اختيار ملف PDF: {error}",
-  "@failedToPickPDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "reviewEditLabResults": "مراجعة وتعديل نتائج المختبر",
-  "imageNotAvailable": "الصورة غير متاحة",
-  "addTest": "إضافة اختبار",
-  "saveResults": "حفظ {count} نتيجة",
-  "@saveResults": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "labResultsSavedSuccessfully": "تم حفظ نتائج المختبر بنجاح!",
-  "failedToSaveResults": "فشل في حفظ النتائج: {error}",
-  "@failedToSaveResults": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "noResultsToSave": "لا توجد نتائج لحفظها",
-  "pdfLabReport": "تقرير مختبر PDF",
-  "savePDFReference": "حفظ مرجع PDF",
-  "enterDataManually": "إدخال البيانات يدويًا",
-  "pdfSavedAndUploaded": "تم حفظ وتحميل ملف PDF!",
-  "failedToSavePDF": "فشل في حفظ ملف PDF: {error}",
-  "@failedToSavePDF": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "extractLabResults": "استخراج نتائج المختبر",
-  "extractingTextFromImage": "جارٍ استخراج النص من الصورة...",
-  "viewRawText": "عرض النص الخام",
-  "noDataExtracted": "لم يتم استخراج بيانات",
-  "saveImageOnly": "حفظ الصورة فقط",
-  "imageSaved": "تم حفظ الصورة! يمكنك إضافة التفاصيل لاحقًا.",
-  "enterManually": "إدخال يدويًا",
-  "noImageSaved": "لم يتم حفظ أي صورة. يرجى المحاولة مرة أخرى.",
-  "manualLabEntry": "إدخال مختبر يدوي",
-  "labResultAddedSuccessfully": "تمت إضافة نتيجة المختبر بنجاح!",
-  "exporting": "جارٍ التصدير...",
-  "labResultImage": "صورة نتيجة المختبر",
-  "deleteResult": "حذف النتيجة",
-  "areYouSureDeleteResult": "هل أنتِ متأكدة من حذف {testName}؟",
-  "@areYouSureDeleteResult": {
-    "placeholders": {
-      "testName": {
-        "type": "String"
-      }
-    }
-  },
-  "delete": "حذف",
-  "exportLabResults": "تصدير نتائج المختبر",
-  "exportAllLabResultsAsZIP": "تصدير جميع صور نتائج المختبر كملف ZIP؟",
-  "export": "تصدير",
-  "labResultUpdatedSuccessfully": "تم تحديث نتيجة المختبر بنجاح",
-  "errorUpdatingResult": "خطأ في تحديث النتيجة: {error}",
-  "@errorUpdatingResult": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "editLabResult": "تعديل نتيجة المختبر",
-  "errorCallingContact": "خطأ في الاتصال بـ {contactName}: {error}",
-  "@errorCallingContact": {
-    "placeholders": {
-      "contactName": {
-        "type": "String"
-      },
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "iDontNeedThisContact": "لا أحتاج هذا جهة الاتصال",
-  "saveEmergencyContacts": "حفظ",
-  "setupEmergencyContacts": "إعداد جهات اتصال الطوارئ",
-  "setupContactsDescription": "أضيفي جهات اتصال الطوارئ للوصول السريع في الحالات العاجلة.",
-  "partner": "الشريك",
-  "healthcareProvider": "مقدم الرعاية الصحية",
-  "parent": "الوالدين/العائلة",
-  "actionNeeded": "مطلوب إجراء",
-  "detectedPatterns": "الأنماط المكتشفة",
-  "recommendations": "التوصيات",
-  "aiAnalysis": "تحليل الذكاء الاصطناعي",
-  "aiRiskAssessmentDisclaimer": "⚠️ تقييم المخاطر الناتج عن الذكاء الاصطناعي. ليس تشخيصًا طبيًا. استشيري دائمًا مقدم الرعاية الصحية بشأن المخاوف.",
-  "riskLevel": "الخطر",
-  "none": "لا يوجد",
-  "normalRisk": "عادي",
-  "lowRiskLevel": "منخفض",
-  "mediumRisk": "متوسط",
-  "highRisk": "مرتفع",
-  "urgentRisk": "عاجل",
-  "noSignificantConcerns": "لا توجد مخاوف كبيرة",
-  "heartRateProgress": "تطور معدل ضربات القلب",
-  "bloodPressureTrend": "اتجاه ضغط الدم",
-  "noSymptomLogged": "لم يتم تسجيل أي أعراض",
-  "noMoodsLogged": "لم يتم تسجيل أي حالات مزاجية",
-  "noLabResultsYet": "لا توجد نتائج اختبارات معملية حتى الآن",
-  "lowStatus": "منخفض",
-  "highStatus": "مرتفع",
-  "viewAllLabPapers": "عرض جميع أوراق المختبر",
-  "systolic": "الانقباضي",
-  "diastolic": "الانبساطي",
-  "noSymptomDataAvailable": "لا توجد بيانات الأعراض متاحة",
-  "noNotes": "لا توجد ملاحظات",
-  "noMoodDataAvailable": "لا توجد بيانات الحالة المزاجية متاحة",
-  "noSignificantConcernsMessage": "لا توجد مخاوف كبيرة",
-  "noAssessmentDetailsAvailable": "لا توجد تفاصيل التقييم متاحة",
-  "minAgo": "منذ {minutes} دقيقة",
-  "@minAgo": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgo": "منذ {hours} ساعات",
-  "@hoursAgo": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgo": "منذ {days} أيام",
-  "@daysAgo": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "yesterday": "بالأمس",
-  "minAgoShort": "منذ {minutes}د",
-  "@minAgoShort": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursAgoShort": "منذ {hours}س",
-  "@hoursAgoShort": {
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "daysAgoShort": "منذ {days}ي",
-  "@daysAgoShort": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "underweight": "نقص الوزن",
-  "overweight": "زيادة الوزن",
-  "obese": "السمنة",
-  "normalBMI": "عادي",
-  "mixedMoodsCareMessage": "مزاج مختلط - اعتني بنفسك!",
-  "pain": "ألم",
-  "sleep": "نوم",
-  "feet": "قدم"
+  "callNow": "اتصل الآن",
+  "pregnancyPillow": "وسادة الحمل",
+  "essentialNutrientsMealPlanning": "العناصر الغذائية الأساسية وتخطيط الوجبات لحمل صحي",
+  "fiveMinRead": "قراءة 5 دقائق"
 }

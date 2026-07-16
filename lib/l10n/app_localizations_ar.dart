@@ -9,32 +9,335 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get locationPermissionRequired => 'مطلوب إذن الموقع';
+  String get hello => 'مرحباً';
 
   @override
-  String get locationPermissionMessage =>
-      'نحتاج إلى الوصول إلى موقعك لعرض الأطباء القريبين.';
+  String get ourDoctors => 'أطبائنا';
 
   @override
-  String get gettingLocation => 'جارٍ تحديد موقعك...';
+  String get findTheBestDoctor => 'ابحثي عن أفضل طبيب';
 
   @override
-  String get locationPermissionDenied => 'تم رفض إذن الموقع';
+  String get upComing => 'قادم';
 
   @override
-  String get locationUpdated => 'تم تحديث الموقع';
+  String get seeAll => 'عرض الكل';
 
   @override
-  String get retry => 'إعادة المحاولة';
+  String get today => 'اليوم';
 
   @override
-  String get showingDoctorsNearYou => 'عرض الأطباء القريبين منك';
+  String get tomorrow => 'غداً';
 
   @override
-  String get selectLocation => 'اختر الموقع';
+  String get at => 'في';
 
   @override
-  String get searchWilaya => 'ابحث عن ولاية...';
+  String get overdue => 'متأخر';
+
+  @override
+  String get in_ => 'في';
+
+  @override
+  String get minutes => 'دقائق';
+
+  @override
+  String get hours => 'ساعات';
+
+  @override
+  String get noUpcomingEvents => 'لا توجد أحداث قادمة';
+
+  @override
+  String get addAppointmentsInPlan => 'أضيفي المواعيد في الخطة';
+
+  @override
+  String get getInTouch => 'تواصلي معنا';
+
+  @override
+  String get contactFormDescription =>
+      'هل لديك سؤال أو ملاحظة؟ نود سماع آرائك. ملي النموذج أدناه وسنرد عليك خلال 24 ساعة.';
+
+  @override
+  String get supportEmail => 'support@momcare.com';
+
+  @override
+  String get supportPhone => '+1 (800) 123-4567';
+
+  @override
+  String get supportHours => 'الاثنين-الجمعة، 9 صباحاً-6 مساءً';
+
+  @override
+  String get yourNameLabel => 'اسمك';
+
+  @override
+  String get enterYourName => 'أدخلي اسمك';
+
+  @override
+  String get emailAddressLabel => 'عنوان البريد الإلكتروني';
+
+  @override
+  String get emailPlaceholder => 'بريدك@example.com';
+
+  @override
+  String get subjectLabel => 'الموضوع';
+
+  @override
+  String get whatIsThisAbout => 'ما هو موضوع هذا؟';
+
+  @override
+  String get messageLabel => 'الرسالة';
+
+  @override
+  String get tellUsHowWeCanHelp => 'أخبرينا كيف يمكننا مساعدتك...';
+
+  @override
+  String get sendMessage => 'إرسال الرسالة';
+
+  @override
+  String get appName => 'جيستانيا';
+
+  @override
+  String get appVersion => 'الإصدار 2.1.0';
+
+  @override
+  String get appDescription =>
+      'رفيقك الموثوق به عبر الحمل والأمومة. تابعي رحلتك واحصلي على رؤى شخصية والتقطي بمجتمع داعم.';
+
+  @override
+  String get activeUsersCount => '100K+';
+
+  @override
+  String get activeUsers => 'المستخدمون النشطون';
+
+  @override
+  String get appRatingValue => '4.8★';
+
+  @override
+  String get appRating => 'تقييم التطبيق';
+
+  @override
+  String get versionInfo => 'معلومات الإصدار';
+
+  @override
+  String get versionBuild => 'Build 2.1.0 (245)';
+
+  @override
+  String get madeWithLove => 'مصنوع بحب';
+
+  @override
+  String get forMomsEverywhere => 'لجميع الأمهات في كل مكان';
+
+  @override
+  String get copyrightText => '© 2025 جيستانيا. جميع الحقوق محفوظة.';
+
+  @override
+  String get faqIntroText => 'اختر لغتك المفضلة';
+
+  @override
+  String get faqQuestion1 => 'كيف يمكنني تعيين تذكيرات المواعيد؟';
+
+  @override
+  String get faqAnswer1 =>
+      'يمكنك تعيين تذكيرات المواعيد بالانتقال إلى قسم \"المواعيد\" وتحديد زيارتك المجدولة والنقر على خيار \"تعيين تذكير\". ستتمكن من اختيار فترة زمنية (على سبيل المثال، يوم واحد أو ساعة واحدة قبل).';
+
+  @override
+  String get faqQuestion2 => 'هل بيانات صحتي آمنة؟';
+
+  @override
+  String get faqAnswer2 =>
+      'نعم. نحن نستخدم التشفير الرائد في الصناعة ونتابع إرشادات التوافق مع HIPAA / GDPR لضمان بقاء معلومات صحتك الشخصية خاصة وآمنة. يتم تخزين البيانات بشكل مجهول على خوادم آمنة.';
+
+  @override
+  String get faqQuestion3 => 'كيف يمكنني تغيير موعد ولادتي المتوقع؟';
+
+  @override
+  String get faqAnswer3 =>
+      'إذا كنت تتابعين الحمل، يمكنك تغيير موعد الولادة المتوقع (EDD) في إعدادات \"الملف الشخصي\" أو \"التتبع\". اضغطي على حقل التاريخ الحالي لإدخال تاريخ جديد يدويًا بناءً على آخر الموجات فوق الصوتية أو توصية طبيبك.';
+
+  @override
+  String get faqQuestion4 => 'هل يمكنني تصدير سجلاتي الطبية؟';
+
+  @override
+  String get faqAnswer4 =>
+      'نعم! انتقلي إلى الإعدادات > البيانات والخصوصية > تنزيل بياناتي لتصدير جميع معلوماتك بصيغة قابلة للقراءة.';
+
+  @override
+  String get faqQuestion5 => 'كيف يمكنني الاتصال بالدعم؟';
+
+  @override
+  String get faqAnswer5 =>
+      'يمكنك الاتصال بالدعم من خلال زر \"الاتصال بالدعم\" في أسفل هذه الشاشة، أو يمكنك إرسال بريد إلكتروني مباشرة إلى support@appname.com. نحن عادة ما نرد خلال 24 ساعة.';
+
+  @override
+  String get faqQuestion6 => 'ما هي اللغات المدعومة؟';
+
+  @override
+  String get faqAnswer6 =>
+      'حاليًا، يدعم التطبيق اللغة الإنجليزية والإسبانية والفرنسية والألمانية. يمكنك تغيير لغتك المفضلة في قائمة \"إعدادات التطبيق\".';
+
+  @override
+  String get stillHaveQuestions => 'هل لديك أسئلة أخرى؟';
+
+  @override
+  String get contactSupport => 'الاتصال بالدعم';
+
+  @override
+  String get faq => 'الأسئلة المتكررة';
+
+  @override
+  String get yourPrivacyMatters => 'خصوصيتك مهمة لنا';
+
+  @override
+  String get privacyCommitmentDescription =>
+      'نحن ملتزمون بحماية معلوماتك الشخصية وضمان الشفافية حول كيفية استخدام بيانتك.';
+
+  @override
+  String get lastUpdatedPrivacy => 'آخر تحديث: 4 ديسمبر 2025';
+
+  @override
+  String get dataCollection => 'جمع البيانات';
+
+  @override
+  String get dataCollectionDescription =>
+      'نحن نجمع فقط المعلومات الضرورية المطلوبة لتوفير أفضل تجربة تتبع صحي لك. يتضمن ذلك معلومات ملفك الشخصي ومقاييس صحتك وبيانات استخدام التطبيق.';
+
+  @override
+  String get dataSecurity => 'أمان البيانات';
+
+  @override
+  String get dataSecurityDescription =>
+      'يتم تشفير بيانتك باستخدام بروتوكولات معيارية في الصناعة. نستخدم عدة طبقات من الأمان لحماية معلوماتك الصحية الشخصية من الوصول غير المصرح به.';
+
+  @override
+  String get dataUsage => 'استخدام البيانات';
+
+  @override
+  String get dataUsageDescription =>
+      'نستخدم بياناتك لتخصيص تجربة تطبيقك وتوفير رؤى صحية ذات صلة وتحسينها. نحن لا نبيع البيانات الشخصية لأطراف ثالثة.';
+
+  @override
+  String get yourRights => 'حقوقك';
+
+  @override
+  String get yourRightsDescription =>
+      'لديك الحق في الوصول أو تحديث أو طلب حذف بيانتك. يمكنك إدارة إعدادات الخصوصية في التطبيق أو الاتصال بالدعم.';
+
+  @override
+  String get weAreHereToHelp => 'نحن هنا لمساعدتك';
+
+  @override
+  String get chooseSupportOptionDescription =>
+      'اختر خيار الدعم الذي يناسبك بشكل أفضل. فريقنا متاح 24/7 لمساعدتك.';
+
+  @override
+  String get knowledgeBase => 'قاعدة المعرفة';
+
+  @override
+  String get browseArticlesAndGuides => 'تصفح المقالات والأدلة';
+
+  @override
+  String get liveChat => 'دردشة مباشرة';
+
+  @override
+  String get chatWithSupportTeam => 'تحدث مع فريق الدعم الخاص بنا';
+
+  @override
+  String get videoTutorials => 'دروس فيديو';
+
+  @override
+  String get watchStepByStepGuides => 'شاهد الأدلة خطوة بخطوة';
+
+  @override
+  String get emailSupport => 'دعم البريد الإلكتروني';
+
+  @override
+  String get emailSupportAddress => 'support@momcare.com';
+
+  @override
+  String get phoneSupport => 'دعم الهاتف';
+
+  @override
+  String get phoneSupportNumber => '1-800-MOM-CARE';
+
+  @override
+  String get communityForum => 'منتدى المجتمع';
+
+  @override
+  String get connectWithOtherUsers => 'تواصل مع المستخدمين الآخرين';
+
+  @override
+  String get secureYourAccount => 'أمّن حسابك';
+
+  @override
+  String get enableSecurityFeaturesDescription =>
+      'فعّل ميزات الأمان الإضافية لحماية معلومات صحتك الشخصية';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get lastChangedDaysAgo => 'تم التغيير آخر مرة قبل 30 يوماً';
+
+  @override
+  String get biometricAuthentication => 'المصادقة البيومترية';
+
+  @override
+  String get useFingerprintOrFaceId => 'استخدم بصمة الإصبع أو Face ID للفتح';
+
+  @override
+  String get twoFactorAuthentication => 'المصادقة ذات العاملين';
+
+  @override
+  String get addExtraLayerSecurity => 'أضف طبقة أمان إضافية';
+
+  @override
+  String get autoLock => 'القفل التلقائي';
+
+  @override
+  String get lockAppAfterInactivity =>
+      'قفل التطبيق بعد 5 دقائق من عدم الاستخدام';
+
+  @override
+  String get manageNotificationPreferences => 'إدارة تفضيلات الإشعارات';
+
+  @override
+  String get pushNotifications => 'إشعارات الدفع';
+
+  @override
+  String get receiveNotificationsOnDevice => 'تلقي الإشعارات على جهازك';
+
+  @override
+  String get emailNotifications => 'إشعارات البريد الإلكتروني';
+
+  @override
+  String get getUpdatesViaEmail => 'احصل على التحديثات عبر البريد الإلكتروني';
+
+  @override
+  String get appointmentReminders => 'تذكيرات المواعيد';
+
+  @override
+  String get neverMissAppointment => 'لا تفوت موعد الطبيب أبداً';
+
+  @override
+  String get healthTips => 'نصائح صحية';
+
+  @override
+  String get dailyWellnessRecommendations => 'توصيات العافية اليومية';
+
+  @override
+  String get weeklyReports => 'التقارير الأسبوعية';
+
+  @override
+  String get healthProgressSummary => 'ملخص تقدمك الصحي';
+
+  @override
+  String get vitaminReminders => 'تذكيرات الفيتامينات';
+
+  @override
+  String get dontForgetSupplements => 'لا تنسى المكملات الغذائية';
+
+  @override
+  String get choosePreferredLanguage => 'اختر لغتك المفضلة';
 
   @override
   String get security => 'الأمان';
@@ -68,9 +371,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get logout_confirmation => 'هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟';
-
-  @override
-  String get cancel => 'إلغاء';
 
   @override
   String get unknown => 'غير معروف';
@@ -464,9 +764,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get login => 'تسجيل الدخول';
 
   @override
-  String get signup => 'إنشاء حساب';
-
-  @override
   String get password => 'كلمة المرور';
 
   @override
@@ -515,7 +812,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get your_name => 'اسمكِ';
+  String get signup => 'إنشاء حساب';
+
+  @override
+  String get your_name => 'اسمك';
 
   @override
   String get email => 'البريد الإلكتروني';
@@ -581,9 +881,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get skinCare => 'العناية بالبشرة';
-
-  @override
-  String get pregnancyPillow => 'وسادة الحمل';
 
   @override
   String get backSupportBelt => 'حزام دعم الظهر';
@@ -777,6 +1074,9 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get cancel => 'إلغاء';
+
+  @override
   String get applyFilters => 'تطبيق التصفية';
 
   @override
@@ -838,831 +1138,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get openingHours => 'ساعات العمل';
 
   @override
-  String get callNow => 'اتصلي الآن';
+  String get callNow => 'اتصل الآن';
 
   @override
-  String get all => 'الكل';
+  String get pregnancyPillow => 'وسادة الحمل';
 
   @override
-  String get taken => 'تم تناولها';
+  String get essentialNutrientsMealPlanning =>
+      'العناصر الغذائية الأساسية وتخطيط الوجبات لحمل صحي';
 
   @override
-  String get missed => 'فاتت';
-
-  @override
-  String get take => 'تناولي';
-
-  @override
-  String get noMedicinesFound => 'لم يتم العثور على أدوية';
-
-  @override
-  String get pleaseLoginToViewPlan => 'يرجى تسجيل الدخول لعرض خطتك';
-
-  @override
-  String get selectColor => 'اختاري اللون';
-
-  @override
-  String get selectSize => 'اختاري المقاس';
-
-  @override
-  String get addToCart => 'أضيفي إلى السلة';
-
-  @override
-  String get buyNow => 'اشتري الآن';
-
-  @override
-  String get description => 'الوصف';
-
-  @override
-  String get noDescriptionAvailable => 'لا يوجد وصف متاح';
-
-  @override
-  String get specifications => 'المواصفات';
-
-  @override
-  String get customerReviews => 'تقييمات العملاء';
-
-  @override
-  String get seeAll => 'عرض الكل';
-
-  @override
-  String get completeYourOrder => 'أكملي طلبك';
-
-  @override
-  String get orderSummary => 'ملخص الطلب';
-
-  @override
-  String get product => 'المنتج';
-
-  @override
-  String get size => 'المقاس';
-
-  @override
-  String get subtotal => 'المجموع الفرعي';
-
-  @override
-  String get deliveryFee => 'رسوم التوصيل';
-
-  @override
-  String get total => 'المجموع';
-
-  @override
-  String get deliveryInformation => 'معلومات التوصيل';
-
-  @override
-  String get fullName => 'الاسم الكامل';
-
-  @override
-  String get enterYourFullName => 'أدخلي اسمك الكامل';
-
-  @override
-  String get enterYourPhoneNumber => 'أدخلي رقم هاتفك';
-
-  @override
-  String get deliveryAddress => 'عنوان التوصيل';
-
-  @override
-  String get streetAddressApartment => 'عنوان الشارع، الشقة، إلخ.';
-
-  @override
-  String get city => 'المدينة';
-
-  @override
-  String get enterYourCity => 'أدخلي مدينتك';
-
-  @override
-  String get specialInstructions => 'تعليمات خاصة (اختياري)';
-
-  @override
-  String get addDeliveryNotes => 'أضيفي ملاحظات التوصيل، طلبات خاصة...';
-
-  @override
-  String get paymentMethod => 'طريقة الدفع';
-
-  @override
-  String get cashOnDelivery => 'الدفع عند الاستلام';
-
-  @override
-  String get creditDebitCard => 'بطاقة ائتمان / خصم';
-
-  @override
-  String get digitalWallet => 'محفظة رقمية';
-
-  @override
-  String get placeOrder => 'إتمام الطلب';
-
-  @override
-  String orderPlacedSuccessfully(String orderId) {
-    return 'تم تقديم الطلب $orderId بنجاح!';
-  }
-
-  @override
-  String get yourInformationIsSecure => 'معلوماتك آمنة ومشفرة';
-
-  @override
-  String get openNow => 'مفتوح الآن';
-
-  @override
-  String get nausea => 'Nausea';
-
-  @override
-  String get headache => 'Headache';
-
-  @override
-  String get backPain => 'Back pain';
-
-  @override
-  String get swelling => 'Swelling';
-
-  @override
-  String get fatigue => 'Fatigue';
-
-  @override
-  String get dizziness => 'Dizziness';
-
-  @override
-  String get heartburn => 'Heartburn';
-
-  @override
-  String get legCramps => 'Leg cramps';
-
-  @override
-  String get other => 'Other';
-
-  @override
-  String get pleaseSelectSymptom => 'Please select a symptom';
-
-  @override
-  String get pleaseSelectSeverity => 'Please select severity';
-
-  @override
-  String get symptomLoggedSuccessfully => 'Symptom logged successfully!';
-
-  @override
-  String get addSymptom => 'Add Symptom';
-
-  @override
-  String get symptomType => 'Symptom type';
-
-  @override
-  String get selectSymptom => 'Select symptom';
-
-  @override
-  String get specifySymptom => 'Specify symptom';
-
-  @override
-  String get pleaseSpecifySymptom => 'Please specify the symptom';
-
-  @override
-  String get severity => 'Severity';
-
-  @override
-  String get mild => 'Mild';
-
-  @override
-  String get moderate => 'Moderate';
-
-  @override
-  String get severe => 'Severe';
-
-  @override
-  String get duration => 'Duration';
-
-  @override
-  String get pleaseEnterDuration => 'Please enter duration';
-
-  @override
-  String get notes => 'Notes';
-
-  @override
-  String get veryHappy => 'Very happy';
-
-  @override
-  String get happy => 'Happy';
-
-  @override
-  String get neutral => 'Neutral';
-
-  @override
-  String get sad => 'Sad';
-
-  @override
-  String get verySad => 'Very sad';
-
-  @override
-  String get pleaseSelectMood => 'Please select a mood';
-
-  @override
-  String get moodLoggedSuccessfully => 'Mood logged successfully!';
-
-  @override
-  String get howAreYouFeeling => 'How are you feeling?';
-
-  @override
-  String get energyLevel => 'Energy level';
-
-  @override
-  String get low => 'Low';
-
-  @override
-  String get high => 'High';
-
-  @override
-  String get sleepQuality => 'Sleep quality';
-
-  @override
-  String get howWasYourDay => 'How was your day?';
-
-  @override
-  String get prePregnancyBMI => 'Pre-pregnancy BMI';
-
-  @override
-  String get normalBMI => 'عادي';
-
-  @override
-  String get currentGain => 'Current gain';
-
-  @override
-  String get targetRange => 'Target range';
-
-  @override
-  String get expected => 'Expected';
-
-  @override
-  String get recentLabResults => 'Recent Lab Results';
-
-  @override
-  String get keepLabResultsOrganized =>
-      'Keep your lab results organized for better tracking.';
-
-  @override
-  String get viewAllLabResults => 'View All Lab Results';
-
-  @override
-  String get riskFactorsToMonitor => 'Risk factors to monitor';
-
-  @override
-  String get lowRisk => 'Low risk';
-
-  @override
-  String get withinNormalRange => 'Within normal range';
-
-  @override
-  String get gestationalDiabetes => 'Gestational diabetes';
-
-  @override
-  String get glucoseLevelsNormal => 'Glucose levels are normal';
-
-  @override
-  String get preeclampsia => 'Preeclampsia';
-
-  @override
-  String get noProteinInUrine => 'No protein in urine';
-
-  @override
-  String get warningSignsToWatch => 'Warning signs to watch';
-
-  @override
-  String get severeHeadache => 'Severe headache';
-
-  @override
-  String get blurredVision => 'Blurred vision';
-
-  @override
-  String get severeAbdominalPain => 'Severe abdominal pain';
-
-  @override
-  String get decreasedFetalMovement => 'Decreased fetal movement';
-
-  @override
-  String get vaginalBleeding => 'Vaginal bleeding';
-
-  @override
-  String get emergencyCall => 'Emergency Call';
-
-  @override
-  String get areYouSureCall911 => 'Are you sure you want to call 911?';
-
-  @override
-  String get couldNotMakeEmergencyCall => 'Could not make emergency call.';
-
-  @override
-  String get ifYouExperienceWarnings =>
-      'If you experience any warning signs, contact your healthcare provider immediately.';
-
-  @override
-  String get allIndicatorsNormal => 'All indicators are normal';
-
-  @override
-  String get emergencyContact => 'Emergency Contact';
-
-  @override
-  String get overallRiskLevel => 'Overall risk level';
-
-  @override
-  String get call911OrProvider => 'Call 911 or your healthcare provider';
-
-  @override
-  String get recentSymptoms => 'Recent Symptoms';
-
-  @override
-  String get logNewSymptom => 'Log new symptom';
-
-  @override
-  String get symptomFrequency => 'Symptom frequency';
-
-  @override
-  String get swollenFeet => 'Swollen feet';
-
-  @override
-  String get sleepIssues => 'Sleep issues';
-
-  @override
-  String get times => 'times';
-
-  @override
-  String get commonSymptomsWeek24 =>
-      'Common symptoms at week 24 include back pain and swelling.';
-
-  @override
-  String get viewAllSymptoms => 'View All Symptoms';
-
-  @override
-  String get weightProgress => 'Weight Progress';
-
-  @override
-  String get measurementSavedSuccessfully => 'Measurement saved successfully!';
-
-  @override
-  String get addMeasurement => 'Add Measurement';
-
-  @override
-  String get weightKg => 'Weight (kg)';
-
-  @override
-  String get pleaseEnterWeight => 'Please enter your weight';
-
-  @override
-  String get pleaseEnterValidNumber => 'Please enter a valid number';
-
-  @override
-  String get weightRange => 'Weight must be between 30 and 200 kg';
-
-  @override
-  String get heartRateBpm => 'Heart Rate (bpm)';
-
-  @override
-  String get pleaseEnterHeartRate => 'Please enter your heart rate';
-
-  @override
-  String get heartRateRange => 'Heart rate must be between 40 and 200 bpm';
-
-  @override
-  String get systolic => 'الانقباضي';
-
-  @override
-  String get required => 'Required';
-
-  @override
-  String get invalid => 'Invalid';
-
-  @override
-  String get systolicRange => 'Systolic must be between 70 and 190';
-
-  @override
-  String get diastolic => 'الانبساطي';
-
-  @override
-  String get diastolicRange => 'Diastolic must be between 40 and 130';
-
-  @override
-  String get normalRangeLabel => 'Normal range';
-
-  @override
-  String get uploadLabResults => 'Upload Lab Results';
-
-  @override
-  String get nextLabAppointment => 'Next Lab Appointment';
-
-  @override
-  String get navHome => 'الرئيسية';
-
-  @override
-  String get navTrack => 'التتبع';
-
-  @override
-  String get navHealth => 'الصحة';
-
-  @override
-  String get navPlan => 'الخطة';
-
-  @override
-  String get navMarket => 'المتجر';
-
-  @override
-  String get hello => 'مرحباً';
-
-  @override
-  String get done => 'تم';
-
-  @override
-  String get daysToGo => 'أيام متبقية';
-
-  @override
-  String get weekLabel => 'أسبوع';
-
-  @override
-  String get day => 'يوم';
-
-  @override
-  String get days => 'أيام';
-
-  @override
-  String get more => 'المزيد';
-
-  @override
-  String get ourTips => 'نصائحنا';
-
-  @override
-  String get followBestPractices => 'اتبعي أفضل الممارسات';
-
-  @override
-  String get ourDoctors => 'أطباؤنا';
-
-  @override
-  String get findTheBestDoctor => 'ابحثي عن أفضل طبيب';
-
-  @override
-  String get upComing => 'القادمة';
-
-  @override
-  String get noUpcomingEvents => 'لا توجد أحداث قادمة';
-
-  @override
-  String get addAppointmentsInPlan => 'أضيفي المواعيد في الخطة';
-
-  @override
-  String get overdue => 'متأخر';
-
-  @override
-  String inMinutes(int minutes) {
-    return 'خلال $minutes دقائق';
-  }
-
-  @override
-  String inHours(int hours) {
-    return 'خلال $hours ساعات';
-  }
-
-  @override
-  String todayAt(String time) {
-    return 'اليوم في $time';
-  }
-
-  @override
-  String tomorrowAt(String time) {
-    return 'غداً في $time';
-  }
-
-  @override
-  String get at => 'في';
-
-  @override
-  String get myMoods => 'مزاجي';
-
-  @override
-  String get noMoodsLoggedYet => 'لم يتم تسجيل أي حالة مزاجية بعد!';
-
-  @override
-  String get tapLogMoodToStart => 'اضغطي على \"تسجيل الحالة المزاجية\" للبدء.';
-
-  @override
-  String get noData => 'لا توجد بيانات';
-
-  @override
-  String get pleaseLogInToSaveMood => 'يرجى تسجيل الدخول لحفظ الحالة المزاجية';
-
-  @override
-  String get mySymptoms => 'أعراضي';
-
-  @override
-  String get tapLogNewSymptomToStart => 'اضغطي على \"تسجيل عرض جديد\" للبدء.';
-
-  @override
-  String get myMeasurements => 'قياساتي';
-
-  @override
-  String get tapAddMeasurementToStart => 'اضغطي على \"إضافة قياس\" للبدء.';
-
-  @override
-  String get myLabResults => 'نتائج المختبر';
-
-  @override
-  String get uploadFirstLabResult => 'ارفعي أول نتيجة مختبر للبدء.';
-
-  @override
-  String get labPapersGallery => 'معرض أوراق المختبر';
-
-  @override
-  String get uploadLabReportsToSee => 'ارفعي تقارير المختبر لرؤيتها هنا';
-
-  @override
-  String get exportingLabPapers => 'جارٍ تصدير أوراق المختبر...';
-
-  @override
-  String get healthRiskAssessment => 'تقييم المخاطر الصحية';
-
-  @override
-  String get analyzingYourHealthData => 'جارٍ تحليل بياناتك الصحية...';
-
-  @override
-  String get unableToAssessRisk => 'غير قادر على تقييم المخاطر';
-
-  @override
-  String get noAssessmentAvailable => 'لا يوجد تقييم متاح';
-
-  @override
-  String get viewAllMeasurements => 'عرض جميع القياسات';
-
-  @override
-  String get viewAllMoods => 'عرض جميع الحالات المزاجية';
-
-  @override
-  String get viewAllLabPapers => 'عرض جميع أوراق المختبر';
-
-  @override
-  String get noWeightDataAvailable => 'لا توجد بيانات للوزن';
-
-  @override
-  String get monitor => 'مراقبة';
-
-  @override
-  String get cameraPermissionDenied => 'تم رفض إذن الكاميرا';
-
-  @override
-  String get photosPermissionDenied => 'تم رفض إذن الصور';
-
-  @override
-  String failedToPickImage(String error) {
-    return 'فشل في اختيار الصورة: $error';
-  }
-
-  @override
-  String failedToPickPDF(String error) {
-    return 'فشل في اختيار ملف PDF: $error';
-  }
-
-  @override
-  String get reviewEditLabResults => 'مراجعة وتعديل نتائج المختبر';
-
-  @override
-  String get imageNotAvailable => 'الصورة غير متاحة';
-
-  @override
-  String get addTest => 'إضافة اختبار';
-
-  @override
-  String saveResults(int count) {
-    return 'حفظ $count نتيجة';
-  }
-
-  @override
-  String get labResultsSavedSuccessfully => 'تم حفظ نتائج المختبر بنجاح!';
-
-  @override
-  String failedToSaveResults(String error) {
-    return 'فشل في حفظ النتائج: $error';
-  }
-
-  @override
-  String get noResultsToSave => 'لا توجد نتائج لحفظها';
-
-  @override
-  String get pdfLabReport => 'تقرير مختبر PDF';
-
-  @override
-  String get savePDFReference => 'حفظ مرجع PDF';
-
-  @override
-  String get enterDataManually => 'إدخال البيانات يدويًا';
-
-  @override
-  String get pdfSavedAndUploaded => 'تم حفظ وتحميل ملف PDF!';
-
-  @override
-  String failedToSavePDF(String error) {
-    return 'فشل في حفظ ملف PDF: $error';
-  }
-
-  @override
-  String get extractLabResults => 'استخراج نتائج المختبر';
-
-  @override
-  String get extractingTextFromImage => 'جارٍ استخراج النص من الصورة...';
-
-  @override
-  String get viewRawText => 'عرض النص الخام';
-
-  @override
-  String get noDataExtracted => 'لم يتم استخراج بيانات';
-
-  @override
-  String get saveImageOnly => 'حفظ الصورة فقط';
-
-  @override
-  String get imageSaved => 'تم حفظ الصورة! يمكنك إضافة التفاصيل لاحقًا.';
-
-  @override
-  String get enterManually => 'إدخال يدويًا';
-
-  @override
-  String get noImageSaved => 'لم يتم حفظ أي صورة. يرجى المحاولة مرة أخرى.';
-
-  @override
-  String get manualLabEntry => 'إدخال مختبر يدوي';
-
-  @override
-  String get labResultAddedSuccessfully => 'تمت إضافة نتيجة المختبر بنجاح!';
-
-  @override
-  String get exporting => 'جارٍ التصدير...';
-
-  @override
-  String get labResultImage => 'صورة نتيجة المختبر';
-
-  @override
-  String get deleteResult => 'حذف النتيجة';
-
-  @override
-  String areYouSureDeleteResult(String testName) {
-    return 'هل أنتِ متأكدة من حذف $testName؟';
-  }
-
-  @override
-  String get delete => 'حذف';
-
-  @override
-  String get exportLabResults => 'تصدير نتائج المختبر';
-
-  @override
-  String get exportAllLabResultsAsZIP =>
-      'تصدير جميع صور نتائج المختبر كملف ZIP؟';
-
-  @override
-  String get export => 'تصدير';
-
-  @override
-  String get labResultUpdatedSuccessfully => 'تم تحديث نتيجة المختبر بنجاح';
-
-  @override
-  String errorUpdatingResult(String error) {
-    return 'خطأ في تحديث النتيجة: $error';
-  }
-
-  @override
-  String get editLabResult => 'تعديل نتيجة المختبر';
-
-  @override
-  String errorCallingContact(String contactName, String error) {
-    return 'خطأ في الاتصال بـ $contactName: $error';
-  }
-
-  @override
-  String get iDontNeedThisContact => 'لا أحتاج هذا جهة الاتصال';
-
-  @override
-  String get saveEmergencyContacts => 'حفظ';
-
-  @override
-  String get setupEmergencyContacts => 'إعداد جهات اتصال الطوارئ';
-
-  @override
-  String get setupContactsDescription =>
-      'أضيفي جهات اتصال الطوارئ للوصول السريع في الحالات العاجلة.';
-
-  @override
-  String get partner => 'الشريك';
-
-  @override
-  String get healthcareProvider => 'مقدم الرعاية الصحية';
-
-  @override
-  String get parent => 'الوالدين/العائلة';
-
-  @override
-  String get actionNeeded => 'مطلوب إجراء';
-
-  @override
-  String get detectedPatterns => 'الأنماط المكتشفة';
-
-  @override
-  String get recommendations => 'التوصيات';
-
-  @override
-  String get aiAnalysis => 'تحليل الذكاء الاصطناعي';
-
-  @override
-  String get aiRiskAssessmentDisclaimer =>
-      '⚠️ تقييم المخاطر الناتج عن الذكاء الاصطناعي. ليس تشخيصًا طبيًا. استشيري دائمًا مقدم الرعاية الصحية بشأن المخاوف.';
-
-  @override
-  String get riskLevel => 'الخطر';
-
-  @override
-  String get none => 'لا يوجد';
-
-  @override
-  String get normalRisk => 'عادي';
-
-  @override
-  String get lowRiskLevel => 'منخفض';
-
-  @override
-  String get mediumRisk => 'متوسط';
-
-  @override
-  String get highRisk => 'مرتفع';
-
-  @override
-  String get urgentRisk => 'عاجل';
-
-  @override
-  String get noSignificantConcerns => 'لا توجد مخاوف كبيرة';
-
-  @override
-  String get heartRateProgress => 'تطور معدل ضربات القلب';
-
-  @override
-  String get bloodPressureTrend => 'اتجاه ضغط الدم';
-
-  @override
-  String get noSymptomLogged => 'لم يتم تسجيل أي أعراض';
-
-  @override
-  String get noMoodsLogged => 'لم يتم تسجيل أي حالات مزاجية';
-
-  @override
-  String get noLabResultsYet => 'لا توجد نتائج اختبارات معملية حتى الآن';
-
-  @override
-  String get lowStatus => 'منخفض';
-
-  @override
-  String get highStatus => 'مرتفع';
-
-  @override
-  String get noSymptomDataAvailable => 'لا توجد بيانات الأعراض متاحة';
-
-  @override
-  String get noNotes => 'لا توجد ملاحظات';
-
-  @override
-  String get noMoodDataAvailable => 'لا توجد بيانات الحالة المزاجية متاحة';
-
-  @override
-  String get noSignificantConcernsMessage => 'لا توجد مخاوف كبيرة';
-
-  @override
-  String get noAssessmentDetailsAvailable => 'لا توجد تفاصيل التقييم متاحة';
-
-  @override
-  String minAgo(int minutes) {
-    return 'منذ $minutes دقيقة';
-  }
-
-  @override
-  String minAgoShort(int minutes) {
-    return 'منذ $minutesد';
-  }
-
-  @override
-  String hoursAgoShort(int hours) {
-    return 'منذ $hoursس';
-  }
-
-  @override
-  String daysAgoShort(int days) {
-    return 'منذ $daysي';
-  }
-
-  @override
-  String get underweight => 'نقص الوزن';
-
-  @override
-  String get overweight => 'زيادة الوزن';
-
-  @override
-  String get obese => 'السمنة';
-
-  @override
-  String get mixedMoodsCareMessage => 'مزاج مختلط - اعتني بنفسك!';
-
-  @override
-  String get pain => 'ألم';
-
-  @override
-  String get sleep => 'نوم';
-
-  @override
-  String get feet => 'قدم';
+  String get fiveMinRead => 'قراءة 5 دقائق';
 }

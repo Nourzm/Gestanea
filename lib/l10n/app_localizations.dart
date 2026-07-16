@@ -100,59 +100,635 @@ abstract class AppLocalizations {
     Locale('fr'),
   ];
 
-  /// No description provided for @locationPermissionRequired.
+  /// No description provided for @hello.
   ///
   /// In en, this message translates to:
-  /// **'Location Permission Required'**
-  String get locationPermissionRequired;
+  /// **'Hello'**
+  String get hello;
 
-  /// No description provided for @locationPermissionMessage.
+  /// No description provided for @ourDoctors.
   ///
   /// In en, this message translates to:
-  /// **'We need access to your location to show nearby doctors.'**
-  String get locationPermissionMessage;
+  /// **'Our Doctors'**
+  String get ourDoctors;
 
-  /// No description provided for @gettingLocation.
+  /// No description provided for @findTheBestDoctor.
   ///
   /// In en, this message translates to:
-  /// **'Getting your location...'**
-  String get gettingLocation;
+  /// **'find the best doctor'**
+  String get findTheBestDoctor;
 
-  /// No description provided for @locationPermissionDenied.
+  /// No description provided for @upComing.
   ///
   /// In en, this message translates to:
-  /// **'Location permission denied'**
-  String get locationPermissionDenied;
+  /// **'Up coming'**
+  String get upComing;
 
-  /// No description provided for @locationUpdated.
+  /// No description provided for @seeAll.
   ///
   /// In en, this message translates to:
-  /// **'Location updated'**
-  String get locationUpdated;
+  /// **'see all'**
+  String get seeAll;
 
-  /// No description provided for @retry.
+  /// No description provided for @today.
   ///
   /// In en, this message translates to:
-  /// **'Retry'**
-  String get retry;
+  /// **'Today'**
+  String get today;
 
-  /// No description provided for @showingDoctorsNearYou.
+  /// No description provided for @tomorrow.
   ///
   /// In en, this message translates to:
-  /// **'Showing doctors near you'**
-  String get showingDoctorsNearYou;
+  /// **'Tomorrow'**
+  String get tomorrow;
 
-  /// No description provided for @selectLocation.
+  /// No description provided for @at.
   ///
   /// In en, this message translates to:
-  /// **'Select Location'**
-  String get selectLocation;
+  /// **'at'**
+  String get at;
 
-  /// No description provided for @searchWilaya.
+  /// No description provided for @overdue.
   ///
   /// In en, this message translates to:
-  /// **'Search for a wilaya...'**
-  String get searchWilaya;
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @in_.
+  ///
+  /// In en, this message translates to:
+  /// **'In'**
+  String get in_;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get minutes;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// No description provided for @noUpcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming events'**
+  String get noUpcomingEvents;
+
+  /// No description provided for @addAppointmentsInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Add appointments in Plan'**
+  String get addAppointmentsInPlan;
+
+  /// No description provided for @getInTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Get in Touch'**
+  String get getInTouch;
+
+  /// No description provided for @contactFormDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a question or feedback? We\'d love to hear from you. Fill out the form below and we\'ll get back to you within 24 hours.'**
+  String get contactFormDescription;
+
+  /// No description provided for @supportEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'support@momcare.com'**
+  String get supportEmail;
+
+  /// No description provided for @supportPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 (800) 123-4567'**
+  String get supportPhone;
+
+  /// No description provided for @supportHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon-Fri, 9AM-6PM EST'**
+  String get supportHours;
+
+  /// No description provided for @yourNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get yourNameLabel;
+
+  /// No description provided for @enterYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get enterYourName;
+
+  /// No description provided for @emailAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailAddressLabel;
+
+  /// No description provided for @emailPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'your.email@example.com'**
+  String get emailPlaceholder;
+
+  /// No description provided for @subjectLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get subjectLabel;
+
+  /// No description provided for @whatIsThisAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'What is this about?'**
+  String get whatIsThisAbout;
+
+  /// No description provided for @messageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get messageLabel;
+
+  /// No description provided for @tellUsHowWeCanHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us how we can help...'**
+  String get tellUsHowWeCanHelp;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Message'**
+  String get sendMessage;
+
+  /// No description provided for @appName.
+  ///
+  /// In en, this message translates to:
+  /// **'Gestanéa'**
+  String get appName;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 2.1.0'**
+  String get appVersion;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trusted companion through pregnancy and motherhood. Track your journey, get personalized insights, and connect with a supportive community.'**
+  String get appDescription;
+
+  /// No description provided for @activeUsersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'100K+'**
+  String get activeUsersCount;
+
+  /// No description provided for @activeUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Users'**
+  String get activeUsers;
+
+  /// No description provided for @appRatingValue.
+  ///
+  /// In en, this message translates to:
+  /// **'4.8★'**
+  String get appRatingValue;
+
+  /// No description provided for @appRating.
+  ///
+  /// In en, this message translates to:
+  /// **'App Rating'**
+  String get appRating;
+
+  /// No description provided for @versionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Version Info'**
+  String get versionInfo;
+
+  /// No description provided for @versionBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Build 2.1.0 (245)'**
+  String get versionBuild;
+
+  /// No description provided for @madeWithLove.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with Love'**
+  String get madeWithLove;
+
+  /// No description provided for @forMomsEverywhere.
+  ///
+  /// In en, this message translates to:
+  /// **'For moms everywhere'**
+  String get forMomsEverywhere;
+
+  /// No description provided for @copyrightText.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2025 Gestanéa. All rights reserved.'**
+  String get copyrightText;
+
+  /// No description provided for @faqIntroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get faqIntroText;
+
+  /// No description provided for @faqQuestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I set appointment reminders?'**
+  String get faqQuestion1;
+
+  /// No description provided for @faqAnswer1.
+  ///
+  /// In en, this message translates to:
+  /// **'You can set appointment reminders by navigating to the \"Appointments\" section, selecting your scheduled visit, and tapping the \"Set Reminder\" option. You will be able to choose a time interval (e.g., 1 day or 1 hour before).'**
+  String get faqAnswer1;
+
+  /// No description provided for @faqQuestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'Is my health data secure?'**
+  String get faqQuestion2;
+
+  /// No description provided for @faqAnswer2.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. We use industry-leading encryption and follow HIPAA/GDPR compliance guidelines to ensure your personal health information remains private and secure. Data is stored anonymously on secure servers.'**
+  String get faqAnswer2;
+
+  /// No description provided for @faqQuestion3.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change my due date?'**
+  String get faqQuestion3;
+
+  /// No description provided for @faqAnswer3.
+  ///
+  /// In en, this message translates to:
+  /// **'If you are tracking a pregnancy, you can change your estimated due date (EDD) in the \"Profile\" or \"Tracking\" settings. Tap on the current due date field to manually enter a new date based on your latest ultrasound or doctor\'s recommendation.'**
+  String get faqAnswer3;
+
+  /// No description provided for @faqQuestion4.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I export my health records?'**
+  String get faqQuestion4;
+
+  /// No description provided for @faqAnswer4.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Go to Settings > Data & Privacy > Download My Data to export all your information in a readable format.'**
+  String get faqAnswer4;
+
+  /// No description provided for @faqQuestion5.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I contact support?'**
+  String get faqQuestion5;
+
+  /// No description provided for @faqAnswer5.
+  ///
+  /// In en, this message translates to:
+  /// **'You can contact support via the \"Contact Support\" button at the bottom of this screen, or you can email us directly at support@appname.com. We typically respond within 24 hours.'**
+  String get faqAnswer5;
+
+  /// No description provided for @faqQuestion6.
+  ///
+  /// In en, this message translates to:
+  /// **'What languages are supported?'**
+  String get faqQuestion6;
+
+  /// No description provided for @faqAnswer6.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently, the app supports English, Spanish, French, and German. You can change your preferred language in the \"App Settings\" menu.'**
+  String get faqAnswer6;
+
+  /// No description provided for @stillHaveQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Still have questions?'**
+  String get stillHaveQuestions;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contactSupport;
+
+  /// No description provided for @faq.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ'**
+  String get faq;
+
+  /// No description provided for @yourPrivacyMatters.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Privacy Matters'**
+  String get yourPrivacyMatters;
+
+  /// No description provided for @privacyCommitmentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We are committed to protecting your personal information and ensuring transparency about how we use your data.'**
+  String get privacyCommitmentDescription;
+
+  /// No description provided for @lastUpdatedPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: December 4, 2025'**
+  String get lastUpdatedPrivacy;
+
+  /// No description provided for @dataCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Collection'**
+  String get dataCollection;
+
+  /// No description provided for @dataCollectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect only essential information needed to provide you with the best health tracking experience. This includes your profile information, health metrics, and app usage data.'**
+  String get dataCollectionDescription;
+
+  /// No description provided for @dataSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Security'**
+  String get dataSecurity;
+
+  /// No description provided for @dataSecurityDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is encrypted using industry-standard protocols. We employ multiple layers of security to protect your personal health information from unauthorized access.'**
+  String get dataSecurityDescription;
+
+  /// No description provided for @dataUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Usage'**
+  String get dataUsage;
+
+  /// No description provided for @dataUsageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We use your data to personalize your app experience, provide relevant health insights, and improve. We do not sell personal data to third parties.'**
+  String get dataUsageDescription;
+
+  /// No description provided for @yourRights.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rights'**
+  String get yourRights;
+
+  /// No description provided for @yourRightsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to access, or update, or request deletion of your data. You can manage privacy settings within the app or contact support.'**
+  String get yourRightsDescription;
+
+  /// No description provided for @weAreHereToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re Here to Help'**
+  String get weAreHereToHelp;
+
+  /// No description provided for @chooseSupportOptionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the support option that works best for you. Our team is available 24/7 to assist you.'**
+  String get chooseSupportOptionDescription;
+
+  /// No description provided for @knowledgeBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge Base'**
+  String get knowledgeBase;
+
+  /// No description provided for @browseArticlesAndGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse articles and guides'**
+  String get browseArticlesAndGuides;
+
+  /// No description provided for @liveChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Chat'**
+  String get liveChat;
+
+  /// No description provided for @chatWithSupportTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with our support team'**
+  String get chatWithSupportTeam;
+
+  /// No description provided for @videoTutorials.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Tutorials'**
+  String get videoTutorials;
+
+  /// No description provided for @watchStepByStepGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch step-by-step guides'**
+  String get watchStepByStepGuides;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get emailSupport;
+
+  /// No description provided for @emailSupportAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'support@momcare.com'**
+  String get emailSupportAddress;
+
+  /// No description provided for @phoneSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Support'**
+  String get phoneSupport;
+
+  /// No description provided for @phoneSupportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'1-800-MOM-CARE'**
+  String get phoneSupportNumber;
+
+  /// No description provided for @communityForum.
+  ///
+  /// In en, this message translates to:
+  /// **'Community Forum'**
+  String get communityForum;
+
+  /// No description provided for @connectWithOtherUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with other users'**
+  String get connectWithOtherUsers;
+
+  /// No description provided for @secureYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure Your Account'**
+  String get secureYourAccount;
+
+  /// No description provided for @enableSecurityFeaturesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable additional security features to protect your personal health information'**
+  String get enableSecurityFeaturesDescription;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @lastChangedDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Last changed 30 days ago'**
+  String get lastChangedDaysAgo;
+
+  /// No description provided for @biometricAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric Authentication'**
+  String get biometricAuthentication;
+
+  /// No description provided for @useFingerprintOrFaceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint or Face ID to unlock'**
+  String get useFingerprintOrFaceId;
+
+  /// No description provided for @twoFactorAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-Factor Authentication'**
+  String get twoFactorAuthentication;
+
+  /// No description provided for @addExtraLayerSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an extra layer of security'**
+  String get addExtraLayerSecurity;
+
+  /// No description provided for @autoLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Lock'**
+  String get autoLock;
+
+  /// No description provided for @lockAppAfterInactivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock app after 5 minutes of inactivity'**
+  String get lockAppAfterInactivity;
+
+  /// No description provided for @manageNotificationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your notification preferences'**
+  String get manageNotificationPreferences;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @receiveNotificationsOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive notifications on your device'**
+  String get receiveNotificationsOnDevice;
+
+  /// No description provided for @emailNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Notifications'**
+  String get emailNotifications;
+
+  /// No description provided for @getUpdatesViaEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Get updates via email'**
+  String get getUpdatesViaEmail;
+
+  /// No description provided for @appointmentReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Reminders'**
+  String get appointmentReminders;
+
+  /// No description provided for @neverMissAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Never miss a doctor\'s appointment'**
+  String get neverMissAppointment;
+
+  /// No description provided for @healthTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Tips'**
+  String get healthTips;
+
+  /// No description provided for @dailyWellnessRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wellness recommendations'**
+  String get dailyWellnessRecommendations;
+
+  /// No description provided for @weeklyReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Reports'**
+  String get weeklyReports;
+
+  /// No description provided for @healthProgressSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary of your health progress'**
+  String get healthProgressSummary;
+
+  /// No description provided for @vitaminReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Vitamin Reminders'**
+  String get vitaminReminders;
+
+  /// No description provided for @dontForgetSupplements.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t forget your supplements'**
+  String get dontForgetSupplements;
+
+  /// No description provided for @choosePreferredLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get choosePreferredLanguage;
 
   /// No description provided for @security.
   ///
@@ -219,12 +795,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to log out?'**
   String get logout_confirmation;
-
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
 
   /// No description provided for @unknown.
   ///
@@ -502,13 +1072,7 @@ abstract class AppLocalizations {
   /// **'Drop'**
   String get formDrop;
 
-  /// No description provided for @formSyrup.
-  ///
-  /// In en, this message translates to:
-  /// **'Syrup'**
-  String get formSyrup;
-
-  /// No description provided for @formOthers.
+  /// No description provided for @password.
   ///
   /// In en, this message translates to:
   /// **'Others'**
@@ -604,7 +1168,13 @@ abstract class AppLocalizations {
   /// **'Select End Date'**
   String get selectEndDate;
 
-  /// No description provided for @addTime.
+  /// No description provided for @signup.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signup;
+
+  /// No description provided for @your_name.
   ///
   /// In en, this message translates to:
   /// **'Add Time'**
@@ -688,13 +1258,7 @@ abstract class AppLocalizations {
   /// **'Book Appointment'**
   String get bookAppointment;
 
-  /// No description provided for @price.
-  ///
-  /// In en, this message translates to:
-  /// **'Price'**
-  String get price;
-
-  /// No description provided for @quantity.
+  /// Back support belt product
   ///
   /// In en, this message translates to:
   /// **'Quantity'**
@@ -2866,7 +3430,13 @@ abstract class AppLocalizations {
   /// **'PDF Lab Report'**
   String get pdfLabReport;
 
-  /// No description provided for @savePDFReference.
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @applyFilters.
   ///
   /// In en, this message translates to:
   /// **'Save PDF Reference'**
@@ -2989,296 +3559,26 @@ abstract class AppLocalizations {
   /// No description provided for @exportAllLabResultsAsZIP.
   ///
   /// In en, this message translates to:
-  /// **'Export all lab result images as a ZIP file?'**
-  String get exportAllLabResultsAsZIP;
+  /// **'Call Now'**
+  String get callNow;
 
-  /// No description provided for @export.
+  /// Pregnancy pillow product
   ///
   /// In en, this message translates to:
-  /// **'Export'**
-  String get export;
+  /// **'Pregnancy Pillow'**
+  String get pregnancyPillow;
 
-  /// No description provided for @labResultUpdatedSuccessfully.
+  /// No description provided for @essentialNutrientsMealPlanning.
   ///
   /// In en, this message translates to:
-  /// **'Lab result updated successfully'**
-  String get labResultUpdatedSuccessfully;
+  /// **'Essential nutrients and meal planning for a healthy pregnancy'**
+  String get essentialNutrientsMealPlanning;
 
-  /// No description provided for @errorUpdatingResult.
+  /// No description provided for @fiveMinRead.
   ///
   /// In en, this message translates to:
-  /// **'Error updating result: {error}'**
-  String errorUpdatingResult(String error);
-
-  /// No description provided for @editLabResult.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit Lab Result'**
-  String get editLabResult;
-
-  /// No description provided for @errorCallingContact.
-  ///
-  /// In en, this message translates to:
-  /// **'Error calling {contactName}: {error}'**
-  String errorCallingContact(String contactName, String error);
-
-  /// No description provided for @iDontNeedThisContact.
-  ///
-  /// In en, this message translates to:
-  /// **'I don\'t need this contact'**
-  String get iDontNeedThisContact;
-
-  /// No description provided for @saveEmergencyContacts.
-  ///
-  /// In en, this message translates to:
-  /// **'Save'**
-  String get saveEmergencyContacts;
-
-  /// No description provided for @setupEmergencyContacts.
-  ///
-  /// In en, this message translates to:
-  /// **'Setup Emergency Contacts'**
-  String get setupEmergencyContacts;
-
-  /// No description provided for @setupContactsDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Add emergency contacts for quick access during urgent situations.'**
-  String get setupContactsDescription;
-
-  /// No description provided for @partner.
-  ///
-  /// In en, this message translates to:
-  /// **'Partner'**
-  String get partner;
-
-  /// No description provided for @healthcareProvider.
-  ///
-  /// In en, this message translates to:
-  /// **'Healthcare Provider'**
-  String get healthcareProvider;
-
-  /// No description provided for @parent.
-  ///
-  /// In en, this message translates to:
-  /// **'Parent/Family'**
-  String get parent;
-
-  /// No description provided for @actionNeeded.
-  ///
-  /// In en, this message translates to:
-  /// **'ACTION NEEDED'**
-  String get actionNeeded;
-
-  /// No description provided for @detectedPatterns.
-  ///
-  /// In en, this message translates to:
-  /// **'Detected Patterns'**
-  String get detectedPatterns;
-
-  /// No description provided for @recommendations.
-  ///
-  /// In en, this message translates to:
-  /// **'Recommendations'**
-  String get recommendations;
-
-  /// No description provided for @aiAnalysis.
-  ///
-  /// In en, this message translates to:
-  /// **'AI Analysis'**
-  String get aiAnalysis;
-
-  /// No description provided for @aiRiskAssessmentDisclaimer.
-  ///
-  /// In en, this message translates to:
-  /// **'⚠️ AI-generated risk assessment. Not a medical diagnosis. Always consult your healthcare provider for concerns.'**
-  String get aiRiskAssessmentDisclaimer;
-
-  /// No description provided for @riskLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'RISK'**
-  String get riskLevel;
-
-  /// No description provided for @none.
-  ///
-  /// In en, this message translates to:
-  /// **'NONE'**
-  String get none;
-
-  /// No description provided for @normalRisk.
-  ///
-  /// In en, this message translates to:
-  /// **'Normal'**
-  String get normalRisk;
-
-  /// No description provided for @lowRiskLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Low'**
-  String get lowRiskLevel;
-
-  /// No description provided for @mediumRisk.
-  ///
-  /// In en, this message translates to:
-  /// **'Medium'**
-  String get mediumRisk;
-
-  /// No description provided for @highRisk.
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get highRisk;
-
-  /// No description provided for @urgentRisk.
-  ///
-  /// In en, this message translates to:
-  /// **'Urgent'**
-  String get urgentRisk;
-
-  /// No description provided for @noSignificantConcerns.
-  ///
-  /// In en, this message translates to:
-  /// **'No significant concerns'**
-  String get noSignificantConcerns;
-
-  /// No description provided for @heartRateProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Heart Rate Progress'**
-  String get heartRateProgress;
-
-  /// No description provided for @bloodPressureTrend.
-  ///
-  /// In en, this message translates to:
-  /// **'Blood Pressure Trend'**
-  String get bloodPressureTrend;
-
-  /// No description provided for @noSymptomLogged.
-  ///
-  /// In en, this message translates to:
-  /// **'No symptoms logged yet'**
-  String get noSymptomLogged;
-
-  /// No description provided for @noMoodsLogged.
-  ///
-  /// In en, this message translates to:
-  /// **'No moods logged yet'**
-  String get noMoodsLogged;
-
-  /// No description provided for @noLabResultsYet.
-  ///
-  /// In en, this message translates to:
-  /// **'No lab results yet'**
-  String get noLabResultsYet;
-
-  /// No description provided for @lowStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'Low'**
-  String get lowStatus;
-
-  /// No description provided for @highStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get highStatus;
-
-  /// No description provided for @noSymptomDataAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No symptom data available'**
-  String get noSymptomDataAvailable;
-
-  /// No description provided for @noNotes.
-  ///
-  /// In en, this message translates to:
-  /// **'No notes'**
-  String get noNotes;
-
-  /// No description provided for @noMoodDataAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No mood data available'**
-  String get noMoodDataAvailable;
-
-  /// No description provided for @noSignificantConcernsMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'No significant concerns'**
-  String get noSignificantConcernsMessage;
-
-  /// No description provided for @noAssessmentDetailsAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No assessment details available'**
-  String get noAssessmentDetailsAvailable;
-
-  /// No description provided for @minAgo.
-  ///
-  /// In en, this message translates to:
-  /// **'{minutes} min ago'**
-  String minAgo(int minutes);
-
-  /// No description provided for @minAgoShort.
-  ///
-  /// In en, this message translates to:
-  /// **'{minutes}m ago'**
-  String minAgoShort(int minutes);
-
-  /// No description provided for @hoursAgoShort.
-  ///
-  /// In en, this message translates to:
-  /// **'{hours}h ago'**
-  String hoursAgoShort(int hours);
-
-  /// No description provided for @daysAgoShort.
-  ///
-  /// In en, this message translates to:
-  /// **'{days}d ago'**
-  String daysAgoShort(int days);
-
-  /// No description provided for @underweight.
-  ///
-  /// In en, this message translates to:
-  /// **'Underweight'**
-  String get underweight;
-
-  /// No description provided for @overweight.
-  ///
-  /// In en, this message translates to:
-  /// **'Overweight'**
-  String get overweight;
-
-  /// No description provided for @obese.
-  ///
-  /// In en, this message translates to:
-  /// **'Obese'**
-  String get obese;
-
-  /// No description provided for @mixedMoodsCareMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Mixed moods - take care of yourself!'**
-  String get mixedMoodsCareMessage;
-
-  /// No description provided for @pain.
-  ///
-  /// In en, this message translates to:
-  /// **'pain'**
-  String get pain;
-
-  /// No description provided for @sleep.
-  ///
-  /// In en, this message translates to:
-  /// **'sleep'**
-  String get sleep;
-
-  /// No description provided for @feet.
-  ///
-  /// In en, this message translates to:
-  /// **'feet'**
-  String get feet;
+  /// **'5 min read'**
+  String get fiveMinRead;
 }
 
 class _AppLocalizationsDelegate

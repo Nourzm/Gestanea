@@ -50,7 +50,7 @@ class NeumorphicButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final buttonHeight = minHeight ?? size.height * 0.08;
+    final buttonHeight = minHeight ?? size.height * 0.07;
 
     final verticalPadding = size.height * 0.012;
     final horizontalPadding = size.width * 0.04;
@@ -86,14 +86,21 @@ class NeumorphicButton extends StatelessWidget {
             vertical: verticalPadding,
             horizontal: horizontalPadding,
           ),
-          child: isLoading
-              ? const Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(width: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  prefix ?? const SizedBox(width: 20, height: 20),
+
+                  Text(
+                    text,
+                    style: AppTextStyles.headline2.copyWith(
+                      color: AppColors.white,
+                      fontSize: size.width * 0.04,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 )

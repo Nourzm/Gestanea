@@ -16,6 +16,7 @@ import 'package:gestanea/core/widgets/notificationsCard.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 
@@ -25,6 +26,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -106,12 +108,11 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
-                              final l10n = AppLocalizations.of(context)!;
-                              String greeting = l10n.hello;
+                              String greeting = t.hello;
                               String nameText = '';
                               if (state is AuthAuthenticated) {
                                 nameText = state.user.name;
-                                greeting = l10n.hello;
+                                greeting = t.hello;
                               }
                               return Text(
                                 '$greeting ${nameText.isNotEmpty ? nameText : ''}',
@@ -208,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               SizedBox(height: screenHeight * 0.015),
                               Text(
-                                AppLocalizations.of(context)!.ourDoctors,
+                                t.ourDoctors,
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.045,
                                   fontWeight: FontWeight.bold,
@@ -217,7 +218,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               SizedBox(height: screenHeight * 0.005),
                               Text(
-                                AppLocalizations.of(context)!.findTheBestDoctor,
+                                t.findTheBestDoctor,
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.032,
                                   color: AppColors.main500.withValues(
@@ -243,7 +244,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.upComing,
+                      t.upComing,
                       style: TextStyle(
                         fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.bold,
@@ -254,7 +255,7 @@ class HomeScreen extends StatelessWidget {
                       onTap: () =>
                           onNavigate(3), // Navigate to Plan page (index 3)
                       child: Text(
-                        AppLocalizations.of(context)!.seeAll,
+                        t.seeAll,
                         style: TextStyle(
                           fontSize: screenWidth * 0.035,
                           fontWeight: FontWeight.w600,
@@ -297,8 +298,8 @@ class HomeScreen extends StatelessWidget {
                           screenHeight,
                           title: appointments[i].title,
                           subtitle: _formatAppointmentTime(
-                            context,
                             appointments[i].dateTime,
+                            t,
                           ),
                           icon: "assets/icons/heartplus.svg",
                           isAppointment: true,
@@ -319,8 +320,8 @@ class HomeScreen extends StatelessWidget {
                           screenHeight,
                           title: medicines[i].medicineName,
                           subtitle: _formatMedicineTime(
-                            context,
                             medicines[i].nextDoseTime,
+                            t,
                           ),
                           icon: "assets/icons/pills.svg",
                           isAppointment: false,
@@ -331,16 +332,13 @@ class HomeScreen extends StatelessWidget {
                     // Show placeholder if no upcoming events
                     if (upcomingItems.isEmpty) {
                       return _buildNoUpcomingItems(
-                        context,
                         screenWidth,
                         screenHeight,
+                        t,
                       );
                     }
 
-                    return Container(
-                      width: double.infinity,
-                      child: Column(children: upcomingItems),
-                    );
+                    return Column(children: upcomingItems);
                   },
                 ),
               ),
@@ -353,7 +351,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  String _formatAppointmentTime(BuildContext context, DateTime dateTime) {
+  String _formatAppointmentTime(DateTime dateTime, AppLocalizations t) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final appointmentDate = DateTime(
@@ -365,29 +363,27 @@ class HomeScreen extends StatelessWidget {
 
     String dayText;
     if (appointmentDate == today) {
-      dayText = AppLocalizations.of(context)!.today;
+      dayText = t.today;
     } else if (appointmentDate == tomorrow) {
-      dayText = AppLocalizations.of(context)!.tomorrow;
+      dayText = t.tomorrow;
     } else {
       dayText = DateFormat('MMM d').format(dateTime);
     }
 
     final timeText = DateFormat('h:mm a').format(dateTime);
-    final l10n = AppLocalizations.of(context)!;
-    return '$dayText ${l10n.at} $timeText';
+    return '$dayText ${t.at} $timeText';
   }
 
-  String _formatMedicineTime(BuildContext context, DateTime dateTime) {
+  String _formatMedicineTime(DateTime dateTime, AppLocalizations t) {
     final now = DateTime.now();
     final diff = dateTime.difference(now);
-    final l10n = AppLocalizations.of(context)!;
 
     if (diff.isNegative) {
-      return l10n.overdue;
+      return t.overdue;
     } else if (diff.inMinutes < 60) {
-      return l10n.inMinutes(diff.inMinutes);
+      return '${t.in_} ${diff.inMinutes} ${t.minutes}';
     } else if (diff.inHours < 24) {
-      return l10n.inHours(diff.inHours);
+      return '${t.in_} ${diff.inHours} ${t.hours}';
     } else {
       return DateFormat('MMM d, h:mm a').format(dateTime);
     }
@@ -477,9 +473,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildNoUpcomingItems(
-    BuildContext context,
     double screenWidth,
     double screenHeight,
+    AppLocalizations t,
   ) {
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.06),
@@ -500,7 +496,7 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: screenHeight * 0.01),
           Text(
-            AppLocalizations.of(context)!.noUpcomingEvents,
+            t.noUpcomingEvents,
             style: TextStyle(
               fontSize: screenWidth * 0.04,
               color: Colors.grey.shade600,
@@ -511,7 +507,7 @@ class HomeScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => onNavigate(3),
             child: Text(
-              AppLocalizations.of(context)!.addAppointmentsInPlan,
+              t.addAppointmentsInPlan,
               style: TextStyle(
                 fontSize: screenWidth * 0.035,
                 color: AppColors.main500,

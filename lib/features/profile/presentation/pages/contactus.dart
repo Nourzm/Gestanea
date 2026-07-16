@@ -4,7 +4,7 @@ import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/utils/box_shadow.dart';
 import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
-import 'package:gestanea/core/services/emailjs_service.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -369,6 +369,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -383,7 +384,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           },
         ),
         title: Text(
-          'Contacts',
+          t.contact_us,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -400,106 +401,70 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           horizontal: horizontalPadding,
           vertical: 10.0,
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // 1. "Get in Touch" Header Card
-              NeumorphicContainer(
-                borderRadius: 30.0,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 30.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Get in Touch",
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // 1. "Get in Touch" Header Card
+            NeumorphicContainer(
+              borderRadius: 30.0,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 30.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.getInTouch,
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.",
-                      style: TextStyle(
-                        color: AppColors.main700.withOpacity(0.7),
-                        fontSize: 14,
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    t.contactFormDescription,
+                    style: TextStyle(
+                      color: AppColors.main700.withOpacity(0.7),
+                      fontSize: 14,
                     ),
-                    const SizedBox(height: 15),
-                    // Contact details
-                    _buildContactDetail(
-                      Icons.email_outlined,
-                      'support@gestanea.com',
-                    ),
-                    _buildContactDetail(
-                      Icons.phone_outlined,
-                      '+1 (800) 123-4567',
-                    ),
-                    _buildContactDetail(Icons.schedule, 'Mon-Fri, 9AM-6PM EST'),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 15),
+                  // Contact details
+                  _buildContactDetail(Icons.email_outlined, t.supportEmail),
+                  _buildContactDetail(Icons.phone_outlined, t.supportPhone),
+                  _buildContactDetail(Icons.schedule, t.supportHours),
+                ],
               ),
               const SizedBox(height: 20),
 
-              // 2. Contact Form Fields
-              NeumorphicTextField(
-                label: 'Your Name',
-                hint: 'Enter your name',
-                controller: _nameController,
-                errorText: _autoValidate ? _nameError : null,
-                validator: _validateName,
-              ),
-              const SizedBox(height: 15),
-              NeumorphicTextField(
-                label: 'Email Address',
-                hint: 'your.email@example.com',
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                errorText: _autoValidate ? _emailError : null,
-                validator: _validateEmail,
-              ),
-              const SizedBox(height: 15),
-              NeumorphicTextField(
-                label: 'Subject',
-                hint: 'What is this about?',
-                controller: _subjectController,
-                errorText: _autoValidate ? _subjectError : null,
-                validator: _validateSubject,
-              ),
-              const SizedBox(height: 15),
-              NeumorphicTextField(
-                label: 'Message',
-                hint: 'Tell us how we can help...',
-                maxLines: 6,
-                controller: _messageController,
-                errorText: _autoValidate ? _messageError : null,
-                validator: _validateMessage,
-              ),
-              const SizedBox(height: 30),
+            // 2. Contact Form Fields
+            NeumorphicTextField(label: t.yourNameLabel, hint: t.enterYourName),
+            const SizedBox(height: 15),
+            NeumorphicTextField(
+              label: t.emailAddressLabel,
+              hint: t.emailPlaceholder,
+            ),
+            const SizedBox(height: 15),
+            NeumorphicTextField(label: t.subjectLabel, hint: t.whatIsThisAbout),
+            const SizedBox(height: 15),
+            NeumorphicTextField(
+              label: t.messageLabel,
+              hint: t.tellUsHowWeCanHelp,
+              maxLines: 6,
+            ),
+            const SizedBox(height: 30),
 
-              // 3. Submit Button
-              NeumorphicButton(
-                text: _isLoading ? 'Sending...' : "Send Message",
-                onPressed: _isLoading ? null : _sendEmail,
-                prefixIcon: _isLoading
-                    ? null
-                    : const Icon(
-                        Icons.send,
-                        color: AppColors.white,
-                        size: 24,
-                      ),
-                color: AppColors.main500,
-                isLoading: _isLoading,
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
+            // 3. Submit Button
+            NeumorphicButton(
+              text: t.sendMessage,
+              onPressed: () {},
+              prefixIcon: Icons.send,
+              color: AppColors.main500,
+            ),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );

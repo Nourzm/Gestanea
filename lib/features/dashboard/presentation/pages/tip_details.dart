@@ -77,88 +77,84 @@ class CustomCurvedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double appBarHeight = MediaQuery.of(context).padding.top + 56.0;
-
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.4,
 
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1350&q=80',
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/onboarding5.png"),
+                    fit: BoxFit.cover,
                   ),
-                  fit: BoxFit.cover,
                 ),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    color: const Color(
-                      0xFF8A2BE2,
-                    ).withOpacity(0.3), // Purple overlay
-                  ),
-                  Positioned(
-                    top:
-                        appBarHeight -
-                        40, // Place it near the top status bar area
-                    left: 16,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      borderRadius: BorderRadius.circular(20),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 30,
+                child: Stack(
+                  children: [
+                    Container(
+                      color: const Color(
+                        0xFF8A2BE2,
+                      ).withOpacity(0.3), // Purple overlay
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 16,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Pregnancy Pillow',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: Text(
+                        'Healthy Nutrition',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Transform.translate(
-              offset: Offset(0, -MediaQuery.of(context).size.height * 0.22),
-              child: Container(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height * 0.85,
+                  ],
                 ),
-                width: double.infinity,
-                child: CustomPaint(
-                  painter: const WavyShadowAndFillPainter(),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top:
-                          MediaQuery.of(context).size.height * 0.75 * 0.05 +
-                          20, // A refined estimate to clear the peak.
-                      left: 20,
-                      right: 20,
+              ),
+              Transform.translate(
+                offset: Offset(0, -MediaQuery.of(context).size.height * 0.28),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.85,
+                  ),
+                  width: double.infinity,
+                  child: CustomPaint(
+                    painter: const WavyShadowAndFillPainter(),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top:
+                            MediaQuery.of(context).size.height * 0.75 * 0.05 +
+                            20, // A refined estimate to clear the peak.
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: _buildDummyContent(),
                     ),
-                    child: _buildDummyContent(),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -169,11 +165,11 @@ Widget _buildDummyContent() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const SizedBox(height: 130),
+      const SizedBox(height: 140),
 
       // Title
       const Text(
-        'Healthy Pregnancy Tips',
+        'Healthy Nutrition',
         style: TextStyle(
           color: Colors.white,
           fontSize: 22,
@@ -182,9 +178,9 @@ Widget _buildDummyContent() {
       ),
       const SizedBox(height: 12),
 
-      // Subtitle / description
+      // Description
       const Text(
-        'Discover simple practices to enhance your comfort, sleep, and well-being during pregnancy.',
+        'Include a variety of fruits, vegetables, lean proteins, and whole grains to support both mother and baby.',
         style: TextStyle(color: Colors.white70, fontSize: 16, height: 1.5),
       ),
       const SizedBox(height: 20),
@@ -212,17 +208,17 @@ Widget _buildDummyContent() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           Text(
-            '• Use a supportive pregnancy pillow for better sleep posture.',
+            '• Eat a rainbow of fruits and vegetables every day.',
             style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
           ),
           SizedBox(height: 6),
           Text(
-            '• Stay hydrated throughout the day to maintain energy and wellness.',
+            '• Include lean proteins such as chicken, fish, beans, and tofu.',
             style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
           ),
           SizedBox(height: 6),
           Text(
-            '• Light stretching in the morning can reduce back pain.',
+            '• Prefer whole grains like brown rice, oats, and whole wheat bread.',
             style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
           ),
         ],
@@ -252,7 +248,7 @@ Widget _buildDummyContent() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             Text(
-              'Choosing the Right Pregnancy Pillow',
+              'Balancing Nutrients for Pregnancy',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -261,7 +257,7 @@ Widget _buildDummyContent() {
             ),
             SizedBox(height: 8),
             Text(
-              'Learn how different pillow shapes support your body for restful sleep.',
+              'Learn how to combine fruits, vegetables, proteins, and grains to nourish both mother and baby.',
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 14,
@@ -270,26 +266,6 @@ Widget _buildDummyContent() {
             ),
           ],
         ),
-      ),
-      const SizedBox(height: 24),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            '• Use a supportive pregnancy pillow for better sleep posture.',
-            style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
-          ),
-          SizedBox(height: 6),
-          Text(
-            '• Stay hydrated throughout the day to maintain energy and wellness.',
-            style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
-          ),
-          SizedBox(height: 6),
-          Text(
-            '• Light stretching in the morning can reduce back pain.',
-            style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
-          ),
-        ],
       ),
     ],
   );

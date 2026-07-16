@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 // --- Custom Neumorphic Container Widget (Reused) ---
 class NeumorphicContainer extends StatelessWidget {
@@ -107,6 +108,7 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
 
@@ -121,7 +123,7 @@ class HelpSupportScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          'Help & Support',
+          t.help_support,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -151,7 +153,7 @@ class HelpSupportScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "We're Here to Help",
+                    t.weAreHereToHelp,
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 20,
@@ -160,7 +162,7 @@ class HelpSupportScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Choose the support option that works best for you. Our team is available 24/7 to assist you.',
+                    t.chooseSupportOptionDescription,
                     style: TextStyle(
                       color: AppColors.main700.withOpacity(0.7),
                       fontSize: 14,
@@ -174,32 +176,32 @@ class HelpSupportScreen extends StatelessWidget {
             // 2. Support Options List
             SupportOptionTile(
               icon: Icons.book_outlined,
-              title: 'Knowledge Base',
-              subtitle: 'Browse articles and guides',
+              title: t.knowledgeBase,
+              subtitle: t.browseArticlesAndGuides,
               onTap: () {},
               iconColor: AppColors.main500,
             ),
             const SizedBox(height: 15),
             SupportOptionTile(
               icon: Icons.chat_bubble_outline,
-              title: 'Live Chat',
-              subtitle: 'Chat with our support team',
+              title: t.liveChat,
+              subtitle: t.chatWithSupportTeam,
               onTap: () {},
               iconColor: AppColors.main500,
             ),
             const SizedBox(height: 15),
             SupportOptionTile(
               icon: Icons.videocam_outlined,
-              title: 'Video Tutorials',
-              subtitle: 'Watch step-by-step guides',
+              title: t.videoTutorials,
+              subtitle: t.watchStepByStepGuides,
               onTap: () {},
               iconColor: AppColors.main500,
             ),
             const SizedBox(height: 15),
             SupportOptionTile(
               icon: Icons.email_outlined,
-              title: 'Email Support',
-              subtitle: 'support@momcare.com',
+              title: t.emailSupport,
+              subtitle: t.emailSupportAddress,
               onTap: () {},
               iconColor: AppColors.main500,
               subtitleColor:
@@ -208,8 +210,8 @@ class HelpSupportScreen extends StatelessWidget {
             const SizedBox(height: 15),
             SupportOptionTile(
               icon: Icons.phone_outlined,
-              title: 'Phone Support',
-              subtitle: '1-800-MOM-CARE',
+              title: t.phoneSupport,
+              subtitle: t.phoneSupportNumber,
               onTap: () {},
               iconColor: AppColors.main500,
               subtitleColor:
@@ -218,8 +220,8 @@ class HelpSupportScreen extends StatelessWidget {
             const SizedBox(height: 15),
             SupportOptionTile(
               icon: Icons.public_outlined,
-              title: 'Community Forum',
-              subtitle: 'Connect with other users',
+              title: t.communityForum,
+              subtitle: t.connectWithOtherUsers,
               onTap: () {},
               iconColor: AppColors.main500,
             ),

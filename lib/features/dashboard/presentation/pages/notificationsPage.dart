@@ -3,12 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/core/database/models/notification_model.dart';
-import 'package:gestanea/core/services/notification_service.dart';
-import 'package:gestanea/features/auth/logic/auth_bloc.dart';
-import 'package:gestanea/features/auth/logic/auth_state.dart';
-import 'package:intl/intl.dart';
-import 'dart:async';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -130,6 +125,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       appBar: AppBar(
@@ -145,7 +141,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           },
         ),
         title: Text(
-          'Notifications',
+          t.notifications,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
