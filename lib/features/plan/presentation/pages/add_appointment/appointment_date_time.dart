@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+
 class AppointmentDateTimePage extends StatefulWidget {
   final DateTime? selectedDate;
   final TimeOfDay? selectedTime;
@@ -72,6 +76,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -82,10 +87,13 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Appointment Date & Time',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.appointmentDateTime,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -106,7 +114,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: widget.selectedDate != null
-                    ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                    ? Border.all(color: themeData.primaryColor, width: 2)
                     : null,
               ),
               child: Row(
@@ -114,7 +122,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                   Icon(
                     Icons.calendar_today,
                     color: widget.selectedDate != null
-                        ? const Color(0xFFA67FF5)
+                        ? themeData.primaryColor
                         : Colors.black87,
                   ),
                   const SizedBox(width: 16),
@@ -123,7 +131,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                         ? DateFormat(
                             'MMMM dd, yyyy',
                           ).format(widget.selectedDate!)
-                        : 'Select Date',
+                        : AppLocalizations.of(context)!.selectDate,
                     style: TextStyle(
                       fontSize: 16,
                       color: widget.selectedDate != null
@@ -159,7 +167,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: widget.selectedTime != null
-                    ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                    ? Border.all(color: themeData.primaryColor, width: 2)
                     : null,
               ),
               child: Row(
@@ -167,14 +175,14 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                   Icon(
                     Icons.access_time,
                     color: widget.selectedTime != null
-                        ? const Color(0xFFA67FF5)
+                        ? themeData.primaryColor
                         : Colors.black87,
                   ),
                   const SizedBox(width: 16),
                   Text(
                     widget.selectedTime != null
                         ? '${widget.selectedTime!.hour.toString().padLeft(2, '0')}:${widget.selectedTime!.minute.toString().padLeft(2, '0')}'
-                        : 'Select Time',
+                        : AppLocalizations.of(context)!.selectTime,
                     style: TextStyle(
                       fontSize: 16,
                       color: widget.selectedTime != null
@@ -208,7 +216,7 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -219,9 +227,12 @@ class AppointmentDateTimePageState extends State<AppointmentDateTimePage> {
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
                 disabledForegroundColor: Colors.white,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -263,6 +274,8 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -271,9 +284,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select date',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                AppLocalizations.of(context)!.selectDate,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -336,7 +352,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          ..._buildCalendarDays(),
+          ..._buildCalendarDays(themeData),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -347,7 +363,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -355,9 +371,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -366,7 +385,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
     );
   }
 
-  List<Widget> _buildCalendarDays() {
+  List<Widget> _buildCalendarDays(themeData) {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(
       currentMonth.year,
@@ -398,7 +417,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFA67FF5) : Colors.transparent,
+              color: isSelected ? themeData.primaryColor : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -507,6 +526,8 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -515,9 +536,12 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select time',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                AppLocalizations.of(context)!.selectTime,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -617,7 +641,7 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -625,9 +649,12 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

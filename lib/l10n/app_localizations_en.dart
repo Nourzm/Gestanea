@@ -446,6 +446,260 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appointments => 'Appointments';
 
   @override
+  String get appointmentName => 'Appointment Name';
+
+  @override
+  String get medicationName => 'Medication Name';
+
+  @override
+  String get nextLabel => 'Next';
+
+  @override
+  String get doneLabel => 'Done';
+
+  @override
+  String get uploadPicture => 'Upload a picture';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get removeImage => 'Remove Image';
+
+  @override
+  String get tapToAddPicture => 'Tap to add picture';
+
+  @override
+  String get optionalImageNote =>
+      'Adding a picture is optional. You can skip this step.';
+
+  @override
+  String get selectFormDose => 'Select Form & Dose';
+
+  @override
+  String get frequencySchedule => 'Frequency & Schedule';
+
+  @override
+  String get frequencyType => 'Frequency Type';
+
+  @override
+  String get frequencyValue => 'Frequency Value';
+
+  @override
+  String get scheduledTimesLabel => 'Scheduled Times';
+
+  @override
+  String get asNeeded => 'As Needed';
+
+  @override
+  String get dosage => 'Dosage';
+
+  @override
+  String get dosageExample => 'e.g., 5mg or 10ml';
+
+  @override
+  String get formPill => 'Pill';
+
+  @override
+  String get formInjection => 'Injection';
+
+  @override
+  String get formSpray => 'Spray';
+
+  @override
+  String get formDrop => 'Drop';
+
+  @override
+  String get formSyrup => 'Syrup';
+
+  @override
+  String get formOthers => 'Others';
+
+  @override
+  String medicinesTaken(int taken, int total) {
+    return '$taken of $total taken';
+  }
+
+  @override
+  String get daily => 'Daily';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get timesPerDayExample => 'e.g., 3 (times per day)';
+
+  @override
+  String get timesPerWeekExample => 'e.g., 2 (times per week)';
+
+  @override
+  String get timesPerMonthExample => 'e.g., 1 (times per month)';
+
+  @override
+  String get appointmentDateTime => 'Appointment Date & Time';
+
+  @override
+  String get appointmentLocation => 'Appointment location';
+
+  @override
+  String get selectDate => 'Select Date';
+
+  @override
+  String get selectTime => 'Select time';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date (Optional)';
+
+  @override
+  String get selectStartDate => 'Select Start Date';
+
+  @override
+  String get selectEndDate => 'Select End Date';
+
+  @override
+  String get addTime => 'Add Time';
+
+  @override
+  String get noScheduledTimesAdded => 'No scheduled times added yet';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String get noAppointmentsFound => 'No appointments found';
+
+  @override
+  String get appointment => 'Appointment';
+
+  @override
+  String get pleaseAddScheduledTime => 'Please add at least one scheduled time';
+
+  @override
+  String reviewsCount(Object count) {
+    return '$count reviews';
+  }
+
+  @override
+  String get qty => 'Qty';
+
+  @override
+  String get noMedicines => 'No medicines';
+
+  @override
+  String get schedule => 'Schedule';
+
+  @override
+  String get availability => 'Availability';
+
+  @override
+  String get specialty => 'Specialty';
+
+  @override
+  String get bookAppointment => 'Book Appointment';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get checkout => 'Checkout';
+
+  @override
+  String get applyCoupon => 'Apply coupon';
+
+  @override
+  String get popular => 'Popular';
+
+  @override
+  String get offers => 'Offers';
+
+  @override
+  String get newLabel => 'New';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get message => 'Message';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String get marketplace => 'Marketplace';
+
+  @override
+  String get doctorsFeatureTitle => 'Doctors';
+
+  @override
+  String get planFeatureTitle => 'Plan';
+
+  @override
+  String get addMedicine => 'Add medicine';
+
+  @override
+  String get addAppointment => 'Add appointment';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get reviewsLabel => 'Reviews';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get recommended => 'Recommended';
+
+  @override
+  String get noReviews => 'No reviews';
+
+  @override
+  String get delivery => 'Delivery';
+
+  @override
+  String get shipping => 'Shipping';
+
+  @override
+  String get taxes => 'Taxes';
+
+  @override
   String get sunday => 'Sunday';
 
   @override
@@ -536,7 +790,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'About';
 
   @override
-  String get welcome_back => 'Welcome Back!';
+  String get welcome_back => 'Welcome Back! ';
 
   @override
   String get or => '— OR —';
@@ -579,6 +833,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rememberMe => 'Remember me';
 
   @override
+  String get sendOtp => 'Send Code';
+
+  @override
+  String get verifyOtp => 'Verify Code';
+
+  @override
+  String get enterOtpCode => 'Enter verification code';
+
+  @override
+  String get otpSent => 'Verification code sent to your email';
+
+  @override
+  String get otpCodePlaceholder => '6-digit code';
+
+  @override
+  String get resendOtp => 'Resend code';
+
+  @override
+  String get noInternetConnection =>
+      'No internet connection. Please check your network and try again.';
+
+  @override
   String get version => 'Version';
 
   @override
@@ -613,10 +889,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backSupportBelt => 'Back Support Belt';
 
   @override
-  String get searchHint => 'Find what you need...';
+  String get searchHint => 'Find what you need.. .';
 
   @override
-  String get dontMissOut => 'Don\'t miss out!';
+  String get dontMissOut => 'Don\'t miss out! ';
 
   @override
   String get discountUpTo => 'Discount up to 50%';
@@ -665,10 +941,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthTipMessage =>
-      'Great job! You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.';
+      'Great job!  You\'re maintaining a healthy weight gain pace. Keep up with your balanced diet and gentle exercise routine.';
 
   @override
   String get onTrack => 'On Track';
+
+  @override
+  String get moodTab => 'Mood Tab';
+
+  @override
+  String get recentEntries => 'Recent entries';
+
+  @override
+  String get howAreYouFeelingToday => 'How are you feeling today?';
+
+  @override
+  String get feltEnergeticToday => 'Felt energetic today';
+
+  @override
+  String hoursAgo(int hours) {
+    return '$hours hours ago';
+  }
+
+  @override
+  String get calm => 'Calm';
+
+  @override
+  String get relaxingEvening => 'Relaxing evening';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get tired => 'Tired';
+
+  @override
+  String get needMoreSleep => 'Need more sleep';
+
+  @override
+  String daysAgo(int days) {
+    return '$days days ago';
+  }
+
+  @override
+  String get trackingMoodHelps =>
+      'Tracking your mood helps you understand your well-being.';
+
+  @override
+  String get great => 'Great';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get okay => 'Okay';
+
+  @override
+  String get moodTrendsLast7Days => 'Mood trends (last 7 days)';
+
+  @override
+  String get mostlyPositiveMoods => 'Mostly positive moods';
+
+  @override
+  String get selfCareSuggestions => 'Self-care suggestions';
+
+  @override
+  String get takeShortWalk => 'Take a short walk';
+
+  @override
+  String get practiceDeepBreathing => 'Practice deep breathing';
+
+  @override
+  String get listenToCalmingMusic => 'Listen to calming music';
+
+  @override
+  String get connectWithLovedOnes => 'Connect with loved ones';
 
   @override
   String get doctors => 'Doctors';
@@ -678,24 +1025,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get useCurrentLocation => 'Use current location';
-
-  @override
-  String get algiers => 'Algiers';
-
-  @override
-  String get oran => 'Oran';
-
-  @override
-  String get constantine => 'Constantine';
-
-  @override
-  String get annaba => 'Annaba';
-
-  @override
-  String get blida => 'Blida';
-
-  @override
-  String get bouira => 'Bouira';
 
   @override
   String get doctorsFoundSingle => '1 Doctor Found';
@@ -734,9 +1063,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
-  String get all => 'All';
-
-  @override
   String get male => 'Male';
 
   @override
@@ -766,9 +1092,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noDoctorsFound => 'No doctors found';
-
-  @override
-  String get noResults => 'No results';
 
   @override
   String noMatchingDoctors(String query) {

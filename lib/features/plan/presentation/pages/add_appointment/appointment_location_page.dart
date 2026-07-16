@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
+
 // Page 2: Appointment Location
 class AppointmentLocationPage extends StatefulWidget {
   final String initialLocation;
@@ -40,6 +44,7 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -50,10 +55,13 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Appointment location',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.appointmentLocation,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -91,7 +99,7 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
               onPressed: _controller.text.isNotEmpty ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _controller.text.isNotEmpty
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -100,9 +108,12 @@ class _AppointmentLocationPageState extends State<AppointmentLocationPage> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

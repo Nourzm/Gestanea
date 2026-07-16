@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:gestanea/core/widgets/header.dart';
 import 'package:gestanea/core/widgets/search_bar.dart';
@@ -37,6 +38,9 @@ class _MarketplacePageState extends State<MarketplacePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // Get current theme colors
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -61,7 +65,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
             const SizedBox(height: 20),
 
-            // Promotional Banner
+            // Promotional Banner - Now uses dynamic theme colors
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -69,6 +73,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                 height: 120,
                 clipBehavior: Clip.antiAlias,
                 decoration: ShapeDecoration(
+                  // Use theme primary color for banner background
                   color: AppColors.pink500,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.27),
@@ -200,29 +205,120 @@ class _MarketplacePageState extends State<MarketplacePage> {
               child: BlocBuilder<MarketplaceBloc, MarketplaceState>(
                 builder: (context, state) {
                   if (state is MarketplaceLoading) {
-                    return const Center(
+                    return Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.main500,
+                        // Use theme primary color
+                        color: themeData.primaryColor,
+                      ),
+                    );
+                  }
+
+                  if (state is MarketplaceOffline) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.wifi_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              l10n.noInternetConnection ??
+                                  'No internet connection',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.headline2.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              'Please check your internet connection and try again',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<MarketplaceBloc>().add(
+                                const LoadMarketplaceData(),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l10n.retry ?? 'Retry'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }
 
                   if (state is MarketplaceError) {
                     return Center(
-                      child: Text(
-                        state.message,
-                        style: AppTextStyles.body1.copyWith(color: Colors.red),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.body1,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<MarketplaceBloc>().add(
+                                const LoadMarketplaceData(),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l10n.retry ?? 'Retry'),
+                          ),
+                        ],
                       ),
                     );
                   }
 
                   if (state is MarketplaceLoaded) {
+                    // Find the index of the selected category
+                    final selectedIndex = state.selectedCategoryId != null
+                        ? state.categories.indexWhere(
+                            (cat) => cat.id == state.selectedCategoryId,
+                          )
+                        : null;
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Category sidebar
                         CategorySidebar(
                           categories: state.categories,
+                          selectedIndex: selectedIndex != -1
+                              ? selectedIndex
+                              : null,
                           onCategoryTapped: (index) {
                             final categoryId = state.categories[index].id;
                             context.read<MarketplaceBloc>().add(

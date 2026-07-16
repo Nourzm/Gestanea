@@ -4,7 +4,10 @@ import 'add_appointment/appointment_location_page.dart';
 import 'add_appointment/appointment_date_time.dart';
 import 'package:gestanea/core/database/models/appointment_model.dart';
 import 'package:gestanea/features/plan/data/repositories/appointment_repository.dart';
+import 'package:gestanea/core/services/alarm_scheduler.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 // Main Add Appointment Flow
 class AddAppointmentFlow extends StatefulWidget {
@@ -20,6 +23,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final _appointmentRepository = AppointmentRepository.getInstance();
+  final _alarmScheduler = AlarmScheduler();
 
   String appointmentName = '';
   String appointmentLocation = '';
@@ -87,18 +91,39 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
         createdAt: DateTime.now(),
       );
 
+      print('📅 Saving appointment: ${appointment.title}');
+      print('   Date: ${appointment.appointmentDate}');
+      print('   Location: ${appointment.location}');
+
+      // Save appointment to database
       final result = await _appointmentRepository.insertAppointment(
         appointment,
       );
 
       if (result.state) {
+        print('✅ Appointment saved to database');
+
+        // Schedule alarm for this appointment (30 minutes before)
+        print('⏰ Scheduling alarm for appointment...');
+
+        await _alarmScheduler.scheduleAppointmentAlarm(
+          appointmentId: appointment.id,
+          title: appointment.title,
+          appointmentDate: appointment.appointmentDate,
+          location: appointment.location,
+          reminderMinutesBefore: 30,
+        );
+
+        print('✅ Alarm scheduled successfully');
+
         if (mounted) {
-          Navigator.pop(context, true); // Return true to indicate success
+          Navigator.pop(context, true);
         }
       } else {
         _showError(result.message);
       }
     } catch (e) {
+      print('❌ Error saving appointment: $e');
       _showError('Failed to save appointment: $e');
     }
   }
@@ -131,7 +156,15 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
                     initialName: appointmentName,
                     onNameChanged: (name) =>
                         setState(() => appointmentName = name),
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (appointmentName.length <= 2) {
+                        _showError(
+                          'Appointment name must be greater than 2 characters',
+                        );
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                   ),
                   AppointmentLocationPage(
@@ -163,6 +196,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
   }
 
   Widget _buildProgressIndicator() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -173,7 +207,7 @@ class _AddAppointmentFlowState extends State<AddAppointmentFlow> {
               margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

@@ -1,5 +1,5 @@
 import 'package:gestanea/core/database/models/doctor_model.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 
 abstract class DoctorsState {}
 
@@ -14,6 +14,8 @@ class DoctorsLoaded extends DoctorsState {
   final DoctorFilter currentFilter;
   final String searchQuery;
   final String selectedLocation;
+  final double? userLatitude;
+  final double? userLongitude;
 
   DoctorsLoaded({
     required this.doctors,
@@ -22,6 +24,8 @@ class DoctorsLoaded extends DoctorsState {
     required this.currentFilter,
     required this.searchQuery,
     required this.selectedLocation,
+    this.userLatitude,
+    this.userLongitude,
   });
 }
 
@@ -30,3 +34,5 @@ class DoctorsError extends DoctorsState {
 
   DoctorsError(this.message);
 }
+
+class DoctorsOffline extends DoctorsState {}

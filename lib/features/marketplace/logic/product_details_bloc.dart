@@ -4,7 +4,7 @@ import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/database/models/product_variant_model.dart';
 import 'package:gestanea/core/database/models/product_spec_model.dart';
 import 'package:gestanea/core/database/models/product_review_model.dart';
-import '../data/datasources/mock_marketplace_data.dart';
+import 'package:gestanea/features/marketplace/product_api_service.dart';
 
 // Events
 abstract class ProductDetailsEvent extends Equatable {
@@ -173,15 +173,18 @@ class ProductDetailsBloc
   ) async {
     emit(ProductDetailsLoading());
     try {
-      final allVariants = MockMarketplaceData.getProductVariants(
+      // Fetch data from API instead of mock data
+      final allVariants = await ProductApiService.getProductVariants(
         event.product.id,
       );
       final colorVariants = allVariants
           .where((v) => v.type == 'color')
           .toList();
       final sizeVariants = allVariants.where((v) => v.type == 'size').toList();
-      final specs = MockMarketplaceData.getProductSpecs(event.product.id);
-      final reviews = MockMarketplaceData.getProductReviews(event.product.id);
+      final specs = await ProductApiService.getProductSpecs(event.product.id);
+      final reviews = await ProductApiService.getProductReviews(
+        event.product.id,
+      );
 
       emit(
         ProductDetailsLoaded(

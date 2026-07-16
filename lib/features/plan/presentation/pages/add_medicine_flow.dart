@@ -6,7 +6,11 @@ import 'add_medicine/upload_picture_page.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/database/models/medicine_model.dart';
 import 'package:gestanea/features/plan/data/repositories/medicine_repository.dart';
+import 'package:gestanea/core/services/alarm_scheduler.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class AddMedicineFlow extends StatefulWidget {
   final String userId;
@@ -21,11 +25,12 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final _medicineRepository = MedicineRepository.getInstance();
+  final _alarmScheduler = AlarmScheduler();
 
   String? selectedMedication;
   String? selectedForm;
-  double selectedDose = 0.5;
-  int frequencyNumber = 1;
+  double? selectedDose;
+  int? frequencyNumber;
   String frequencyType = 'daily';
   List<String> scheduledTimes = [];
 
@@ -54,26 +59,6 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Future<void> _saveMedicine() async {
-    if (selectedMedication == null || selectedMedication!.isEmpty) {
-      _showError('Please enter a medication name');
-      return;
-    }
-
-    if (selectedForm == null || selectedForm!.isEmpty) {
-      _showError('Please select a form');
-      return;
-    }
-
-    if (startingDate == null) {
-      _showError('Please select a starting date');
-      return;
-    }
-
-    if (scheduledTimes.isEmpty) {
-      _showError('Please add at least one scheduled time');
-      return;
-    }
-
     try {
       final uuid = Uuid();
       final medicine = MedicineModel(
@@ -81,6 +66,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
         userId: widget.userId,
         babyId: null,
         medicineName: selectedMedication!,
+
         dosage: '$selectedDose $selectedForm',
         type: selectedForm,
         frequencyType: frequencyType,
@@ -88,22 +74,46 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
         scheduledTimes: scheduledTimes,
         startDate: startingDate!,
         endDate: endingDate,
-        maxDoses: null,
         medicineImageUrl: medicationImage,
         isActive: true,
         createdAt: DateTime.now(),
       );
+      print('💊 Saving medicine: ${medicine.medicineName}');
+      print('   Times: ${medicine.scheduledTimes}');
+      print('   Start date: ${medicine.startDate}');
 
+      // Save medicine to database
       final result = await _medicineRepository.insertMedicine(medicine);
 
       if (result.state) {
+        print('✅ Medicine saved to database');
+
+        // Schedule alarms for this medicine
+        if (medicine.scheduledTimes != null &&
+            medicine.scheduledTimes!.isNotEmpty) {
+          print('⏰ Scheduling alarms for medicine...');
+
+          await _alarmScheduler.scheduleMedicineAlarms(
+            medicineId: medicine.id,
+            medicineName: medicine.medicineName,
+            dosage: medicine.dosage,
+            scheduledTimes: medicine.scheduledTimes!,
+            startDate: medicine.startDate,
+            endDate: medicine.endDate,
+          );
+
+          print('✅ Alarms scheduled successfully');
+        }
+
         if (mounted) {
-          Navigator.pop(context, true); // Return true to indicate success
+          Navigator.pop(context, true);
         }
       } else {
         _showError(result.message);
+        Navigator.pop(context, true);
       }
     } catch (e) {
+      print('❌ Error saving medicine: $e');
       _showError('Failed to save medicine: $e');
     }
   }
@@ -134,6 +144,12 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                 children: [
                   MedicationNamePage(
                     onMedicationSelected: (med) {
+                      if (med.length <= 2) {
+                        _showError(
+                          'Medicine name must be greater than 2 characters',
+                        );
+                        return;
+                      }
                       setState(() => selectedMedication = med);
                       _nextPage();
                     },
@@ -141,16 +157,43 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
                   ),
                   FormDosePage(
                     selectedForm: selectedForm,
-                    selectedDose: selectedDose,
+                    selectedDose: selectedDose ?? 0,
                     onFormSelected: (form) =>
                         setState(() => selectedForm = form),
                     onDoseChanged: (dose) =>
                         setState(() => selectedDose = dose),
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (selectedForm == null || selectedForm!.isEmpty) {
+                        _showError('Please select a form');
+                        return;
+                      }
+                      if (selectedDose == null || selectedDose! <= 0) {
+                        _showError('Please enter a valid dose');
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                   ),
                   FrequencyPage(
-                    onNext: _nextPage,
+                    onNext: () {
+                      if (frequencyNumber == null || frequencyNumber! <= 0) {
+                        _showError('Please enter a valid frequency value');
+                        return;
+                      }
+
+                      if (startingDate == null) {
+                        _showError('Please select a starting date');
+                        return;
+                      }
+                      if (scheduledTimes.isEmpty) {
+                        _showError(
+                          AppLocalizations.of(context)!.pleaseAddScheduledTime,
+                        );
+                        return;
+                      }
+                      _nextPage();
+                    },
                     onBack: _previousPage,
                     onFrequencyChanged: (freq) =>
                         setState(() => frequencyNumber = freq),
@@ -166,6 +209,10 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
 
                   UploadPicturePage(
                     onBack: _previousPage,
+                    initialImagePath: medicationImage,
+                    onImageSelected: (imagePath) {
+                      setState(() => medicationImage = imagePath);
+                    },
                     onDone: () async {
                       await _saveMedicine();
                     },
@@ -180,6 +227,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
   }
 
   Widget _buildProgressIndicator() {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -190,7 +238,7 @@ class _AddMedicineFlowState extends State<AddMedicineFlow> {
               margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
               decoration: BoxDecoration(
                 color: index <= _currentPage
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(2),
               ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:gestanea/features/doctors/data/models/doctor_filter_model.dart';
+import 'package:gestanea/core/database/models/doctor_filter_model.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   final DoctorFilter currentFilter;
@@ -27,7 +29,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    _maxDistance = widget.currentFilter.maxDistance ?? 10.0;
+    _maxDistance = widget.currentFilter.maxDistance ?? 0.0;
     _minRating = widget.currentFilter.minRating ?? 0.0;
     _selectedGender = widget.currentFilter.gender;
     _minReviews = (widget.currentFilter.minReviews ?? 0).toDouble();
@@ -35,6 +37,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.bg_1,
@@ -44,22 +47,22 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildHandle(),
-          _buildHeader(),
+          _buildHeader(themeData),
           Flexible(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDistanceFilter(),
+                  _buildDistanceFilter(themeData),
                   const SizedBox(height: 24),
-                  _buildRatingFilter(),
+                  _buildRatingFilter(themeData),
                   const SizedBox(height: 24),
-                  _buildGenderFilter(),
+                  _buildGenderFilter(themeData),
                   const SizedBox(height: 24),
-                  _buildReviewsFilter(),
+                  _buildReviewsFilter(themeData),
                   const SizedBox(height: 32),
-                  _buildActionButtons(),
+                  _buildActionButtons(themeData),
                 ],
               ),
             ),
@@ -81,7 +84,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -104,7 +107,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 14,
-                color: AppColors.main500,
+                color: themeData.primaryColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -114,7 +117,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildDistanceFilter() {
+  Widget _buildDistanceFilter(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,23 +137,23 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 14,
-            color: AppColors.main500,
+            color: themeData.primaryColor,
             fontWeight: FontWeight.w500,
           ),
         ),
         SliderTheme(
           data: SliderThemeData(
-            activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
-            thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            activeTrackColor: themeData.primaryColor,
+            inactiveTrackColor: themeData.lightColor.withOpacity(0.3),
+            thumbColor: themeData.secondaryColor,
+            overlayColor: themeData.primaryColor.withOpacity(0.2),
             trackHeight: 4,
           ),
           child: Slider(
             value: _maxDistance,
-            min: 0.5,
-            max: 20.0,
-            divisions: 39,
+            min: 0.0,
+            max: 35.0,
+            divisions: 35,
             onChanged: (value) {
               setState(() {
                 _maxDistance = value;
@@ -162,7 +165,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildRatingFilter() {
+  Widget _buildRatingFilter(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +189,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               style: AppTextStyles.body1.copyWith(
                 fontFamily: 'Lato',
                 fontSize: 14,
-                color: AppColors.main500,
+                color: themeData.primaryColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -194,10 +197,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ),
         SliderTheme(
           data: SliderThemeData(
-            activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
-            thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            activeTrackColor: themeData.primaryColor,
+            inactiveTrackColor: themeData.lightColor.withOpacity(0.3),
+            thumbColor: themeData.secondaryColor,
+            overlayColor: themeData.primaryColor.withOpacity(0.2),
             trackHeight: 4,
           ),
           child: Slider(
@@ -216,7 +219,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildGenderFilter() {
+  Widget _buildGenderFilter(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,16 +237,16 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         Wrap(
           spacing: 12,
           children: [
-            _buildGenderChip(l10n.all, null),
-            _buildGenderChip(l10n.male, 'Male'),
-            _buildGenderChip(l10n.female, 'Female'),
+            _buildGenderChip(l10n.all, null, themeData),
+            _buildGenderChip(l10n.male, 'Male', themeData),
+            _buildGenderChip(l10n.female, 'Female', themeData),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildGenderChip(String label, String? value) {
+  Widget _buildGenderChip(String label, String? value, themeData) {
     final isSelected = _selectedGender == value;
     return GestureDetector(
       onTap: () {
@@ -254,7 +257,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.main500 : AppColors.background,
+          color: isSelected ? themeData.primaryColor : AppColors.background,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -264,7 +267,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: AppColors.main400.withOpacity(0.3),
+              color: themeData.lightColor.withOpacity(0.3),
               offset: const Offset(2, 2),
               blurRadius: 4,
               spreadRadius: 0,
@@ -284,7 +287,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildReviewsFilter() {
+  Widget _buildReviewsFilter(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,16 +307,16 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           style: AppTextStyles.body1.copyWith(
             fontFamily: 'Lato',
             fontSize: 14,
-            color: AppColors.main500,
+            color: themeData.primaryColor,
             fontWeight: FontWeight.w500,
           ),
         ),
         SliderTheme(
           data: SliderThemeData(
-            activeTrackColor: AppColors.main500,
-            inactiveTrackColor: AppColors.main400.withOpacity(0.3),
-            thumbColor: AppColors.main600,
-            overlayColor: AppColors.main500.withOpacity(0.2),
+            activeTrackColor: themeData.primaryColor,
+            inactiveTrackColor: themeData.lightColor.withOpacity(0.3),
+            thumbColor: themeData.secondaryColor,
+            overlayColor: themeData.primaryColor.withOpacity(0.2),
             trackHeight: 4,
           ),
           child: Slider(
@@ -332,13 +335,17 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(themeData) {
     final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              // Reset all filters and reload initial doctors list
+              widget.onApplyFilter(DoctorFilter());
+              Navigator.pop(context);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.background,
               foregroundColor: AppColors.textPrimary,
@@ -364,7 +371,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           child: ElevatedButton(
             onPressed: _applyFilters,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.main500,
+              backgroundColor: themeData.primaryColor,
               foregroundColor: AppColors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -389,7 +396,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   void _clearFilters() {
     setState(() {
-      _maxDistance = 10.0;
+      _maxDistance = 0.0;
       _minRating = 0.0;
       _selectedGender = null;
       _minReviews = 0.0;

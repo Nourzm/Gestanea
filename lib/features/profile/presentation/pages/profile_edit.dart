@@ -1,16 +1,20 @@
 // Updated EditProfileScreen to use AuthBloc for user data and to dispatch UpdateProfileRequested.
 // Replaces existing lib/features/profile/presentation/pages/profile_edit.dart
+import 'dart:io';
 import 'package:flutter/material.dart' hide BoxShadow, BoxDecoration;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_routes.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_event.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NeumorphicContainer extends StatelessWidget {
   final Widget child;
@@ -137,9 +141,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _emailC;
   late TextEditingController _phoneC;
   late TextEditingController _countryC;
-  late TextEditingController _languageC;
   late TextEditingController _themeC;
   String? _userId;
+  File? _selectedImage;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -148,7 +153,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailC = TextEditingController();
     _phoneC = TextEditingController();
     _countryC = TextEditingController();
-    _languageC = TextEditingController();
     _themeC = TextEditingController();
 
     final state = context.read<AuthBloc>().state;
@@ -159,7 +163,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _emailC.text = user.email;
       _phoneC.text = user.phone ?? '';
       _countryC.text = user.country ?? '';
-      _languageC.text = user.language ?? '';
       _themeC.text = user.theme ?? '';
     }
   }
@@ -170,18 +173,108 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailC.dispose();
     _phoneC.dispose();
     _countryC.dispose();
-    _languageC.dispose();
     _themeC.dispose();
     super.dispose();
   }
 
-  void _onSave() {
+  Future<void> _pickImage() async {
+    final t = AppLocalizations.of(context)!;
+    
+    // Show dialog to choose image source
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.change_profile_photo),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
+    try {
+      final XFile? pickedFile = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: 85, // Compress for better performance
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pick image: $e'),
+            backgroundColor: AppColors.error1,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _uploadProfilePicture(String userId) async {
+    if (_selectedImage == null || !await _selectedImage!.exists()) {
+      return;
+    }
+
+    try {
+      context.read<AuthBloc>().add(
+            UpdateProfilePictureRequested(
+              userId: userId,
+              imageFilePath: _selectedImage!.path,
+            ),
+          );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload profile picture: $e'),
+            backgroundColor: AppColors.error1,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
     if (_userId == null) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Not authenticated')));
       return;
+    }
+
+    // Upload profile picture first if selected
+    if (_selectedImage != null) {
+      await _uploadProfilePicture(_userId!);
+      // Wait a bit for the upload to complete and state to update
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+
+    // Get current state to preserve profile picture URL if not uploading new one
+    final authState = context.read<AuthBloc>().state;
+    String? profilePictureUrl;
+    if (authState is AuthAuthenticated) {
+      profilePictureUrl = authState.user.profilePictureUrl;
     }
 
     context.read<AuthBloc>().add(
@@ -191,10 +284,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         email: _emailC.text.trim(),
         phone: _phoneC.text.trim().isEmpty ? null : _phoneC.text.trim(),
         country: _countryC.text.trim().isEmpty ? null : _countryC.text.trim(),
-        language: _languageC.text.trim().isEmpty
-            ? null
-            : _languageC.text.trim(),
         theme: _themeC.text.trim().isEmpty ? null : _themeC.text.trim(),
+        profilePictureUrl: profilePictureUrl, // Preserve existing or newly uploaded URL
       ),
     );
   }
@@ -259,20 +350,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          Container(
-                            width: screenWidth * 0.30,
-                            height: screenWidth * 0.30,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.main500,
-                            ),
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: const AssetImage(
-                                'assets/images/pfp.png',
-                              ),
-                              backgroundColor: Colors.transparent,
-                            ),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              if (_selectedImage != null) {
+                                // Show selected image
+                                return Container(
+                                  width: screenWidth * 0.30,
+                                  height: screenWidth * 0.30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.main500,
+                                      width: 3,
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.file(
+                                      _selectedImage!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              // Show existing profile picture or placeholder
+                              if (state is AuthAuthenticated) {
+                                return Container(
+                                  width: screenWidth * 0.30,
+                                  height: screenWidth * 0.30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.main500,
+                                      width: 3,
+                                    ),
+                                  ),
+                                  child: ProfileAvatar(
+                                    imageUrl: state.user.profilePictureUrl,
+                                    userId: state.user.id,
+                                    radius: screenWidth * 0.15,
+                                  ),
+                                );
+                              }
+
+                              return Container(
+                                width: screenWidth * 0.30,
+                                height: screenWidth * 0.30,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.main500,
+                                ),
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: const AssetImage(
+                                    'assets/images/pfp.png',
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              );
+                            },
                           ),
                           Positioned(
                             right: 0,
@@ -286,9 +422,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 color: AppColors.main500,
                                 size: 20,
                               ),
-                              onTap: () {
-                                // pick image
-                              },
+                              onTap: _pickImage,
                             ),
                           ),
                         ],
@@ -321,8 +455,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 15),
                 NeumorphicTextField(label: t.country, controller: _countryC),
-                const SizedBox(height: 15),
-                NeumorphicTextField(label: t.language, controller: _languageC),
                 const SizedBox(height: 15),
 
                 BlocBuilder<AuthBloc, AuthState>(

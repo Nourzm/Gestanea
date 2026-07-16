@@ -1,0 +1,15 @@
+# FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database
+sqlalchemy==2.0.23
+
+
+# Pydantic for data validation
+pydantic>=2.11.7
+pydantic-settings==2.1.0
+
+
+# Supabase
+supabase==2.27.0

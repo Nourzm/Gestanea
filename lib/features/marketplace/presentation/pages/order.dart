@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/order_bloc.dart';
 import '../widgets/neumorphic_section.dart';
 import '../widgets/delivery_form.dart';
@@ -125,6 +128,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Scaffold(
       backgroundColor: AppColors.bg_1,
       body: SafeArea(
@@ -139,17 +143,17 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.chevron_left,
-                      color: AppColors.main500,
+                      color: themeData.primaryColor,
                       size: 24,
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'Complete Your Order',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.completeYourOrder,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -187,7 +191,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildSectionTitle('Order Summary'),
+                              _buildSectionTitle(
+                                AppLocalizations.of(context)!.orderSummary,
+                              ),
                               const SizedBox(height: 16),
                               Row(
                                 children: [
@@ -203,21 +209,50 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
-                                            child: Image.asset(
-                                              state.productImage,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return const Center(
-                                                      child: Icon(
-                                                        Icons
-                                                            .image_not_supported,
-                                                        color: Colors.grey,
-                                                        size: 40,
-                                                      ),
-                                                    );
-                                                  },
-                                            ),
+                                            child:
+                                                state.productImage.startsWith(
+                                                  'http',
+                                                )
+                                                ? Image.network(
+                                                    state.productImage,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) {
+                                                          return const Center(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .image_not_supported,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 40,
+                                                            ),
+                                                          );
+                                                        },
+                                                  )
+                                                : Image.asset(
+                                                    state.productImage,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) {
+                                                          return const Center(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .image_not_supported,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 40,
+                                                            ),
+                                                          );
+                                                        },
+                                                  ),
                                           )
                                         : const Center(
                                             child: Icon(
@@ -236,7 +271,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                         Text(
                                           state.productName.isNotEmpty
                                               ? state.productName
-                                              : 'Product',
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.product,
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -269,7 +306,8 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                                                   ),
                                                             ),
                                                           )
-                                                        : AppColors.main500,
+                                                        : themeData
+                                                              .primaryColor,
                                                   ),
                                                 ),
                                                 const SizedBox(width: 8),
@@ -289,7 +327,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                                   .isNotEmpty) ...[
                                                 const SizedBox(width: 16),
                                                 Text(
-                                                  'Size: ${state.selectedSize}',
+                                                  '${AppLocalizations.of(context)!.size}: ${state.selectedSize}',
                                                   style: AppTextStyles.body1
                                                       .copyWith(
                                                         fontSize: 12,
@@ -307,7 +345,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'Qty: ${state.quantity}',
+                                              '${AppLocalizations.of(context)!.qty}: ${state.quantity}',
                                               style: AppTextStyles.body1
                                                   .copyWith(
                                                     fontSize: 12,
@@ -344,13 +382,15 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                   return Column(
                                     children: [
                                       _buildPriceRow(
-                                        'Subtotal',
-                                        '\$${subtotal.toStringAsFixed(2)}',
+                                        AppLocalizations.of(context)!.subtotal,
+                                        "${subtotal.toStringAsFixed(0)}DA",
                                       ),
                                       const SizedBox(height: 8),
                                       _buildPriceRow(
-                                        'Delivery Fee',
-                                        '\$${deliveryFee.toStringAsFixed(2)}',
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.deliveryFee,
+                                        '${deliveryFee.toStringAsFixed(0)}DA',
                                       ),
                                       const SizedBox(height: 12),
                                       const Divider(
@@ -359,8 +399,8 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                       ),
                                       const SizedBox(height: 12),
                                       _buildPriceRow(
-                                        'Total',
-                                        '\$${total.toStringAsFixed(2)}',
+                                        AppLocalizations.of(context)!.total,
+                                        '${total.toStringAsFixed(0)}DA',
                                         isBold: true,
                                       ),
                                     ],
@@ -413,7 +453,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'Order ${state.orderId} placed successfully!',
+                                AppLocalizations.of(
+                                  context,
+                                )!.orderPlacedSuccessfully(state.orderId),
                               ),
                               backgroundColor: Colors.green,
                             ),
@@ -450,7 +492,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                     );
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.main500,
+                              backgroundColor: themeData.primaryColor,
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -468,9 +510,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                                       ),
                                     ),
                                   )
-                                : const Text(
-                                    'Place Order',
-                                    style: TextStyle(
+                                : Text(
+                                    AppLocalizations.of(context)!.placeOrder,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Lato',
@@ -492,9 +534,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.textSecondary,
                         ),
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.cancel,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Lato',
@@ -513,18 +555,18 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: AppColors.main500.withOpacity(0.2),
+                            color: themeData.primaryColor.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.check,
                             size: 14,
-                            color: AppColors.main500,
+                            color: themeData.primaryColor,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Your information is secure and encrypted',
+                          AppLocalizations.of(context)!.yourInformationIsSecure,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary.withOpacity(0.7),

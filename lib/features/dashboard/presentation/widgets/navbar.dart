@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FancyNavBar extends StatelessWidget {
   final int currentIndex;
@@ -11,13 +12,18 @@ class FancyNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTap,
-    required this.items, required this.barHeight,
+    required this.items,
+    required this.barHeight,
   });
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+
+    // Check if current locale is RTL (Arabic)
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
 
     // --- RESPONSIVE VALUES ---
     final notchSize = w * 0.10; // size of notch curve
@@ -26,6 +32,14 @@ class FancyNavBar extends StatelessWidget {
     final iconSizeInactive = w * 0.065; // inactive icons
     final itemWidth = w / items.length;
     final bottomPadding = h * 0.015; // space for labels
+
+    // Calculate position based on RTL direction
+    final int displayIndex = isRTL
+        ? (items.length - 1 - currentIndex)
+        : currentIndex;
+    final double circleLeft =
+        itemWidth * displayIndex + (itemWidth - circleSize) / 2;
+    final double notchCenterX = itemWidth * displayIndex + itemWidth / 2;
 
     return SizedBox(
       height: barHeight + circleSize * 0.6,
@@ -41,7 +55,7 @@ class FancyNavBar extends StatelessWidget {
             right: 0,
             child: CustomPaint(
               painter: _NotchedBarPainter(
-                notchCenterX: itemWidth * currentIndex + itemWidth / 2,
+                notchCenterX: notchCenterX,
                 notchRadius: notchSize,
                 borderRadius: 20,
               ),
@@ -56,16 +70,16 @@ class FancyNavBar extends StatelessWidget {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
             bottom: barHeight - circleSize * 0.40,
-            left: itemWidth * currentIndex + (itemWidth - circleSize) / 2,
+            left: circleLeft,
             child: Container(
               width: circleSize,
               height: circleSize,
               decoration: BoxDecoration(
-                color: AppColors.main500,
+                color: themeData.primaryColor,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.main500.withOpacity(0.25),
+                    color: themeData.primaryColor.withOpacity(0.25),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -125,7 +139,7 @@ class FancyNavBar extends StatelessWidget {
                             fontSize: w * 0.033, // responsive
                             fontWeight: FontWeight.w600,
                             color: active
-                                ? AppColors.main500
+                                ? themeData.primaryColor
                                 : Colors.grey.shade500,
                           ),
                         ),

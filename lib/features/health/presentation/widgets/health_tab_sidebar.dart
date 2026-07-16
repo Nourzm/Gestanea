@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HealthTabSidebar extends StatelessWidget {
   final List<Map<String, dynamic>> tabs;
@@ -38,36 +41,33 @@ class HealthTabSidebar extends StatelessWidget {
       width: 60,
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: const BoxDecoration(
-              color: const Color.fromARGB(255, 247, 240, 254), // Slightly whiter purple
- // Whiter purple - same as header
+        color: AppColors.bg_1, // ✅ Changed to match header background
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          tabs.length,
-          (index) {
-            final tab = tabs[index];
-            final isSelected = selectedIndex == index;
-            return _buildTabItem(
-              context: context,
-              icon: tab['icon'],
-              labelKey: tab['labelKey'],
-              isSelected: isSelected,
-              onTap: () => onTabSelected(index),
-            );
-          },
-        ),
+        children: List.generate(tabs.length, (index) {
+          final tab = tabs[index];
+          final isSelected = selectedIndex == index;
+          return _buildTabItem(
+            context: context,
+            icon: tab['icon'] as String,
+            labelKey: tab['labelKey'] as String,
+            isSelected: isSelected,
+            onTap: () => onTabSelected(index),
+          );
+        }),
       ),
     );
   }
 
   Widget _buildTabItem({
     required BuildContext context,
-    required IconData icon,
+    required String icon,
     required String labelKey,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -80,13 +80,20 @@ class HealthTabSidebar extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.main500 : Colors.transparent,
+                color: isSelected ? themeData.primaryColor : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: isSelected ? AppColors.white : AppColors.main500,
-                size: 24,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset(
+                  icon,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    isSelected ? AppColors.white : themeData.primaryColor,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 4),
@@ -94,7 +101,7 @@ class HealthTabSidebar extends StatelessWidget {
               _getLocalizedLabel(context, labelKey),
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isSelected ? AppColors.main500 : AppColors.textDark,
+                color: isSelected ? themeData.primaryColor : AppColors.textDark,
                 fontSize: 8,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 height: 1.2,

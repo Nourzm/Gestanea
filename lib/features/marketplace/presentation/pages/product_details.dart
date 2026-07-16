@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:gestanea/core/utils/box_shadow.dart';
+import 'package:gestanea/core/utils/box_decoration.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 import 'package:gestanea/core/database/models/product_model.dart';
 import 'package:gestanea/core/widgets/neumorphic_button.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 import '../../logic/product_details_bloc.dart';
 import '../../logic/order_bloc.dart';
 import '../widgets/neumorphic_section.dart';
@@ -27,9 +30,10 @@ class ProductDetailPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
           builder: (context, state) {
+            final themeData = context.watch<ThemeCubit>().currentTheme;
             if (state is ProductDetailsLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.main500),
+              return Center(
+                child: CircularProgressIndicator(color: themeData.primaryColor),
               );
             }
 
@@ -60,6 +64,7 @@ class ProductDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _buildNeumorphicIconButton(
+                          context: context,
                           icon: Icons.arrow_back_ios_new,
                           onTap: () => Navigator.pop(context),
                         ),
@@ -68,98 +73,190 @@ class ProductDetailPage extends StatelessWidget {
                   ),
 
                   // Main product image with thumbnail gallery
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        // Main image
-                        Container(
-                          width: double.infinity,
-                          height: screenHeight * 0.35,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x3F000000),
-                                blurRadius: 10,
-                                offset: Offset(4, 4),
-                                spreadRadius: 0,
-                              ),
-                              BoxShadow(
-                                color: AppColors.white,
-                                blurRadius: 10,
-                                offset: Offset(-4, -4),
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              state.product.imageUrls[state.currentImageIndex],
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(
-                                    Icons.image_not_supported,
-                                    size: 50,
-                                    color: AppColors.main300,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Thumbnail gallery
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            state.product.imageUrls.length,
-                            (index) => GestureDetector(
-                              onTap: () {
-                                context.read<ProductDetailsBloc>().add(
-                                  ChangeImage(index),
-                                );
-                              },
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                margin: const EdgeInsets.only(right: 12),
-                                decoration: BoxDecoration(
+                  if (state.product.imageUrls.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          // Main image
+                          Container(
+                            width: double.infinity,
+                            height: screenHeight * 0.35,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3F000000),
+                                  blurRadius: 10,
+                                  offset: Offset(4, 4),
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
                                   color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: state.currentImageIndex == index
-                                        ? AppColors.main500
-                                        : Colors.transparent,
-                                    width: 2,
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x26000000),
-                                      blurRadius: 4,
-                                      offset: Offset(2, 2),
-                                    ),
-                                  ],
+                                  blurRadius: 10,
+                                  offset: Offset(-4, -4),
+                                  spreadRadius: 0,
                                 ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    state.product.imageUrls[index],
-                                    fit: BoxFit.cover,
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child:
+                                  state
+                                      .product
+                                      .imageUrls[state.currentImageIndex]
+                                      .startsWith('http')
+                                  ? Image.network(
+                                      state.product.imageUrls[state
+                                          .currentImageIndex],
+                                      fit: BoxFit.contain,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                    : null,
+                                                color: themeData.primaryColor,
+                                              ),
+                                            );
+                                          },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 50,
+                                                color: themeData.cardColor,
+                                              ),
+                                            );
+                                          },
+                                    )
+                                  : Image.asset(
+                                      state.product.imageUrls[state
+                                          .currentImageIndex],
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 50,
+                                                color: themeData.cardColor,
+                                              ),
+                                            );
+                                          },
+                                    ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Thumbnail gallery
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              state.product.imageUrls.length,
+                              (index) => GestureDetector(
+                                onTap: () {
+                                  context.read<ProductDetailsBloc>().add(
+                                    ChangeImage(index),
+                                  );
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  margin: const EdgeInsets.only(right: 12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: state.currentImageIndex == index
+                                          ? themeData.primaryColor
+                                          : Colors.transparent,
+                                      width: 2,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x26000000),
+                                        blurRadius: 4,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child:
+                                        state.product.imageUrls[index]
+                                            .startsWith('http')
+                                        ? Image.network(
+                                            state.product.imageUrls[index],
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (
+                                                  context,
+                                                  child,
+                                                  loadingProgress,
+                                                ) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child: SizedBox(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                            strokeWidth: 2,
+                                                            color: themeData
+                                                                .primaryColor,
+                                                          ),
+                                                    ),
+                                                  );
+                                                },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 20,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  );
+                                                },
+                                          )
+                                        : Image.asset(
+                                            state.product.imageUrls[index],
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 20,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  );
+                                                },
+                                          ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
                   const SizedBox(height: 24),
 
@@ -173,11 +270,11 @@ class ProductDetailPage extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.main500,
+                          color: themeData.primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${state.product.discountPercentage}% OFF',
+                          '-${state.product.discountPercentage}%',
                           style: AppTextStyles.smallLabel.copyWith(
                             color: AppColors.white,
                             fontWeight: FontWeight.w600,
@@ -196,7 +293,9 @@ class ProductDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          state.product.productName,
+                          state.product.getTranslatedName(
+                            Localizations.localeOf(context).languageCode,
+                          ),
                           style: AppTextStyles.headline2.copyWith(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -216,9 +315,9 @@ class ProductDetailPage extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${state.product.rating} (${state.product.reviewsCount} reviews)',
+                              '${state.product.rating} (${AppLocalizations.of(context)!.reviewsCount(state.product.reviewsCount)})',
                               style: AppTextStyles.body1.copyWith(
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                                 fontSize: 13,
                               ),
                             ),
@@ -236,21 +335,21 @@ class ProductDetailPage extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          '\$${state.product.price.toStringAsFixed(2)}',
+                          '${state.product.price.toStringAsFixed(0)} DA',
                           style: AppTextStyles.headline1.copyWith(
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.main500,
+                            color: themeData.primaryColor,
                           ),
                         ),
                         const SizedBox(width: 12),
                         if (state.product.originalPrice != null)
                           Text(
-                            '\$${state.product.originalPrice!.toStringAsFixed(2)}',
+                            '${state.product.originalPrice!.toStringAsFixed(0)} DA',
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 18,
                               decoration: TextDecoration.lineThrough,
-                              color: AppColors.main400,
+                              color: themeData.accentColor,
                             ),
                           ),
                       ],
@@ -260,7 +359,8 @@ class ProductDetailPage extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Select Color
-                  if (state.colorVariants.isNotEmpty)
+                  if (state.colorVariants.isNotEmpty &&
+                      state.product.categoryId != 'cat_3')
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: NeumorphicSection(
@@ -268,7 +368,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Select Color',
+                              AppLocalizations.of(context)!.selectColor,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -301,11 +401,11 @@ class ProductDetailPage extends StatelessWidget {
                                                     .replaceFirst('#', '0xFF'),
                                               ),
                                             )
-                                          : AppColors.main300,
+                                          : themeData.cardColor,
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: state.selectedColorIndex == index
-                                            ? AppColors.main700
+                                            ? themeData.darkColor
                                             : Colors.transparent,
                                         width: 3,
                                       ),
@@ -329,7 +429,8 @@ class ProductDetailPage extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // Select Size
-                  if (state.sizeVariants.isNotEmpty)
+                  if (state.sizeVariants.isNotEmpty &&
+                      state.product.categoryId != 'cat_3')
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: NeumorphicSection(
@@ -337,7 +438,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Select Size',
+                              AppLocalizations.of(context)!.selectSize,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -362,7 +463,7 @@ class ProductDetailPage extends StatelessWidget {
                                     margin: const EdgeInsets.only(right: 12),
                                     decoration: BoxDecoration(
                                       color: state.selectedSizeIndex == index
-                                          ? AppColors.main500
+                                          ? themeData.primaryColor
                                           : AppColors.bg_1,
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
@@ -385,7 +486,7 @@ class ProductDetailPage extends StatelessWidget {
                                       style: AppTextStyles.body1.copyWith(
                                         color: state.selectedSizeIndex == index
                                             ? AppColors.white
-                                            : AppColors.main500,
+                                            : themeData.primaryColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                       ),
@@ -416,7 +517,7 @@ class ProductDetailPage extends StatelessWidget {
                                   const DecrementQuantity(),
                                 );
                               },
-                              color: AppColors.main500,
+                              color: themeData.primaryColor,
                             ),
                             const SizedBox(width: 16),
                             Text(
@@ -424,7 +525,7 @@ class ProductDetailPage extends StatelessWidget {
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.main500,
+                                color: themeData.primaryColor,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -435,7 +536,7 @@ class ProductDetailPage extends StatelessWidget {
                                   const IncrementQuantity(),
                                 );
                               },
-                              color: AppColors.main500,
+                              color: themeData.primaryColor,
                             ),
                           ],
                         ),
@@ -452,10 +553,10 @@ class ProductDetailPage extends StatelessWidget {
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
+                                gradient: LinearGradient(
                                   colors: [
-                                    AppColors.main500,
-                                    AppColors.main600,
+                                    themeData.primaryColor,
+                                    themeData.secondaryColor,
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(25),
@@ -482,7 +583,7 @@ class ProductDetailPage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Add to Cart',
+                                    AppLocalizations.of(context)!.addToCart,
                                     style: AppTextStyles.headline2.copyWith(
                                       color: AppColors.white,
                                       fontSize: 16,
@@ -539,9 +640,9 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                         );
                       },
-                      text: 'Buy Now',
+                      text: AppLocalizations.of(context)!.buyNow,
                       prefixIcon: Icons.shopping_bag_outlined,
-                      color: AppColors.main600,
+                      color: themeData.secondaryColor,
                     ),
                   ),
 
@@ -555,7 +656,7 @@ class ProductDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Description',
+                            AppLocalizations.of(context)!.description,
                             style: AppTextStyles.headline2.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -564,8 +665,12 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            state.product.description ??
-                                'No description available',
+                            state.product.getTranslatedDescription(
+                                  Localizations.localeOf(context).languageCode,
+                                ) ??
+                                AppLocalizations.of(
+                                  context,
+                                )!.noDescriptionAvailable,
                             style: AppTextStyles.body1.copyWith(
                               fontSize: 13,
                               color: AppColors.textPrimary,
@@ -588,7 +693,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Specifications',
+                              AppLocalizations.of(context)!.specifications,
                               style: AppTextStyles.headline2.copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -599,7 +704,11 @@ class ProductDetailPage extends StatelessWidget {
                             ...state.specs.map(
                               (spec) => Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                child: _buildSpecRow(spec.name, spec.value),
+                                child: _buildSpecRow(
+                                  context,
+                                  spec.name,
+                                  spec.value,
+                                ),
                               ),
                             ),
                           ],
@@ -619,7 +728,7 @@ class ProductDetailPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Customer Reviews',
+                                AppLocalizations.of(context)!.customerReviews,
                                 style: AppTextStyles.headline2.copyWith(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -627,10 +736,10 @@ class ProductDetailPage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'see all',
+                                AppLocalizations.of(context)!.seeAll,
                                 style: AppTextStyles.body1.copyWith(
                                   fontSize: 13,
-                                  color: AppColors.main500,
+                                  color: themeData.primaryColor,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -673,9 +782,11 @@ class ProductDetailPage extends StatelessWidget {
   }
 
   Widget _buildNeumorphicIconButton({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -699,12 +810,13 @@ class ProductDetailPage extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.main500, size: 20),
+        child: Icon(icon, color: themeData.primaryColor, size: 20),
       ),
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
+  Widget _buildSpecRow(BuildContext context, String label, String value) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -712,8 +824,8 @@ class ProductDetailPage extends StatelessWidget {
           label,
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
-            color: AppColors.main500,
-            fontWeight: FontWeight.w500,
+            color: themeData.primaryColor,
+            fontWeight: FontWeight.w600,
           ),
         ),
         Text(
@@ -721,7 +833,7 @@ class ProductDetailPage extends StatelessWidget {
           style: AppTextStyles.body1.copyWith(
             fontSize: 13,
             color: AppColors.textDark,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],

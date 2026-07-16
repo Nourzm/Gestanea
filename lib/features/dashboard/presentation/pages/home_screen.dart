@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
+import 'package:gestanea/core/widgets/profile_avatar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_cubit.dart';
 import 'package:gestanea/features/dashboard/logic/cubit/dashboard_state.dart';
 import 'package:gestanea/features/dashboard/domain/entities/pregnancy_dashboard.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/notificationsPage.dart';
-import 'package:gestanea/features/dashboard/presentation/pages/tips_page.dart';
+import 'package:gestanea/features/dashboard/presentation/pages/tips_overview_page.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/cards.dart';
 import 'package:gestanea/features/dashboard/presentation/widgets/main_card.dart';
 import 'package:gestanea/core/widgets/notificationsCard.dart';
@@ -17,6 +18,7 @@ import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
 import 'package:gestanea/features/profile/presentation/pages/profile_page.dart';
 import 'package:gestanea/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigate});
@@ -45,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // 👤 Profile section (tap -> Profile page)
+                    // Profile section (tap -> Profile page)
                     GestureDetector(
                       onTap: () async {
                         // Capture cubit before navigation
@@ -70,10 +72,38 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Image.asset("assets/images/profile.png"),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              Widget avatar;
+
+                              if (state is AuthAuthenticated) {
+                                avatar = ProfileAvatar(
+                                  imageUrl: state.user.profilePictureUrl,
+                                  userId: state.user.id,
+                                  radius: 24,
+                                );
+                              } else {
+                                avatar = CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.grey.shade300,
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                  ),
+                                );
+                              }
+
+                              return Container(
+                                // border thickness
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.main500, // border color
+                                    width: 3,
+                                  ),
+                                ),
+                                child: avatar,
+                              );
+                            },
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           BlocBuilder<AuthBloc, AuthState>(
@@ -98,7 +128,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // 🔔 Notification icon (tap -> Notifications page)
+                    //Notification icon (tap -> Notifications page)
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -131,7 +161,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     // Our Tips Card
-                    Expanded(child: ClickableTipsCard(targetPage: Tips())),
+                    Expanded(child: ClickableTipsCard(targetPage: const TipsOverviewPage())),
 
                     SizedBox(width: screenWidth * 0.04),
 

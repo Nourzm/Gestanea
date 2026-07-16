@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<key>NSCameraUsageDescription</key>
+<string>We need camera access to scan lab results</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need photo library access to upload lab results</string>
+<key>LSApplicationQueriesSchemes</key>
+<key>NSCameraUsageDescription</key>
+<string>We need camera access to capture lab results</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need photo library access to select lab results</string>
+<array>
+  <string>tel</string>
+</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gestanea/core/theme/theme_cubit.dart';
 
 class FrequencyPage extends StatefulWidget {
   final VoidCallback onNext;
@@ -106,6 +109,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
     return Column(
       children: [
         Padding(
@@ -116,10 +120,13 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 icon: const Icon(Icons.arrow_back_ios, size: 20),
                 onPressed: widget.onBack,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Frequency & Schedule',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  AppLocalizations.of(context)!.frequencySchedule,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -136,9 +143,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Frequency Type Dropdown
-                const Text(
-                  'Frequency Type',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                Text(
+                  AppLocalizations.of(context)!.frequencyType,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
@@ -149,8 +159,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFA67FF5),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
                         width: 2,
                       ),
                     ),
@@ -159,13 +169,22 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       vertical: 16,
                     ),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'daily', child: Text('Daily')),
-                    DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
-                    DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'daily',
+                      child: Text(AppLocalizations.of(context)!.daily),
+                    ),
+                    DropdownMenuItem(
+                      value: 'weekly',
+                      child: Text(AppLocalizations.of(context)!.weekly),
+                    ),
+                    DropdownMenuItem(
+                      value: 'monthly',
+                      child: Text(AppLocalizations.of(context)!.monthly),
+                    ),
                     DropdownMenuItem(
                       value: 'as-needed',
-                      child: Text('As Needed'),
+                      child: Text(AppLocalizations.of(context)!.asNeeded),
                     ),
                   ],
                   onChanged: (value) {
@@ -178,9 +197,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 const SizedBox(height: 24),
 
                 // Frequency Value Input
-                const Text(
-                  'Frequency Value',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                Text(
+                  AppLocalizations.of(context)!.frequencyValue,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
@@ -188,17 +210,17 @@ class _FrequencyPageState extends State<FrequencyPage> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     hintText: _frequencyType == 'daily'
-                        ? 'e.g., 3 (times per day)'
+                        ? AppLocalizations.of(context)!.timesPerDayExample
                         : _frequencyType == 'weekly'
-                        ? 'e.g., 2 (times per week)'
-                        : 'e.g., 1 (times per month)',
+                        ? AppLocalizations.of(context)!.timesPerWeekExample
+                        : AppLocalizations.of(context)!.timesPerMonthExample,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFA67FF5),
+                      borderSide: BorderSide(
+                        color: themeData.primaryColor,
                         width: 2,
                       ),
                     ),
@@ -217,9 +239,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 const SizedBox(height: 24),
 
                 // Scheduled Times
-                const Text(
-                  'Scheduled Times',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                Text(
+                  AppLocalizations.of(context)!.scheduledTimesLabel,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 if (_scheduledTimes.isEmpty)
@@ -230,9 +255,9 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.grey[300]!),
                     ),
-                    child: const Text(
-                      'No scheduled times added yet',
-                      style: TextStyle(color: Colors.black54),
+                    child: Text(
+                      AppLocalizations.of(context)!.noScheduledTimesAdded,
+                      style: const TextStyle(color: Colors.black54),
                     ),
                   )
                 else
@@ -244,8 +269,8 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         label: Text(time),
                         deleteIcon: const Icon(Icons.close, size: 18),
                         onDeleted: () => _removeTime(time),
-                        backgroundColor: const Color(0xFFE8D5F5),
-                        deleteIconColor: const Color(0xFFA67FF5),
+                        backgroundColor: themeData.lightColor.withOpacity(0.3),
+                        deleteIconColor: themeData.primaryColor,
                       );
                     }).toList(),
                   ),
@@ -253,10 +278,10 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 OutlinedButton.icon(
                   onPressed: _showTimePicker,
                   icon: const Icon(Icons.access_time),
-                  label: const Text('Add Time'),
+                  label: Text(AppLocalizations.of(context)!.addTime),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFA67FF5),
-                    side: const BorderSide(color: Color(0xFFA67FF5)),
+                    foregroundColor: themeData.primaryColor,
+                    side: BorderSide(color: themeData.primaryColor),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -265,9 +290,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 const SizedBox(height: 24),
 
                 // Start Date Selector
-                const Text(
-                  'Start Date',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                Text(
+                  AppLocalizations.of(context)!.startDate,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 InkWell(
@@ -278,7 +306,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: _selectedStartDate != null
-                          ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                          ? Border.all(color: themeData.primaryColor, width: 2)
                           : Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
@@ -286,7 +314,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         Icon(
                           Icons.calendar_today,
                           color: _selectedStartDate != null
-                              ? const Color(0xFFA67FF5)
+                              ? themeData.primaryColor
                               : Colors.black87,
                         ),
                         const SizedBox(width: 16),
@@ -294,8 +322,9 @@ class _FrequencyPageState extends State<FrequencyPage> {
                           _selectedStartDate != null
                               ? DateFormat(
                                   'MMMM dd, yyyy',
+                                  Localizations.localeOf(context).toString(),
                                 ).format(_selectedStartDate!)
-                              : 'Select Start Date',
+                              : AppLocalizations.of(context)!.selectStartDate,
                           style: TextStyle(
                             fontSize: 16,
                             color: _selectedStartDate != null
@@ -319,9 +348,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 const SizedBox(height: 24),
 
                 // End Date Selector
-                const Text(
-                  'End Date (Optional)',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                Text(
+                  AppLocalizations.of(context)!.endDate,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 InkWell(
@@ -332,7 +364,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: _selectedEndDate != null
-                          ? Border.all(color: const Color(0xFFA67FF5), width: 2)
+                          ? Border.all(color: themeData.primaryColor, width: 2)
                           : Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
@@ -340,7 +372,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
                         Icon(
                           Icons.calendar_today,
                           color: _selectedEndDate != null
-                              ? const Color(0xFFA67FF5)
+                              ? themeData.primaryColor
                               : Colors.black87,
                         ),
                         const SizedBox(width: 16),
@@ -348,8 +380,9 @@ class _FrequencyPageState extends State<FrequencyPage> {
                           _selectedEndDate != null
                               ? DateFormat(
                                   'MMMM dd, yyyy',
+                                  Localizations.localeOf(context).toString(),
                                 ).format(_selectedEndDate!)
-                              : 'Select End Date',
+                              : AppLocalizations.of(context)!.selectEndDate,
                           style: TextStyle(
                             fontSize: 16,
                             color: _selectedEndDate != null
@@ -385,7 +418,7 @@ class _FrequencyPageState extends State<FrequencyPage> {
               onPressed: _canProceed ? widget.onNext : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _canProceed
-                    ? const Color(0xFFA67FF5)
+                    ? themeData.primaryColor
                     : const Color(0xFFE0E0E0),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -396,9 +429,12 @@ class _FrequencyPageState extends State<FrequencyPage> {
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
                 disabledForegroundColor: Colors.white,
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.nextLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -440,6 +476,8 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -448,9 +486,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select date',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                AppLocalizations.of(context)!.selectDate,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -513,7 +554,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          ..._buildCalendarDays(),
+          ..._buildCalendarDays(themeData),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -524,7 +565,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -532,9 +573,12 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -543,7 +587,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
     );
   }
 
-  List<Widget> _buildCalendarDays() {
+  List<Widget> _buildCalendarDays(themeData) {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(
       currentMonth.year,
@@ -575,7 +619,7 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFA67FF5) : Colors.transparent,
+              color: isSelected ? themeData.primaryColor : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -622,21 +666,36 @@ class _AppointmentCalendarWidgetState extends State<AppointmentCalendarWidget> {
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[month - 1];
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (month) {
+      case 1:
+        return l10n.jan;
+      case 2:
+        return l10n.feb;
+      case 3:
+        return l10n.mar;
+      case 4:
+        return l10n.apr;
+      case 5:
+        return l10n.may;
+      case 6:
+        return l10n.jun;
+      case 7:
+        return l10n.jul;
+      case 8:
+        return l10n.aug;
+      case 9:
+        return l10n.sep;
+      case 10:
+        return l10n.oct;
+      case 11:
+        return l10n.nov;
+      case 12:
+        return l10n.dec;
+      default:
+        return '';
+    }
   }
 }
 
@@ -675,6 +734,8 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = context.watch<ThemeCubit>().currentTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -683,9 +744,12 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select time',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                AppLocalizations.of(context)!.selectTime,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -785,7 +849,7 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA67FF5),
+                backgroundColor: themeData.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -793,9 +857,12 @@ class _MedicineTimeWidgetState extends State<MedicineTimeWidget> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.doneLabel,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

@@ -7,19 +7,28 @@ import 'package:gestanea/features/auth/presentation/pages/signup_page.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:gestanea/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:gestanea/features/onboarding/presentation/pages/splash_screen.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_common_info_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_user_status_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_pregnancy_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_baby_page.dart';
+import 'package:gestanea/features/onboarding/presentation/pages/onboarding_health_page.dart';
 import 'package:gestanea/features/health/presentation/pages/health_log_screen.dart';
 import 'package:gestanea/features/plan/presentation/pages/plan_page.dart';
 import 'package:gestanea/features/marketplace/presentation/pages/marketplace_page.dart';
 import 'package:gestanea/features/marketplace/logic/marketplace_bloc.dart';
 import 'package:gestanea/features/doctors/presentation/pages/doctors_page.dart';
 import 'package:gestanea/features/doctors/logic/bloc/doctors_bloc.dart';
-import 'package:gestanea/features/pregnancy/presentation/pages/week_tracker_page.dart';
-
+import 'package:gestanea/features/pregnancyTracking/presentation/pages/week_tracker_page.dart';
 import 'core/constants/app_routes.dart';
 
 Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   AppRoutes.onboarding: (context) => const OnboardingScreen(),
+  AppRoutes.onboardingCommonInfo: (context) => const OnboardingCommonInfoPage(),
+  AppRoutes.onboardingUserStatus: (context) => const OnboardingUserStatusPage(),
+  AppRoutes.onboardingPregnancy: (context) => const OnboardingPregnancyPage(),
+  AppRoutes.onboardingBaby: (context) => const OnboardingBabyPage(),
+  AppRoutes.onboardingHealth: (context) => const OnboardingHealthPage(),
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.auth: (context) => const AuthPage(),
   AppRoutes.personalize: (context) => const Personalize1(),
@@ -33,15 +42,13 @@ Map<String, WidgetBuilder> appRoutes = {
 
   AppRoutes.plan: (context) => const PlanMainPage(),
 
-  // AppRoutes.education: (context) => const EducationScreen(),
   AppRoutes.doctors: (context) => BlocProvider(
     create: (context) => DoctorsBloc(),
+
     child: const DoctorsScreen(),
   ),
   AppRoutes.marketplace: (context) => BlocProvider(
     create: (context) => MarketplaceBloc()..add(const LoadMarketplaceData()),
     child: const MarketplacePage(),
   ),
-  // Product details route will receive arguments
-  // AppRoutes.profile: (context) => const ProfileScreen(),
 };
