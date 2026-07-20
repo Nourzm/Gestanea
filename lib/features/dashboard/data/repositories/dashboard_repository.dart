@@ -25,6 +25,7 @@ abstract class DashboardRepository {
     int? currentMonth,
     bool isPostpartum = false,
     int? postpartumWeek,
+    bool showAllStages = false,
     int limit = 50,
   });
   

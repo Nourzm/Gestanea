@@ -10,6 +10,7 @@ class ProductCardToggle extends StatefulWidget {
   final String description;
   final String readTime;
   final String? imagePath;
+  final VoidCallback? onDetailsTap;
 
   const ProductCardToggle({
     super.key,
@@ -18,6 +19,7 @@ class ProductCardToggle extends StatefulWidget {
     required this.description,
     required this.readTime,
     this.imagePath,
+    this.onDetailsTap,
   });
 
   @override
@@ -40,6 +42,10 @@ class _ProductCardToggleState extends State<ProductCardToggle> {
   }
 
   void _goToDetailsPage() {
+    if (widget.onDetailsTap != null) {
+      widget.onDetailsTap!();
+      return;
+    }
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const CustomCurvedPage(),

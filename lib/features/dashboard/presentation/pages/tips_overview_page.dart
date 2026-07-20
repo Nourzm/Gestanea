@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestanea/core/constants/app_colors.dart';
 import 'package:gestanea/core/constants/app_text_styles.dart';
 import 'package:gestanea/core/database/models/tip_model.dart';
+import 'package:gestanea/core/widgets/search_bar.dart';
 import 'package:gestanea/features/auth/logic/auth_bloc.dart';
 import 'package:gestanea/features/auth/logic/auth_state.dart';
 import 'package:gestanea/features/dashboard/data/repositories/dashboard_repository_impl.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/tip_card_widget.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/tips_category_tab.dart';
-import 'package:gestanea/features/dashboard/presentation/widgets/tips_empty_state.dart';
 import 'package:gestanea/features/dashboard/presentation/pages/tip_details_page.dart';
+import 'package:gestanea/features/dashboard/presentation/widgets/category_card.dart';
+import 'package:gestanea/features/dashboard/presentation/widgets/tipFinal_card.dart';
+import 'package:gestanea/features/dashboard/presentation/widgets/tips_empty_state.dart';
+import 'package:gestanea/l10n/app_localizations.dart';
 
 class TipsOverviewPage extends StatefulWidget {
   const TipsOverviewPage({super.key});
@@ -20,7 +22,10 @@ class TipsOverviewPage extends StatefulWidget {
 
 class _TipsOverviewPageState extends State<TipsOverviewPage> {
   final DashboardRepositoryImpl _repository = DashboardRepositoryImpl();
+  final TextEditingController _searchController = TextEditingController();
+
   List<TipModel> _tips = [];
+  List<TipModel> _filteredTips = [];
   List<String> _savedTipIds = [];
   bool _isLoading = true;
   String _selectedCategory = 'All';
@@ -29,23 +34,27 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
   int? _currentWeek;
   int? _currentMonth;
   int? _postpartumWeek;
-  String _dynamicTitle = 'Tips';
 
-  // Available categories
-  static const List<String> _categories = [
-    'All',
-    'Food',
-    'Sport',
-    'Sleep',
-    'Mental',
-    'Medical',
-    'General',
+  static const List<Map<String, String>> _tipCategories = [
+    {'name': 'All', 'asset': 'assets/icons/global.svg', 'filter': ''},
+    {'name': 'Nutrition', 'asset': 'assets/icons/food.svg', 'filter': 'Food'},
+    {'name': 'Exercise', 'asset': 'assets/icons/sports.svg', 'filter': 'Sport'},
+    {'name': 'Sleep', 'asset': 'assets/icons/sleep.svg', 'filter': 'Sleep'},
+    {'name': 'Baby Care', 'asset': 'assets/icons/baby.svg', 'filter': 'General'},
+    {'name': 'Wellness', 'asset': 'assets/icons/health.svg', 'filter': 'Mental'},
   ];
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_applyFilters);
     _loadTips();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   String _getUserId() {
@@ -59,11 +68,11 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
   Future<Map<String, dynamic>> _getUserStageInfo(String userId) async {
     final isPregnant = await _repository.isUserPregnantByStringId(userId);
     final hasBaby = await _repository.hasActiveBabyByStringId(userId);
-    
+
     if (!isPregnant && hasBaby) {
-      // Postpartum - calculate week from baby birth date
       try {
-        final dashboard = await _repository.getPostpartumDashboardByStringId(userId);
+        final dashboard =
+            await _repository.getPostpartumDashboardByStringId(userId);
         final babyAgeInDays = dashboard.babyAgeInMonths * 30;
         final postpartumWeek = (babyAgeInDays ~/ 7) + 1;
         return {
@@ -73,12 +82,17 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
           'currentMonth': null,
         };
       } catch (e) {
-        return {'isPostpartum': true, 'postpartumWeek': null, 'currentWeek': null, 'currentMonth': null};
+        return {
+          'isPostpartum': true,
+          'postpartumWeek': null,
+          'currentWeek': null,
+          'currentMonth': null,
+        };
       }
     } else {
-      // Pregnancy - calculate week from LMP date
       try {
-        final dashboard = await _repository.getPregnancyDashboardByStringId(userId);
+        final dashboard =
+            await _repository.getPregnancyDashboardByStringId(userId);
         final currentMonth = (dashboard.currentWeek / 4).ceil();
         return {
           'isPostpartum': false,
@@ -87,53 +101,37 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
           'postpartumWeek': null,
         };
       } catch (e) {
-        return {'isPostpartum': false, 'currentWeek': null, 'currentMonth': null, 'postpartumWeek': null};
+        return {
+          'isPostpartum': false,
+          'currentWeek': null,
+          'currentMonth': null,
+          'postpartumWeek': null,
+        };
       }
     }
   }
 
   Future<void> _loadTips() async {
     if (!mounted) return;
-    
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       _userId = _getUserId();
-      if (_userId == null || _userId!.isEmpty) {
-        setState(() {
-          _isLoading = false;
-        });
-        return;
+
+      await _repository.syncTips();
+
+      if (_userId != null && _userId!.isNotEmpty) {
+        final stageInfo = await _getUserStageInfo(_userId!);
+        _isPostpartum = stageInfo['isPostpartum'] as bool;
+        _currentWeek = stageInfo['currentWeek'] as int?;
+        _currentMonth = stageInfo['currentMonth'] as int?;
+        _postpartumWeek = stageInfo['postpartumWeek'] as int?;
+        _savedTipIds = await _repository.getSavedTipIds(_userId!);
       }
 
-      // Determine user stage (pregnancy or postpartum)
-      final isPregnant = await _repository.isUserPregnantByStringId(_userId!);
-      final hasBaby = await _repository.hasActiveBabyByStringId(_userId!);
-      
-      _isPostpartum = !isPregnant && hasBaby;
-
-      // Calculate current week/month based on stage
-      // We'll use a helper to get stage info
-      final stageInfo = await _getUserStageInfo(_userId!);
-      _isPostpartum = stageInfo['isPostpartum'] as bool;
-      _currentWeek = stageInfo['currentWeek'] as int?;
-      _currentMonth = stageInfo['currentMonth'] as int?;
-      _postpartumWeek = stageInfo['postpartumWeek'] as int?;
-      
-      if (_isPostpartum && _postpartumWeek != null) {
-        _dynamicTitle = 'Tips for Postpartum Week $_postpartumWeek';
-      } else if (_currentWeek != null) {
-        _dynamicTitle = 'Tips for Week $_currentWeek';
-      } else {
-        _dynamicTitle = _isPostpartum ? 'Postpartum Tips' : 'Pregnancy Tips';
-      }
-
-      // Load saved tip IDs
-      _savedTipIds = await _repository.getSavedTipIds(_userId!);
-
-      // Fetch tips
       await _fetchTips();
     } catch (e) {
       print('Error loading tips: $e');
@@ -148,25 +146,30 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
   Future<void> _fetchTips() async {
     try {
       final targetAudience = _isPostpartum ? 'postpartum' : 'pregnant';
+      final categoryFilter = _selectedCategory == 'All'
+          ? null
+          : _tipCategories
+              .firstWhere((c) => c['name'] == _selectedCategory)['filter'];
+
       final tipsData = await _repository.getTips(
-        category: _selectedCategory == 'All' ? null : _selectedCategory,
+        category: categoryFilter?.isEmpty == true ? null : categoryFilter,
         targetAudience: targetAudience,
         currentWeek: _currentWeek,
         currentMonth: _currentMonth,
         isPostpartum: _isPostpartum,
         postpartumWeek: _postpartumWeek,
+        showAllStages: _selectedCategory == 'All',
         limit: 50,
       );
 
-      final tips = tipsData
-          .map((tipData) => TipModel.fromMap(tipData))
-          .toList();
+      final tips = tipsData.map((tipData) => TipModel.fromMap(tipData)).toList();
 
       if (mounted) {
         setState(() {
           _tips = tips;
           _isLoading = false;
         });
+        _applyFilters();
       }
     } catch (e) {
       print('Error fetching tips: $e');
@@ -176,6 +179,17 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
         });
       }
     }
+  }
+
+  void _applyFilters() {
+    final query = _searchController.text.trim().toLowerCase();
+    setState(() {
+      _filteredTips = _tips.where((tip) {
+        if (query.isEmpty) return true;
+        return tip.title.toLowerCase().contains(query) ||
+            tip.content.toLowerCase().contains(query);
+      }).toList();
+    });
   }
 
   Future<void> _toggleSaveTip(TipModel tip) async {
@@ -206,10 +220,47 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
     _fetchTips();
   }
 
+  void _openTipDetails(TipModel tip) {
+    final isSaved = _savedTipIds.contains(tip.id);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TipDetailsPage(
+          tip: tip,
+          userId: _userId ?? '',
+          isSaved: isSaved,
+          onSaveToggle: () => _toggleSaveTip(tip),
+        ),
+      ),
+    ).then((_) {
+      if (_userId != null) {
+        _repository.getSavedTipIds(_userId!).then((ids) {
+          if (mounted) {
+            setState(() {
+              _savedTipIds = ids;
+            });
+          }
+        });
+      }
+    });
+  }
+
+  String _estimateReadTime(String content) {
+    final minutes = (content.length / 200).ceil().clamp(1, 15);
+    return '$minutes min read';
+  }
+
+  String _truncateDescription(String content, {int maxLength = 100}) {
+    if (content.length <= maxLength) return content;
+    return '${content.substring(0, maxLength).trim()}...';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      backgroundColor: AppColors.bg_1,
       appBar: AppBar(
         backgroundColor: AppColors.bg_1,
         leading: IconButton(
@@ -221,7 +272,7 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _dynamicTitle,
+          l10n.tipsTitle,
           style: AppTextStyles.headline1.copyWith(
             color: AppColors.main500,
             fontSize: 32,
@@ -236,71 +287,68 @@ class _TipsOverviewPageState extends State<TipsOverviewPage> {
       body: RefreshIndicator(
         onRefresh: _loadTips,
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  // Category tabs
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: _categories.map((category) {
-                          return TipsCategoryTab(
-                            category: category,
-                            isSelected: _selectedCategory == category,
-                            onTap: () => _onCategorySelected(category),
-                          );
-                        }).toList(),
-                      ),
+            ? ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: const [
+                  SizedBox(height: 200),
+                  Center(child: CircularProgressIndicator()),
+                ],
+              )
+            : SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  width: double.infinity,
+                  color: AppColors.bg_1,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                    child: Column(
+                      children: [
+                        searchBar(
+                          controller: _searchController,
+                          hintText: l10n.searchHint,
+                          onChanged: (_) => _applyFilters(),
+                        ),
+                        const SizedBox(height: 20),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: _tipCategories.map((category) {
+                              final name = category['name']!;
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: CategoryCard(
+                                  categoryName: name,
+                                  svgAssetPath: category['asset']!,
+                                  isSelected: _selectedCategory == name,
+                                  onTap: () => _onCategorySelected(name),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        if (_filteredTips.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: TipsEmptyState(category: _selectedCategory),
+                          )
+                        else
+                          ...List.generate(_filteredTips.length, (index) {
+                            final tip = _filteredTips[index];
+                            return ProductCardToggle(
+                              initialExpanded: index == 0,
+                              title: tip.title,
+                              description: _truncateDescription(tip.content),
+                              readTime: _estimateReadTime(tip.content),
+                              imagePath: 'assets/images/onboarding5.png',
+                              onDetailsTap: () => _openTipDetails(tip),
+                            );
+                          }),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
-                  // Tips list
-                  Expanded(
-                    child: _tips.isEmpty
-                        ? TipsEmptyState(category: _selectedCategory)
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: _tips.length,
-                            itemBuilder: (context, index) {
-                              final tip = _tips[index];
-                              final isSaved = _savedTipIds.contains(tip.id);
-                              final isHighPriority = tip.priority >= 8;
-
-                              return TipCardWidget(
-                                tip: tip,
-                                isHighPriority: isHighPriority,
-                                isSaved: isSaved,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => TipDetailsPage(
-                                        tip: tip,
-                                        userId: _userId ?? '',
-                                        isSaved: isSaved,
-                                        onSaveToggle: () => _toggleSaveTip(tip),
-                                      ),
-                                    ),
-                                  ).then((_) {
-                                    // Refresh saved tip IDs when returning
-                                    if (_userId != null) {
-                                      _repository.getSavedTipIds(_userId!).then((ids) {
-                                        if (mounted) {
-                                          setState(() {
-                                            _savedTipIds = ids;
-                                          });
-                                        }
-                                      });
-                                    }
-                                  });
-                                },
-                                onSaveToggle: () => _toggleSaveTip(tip),
-                              );
-                            },
-                          ),
-                  ),
-                ],
+                ),
               ),
       ),
     );

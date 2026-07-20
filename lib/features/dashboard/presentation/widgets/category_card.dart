@@ -7,16 +7,22 @@ class CategoryCard extends StatelessWidget {
   final String svgAssetPath;
   // Required name to display below the icon
   final String categoryName;
+  final bool isSelected;
+  final VoidCallback? onTap;
 
   const CategoryCard({
     super.key,
     required this.svgAssetPath,
     required this.categoryName,
+    this.isSelected = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
       mainAxisSize: MainAxisSize.min, // Keep column size minimal
       children: [
         // 1. Icon Container with Neumorphic Styling
@@ -26,9 +32,14 @@ class CategoryCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
-            color: const Color(0xFFFAECFF), // Light purple background
+            color: isSelected
+                ? const Color(0xFFE8D4FF)
+                : const Color(0xFFFAECFF),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
+              side: isSelected
+                  ? const BorderSide(color: Color(0xFF8A2BE2), width: 2)
+                  : BorderSide.none,
             ),
             // Corrected and combined BoxShadow list for the Neumorphic effect
             shadows: const [
@@ -69,13 +80,14 @@ class CategoryCard extends StatelessWidget {
         // 2. Category Name Text
         Text(
           categoryName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.black54,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+            color: isSelected ? const Color(0xFF8A2BE2) : Colors.black54,
           ),
         ),
       ],
+      ),
     );
   }
 }

@@ -519,6 +519,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
     int? currentMonth,
     bool isPostpartum = false,
     int? postpartumWeek,
+    bool showAllStages = false,
     int limit = 50,
   }) async {
     return await _localDataSource.getTips(
@@ -528,6 +529,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       currentMonth: currentMonth,
       isPostpartum: isPostpartum,
       postpartumWeek: postpartumWeek,
+      showAllStages: showAllStages,
       limit: limit,
     );
   }

@@ -35,6 +35,7 @@ abstract class DashboardLocalDataSource {
     int? currentMonth,
     bool isPostpartum = false,
     int? postpartumWeek,
+    bool showAllStages = false,
     int limit = 50,
   });
   
@@ -401,6 +402,7 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
     int? currentMonth,
     bool isPostpartum = false,
     int? postpartumWeek,
+    bool showAllStages = false,
     int limit = 50,
   }) async {
     final db = await _dbHelper.database;
@@ -424,35 +426,37 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
       whereArgs.add(category);
     }
     
-    // Stage-based filtering (is_global OR stage matches)
-    if (isPostpartum && postpartumWeek != null) {
-      // Postpartum: is_global OR (postpartum_week_from <= currentWeek <= postpartum_week_to)
-      conditions.add(
-        '(is_global = 1 OR ((postpartum_week_from IS NULL OR postpartum_week_from <= ?) AND (postpartum_week_to IS NULL OR postpartum_week_to >= ?)))'
-      );
-      whereArgs.add(postpartumWeek);
-      whereArgs.add(postpartumWeek);
-    } else if (!isPostpartum) {
-      // Pregnancy: is_global OR (week range OR month range matches)
-      if (currentWeek != null) {
+    // Stage-based filtering (skipped when showAllStages is true)
+    if (!showAllStages) {
+      if (isPostpartum && postpartumWeek != null) {
+        // Postpartum: is_global OR (postpartum_week_from <= currentWeek <= postpartum_week_to)
         conditions.add(
-          '(is_global = 1 OR ((pregnancy_week_from IS NULL OR pregnancy_week_from <= ?) AND (pregnancy_week_to IS NULL OR pregnancy_week_to >= ?)))'
+          '(is_global = 1 OR ((postpartum_week_from IS NULL OR postpartum_week_from <= ?) AND (postpartum_week_to IS NULL OR postpartum_week_to >= ?)))'
         );
-        whereArgs.add(currentWeek);
-        whereArgs.add(currentWeek);
-      } else if (currentMonth != null) {
-        conditions.add(
-          '(is_global = 1 OR ((pregnancy_month_from IS NULL OR pregnancy_month_from <= ?) AND (pregnancy_month_to IS NULL OR pregnancy_month_to >= ?)))'
-        );
-        whereArgs.add(currentMonth);
-        whereArgs.add(currentMonth);
+        whereArgs.add(postpartumWeek);
+        whereArgs.add(postpartumWeek);
+      } else if (!isPostpartum) {
+        // Pregnancy: is_global OR (week range OR month range matches)
+        if (currentWeek != null) {
+          conditions.add(
+            '(is_global = 1 OR ((pregnancy_week_from IS NULL OR pregnancy_week_from <= ?) AND (pregnancy_week_to IS NULL OR pregnancy_week_to >= ?)))'
+          );
+          whereArgs.add(currentWeek);
+          whereArgs.add(currentWeek);
+        } else if (currentMonth != null) {
+          conditions.add(
+            '(is_global = 1 OR ((pregnancy_month_from IS NULL OR pregnancy_month_from <= ?) AND (pregnancy_month_to IS NULL OR pregnancy_month_to >= ?)))'
+          );
+          whereArgs.add(currentMonth);
+          whereArgs.add(currentMonth);
+        } else {
+          // No week/month specified, show global tips only
+          conditions.add('is_global = 1');
+        }
       } else {
-        // No week/month specified, show global tips only
+        // Postpartum but no week specified, show global tips only
         conditions.add('is_global = 1');
       }
-    } else {
-      // Postpartum but no week specified, show global tips only
-      conditions.add('is_global = 1');
     }
     
     final whereClause = conditions.join(' AND ');
